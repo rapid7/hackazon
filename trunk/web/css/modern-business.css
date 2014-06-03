@@ -1,0 +1,197 @@
+/* 
+Custom CSS for...
+'Modern Business' HTML Theme by Start Bootstrap
+
+All Start Bootstrap themes are licensed under Apache 2.0. 
+For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap.com!
+*/
+
+/* Global Styles */
+
+html, body {
+    height:100%;
+}
+
+body {
+    padding-top: 50px; /* body padding for fixed top nav */
+}
+
+.img-home-portfolio,
+.img-customer,
+.portfolio-item {
+    margin-bottom: 30px;
+}
+
+.tab-pane {
+    margin-top: 15px;
+}
+
+/* Page Sections */
+.section,
+.section-colored {
+    padding: 50px 0;
+}
+
+.section-colored {
+    background-color: #e1e1e1; /* change this to change the background color of a colored section */
+}
+
+.sidebar {
+    margin-top: 40px;
+}
+
+.sidebar ul {
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid #cccccc;
+}
+
+/* Half Page Height Carousel Customization */
+.carousel {
+    height: 50%;
+    min-height: 400px;
+}
+
+.item,
+.active
+{
+    height: 100%;
+}
+.carousel-inner {
+    height: 400px;
+}
+
+.fill {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+
+/* Social Icons Styles */
+.list-social-icons {
+    margin-bottom: 45px;
+}
+
+.tooltip-social a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.facebook-link a:hover {
+    color: #3b5998;
+}
+
+.linkedin-link a:hover {
+    color: #007fb1;
+}
+
+.twitter-link a:hover {
+    color: #39a9e0;
+}
+
+.google-plus-link a:hover {
+    color: #d14836;
+}
+
+/* Service Page Styles */
+.service-icon {
+    font-size: 50px;
+}
+
+/* 404 Page Styles */
+.error-404 {
+    font-size: 8em;
+}
+
+/* Pricing Page Styles */
+.price {
+    font-size: 4em;
+}
+
+.price-cents {
+    vertical-align: super;
+    font-size: 50%;
+}
+
+.price-month {
+    font-size: 35%;
+    font-style: italic;
+}
+
+/* Footer Styles */
+footer {
+    height:30px;
+    margin: 0;
+    clear: both;
+    width:100%;
+    position: relative;
+}
+
+#container{
+    min-height:100%;
+    position:relative;
+    /* Firefox */
+    min-height: -moz-calc(100% - 80px);
+    /* WebKit */
+    min-height: -webkit-calc(100% - 80px);
+    /* Opera */
+    min-height: -o-calc(100% - 80px);
+    /* Standard */
+    min-height: calc(100% - 80px);
+}
+
+
+.thumbnail img {
+    width: 100%;
+}
+
+.ratings {
+    color: #d17581;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.thumbnail {
+    padding: 0;
+}
+
+.thumbnail .caption-full {
+    padding: 9px;
+    color: #333;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+.center.navbar .nav,
+.center.navbar .nav > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+    *zoom:1; /* hasLayout ie7 trigger */
+    vertical-align: top;
+}
+.center.navbar-inner {
+    text-align:center;
+}
+.center .dropdown-menu {
+    text-align: left;
+}
+.navbar-inner {
+    margin: 0 auto;
+}
+
+
+/* Responsive Styles */
+@media (max-width: 767px) {
+    .container,.container-fluid {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .carousel {
+        height: 70%; /* increases the carousel height so it looks good on phones */
+    }
+
+}
