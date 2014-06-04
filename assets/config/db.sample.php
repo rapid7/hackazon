@@ -18,5 +18,5 @@ return array(
 
 /* note
  * mysql> create database hackazon;
- * mysql> GRANT ALL ON hackazon.* TO hackazon@'localhost' IDENTIFIED BY 'h@ckaZon';
+ * mysql> GRANT ALL ON hackazon.* TO hackazon@'localhost' IDENTIFIED BY 'password';
 */
