@@ -17,7 +17,7 @@ class Page extends \PHPixie\Controller {
 	public function before() {
 		$this->view = $this->pixie->view('main');
                 $className = $this->get_real_class($this);
-                
+
                 
                 if($className != "Home"){
                     $model = new \App\Model\Category($this->pixie);
