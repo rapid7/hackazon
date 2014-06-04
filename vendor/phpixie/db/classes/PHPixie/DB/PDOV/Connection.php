@@ -119,7 +119,7 @@ class Connection extends \PHPixie\DB\Connection {
      * @see Database_Result
      */
     public function execute($query, $params = array()) {
-        return $this->conn->query($query);
+        return $this->pixie->db->result_driver('PDOV', $this->conn->query($query));
         
         /*
           $cursor = $this->conn->prepare($query);
