@@ -1,11 +1,15 @@
 <?php
+
 namespace App\Controller;
 
-class Auth extends \App\Page {
+class User extends \App\Page {
 
 
 
     public function action_login() {
+        if (!is_null($this->pixie->auth->user()))
+            $this->redirect('/account');
+                
         if ($this->request->method == 'POST') {
             $login = $this->request->post('username');
             $password = $this->request->post('password');
@@ -21,20 +25,24 @@ class Auth extends \App\Page {
             //our protected page
             if ($logged)
                 return $this->redirect('/account');
+            else{
+                $this->view->errorMessage = "Username or password are incorrect.";
+            }
         }
         //Include 'login.php' subview
-        $this->view->breadcrumbs = "Вход в личный кабинет";
-        $this->view->subview = 'auth/login';
+        
+        $this->view->subview = 'user/login';
     }
     
     public function action_logout() {
-        $this->pixie->auth->logout();
+        if (!is_null($this->pixie->auth->user()))
+            $this->pixie->auth->logout();
         $this->redirect('/');
-    }    
-    
+    }
+
     public function action_password() {
-        $this->view->subview = 'auth/password';
-    }    
+        $this->view->subview = 'user/password';
+    }
 
     public function action_register() {
         if (!is_null($this->pixie->auth->user()))
@@ -56,7 +64,8 @@ class Auth extends \App\Page {
             }
 
         }
-        $this->view->subview = 'auth/register';
+        $this->view->subview = 'user/register';
+        
     }    
     
     

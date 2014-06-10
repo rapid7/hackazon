@@ -1,7 +1,7 @@
 CREATE TABLE `tbl_users` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
-  `password` varchar(40) NOT NULL,
+  `password` varchar(50) NOT NULL,
   `salt` varchar(40) DEFAULT NULL,
   `email` varchar(80) NOT NULL,
   `created_on` int(11) unsigned NOT NULL,
