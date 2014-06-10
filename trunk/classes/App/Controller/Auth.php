@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 class Auth extends \App\Page {
@@ -25,7 +24,7 @@ class Auth extends \App\Page {
         }
         //Include 'login.php' subview
         $this->view->breadcrumbs = "Вход в личный кабинет";
-        $this->view->subview = 'login';
+        $this->view->subview = 'auth/login';
     }
     
     public function action_logout() {
