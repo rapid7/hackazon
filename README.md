@@ -1,6 +1,7 @@
 [PHPixie](http://phpixie.com)
 =======
 
+I
 PHPixie is a lightweight PHP MVC framework designed for 
 rapid development, speed and simplicty. By avoiding as
 much boilerplate code as possible it allows for better 
