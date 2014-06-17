@@ -4,13 +4,14 @@
 	"description" : "PHPixie skeleton project",
 	"license" : "BSD",
 	"autoload": {
-		"psr-0": {"": "classes/"}
+		"psr-0": {"": ["classes/", "modules/vulninjection/classes/", "classes/PDOV"]}
 	},
 	"require": {
 		"phpixie/core": "2.*@dev",
 		"phpixie/db": "2.*@dev",
 		"phpixie/orm": "2.*@dev",
-                "phpixie/auth":"2.*@dev"
+                "phpixie/auth":"2.*@dev",
+                "phpixie/email":"2.*@dev"
     	},
 	"extra": {
 		"branch-alias": {

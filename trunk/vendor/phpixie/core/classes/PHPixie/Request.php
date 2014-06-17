@@ -76,6 +76,29 @@ class Request
 	}
 
 	/**
+	 * Retrieves a value by key from a specified array with an optional XSS check.
+	 *
+	 * @param array  $params  Array to get the key from
+	 * @param string $key     Key to retrieve
+	 * @param mixed  $default Default value
+	 * @param bool   $filter_xss Whether to filter input for XSS protection
+	 *                           Defaults to true
+	 * @return mixed Returns a value if a key is specified,
+	 *               or an array of specifed parameters if it isn't.
+	 */
+	protected function get_filtered_value($params, $key = null, $default = null, $filter_xss=true)
+	{
+		if ($key == null)
+			return $params;
+		$val = $this->pixie->arr($params, $key, $default);
+		
+		if ($filter_xss)
+			return $this->filter_xss($val);
+			
+		return $val;
+	}
+
+	/**
 	 * Retrieves a GET parameter
 	 *
 	 * @param string $key    Parameter key
@@ -86,14 +109,7 @@ class Request
 	 */
 	public function get($key = null, $default = null, $filter_xss=true)
 	{
-		if ($key == null)
-			return $this->_get;
-		$val = $this->pixie->arr($this->_get, $key, $default);
-		
-		if ($filter_xss)
-			return $this->filter_xss($val);
-			
-		return $val;
+		return $this->get_filtered_value($this->_get, $key, $default, $filter_xss);
 	}
 
 	/**
@@ -107,14 +123,21 @@ class Request
 	 */
 	public function post($key = null, $default = null, $filter_xss=true)
 	{
-		if ($key == null)
-			return $this->_post;
-		$val = $this->pixie->arr($this->_post, $key, $default);
-		
-		if ($filter_xss)
-			return $this->filter_xss($val);
-			
-		return $val;
+		return $this->get_filtered_value($this->_post, $key, $default, $filter_xss);
+	}
+
+	/**
+	 * Retrieves a URL parameter
+	 *
+	 * @param string $key    Parameter key
+	 * @param mixed $default Default value
+	 * @param bool  $filter_xss Whether to filter input for XSS protection
+	 * @return mixed Returns a value if a key is specified,
+	 *               or an array of POST parameters if it isn't.
+	 */
+	public function param($key = null, $default = null, $filter_xss=true)
+	{
+		return $this->get_filtered_value($this->_param, $key, $default, $filter_xss);
 	}
 
 	/**
@@ -125,6 +148,8 @@ class Request
 	 * @return mixed Filtered values
 	 */
 	public function filter_xss($val) {
+		if (is_null($val)) return NULL;
+		
 		if (is_array($val)) {
 			array_walk_recursive($val, function( &$str) {
 				$str = strip_tags($str);
@@ -149,27 +174,6 @@ class Request
 		if ($key == null)
 			return $this->_server;
 		return $this->pixie->arr($this->_server, $key, $default);
-	}
-
-	/**
-	 * Retrieves a URL parameter
-	 *
-	 * @param string $key    Parameter key
-	 * @param mixed $default Default value
-	 * @param bool  $filter_xss Whether to filter input for XSS protection
-	 * @return mixed Returns a value if a key is specified,
-	 *               or an array of POST parameters if it isn't.
-	 */
-	public function param($key = null, $default = null, $filter_xss=true)
-	{
-		if ($key == null)
-			return $this->_param;
-		$val = $this->pixie->arr($this->_param, $key, $default);
-		
-		if ($filter_xss)
-			return $this->filter_xss($val);
-			
-		return $val;
 	}
 
 	/**
@@ -203,6 +207,19 @@ class Request
 				$url = substr($url, 0, $pos);
 		}
 		return $url;
+	}
+	
+	/**
+	 * Check if the request is ajax
+	 *
+	 * @return bool True if it's ajax else False
+	 */
+	public function is_ajax()
+	{
+		if (strtolower($this->server('HTTP_X_REQUESTED_WITH')) === 'xmlhttprequest') {
+		   return true;
+		}
+		return false;
 	}
 	
 }

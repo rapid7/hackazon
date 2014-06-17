@@ -100,7 +100,7 @@ class Cookie {
 	 */
 	public function remove($key) {
 		unset($this->cookies[$key]);
-		$this->set($key, null, 1 - time());
+		$this->set($key, null, -24*3600*30);
 	}
 	
 	/**
@@ -119,12 +119,11 @@ class Cookie {
 				if (!array_key_exists($param, $params))
 					$params[$param] = null;
 			
-			$params['expires'] = $params['lifetime'] > 0 ? time() + $params['lifetime'] : null;
+			$params['expires'] = $params['lifetime'] !== null ? time() + $params['lifetime'] : null;
 			unset($params['lifetime']);
 			
 			$updates[$key] = $params;
 		}
-		
 		return $updates;
 	}
 

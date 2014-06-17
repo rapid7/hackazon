@@ -36,7 +36,7 @@ class RoterTest extends PHPUnit_Framework_TestCase
 	public function testGet()
 	{
 		$except = false;
-		$this->object->add(new \PHPixie\Route('a', 'b', array()));
+		$this->object->add(new \PHPixie\Route('/', 'a', 'b', array()));
 		try {
 			$this->object->get('c');
 		} catch (\Exception $e) {
@@ -51,7 +51,7 @@ class RoterTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testMatchFunc()
 	{
-		$this->object->add(new \PHPixie\Route('func', function() {
+		$this->object->add(new \PHPixie\Route('/', 'func', function() {
 				return array('action' => 'index');
 			}, array('controller' => 'home')));
 		$route = $this->object->match('/test');
@@ -66,7 +66,7 @@ class RoterTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testMatchDefault()
 	{
-		$this->object->add(new \PHPixie\Route('default', '(/<controller>(/<action>(/<id>)))', array(
+		$this->object->add(new \PHPixie\Route('/', 'default', '(/<controller>(/<action>(/<id>)))', array(
 			'controller' => 'home',
 			'action' => 'index'
 		)));
@@ -98,7 +98,7 @@ class RoterTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testMatchCustom()
 	{
-		$this->object->add(new \PHPixie\Route('default', array('/<alpha><num>', array(
+		$this->object->add(new \PHPixie\Route('/', 'default', array('/<alpha><num>', array(
 				'alpha' => '[a-z]*',
 				'num' => '[0-9]*'
 			)), array(
@@ -114,11 +114,11 @@ class RoterTest extends PHPUnit_Framework_TestCase
 	}
 	
 	public function testMatchMethod() {
-		$this->object->add(new \PHPixie\Route('get', '/url', array(
+		$this->object->add(new \PHPixie\Route('/', 'get', '/url', array(
 			'controller' => 'home',
 			'action' => 'get'
 		), 'GeT'));
-		$this->object->add(new \PHPixie\Route('post', '/url', array(
+		$this->object->add(new \PHPixie\Route('/', 'post', '/url', array(
 			'controller' => 'home',
 			'action' => 'get'
 		), array('PosT')));

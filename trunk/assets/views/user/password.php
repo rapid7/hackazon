@@ -24,7 +24,7 @@
         <?php endif; ?>
 
         <div class="section">
-                <form role="form" method="post" action="/auth/password" id="passwordForm">
+                <form role="form" method="post" action="/user/password" id="passwordForm">
                   <div class="form-group">
                     <label for="userEmail">Email address</label>
                     <input type="email" class="form-control" name="userEmail" id="userEmail" placeholder="Enter email">

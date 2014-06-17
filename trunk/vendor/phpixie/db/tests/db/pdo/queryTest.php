@@ -94,7 +94,7 @@ class PDO_Query_Test extends PHPUnit_Framework_TestCase
 			->limit(5)
 			->offset(6)
 			->query();
-		$this->assertEquals("SELECT * FROM `fairies` WHERE `fairies`.`a` = ? AND `fairies`.`b` < ? AND `fairies`.`c` > ? OR `fairies`.`d` > ? AND ( `fairies`.`e` = ? OR ( `fairies`.`f` = ? AND `fairies`.`g` = ? ) OR ( `fairies`.`h` = ? OR `fairies`.`i` = ? ) )  GROUP BY `fairies`.`id` HAVING `fairies`.`j` < korova OR `fairies`.`l` > ? AND ( `fairies`.`m` = ? OR ( `fairies`.`n` = ? AND `fairies`.`o` = ? ) )  ORDER BY `fairies`.`id` DESC LIMIT 5 OFFSET 6 ", current($query));
+		$this->assertEquals("SELECT * FROM `fairies` WHERE `fairies`.`a` = ? AND `fairies`.`b` < ? AND `fairies`.`c` > ? OR `fairies`.`d` > ? AND ( `fairies`.`e` = ? OR ( `fairies`.`f` = ? AND `fairies`.`g` = ? ) OR ( `fairies`.`h` = ? OR `fairies`.`i` = ? ) )  GROUP BY `id` HAVING `fairies`.`j` < korova OR `fairies`.`l` > ? AND ( `fairies`.`m` = ? OR ( `fairies`.`n` = ? AND `fairies`.`o` = ? ) )  ORDER BY `fairies`.`id` DESC LIMIT 5 OFFSET 6 ", current($query));
 	}
 
 	/**
@@ -247,7 +247,7 @@ class PDO_Query_Test extends PHPUnit_Framework_TestCase
 		$subquery = new \PHPixie\DB\PDO\Query($stub, 'select');
 		$subquery->fields('id')->table('fairies');
 		$this->object->table($subquery)->where('id', 7);
-		$this->assertEquals('SELECT * FROM (SELECT `fairies`.`id` FROM `fairies` )  AS a0 WHERE `a0`.`id` = ?  ', current($this->object->query()));
+		$this->assertEquals('SELECT * FROM (SELECT `fairies`.`id` FROM `fairies` )  AS `a0` WHERE `a0`.`id` = ?  ', current($this->object->query()));
 	}
 
 	public function testJoinSubtable()
@@ -261,7 +261,7 @@ class PDO_Query_Test extends PHPUnit_Framework_TestCase
 		$this->object->join(array($subquery, 'fae2'), array('fairies.id', '=', 'fae2.id'));
 
 
-		$this->assertEquals('SELECT * FROM (SELECT * FROM `fairies` )  AS a0 LEFT JOIN `pixies` ON `fairies`.`id` = `pixie`.`id` LEFT JOIN `fairies` AS fae ON `fairies`.`id` = `fae`.`id` LEFT JOIN (SELECT * FROM `fairies` )  AS fae2 ON `fairies`.`id` = `fae2`.`id` ', current($this->object->query()));
+		$this->assertEquals('SELECT * FROM (SELECT * FROM `fairies` )  AS `a0` LEFT JOIN `pixies` ON `fairies`.`id` = `pixie`.`id` LEFT JOIN `fairies` AS `fae` ON `fairies`.`id` = `fae`.`id` LEFT JOIN (SELECT * FROM `fairies` )  AS `fae2` ON `fairies`.`id` = `fae2`.`id` ', current($this->object->query()));
 	}
 
 	public function testExpressionSelect()
@@ -283,7 +283,7 @@ class PDO_Query_Test extends PHPUnit_Framework_TestCase
 			->table('pixies', 'p')
 			->join(array('forest', 'f'), array('p.forest_id', 'f.id'))
 			->where('f.name', 'Dreamwood');
-		$this->assertEquals('UPDATE `pixies` AS p LEFT JOIN `forest` AS f ON `p`.`forest_id` = `f`.`id` SET `p.name` = ? WHERE `f`.`name` = ?  ', current($this->object->query()));
+		$this->assertEquals('UPDATE `pixies` AS `p` LEFT JOIN `forest` AS `f` ON `p`.`forest_id` = `f`.`id` SET `p.name` = ? WHERE `f`.`name` = ?  ', current($this->object->query()));
 	}
 
 }

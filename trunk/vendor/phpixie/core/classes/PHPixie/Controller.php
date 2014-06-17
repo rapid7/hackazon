@@ -80,7 +80,7 @@ class Controller
 	 * @return void
 	 */
 	public function redirect($url) {
-		$this->response-> redirect($url);
+		$this->response->redirect($url);
 		$this->execute = false;
 	}
 	

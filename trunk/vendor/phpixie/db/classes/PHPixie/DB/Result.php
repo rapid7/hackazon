@@ -109,5 +109,15 @@ abstract class Result implements \Iterator
 			return $this->_row->$column;
 		}
 	}
+	
+	/**
+	 * Returns raw database result
+	 *
+	 * @return mixed  Raw database result
+	 */
+	public function result()
+	{
+		return $this->_result;
+	}
 
 }

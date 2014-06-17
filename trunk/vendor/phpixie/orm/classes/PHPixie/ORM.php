@@ -43,7 +43,10 @@ class ORM {
 	 */
 	public function get($name, $id = null)
 	{
-		$model = $this->pixie->app_namespace."Model\\".ucfirst($name);
+		$name = explode('_', $name);
+		$name = array_map('ucfirst', $name);
+		$name = implode("\\", $name);
+		$model = $this->pixie->app_namespace."Model\\".$name;
 		$model = new $model($this->pixie);
 		if ($id != null)
 		{

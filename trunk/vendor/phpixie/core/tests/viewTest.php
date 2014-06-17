@@ -10,7 +10,8 @@ class ViewTest extends PHPUnit_Framework_TestCase
 	 * @var View
 	 */
 	protected $object;
-
+	protected $pixie;
+	
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
@@ -19,11 +20,11 @@ class ViewTest extends PHPUnit_Framework_TestCase
 	{
 		$this->file = $file = tempnam(sys_get_temp_dir(), 'view');
 		file_put_contents($file, '<?php $_($fairy); ?>');
-		$pixie = $this->getMock("\\PHPixie\\Pixie", array('find_file'));
-		$pixie->expects($this->once())
-                 ->method('find_file')
-                 ->will($this->returnValue($this->file));
-		$this->object = new \PHPixie\View($pixie, $pixie->view_helper(), 'view');
+		$this->pixie = $this->getMock("\\PHPixie\\Pixie", array('find_file'));
+		$this->pixie->expects($this->at(0))
+				->method('find_file')
+				->will($this->returnValue($this->file));
+		$this->object = new \PHPixie\View($this->pixie, $this->pixie->view_helper(), 'view');
 	}
 
 	/**
@@ -45,6 +46,17 @@ class ViewTest extends PHPUnit_Framework_TestCase
 		$this->object->test = null;
 		$this->assertEquals(true, isset($this->object->test));
 		
+	}
+	
+	public function testSetTemplate() {
+		$file2 = $file = tempnam(sys_get_temp_dir(), 'view2');
+		file_put_contents($file2, '2<?php $_($fairy); ?>');
+		$this->pixie->expects($this->at(0))
+				->method('find_file')
+				->will($this->returnValue($file2));
+		$this->object->set_template('view2');
+		$this->assertAttributeEquals($file2, 'path', $this->object);
+		unlink($file2);
 	}
 	
 	/**

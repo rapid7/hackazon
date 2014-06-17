@@ -46,7 +46,7 @@ class cookieTest extends PHPUnit_Framework_TestCase
 		$this->checkUpdate('fairy', 'test', 4, '/', 'phpixie.com', true, true);
 		
 		$this->cookie->remove('fairy');
-		$this->checkUpdate('fairy', null, 1 - time(), null, null, null, null);
+		$this->checkUpdate('fairy', null, -24*3600*30, null, null, null, null);
 	}
 	
 	public function testDefaults() {

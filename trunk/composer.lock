@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "62dff3d991eea281c2bfb6b654a2de3f",
+    "hash": "5099f7e5aa78aa3537976aef0305be31",
     "packages": [
         {
             "name": "phpixie/auth",
@@ -11,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dracony/PHPixie-Auth.git",
-                "reference": "613248252458e076e0e824cbaedd4640acfcfcb8"
+                "reference": "4ad10a65f4f888e631e7ebe3f9f52d60734ebfa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dracony/PHPixie-Auth/zipball/613248252458e076e0e824cbaedd4640acfcfcb8",
-                "reference": "613248252458e076e0e824cbaedd4640acfcfcb8",
+                "url": "https://api.github.com/repos/dracony/PHPixie-Auth/zipball/4ad10a65f4f888e631e7ebe3f9f52d60734ebfa0",
+                "reference": "4ad10a65f4f888e631e7ebe3f9f52d60734ebfa0",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +52,7 @@
                 "authorization",
                 "facebook"
             ],
-            "time": "2013-09-30 09:44:36"
+            "time": "2014-04-08 14:40:46"
         },
         {
             "name": "phpixie/core",
@@ -59,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dracony/PHPixie-Core.git",
-                "reference": "bcd1a507de70c423f63a1d2f8697ba671b7613e4"
+                "reference": "38bfffda22101c8925278412dc3e7e1b3acd4a5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dracony/PHPixie-Core/zipball/bcd1a507de70c423f63a1d2f8697ba671b7613e4",
-                "reference": "bcd1a507de70c423f63a1d2f8697ba671b7613e4",
+                "url": "https://api.github.com/repos/dracony/PHPixie-Core/zipball/38bfffda22101c8925278412dc3e7e1b3acd4a5a",
+                "reference": "38bfffda22101c8925278412dc3e7e1b3acd4a5a",
                 "shasum": ""
             },
             "require": {
@@ -97,7 +98,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-01-17 22:48:42"
+            "time": "2014-06-15 00:29:39"
         },
         {
             "name": "phpixie/db",
@@ -105,12 +106,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dracony/PHPixie-DB.git",
-                "reference": "34d4dfb168a84729a3314aff7706d3c029663409"
+                "reference": "67a5f61e1cc9887fdd39a864c5ce56e1b8737009"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dracony/PHPixie-DB/zipball/34d4dfb168a84729a3314aff7706d3c029663409",
-                "reference": "34d4dfb168a84729a3314aff7706d3c029663409",
+                "url": "https://api.github.com/repos/dracony/PHPixie-DB/zipball/67a5f61e1cc9887fdd39a864c5ce56e1b8737009",
+                "reference": "67a5f61e1cc9887fdd39a864c5ce56e1b8737009",
                 "shasum": ""
             },
             "require": {
@@ -146,7 +147,54 @@
                 "postgresql",
                 "sqlite"
             ],
-            "time": "2013-12-24 20:23:40"
+            "time": "2014-05-21 13:21:05"
+        },
+        {
+            "name": "phpixie/email",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dracony/PHPixie-swift-mailer.git",
+                "reference": "0fd099ecc71260a84ef7eba75533e9b744601310"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dracony/PHPixie-swift-mailer/zipball/0fd099ecc71260a84ef7eba75533e9b744601310",
+                "reference": "0fd099ecc71260a84ef7eba75533e9b744601310",
+                "shasum": ""
+            },
+            "require": {
+                "phpixie/core": "2.*@dev",
+                "swiftmailer/swiftmailer": "4.3.*@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "PHPixie": "classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Tsiupa",
+                    "email": "draconyster@gmail.com",
+                    "homepage": "http://dracony.org"
+                }
+            ],
+            "description": "Validation library for PHPixie",
+            "homepage": "http://phpixie.com",
+            "keywords": [
+                "email"
+            ],
+            "time": "2014-01-24 14:19:41"
         },
         {
             "name": "phpixie/orm",
@@ -154,12 +202,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dracony/PHPixie-ORM.git",
-                "reference": "e332aefead3be0e1a72c2e4fe1b26ebdb5ff36db"
+                "reference": "026af58ba5871e0eac526bfc294b4f7b0233b6d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dracony/PHPixie-ORM/zipball/e332aefead3be0e1a72c2e4fe1b26ebdb5ff36db",
-                "reference": "e332aefead3be0e1a72c2e4fe1b26ebdb5ff36db",
+                "url": "https://api.github.com/repos/dracony/PHPixie-ORM/zipball/026af58ba5871e0eac526bfc294b4f7b0233b6d9",
+                "reference": "026af58ba5871e0eac526bfc294b4f7b0233b6d9",
                 "shasum": ""
             },
             "require": {
@@ -193,7 +241,58 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-01-02 15:26:43"
+            "time": "2014-05-22 00:42:52"
+        },
+        {
+            "name": "swiftmailer/swiftmailer",
+            "version": "v4.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swiftmailer/swiftmailer.git",
+                "reference": "ae540bed1079c07aa12e9e62d9d8d4fc49bbdff2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/ae540bed1079c07aa12e9e62d9d8d4fc49bbdff2",
+                "reference": "ae540bed1079c07aa12e9e62d9d8d4fc49bbdff2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.3-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "lib/swift_required.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Chris Corbyn"
+                }
+            ],
+            "description": "Swiftmailer, free feature-rich PHP mailer",
+            "homepage": "http://swiftmailer.org",
+            "keywords": [
+                "mail",
+                "mailer"
+            ],
+            "time": "2013-04-11 10:22:09"
         }
     ],
     "packages-dev": [
@@ -207,7 +306,8 @@
         "phpixie/core": 20,
         "phpixie/db": 20,
         "phpixie/orm": 20,
-        "phpixie/auth": 20
+        "phpixie/auth": 20,
+        "phpixie/email": 20
     },
     "platform": [
 

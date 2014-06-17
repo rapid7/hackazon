@@ -17,7 +17,8 @@
 				background: -webkit-radial-gradient(center, ellipse cover, #a90329 0%,#6d0019 100%); /* Chrome10+,Safari5.1+ */
 			}
 			#content{
-				width:1000px;
+				max-width:80%;
+				min-width:1000px;
 				margin:auto;
 				padding:10px 0px;
 				background:#eee;
@@ -30,7 +31,7 @@
 				margin:10px;
 			}
 			.code{
-				
+				overflow: auto;
 				padding:10px;
 			}
 			.highlight{

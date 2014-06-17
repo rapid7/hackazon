@@ -93,7 +93,7 @@ class Query_Mysql_DriverTest extends PHPUnit_Framework_TestCase
 			->limit(5)
 			->offset(6)
 			->query();
-		$this->assertEquals("SELECT * FROM `fairies` WHERE `fairies`.`a` = ? AND `fairies`.`b` < ? AND `fairies`.`c` > ? OR `fairies`.`d` > ? AND ( `fairies`.`e` = ? OR ( `fairies`.`f` = ? AND `fairies`.`g` = ? ) OR ( `fairies`.`h` = ? OR `fairies`.`i` = ? ) )  GROUP BY `fairies`.`id` HAVING `fairies`.`j` < korova OR `fairies`.`l` > ? AND ( `fairies`.`m` = ? OR ( `fairies`.`n` = ? AND `fairies`.`o` = ? ) )  ORDER BY `fairies`.`id` DESC LIMIT 5 OFFSET 6 ", current($query));
+		$this->assertEquals("SELECT * FROM `fairies` WHERE `fairies`.`a` = ? AND `fairies`.`b` < ? AND `fairies`.`c` > ? OR `fairies`.`d` > ? AND ( `fairies`.`e` = ? OR ( `fairies`.`f` = ? AND `fairies`.`g` = ? ) OR ( `fairies`.`h` = ? OR `fairies`.`i` = ? ) )  GROUP BY `id` HAVING `fairies`.`j` < korova OR `fairies`.`l` > ? AND ( `fairies`.`m` = ? OR ( `fairies`.`n` = ? AND `fairies`.`o` = ? ) )  ORDER BY `fairies`.`id` DESC LIMIT 5 OFFSET 6 ", current($query));
 	}
 
 	/**
