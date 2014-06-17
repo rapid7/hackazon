@@ -18,7 +18,12 @@ class Router {
 	 * @var array
 	 */
 	protected $routes = array();
-	
+
+	/**
+	 * Container for route's rule to process in callback function
+	 */
+	protected $temp_rule;
+
 	/**
 	 * Constructs a router
 	 *
@@ -90,14 +95,8 @@ class Router {
 			{
 				$pattern = is_array($rule) ? $rule[0] : $rule;
 				$pattern = str_replace(')', ')?', $pattern);
-				$pixie=$this->pixie;
-				$pattern = preg_replace_callback('/<.*?>/', function($str) use ($rule, $pixie) {
-						$str = $str[0];
-						$regexp = '[a-zA-Z0-9\-\._]+';
-						if (is_array($rule))
-							$regexp = $pixie->arr($rule[1], str_replace(array('<', '>'), '', $str), $regexp);
-						return '(?P'.$str.$regexp.')';
-					}, $pattern);
+				$this->temp_rule = $rule;
+				$pattern = preg_replace_callback('/<.*?>/', array($this, 'rule'), $pattern);
 
 				preg_match('#^'.$pattern.'/?$#', $uri, $match);
 				if (!empty($match[0]))
@@ -128,5 +127,17 @@ class Router {
 					'params'=>$params
 					);
 	}
-	
+
+	/**
+	 * This method is used only by preg_replace_callback() in method match() instead of making anonymous function
+	 * to avoid fatal memory leak on some server configurations
+	 */
+	protected function rule($str) {
+		$str = $str[0];
+		$regexp = '[a-zA-Z0-9\-\._]+';
+		if(is_array($this->temp_rule))
+			$regexp = $this->pixie->arr($this->temp_rule[1], str_replace(array('<', '>'), '', $str), $regexp);
+		return '(?P'.$str.$regexp.')';
+	}
+
 }

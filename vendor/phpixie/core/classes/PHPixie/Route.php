@@ -10,6 +10,12 @@ class Route
 {
 
 	/**
+	 * BAse path prefix.
+	 * @var string
+	 */
+	public $basepath;
+
+	/**
 	 * Name of the route.
 	 * @var string
 	 */
@@ -42,14 +48,16 @@ class Route
 	/**
 	 * Constructs a route.
 	 *
+	 * @param string $basepath URL path base
 	 * @param string $name Name of the route
 	 * @param mixed $rule Rule for this route
 	 * @param array $defaults Default parameters for the route
 	 * @param mixed $methods Methods to restrict this route to.
 	 *                       Either a single method or an array of them.
 	 */
-	public function __construct($name, $rule, $defaults, $methods = null)
+	public function __construct($basepath, $name, $rule, $defaults, $methods = null)
 	{
+		$this->basepath = $basepath;
 		$this->name = $name;
 		$this->rule = $rule;
 		$this->defaults = $defaults;
@@ -74,7 +82,10 @@ class Route
 		if (is_callable($this->rule))
 			throw new \Exception("The rule for '{$this->name}' route is a function and cannot be reversed");
 
-		$url = is_array($this->rule) ? $this->rule[0] : $this->rule;
+		$url = $this->basepath;
+		if (substr($url, -1) === '/')
+			$url = substr($url, 0, -1);
+		$url.= is_array($this->rule) ? $this->rule[0] : $this->rule;
 
 		$replace = array();
 		$params = array_merge($this->defaults, $params);

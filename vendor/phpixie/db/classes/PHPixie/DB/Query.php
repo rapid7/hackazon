@@ -226,7 +226,8 @@ abstract class Query
 			}
 			if (!in_array(gettype($val), $allowed_types))
 			{
-				throw new \Exception("Method '{$method}' only accepts values of type: ".implode(' or ', $allowed_types).", '{$val}' was passed");
+				if(!($val !== null && $val instanceof \PHPixie\DB\Expression))
+					throw new \Exception("Method '{$method}' only accepts values of type: ".implode(' or ', $allowed_types).", '{$val}' was passed");
 			}
 			$this->$property = $val;
 			return $this;

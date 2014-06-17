@@ -134,7 +134,7 @@ namespace PHPixie;
 	 * @return \PHPixie\Route
 	 */
 	public function route($name, $rule, $defaults, $methods = null) {
-		return new \PHPixie\Route($name, $rule, $defaults, $methods);
+		return new \PHPixie\Route($this->basepath, $name, $rule, $defaults, $methods);
 	}
 	
 	/**
@@ -214,7 +214,7 @@ namespace PHPixie;
 	public function http_request()
 	{
 		$uri = $_SERVER['REQUEST_URI'];
-		$uri = preg_replace("#^{$this->basepath}(?:index\.php/)?#i", '/', $uri);
+		$uri = preg_replace("#^{$this->basepath}(?:index\.php/?)#i", '/', $uri);
 		$url_parts = parse_url($uri);
 		$route_data = $this->router->match($url_parts['path'], $_SERVER['REQUEST_METHOD']);
 		return $this->request($route_data['route'], $_SERVER['REQUEST_METHOD'], $_POST, $_GET, $route_data['params'], $_SERVER, $_COOKIE);
@@ -251,6 +251,18 @@ namespace PHPixie;
 	}
 	
 	/**
+	 * Register assets directories
+	 * 
+	 * @return void
+	 */
+	protected function set_asset_dirs() {
+		$this->assets_dirs = array(
+			$this->root_dir.'assets/',
+			dirname(dirname(dirname(__FILE__))).'/assets/'
+		);
+	}
+	
+	/**
 	 * Bootstraps the project
 	 *
 	 * @param  string $root_dir Root directory of the application
@@ -266,12 +278,13 @@ namespace PHPixie;
 			$class_name = get_class($this);
 			$this->app_namespace = substr($class_name, 0, strpos($class_name, "\\")+1);
 		}
-		$this->assets_dirs[] = dirname(dirname(dirname(__FILE__))).'/assets/';
+
+		$this->set_asset_dirs();
+
 		$this->debug->init();
 		foreach($this->modules as $name=>$class) {
 			$this->$name = new $class($this);
 		}
-		array_unshift($this->assets_dirs, $this->root_dir.'assets/');
 		foreach($this->config->get('routes') as $name => $rule) 
 			$this->router->add($this->route($name, $rule[0], $rule[1], $this->arr($rule, 2, null)));
 			

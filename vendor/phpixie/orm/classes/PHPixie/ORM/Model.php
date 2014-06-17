@@ -548,7 +548,7 @@ class Model
 			}
 
 			$key = $rel['key'];
-			$this->$key = $model->_row[$this->id_field];
+			$this->$key = $model->_row[$model->id_field];
 			if ($this->loaded())
 			{
 				$this->save();

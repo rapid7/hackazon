@@ -43,7 +43,7 @@ class Connection extends \PHPixie\DB\Connection
 		$this->db_type = strtolower(str_replace('PDO_', '', $this->conn->getAttribute(\PDO::ATTR_DRIVER_NAME)));
 		if ($this->db_type != 'sqlite')
 		{
-			$this->conn->exec("SET NAMES utf8");
+			$this->conn->exec("SET NAMES 'utf8'");
 		}
 	}
 

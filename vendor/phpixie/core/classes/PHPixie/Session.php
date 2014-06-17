@@ -37,13 +37,16 @@ class Session
 	/**
 	 * Gets a session variable
 	 *
-	 * @param string $key     Variable name
+	 * @param string $key Variable name, 
+	 *                    If null all variables will be returned.
 	 * @param mixed $default Default value
 	 * @return mixed Session value
 	 */
-	public function get($key, $default = null)
+	public function get($key = null, $default = null)
 	{
 		$this->check();
+		if($key === null)
+			return $_SESSION;
 		return $this->pixie->arr($_SESSION, $key, $default);
 	}
 

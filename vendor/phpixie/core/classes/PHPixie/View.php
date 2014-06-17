@@ -50,19 +50,28 @@ class View
 	 * @param \PHPixie\Pixie $pixie Pixie dependency container
 	 * @param \PHPixie\View\Helper View Helper
 	 * @param string   $name The name of the template to use
-	 * @throws \Exception If specified template is not found
 	 */
 	public function __construct($pixie, $helper, $name)
 	{
 		$this->pixie = $pixie;
 		$this->helper = $helper;
+		$this->set_template($name);
+	}
+	
+	/**
+	 * Sets the template to use for rendering
+	 *
+	 * @param string   $name The name of the template to use
+	 * @throws \Exception If specified template is not found
+	 */
+	public function set_template($name) {
 		$this->name = $name;
 		
 		$file = $this->pixie->find_file('views', $name, $this->_extension);
 			
 		if ($file == false)
 			throw new \Exception("View {$name} not found.");
-
+			
 		$this->path = $file;
 	}
 
@@ -119,7 +128,6 @@ class View
 	 */
 	public function render()
 	{
-		$helper = $this->helper;	
 		extract($this->helper->get_aliases());
 		extract($this->_data);
 		ob_start();
