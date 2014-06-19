@@ -28,19 +28,19 @@
             <div class="row">
                 <div class="form-group">
                     <label for="username">Name</label>
-                    <input type="text" name="username" class="form-control" id="username">
+                    <input type="text" name="User[username]" class="form-control" id="username">
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" name="email" class="form-control" id="email">
+                    <input type="email" name="User[email]" class="form-control" id="email">
                 </div>
                 <div class="form-group">
                     <label for="userphone">Phone Number</label>
-                    <input type="phone" name="userphone" class="form-control" id="userphone">
+                    <input type="text" name="User[userphone]" class="form-control" id="userphone">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" name="password" class="form-control" id="password">
+                    <input type="password" name="User[password]" class="form-control" id="password">
                 </div>
                 <div class="form-group">
                     <label for="cpassword">Confirm Password</label>

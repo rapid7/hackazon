@@ -5,7 +5,7 @@ return array(
         'model' => 'user',
         //Login providers
         'login' => array(
-            'password' => array(
+              'password' => array(
                 'login_field' => 'username',
                 //Make sure that the corresponding field in the database
                 //is at least 50 characters long
@@ -13,14 +13,24 @@ return array(
             ),
             'facebook' => array(
                 //Facebook App ID and Secret
-                'app_id' => '486732748093298',
-                'app_secret' => '581d2d71599d49fee315a4e10882478d',
+                'app_id' => '',
+                'app_secret' => '',
                 //Permissions to request from the user
                 'permissions' => array('user_about_me'),
-                'fbid_field' => 'fb_id',
+                //'fbid_field' => 'fb_id',
+                'fbid_field' => 'oauth_uid',
                 //Redirect user here after he logs in
                 'return_url' => '/home'
-            )
+            ),
+            'twitter' => array(
+                'oauth_consumer_key' => '',
+                'oauth_consumer_secret' => '',
+                'twid_field' => 'oauth_uid',
+                //'permissions' => array('user_about_me'),
+                'oauth_signature_method' => 'HMAC-SHA1',
+                'oauth_callback' => '/home',
+                'oauth_version' => '1.0'
+            ),
         ),
         //Role driver configuration
         'roles' => array(

@@ -16,25 +16,31 @@
 
         </div>
 
-        
-        <?php if (isset($this->errorMessage)):  ?>
-            <div class="panel panel-default">
-                <?php echo $this->errorMessage; ?>
+        <?php if(isset($successMessage) && !empty($successMessage)):?>
+            <div class="alert alert-success">
+                <strong><?=$successMessage;?></strong>
+            </div>
+        <?php else:?>
+            <?php if(isset($errorMessage) && !empty($errorMessage)):?>
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong><?=$errorMessage;?></strong>
+                </div>
+            <?php endif; ?>
+
+            <div class="section">
+                <form role="form" method="post" action="/user/password" id="passwordForm">
+                    <div class="form-group">
+                        <label for="userEmail">Email address</label>
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
             </div>
         <?php endif; ?>
-
-        <div class="section">
-                <form role="form" method="post" action="/user/password" id="passwordForm">
-                  <div class="form-group">
-                    <label for="userEmail">Email address</label>
-                    <input type="email" class="form-control" name="userEmail" id="userEmail" placeholder="Enter email">
-                  </div>
-                  <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-        </div>
     </div>
   <script>
-  
+
   // When the browser is ready...
   $(function() {
 
@@ -42,7 +48,7 @@
     $("#passwordForm").validate({
         // Specify the validation rules
         rules: {
-            userEmail: {
+            email: {
                 required: true,
                 email: true
             }
@@ -51,12 +57,12 @@
         messages: {
             email: "Please enter a valid email address"
         },
-        
+
         submitHandler: function(form) {
             form.submit();
         }
     });
 
   });
-  
+
   </script>

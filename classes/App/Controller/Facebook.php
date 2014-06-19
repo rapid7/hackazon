@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Model\User as User;
+
 class Facebook extends \PHPixie\Auth\Controller\Facebook{
  
     //This method gets called for new users
@@ -18,25 +20,26 @@ class Facebook extends \PHPixie\Auth\Controller\Facebook{
         $data = $this->provider
             ->request("https://graph.facebook.com/me?access_token=".$access_token);
         $data = json_decode($data);
- 
+
         //Save the new user
-        $fairy = $this->pixie->orm->get('fairy');
-        $fairy->name = $data->first_name;
-        $fairy->fb_id = $data->id;
-        $fairy->save();
+        $model = new User($this->pixie);
+        $user = $model->saveOAuthUser($data->first_name, $data->id, 'facebook');
  
         //Get the 'pixie' role
+        /*
         $role=$this->pixie->orm->get('role')
             ->where('name','pixie')
             ->find();
  
         //Add the 'pixie' role to the user
         $fairy->add('roles',$role);
- 
+ */
         //Finally set the user inside the provider
-        $this->provider->set_user($fairy, $access_token);
+        $this->provider->set_user($user, $access_token);
  
         //And redirect him back.
         $this->return_to_url($display_mode, $return_url);
     }
+
+
 }

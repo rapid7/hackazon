@@ -23,6 +23,7 @@
         <script src="/js/modern-business.js"></script>
         <script src="/js/jquery.validate.min.js"></script>
         <script src="/js/site.js"></script>
+        <script src="/js/jquery.inputmask.js"></script>
 
     </head>
 
@@ -114,6 +115,9 @@
                 <!-- /.container -->
             </div>
         <?php endif ?>
+
+
+
         <div id="container">
             <?php include($subview . ".php") ?>
         </div>
@@ -149,13 +153,30 @@
                     <button id="loginbtn" class="submit button" type="submit">Sign in</button>
                     <p>
                         <a class="forgot" href="/user/password">Forgot your password?</a>
-                        <a class="restore" href="/user/register">New user?</a>
+                        <a class="restore" href="/user/register">New user?</a></br>
+                        <a class="forgot" href="/facebook">Login via Facebook</a></br>
+                        <a class="forgot" href="/twitter">Login via Twitter</a>
                     </p>        
                 </fieldset>
             </form>
         </div>
 
-    <script>
+        <!--<div>
+            <a href="/facebook/popup" onclick="return popup(this,'fblogin')">Login via Facebook Popup</a>
+        </div>-->
+
+        <script>
+            //A very basic way to open a popup
+
+            function popup(link, windowname) {
+                window.open(link.href, windowname, 'width=400,height=200,scrollbars=yes');
+                return false;
+            }
+
+        </script>
+
+
+        <script>
 
     // When the browser is ready...
     $(function() {
@@ -167,7 +188,7 @@
               username: {
                   required: true
               },
-              password: "required",
+              password: "required"
           },
           // Specify the validation error messages
           messages: {
