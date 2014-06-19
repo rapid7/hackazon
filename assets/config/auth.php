@@ -13,8 +13,8 @@ return array(
             ),
             'facebook' => array(
                 //Facebook App ID and Secret
-                'app_id' => '',
-                'app_secret' => '',
+                'app_id' => '725422934182477',
+                'app_secret' => '533fff80993f05d1ec606a93d13b1436',
                 //Permissions to request from the user
                 'permissions' => array('user_about_me'),
                 //'fbid_field' => 'fb_id',
@@ -23,8 +23,8 @@ return array(
                 'return_url' => '/home'
             ),
             'twitter' => array(
-                'oauth_consumer_key' => '',
-                'oauth_consumer_secret' => '',
+                'oauth_consumer_key' => '90mjd5RJRUNm0vpfarTql4xKz',
+                'oauth_consumer_secret' => 'Y2y5lpDa1VnbrR4xE6Z20k6qlWqgOxkPSqtT2LlyrCPePZ1Xuf',
                 'twid_field' => 'oauth_uid',
                 //'permissions' => array('user_about_me'),
                 'oauth_signature_method' => 'HMAC-SHA1',
