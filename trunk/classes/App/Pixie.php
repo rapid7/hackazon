@@ -12,8 +12,9 @@ class Pixie extends \PHPixie\Pixie {
 	protected $modules = array(
 		'db' => '\PHPixie\DB',
 		'orm' => '\PHPixie\ORM',
-                'auth' => '\PHPixie\Auth',
-                'vulninjection' => '\PHPixie\VulnInjection',
+        'auth' => '\PHPixie\Auth',
+        'vulninjection' => '\PHPixie\VulnInjection',
+        'email' => '\PHPixie\Email',
 	);
 	
 	protected function after_bootstrap(){

@@ -1,14 +1,17 @@
-CREATE TABLE `tbl_users` (
+CREATE TABLE IF NOT EXISTS `tbl_users` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `salt` varchar(40) DEFAULT NULL,
+  `password` varchar(64) NOT NULL,
+  `user_phone` varchar(20) DEFAULT NULL,
   `email` varchar(80) NOT NULL,
-  `created_on` int(11) unsigned NOT NULL,
-  `last_login` int(11) unsigned DEFAULT NULL,
-  `active` tinyint(1) unsigned DEFAULT NULL,
+  `oauth_provider` varchar(10) DEFAULT NULL,
+  `oauth_uid` text,
+  `created_on` datetime NOT NULL,
+  `last_login` datetime DEFAULT NULL,
+  `active` tinyint(1) unsigned DEFAULT '1',
+  `recover_passw` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
 
