@@ -4,8 +4,15 @@ namespace App\Controller;
 class Home extends \App\Page {
 
 	public function action_index(){
+
+        $model = new \App\Model\Category($this->pixie);
+        $this->view->sidebar = $model->getRootCategoriesSidebar();
+
+        $this->view->common_path = $this->common_path;
 		$this->view->subview = 'home/home';
 		$this->view->message = "Index page";
+
+
 	}
 	
         public function action_404(){

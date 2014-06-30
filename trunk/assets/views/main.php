@@ -13,8 +13,10 @@
         <link href="/css/bootstrap.css" rel="stylesheet">
 
         <!-- Add custom CSS here -->
+        <link href="/css/subcategory.css" rel="stylesheet">
         <link href="/css/modern-business.css" rel="stylesheet">
         <link href="/css/site.css" rel="stylesheet">
+        <link href="/css/sidebar.css" rel="stylesheet">
         <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
         <!-- JavaScript -->
@@ -116,24 +118,13 @@
             </div>
         <?php endif ?>
 
-
-
         <div id="container">
             <?php include($subview . ".php") ?>
         </div>
 
 
         <div class="container" >
-
-            <hr>
-            <footer>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <p>Copyright &copy; NTObjectives 2014</p>
-                    </div>
-                </div>
-            </footer>
-
+            <?php include($common_path."footer.php")?>
         </div>
         <!-- /.container -->
 

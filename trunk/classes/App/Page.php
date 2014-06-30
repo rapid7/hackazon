@@ -9,6 +9,8 @@ namespace App;
 class Page extends \PHPixie\Controller {
 	
 	protected $view;
+    protected $common_path;
+
         protected $model;
         protected $vulninjection;
         protected $errorMessage;
@@ -16,6 +18,11 @@ class Page extends \PHPixie\Controller {
 	
 	public function before() {
 		$this->view = $this->pixie->view('main');
+
+        $config = $this->pixie->config->get('page');
+        $this->common_path = $config['common_path'];
+
+
                 $className = $this->get_real_class($this);
 
                 
@@ -51,5 +58,15 @@ class Page extends \PHPixie\Controller {
 
            return $classname;
        }
-	
+
+    /*
+    protected  function getPageTitle($id=null, $model=null){
+        $model = new $model($this->pixie);
+        return $id;
+    }
+
+    protected function getBreadcrumbs(){
+
+    }
+	*/
 }
