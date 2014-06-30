@@ -31,6 +31,23 @@ $(document).ready(function() {
         });
         return false;
     });
-    
 
-});
+/*
+    var $dropdowns = $('.dropdown-submenu');
+
+    $dropdowns.click(function() {
+        alert('rre');
+        $('.dropdown-menu').css('display','block');
+/*
+        if ( $(this).hasClass('active') ){
+            alert('yes');
+            $(this).toggleClass('active');
+        } else {
+            alert('no');
+            $dropdowns.removeClass('active');
+            $(this).toggleClass('active');
+        }
+*/
+    });
+
+

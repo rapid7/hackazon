@@ -1,0 +1,84 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	margin: 20px;
+}
+
+ul.menu {
+	margin: 0;
+	padding: 0;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	display: inline-block;
+	background-color: #3d3e40;
+	width: 190px;
+}
+
+ul.menu li {
+	list-style: none;
+	position: relative;
+}
+
+ul.menu li a {
+	padding: 10px 12px 12px;
+	color: white;
+	font-size: 13px;
+	font-weight: bold;
+	font-family: Arial;
+	text-decoration: none;
+	display: block;
+	border-top: 1px solid #c4c4c4;
+}
+
+ul.menu li a:hover {
+	background-color: #b00000;
+}
+
+ul.menu li:first-child a {
+	border-top: none;
+}
+
+ul.menu li:first-child a:hover {
+	border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+}
+
+ul.menu li:last-child a:hover {
+	border-radius: 0 0 5px 5px;
+	-webkit-border-radius: 0 0 5px 5px;
+	-moz-border-radius: 0 0 5px 5px;
+}
+/*Выпадающее меню*/
+ul.menu li ul {
+	display: none;
+}
+
+ul.menu li:hover ul {
+	display: block;
+	position: absolute;
+	left: 190px;
+	top: 1px;
+	background-color: #28282a;
+	width: 150px;
+	z-index: 1000;
+	border-radius: 0 5px 5px 0;
+	-webkit-border-radius: 0 5px 5px 0;
+	-moz-border-radius: 0 5px 5px 0;
+}
+
+ul.menu li:hover ul li:first-child a:hover {
+	border-radius: 0 5px 0 0;
+	-webkit-border-radius: 0 5px 0 0;
+	-moz-border-radius: 0 5px 0 0;
+}
+
+ul.menu li:hover ul li:last-child a:hover {
+	border-radius: 0 0 5px 0;
+	-webkit-border-radius: 0 0 5px 0;
+	-moz-border-radius: 0 0 5px 0;
+}
