@@ -24,6 +24,8 @@ class Product extends \PHPixie\ORM\Model {
                     'annotation' => ((empty($product->brief_description))? $this->_getBrief($product->description):$product->brief_description),
                     'thumbnail' => $product->thumbnail,
                     'customers_votes' => $product->customer_votes,
+                    'customers_rating'  => $product->customers_rating,
+
                 );
             }
 

@@ -1,5 +1,6 @@
 <?php
 namespace App;
+use App\Model\Category as Category;
 
 /**
  * Base controller
@@ -18,9 +19,10 @@ class Page extends \PHPixie\Controller {
 	
 	public function before() {
 		$this->view = $this->pixie->view('main');
-
         $config = $this->pixie->config->get('page');
+        $this->view->common_path = $config['common_path'];
         $this->common_path = $config['common_path'];
+        $this->view->sidebar = $this->getSidebar();
 
 
                 $className = $this->get_real_class($this);
@@ -59,14 +61,9 @@ class Page extends \PHPixie\Controller {
            return $classname;
        }
 
-    /*
-    protected  function getPageTitle($id=null, $model=null){
-        $model = new $model($this->pixie);
-        return $id;
+    protected function getSidebar(){
+        $category = new Category($this->pixie);
+        return $category->getRootCategoriesSidebar();
     }
 
-    protected function getBreadcrumbs(){
-
-    }
-	*/
 }

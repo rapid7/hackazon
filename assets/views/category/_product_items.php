@@ -10,13 +10,7 @@
                     </div>
                     <div class="ratings">
                         <p class="pull-right"><?=$product['customers_votes']?> reviews</p>
-                        <p>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                        </p>
+                        <p><?php include($common_path."rating_stars.php")?></p>
                     </div>
             </div>
         </div>

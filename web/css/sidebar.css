@@ -13,7 +13,7 @@ ul.menu {
 	border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
-	display: inline-block;
+	display: none;
 	background-color: #3d3e40;
 	width: 190px;
 }
@@ -81,4 +81,13 @@ ul.menu li:hover ul li:last-child a:hover {
 	border-radius: 0 0 5px 0;
 	-webkit-border-radius: 0 0 5px 0;
 	-moz-border-radius: 0 0 5px 0;
+}
+
+#sidebar-link{
+    text-decoration: none;
+    color: #777;
+}
+#sidebar-link:hover{
+    color: #fff;
+    background: transparent;
 }
