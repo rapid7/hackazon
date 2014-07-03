@@ -25,9 +25,11 @@ class Page extends \PHPixie\Controller {
         $this->view->sidebar = $this->getSidebar();
 
 
-                $className = $this->get_real_class($this);
 
-                
+        $className = $this->get_real_class($this);
+        $this->view->search_category = $this->getSearchCategory($className);
+        $this->view->search_subcategories = $this->getAllCategories($this->view->sidebar);
+
                 if($className != "Home"){
                     $model = new \App\Model\Category($this->pixie);
                     $this->view->categories = $model->getRootCategories();
@@ -64,6 +66,31 @@ class Page extends \PHPixie\Controller {
     protected function getSidebar(){
         $category = new Category($this->pixie);
         return $category->getRootCategoriesSidebar();
+    }
+
+    protected function getSearchCategory($className){
+        $search_category = '';
+        switch ($className){
+            case 'Category':
+                $category = new Category($this->pixie);
+                $search_category = $category->getPageTitle($this->request->param('id'));
+                break;
+            default:
+                $search_category = 'All';
+        }
+        return $search_category;
+    }
+
+    protected function getAllCategories($categories){
+        $all_categories = array();
+        foreach ($categories as $category){
+            $all_categories[] = $category['name'];
+                foreach ($category['child'] as $subcategory){
+                    $all_categories[] = $subcategory['name'];
+                }
+        }
+        sort($all_categories);
+        return $all_categories;
     }
 
 }
