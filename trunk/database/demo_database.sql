@@ -145,12 +145,12 @@ Keytone
 Greeting message 
 ', '0', '187', '117_SGHA100.jpg', '10', '0', '0', '0', '', '1', '', '0', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('26', '18', 'Siemens SL45', 'What if a phone is also an MP3 player, a digital voice recorder, an organizer? Can it still be called a phone? Whatever you decide to call the new SL45, you can`t help but label it as absolutely ingenious. State-of-the-art technology in 88 grams. An almost endless list of multimedia capabilities and intelligent features. The SL45 sets a new standard in the premium class of mobile phones. That is, if you can still call it a mobile phone.', '3.57143', '240', '83_ssl45.jpg', '10', '720_ssl45_small.jpg', '7', '1', '', '1', '', '0', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('27', '18', 'Siemens ME45', 'The action never really stops and neither do you. Work, play or relaxation, you’re ready for the next challenge. So maximise your communication and personal organisation.
-The ME45 is tough enough to stay with you in the heat of the action. Dust, water and shock resistant, light but tough ready to cope with life ’s changing conditions.
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('27', '18', 'Siemens ME45', 'The action never really stops and neither do you. Work, play or relaxation, youï¿½re ready for the next challenge. So maximise your communication and personal organisation.
+The ME45 is tough enough to stay with you in the heat of the action. Dust, water and shock resistant, light but tough ready to cope with life ï¿½s changing conditions.
 Great organisation is part of success. With the ME45 you have it right in your hand. Voice direction and dialling, flexible memorymanagement for total personalisation, easy and fast calendar synchronisation with Microsoft Outlook, GPRS for really fast net action via your notebook or WAP. Plus the ease of use and clarity you rightly expect from Siemens. All this packed into a phone which looks and sounds great.
-Good service is part of the package. Should your phone ever fail to function, we are there to help at all times. Manufacturing defects will be attended to immediately – and absolutely free of charge during the 12-month warranty period. After all, we want you to have maximum convenience not only when you ’re phoning!', '0', '219', '532_sme45.jpg', '10', '546_sme45_small.jpg', '0', '0', '', '1', '', '0', '');
+Good service is part of the package. Should your phone ever fail to function, we are there to help at all times. Manufacturing defects will be attended to immediately ï¿½ and absolutely free of charge during the 12-month warranty period. After all, we want you to have maximum convenience not only when you ï¿½re phoning!', '0', '219', '532_sme45.jpg', '10', '546_sme45_small.jpg', '0', '0', '', '1', '', '0', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('28', '18', 'Siemens M35i', 'Even without being extreme, life can be tough on the streets, or on the slopes, in fact anywhere that the action reaches towards radical. That is when the M35i shows its strengths. Improved shock, water and dust resistance means that it stays right there with you. A natural extension to your lifestyle, supporting your interaction, where and whenever the need arises. But there is more than just action involved. The M35i gives you mobile web access, Personal Messaging with pictures, Intelligent Typing, and even allows the occasional game whenever life slows down. In short, the M35i is built for the demands of the NOW impulse.', '3.26667', '95', '604_sm35.jpg', '10', '366_sm35_small.jpg', '3', '4', '', '1', '', '0', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('29', '18', 'Siemens C45', 'You will now have more choice and freedom of expression with the new C45. With front and back, exchangeable CLIPit™ Covers in eight vibrant and contemporary colors and the opportunity to download ringer melodies, display images and screensavers, as well as creating personalized covers, the C45 allows you to socialize in your own individual style. ', '0', '85.1', '760_sc45.jpg', '2', '729_sc45_small.jpg', '0', '0', '', '1', '', '0', '');
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('29', '18', 'Siemens C45', 'You will now have more choice and freedom of expression with the new C45. With front and back, exchangeable CLIPitï¿½ Covers in eight vibrant and contemporary colors and the opportunity to download ringer melodies, display images and screensavers, as well as creating personalized covers, the C45 allows you to socialize in your own individual style. ', '0', '85.1', '760_sc45.jpg', '2', '729_sc45_small.jpg', '0', '0', '', '1', '', '0', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('30', '18', 'Siemens C35i', 'High on style and elegance. Low on weight and space. Functional simplicity blending intense clarity with real staying power and mobile web access. The C35i fits to the lifestyle you choose to live. The clear, user-friendly interface (including selectable menu levels and animated graphics) puts you completely and easily in control. Dual Band technology and long talk and stand-by time keep you firmly in communication.', '0', '74.99', '387_sc35i.jpg', '10', '549_sc35i_small.jpg', '0', '0', '', '1', '', '0', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('31', '14', 'Samsung A300', 'The premium SGH-A300, designed to succeed the SGH-A100 and A110, is targeted for people who lead in fashion rather than follow. This slim folder phone with its stylish high-resolution dual-LCDs will compliment any trend-setter`s lifestyle. The circular external LCD accentuates its fashion sense, but its greatest benefit is its use of the world first dual LCD to display messages and caller`s numbers without having to open the phone.
 Available in Europe.
@@ -164,7 +164,7 @@ INSERT INTO tbl_products (productID, categoryID, name, description, customers_ra
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('37', '38', 'Pants', '', '0', '21', '693_193.gif', '0', '116_193_small.jpg', '0', '0', '', '1', '', '0', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('38', '40', 'Sweeter', '', '4.33333', '47', '194_095.gif', '3', '480_095_small.jpg', '3', '2', '', '1', '', '0', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('39', '21', 'Diamond Rio Volt', '', '3.575', '149', 'riovolt_b.jpg', '42222', '697_riovolt_b_small.jpg', '20', '39', '', '1', '', '173', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('41', '21', 'MPIO Ñ-32 FM', 'Included User Manual, Setup CD-Rom, Serial D/C, High Quality Earphone, AA Battery       
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('41', '21', 'MPIO ï¿½-32 FM', 'Included User Manual, Setup CD-Rom, Serial D/C, High Quality Earphone, AA Battery       
 Size  66(W) x 90(H) x 18(D)mm   
 Weight  75g (excluding battery)     replay time  About 10 hours 
 Mapping environment  Win95/98/2000 
@@ -205,21 +205,21 @@ INSERT INTO tbl_products (productID, categoryID, name, description, customers_ra
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('80', '20', 'Shipping news', 'Based on the Pulitzer Prize-winning novel by Annie Proulx, the story is about a man named Quoyle (Spacey), a newspaper writer, who moves his aunt and his two daughters back to his ancestral home in a Newfoundland fishing town after his adulterous wife dies in a car crash. Quoyle gets work writing shipping news as he struggles to pull the life of his family back together. 
 
  ', '0', '15.99', '', '3473', '', '0', '0', '', '1', 'Based on the Pulitzer Prize-winning novel by Annie Proulx...', '17.5', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('81', '20', 'Monsters inc.', 'In the realm of things that go bump in the night … another animated flick from Pixar (Toy Story, Toy Story 2, A Bug`s Life), this comedy-adventure tells the story of a large, furry, spotted, and horned James P. Sullivan (John Goodman) and his best friend and roommate, a green, opinionated, feisty little one-eyed monster (Billy Crystal), who audition for spots under children`s beds. They then must capture the children`s screams, that provide the energy on which the monsters live. When the two accidently transport a little girl (Mary Gibbs) back to their realm — an absolute no-no — they are exiled from their land by the factory`s mean crablike CEO (James Coburn) and are forced to live in the human world. ', '0', '14.49', 'monstersinc.gif', '444', '', '0', '0', 'monstersinc_big.gif', '1', 'In the realm of things that go bump in the night … another animated flick from Pixar...', '0', '');
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('81', '20', 'Monsters inc.', 'In the realm of things that go bump in the night ï¿½ another animated flick from Pixar (Toy Story, Toy Story 2, A Bug`s Life), this comedy-adventure tells the story of a large, furry, spotted, and horned James P. Sullivan (John Goodman) and his best friend and roommate, a green, opinionated, feisty little one-eyed monster (Billy Crystal), who audition for spots under children`s beds. They then must capture the children`s screams, that provide the energy on which the monsters live. When the two accidently transport a little girl (Mary Gibbs) back to their realm ï¿½ an absolute no-no ï¿½ they are exiled from their land by the factory`s mean crablike CEO (James Coburn) and are forced to live in the human world. ', '0', '14.49', 'monstersinc.gif', '444', '', '0', '0', 'monstersinc_big.gif', '1', 'In the realm of things that go bump in the night ï¿½ another animated flick from Pixar...', '0', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('82', '20', 'Scary movie', '', '0', '15.99', '', '346', '', '0', '0', '', '1', '', '17.5', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('83', '20', 'Lara Croft - Tomb raider', 'The further adventures of buxom video-game babe Lara Croft, the female Indiana Jones. 
 
 ', '0', '15.99', '', '3646', '', '0', '0', '', '1', 'The further adventures of buxom video-game babe Lara Croft, the female Indiana Jones. 
 
 ', '17.5', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('84', '20', 'Planet of the Apes', 'This version of Planet of the Apes is neither a remake of the 1968 original nor a sequel to the first five films and subsequent television show (all inspired by Pierre Boulle`s 1963 novel). Mark Wahlberg plays Leo Davidson, an Air Force astronaut whose chip crash-lands on a planet ruled by simians and worked by human slaves. Helena Bonham Carter plays a sympathetic ape who eventually joins Wahlberg`s posse — which includes Estella Warren — as they try to escape from the apes, led by an evil general (Tim Roth) and his first-in-command (Michael Clarke Duncan). Look for Charlton Heston, the star of the original, in a humorous supporting role. 
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('84', '20', 'Planet of the Apes', 'This version of Planet of the Apes is neither a remake of the 1968 original nor a sequel to the first five films and subsequent television show (all inspired by Pierre Boulle`s 1963 novel). Mark Wahlberg plays Leo Davidson, an Air Force astronaut whose chip crash-lands on a planet ruled by simians and worked by human slaves. Helena Bonham Carter plays a sympathetic ape who eventually joins Wahlberg`s posse ï¿½ which includes Estella Warren ï¿½ as they try to escape from the apes, led by an evil general (Tim Roth) and his first-in-command (Michael Clarke Duncan). Look for Charlton Heston, the star of the original, in a humorous supporting role. 
 
 ', '0', '15.99', '', '0', '', '0', '0', '', '1', 'This version of Planet of the Apes is neither a remake of the 1968 original nor a sequel to the first five films and subsequent television show (all inspired by Pierre Boulle`s 1963 novel)...', '17.5', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('85', '20', 'Pay it to the bone', '', '0', '14.49', '', '44', '', '0', '0', '', '0', '', '16.1', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('87', '20', 'Memento', 'An insurance investigator (Guy Pearce) loses his short-term memory when he sustains a head injury during his wife`s murder. He can now remember things only through notes, photographs, or writing them on his body. As he tries to track down his wife`s killer despite his handicap, the movie`s story moves backward in time to retrace his steps with him. 
 
 ', '0', '15.99', '', '444', '', '0', '0', '', '1', 'An insurance investigator (Guy Pearce) loses his short-term memory when he sustains a head injury during his wife`s murder...', '17.5', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('88', '20', 'Frequency', 'What if you had the chance to travel back in time and change just one event in your life? For police officer John Sullivan, there is no question. He would undo the events of Oct. 12, 1969, when the Bruxton fire took the life of his father, a heroic firefighter. Now John may get his wish — and more — after he discovers his father`s old ham radio and finds himself talking to a man who claims to be a firefighter and who appears to be awaiting the `69 World Series. 
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('88', '20', 'Frequency', 'What if you had the chance to travel back in time and change just one event in your life? For police officer John Sullivan, there is no question. He would undo the events of Oct. 12, 1969, when the Bruxton fire took the life of his father, a heroic firefighter. Now John may get his wish ï¿½ and more ï¿½ after he discovers his father`s old ham radio and finds himself talking to a man who claims to be a firefighter and who appears to be awaiting the `69 World Series. 
 
 ', '0', '15.99', '', '22', '', '0', '0', '', '1', 'What if you had the chance to travel back in time and change just one event in your life?...', '17.5', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('89', '20', 'XXX', 'Vin Diesel stars as Xander \"xXx\" Cage, a notorious underground thrill-seeker who, until now, has been deemed untouchable by the law. But when NSA Agent Gibbons (Samuel L. Jackson) wants to infiltrate a Russian crime ring, he knows there`s only one man for the job. He makes a deal with xXx, offering him freedom from prosecution if he`ll use his extreme athletic skills and attitude to go undercover. 
@@ -232,26 +232,26 @@ INSERT INTO tbl_products (productID, categoryID, name, description, customers_ra
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('92', '20', 'Fast and furious', 'Loosely based on a Vibe magazine article, the movie is set in Los Angeles, where street youth gangs adapt Japanese sports cars into muscle cars and race them illegally. The two main plots of the movie are a Romeo and Juliet scenario about lovers from rival gangs and an undercover investigation of the highjacking ring. 
 
 ', '0', '14.49', '', '0', '', '0', '0', '', '1', 'Loosely based on a Vibe magazine article...', '17.5', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('93', '57', 'Compaq iPAQ H3760', '3.8’’, 240 õ 320, 206MHz, 64MB,
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('93', '57', 'Compaq iPAQ H3760', '3.8ï¿½ï¿½, 240 ï¿½ 320, 206MHz, 64MB,
 
-32MB ROM, MS Pocket PC 2002', '3.75', '365', '40212.jpg', '1111', '40212_s.jpg', '2', '0', '', '1', '3.8’’, 240 õ 320, 206MHz, 64MB,
+32MB ROM, MS Pocket PC 2002', '3.75', '365', '40212.jpg', '1111', '40212_s.jpg', '2', '0', '', '1', '3.8ï¿½ï¿½, 240 ï¿½ 320, 206MHz, 64MB,
 
 32MB ROM, MS Pocket PC 2002', '377', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('94', '57', 'HP Jornada 568', '3.5’’, 240õ320, 206MHz, 64MB,
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('94', '57', 'HP Jornada 568', '3.5ï¿½ï¿½, 240ï¿½320, 206MHz, 64MB,
 
-32MB ROM, Win CE ', '0', '531', '18787.jpg', '11111', '18787_s.jpg', '0', '0', '', '1', '3.5’’, 240õ320, 206MHz, 64MB,
+32MB ROM, Win CE ', '0', '531', '18787.jpg', '11111', '18787_s.jpg', '0', '0', '', '1', '3.5ï¿½ï¿½, 240ï¿½320, 206MHz, 64MB,
 
 32MB ROM, Win CE ', '550', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('95', '57', 'Rover Computers RoverPC P5', '3.5’’, 240 õ 320, 206MHz, 64MB, 32MB ROM,
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('95', '57', 'Rover Computers RoverPC P5', '3.5ï¿½ï¿½, 240 ï¿½ 320, 206MHz, 64MB, 32MB ROM,
 
-MS Pocket PC 2002 ', '3.04', '414', '53101.jpg', '11111', '53101_s.jpg', '10', '3', '', '1', '3.5’’, 240 õ 320, 206MHz, 64MB, 32MB ROM,
+MS Pocket PC 2002 ', '3.04', '414', '53101.jpg', '11111', '53101_s.jpg', '10', '3', '', '1', '3.5ï¿½ï¿½, 240 ï¿½ 320, 206MHz, 64MB, 32MB ROM,
 
 MS Pocket PC 2002 ', '430', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('96', '57', 'Fujitsu Siemens Pocket LOOX 60', '3.5’’, 240 õ 320, 400MHz, 64MB, 32MB ROM,
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('96', '57', 'Fujitsu Siemens Pocket LOOX 60', '3.5ï¿½ï¿½, 240 ï¿½ 320, 400MHz, 64MB, 32MB ROM,
 
 MS Pocket PC 2002 
 
-', '0', '568', '50801.jpg', '11111', '50801_s.jpg', '0', '0', '', '1', '3.5’’, 240 õ 320, 400MHz, 64MB, 32MB ROM,
+', '0', '568', '50801.jpg', '11111', '50801_s.jpg', '0', '0', '', '1', '3.5ï¿½ï¿½, 240 ï¿½ 320, 400MHz, 64MB, 32MB ROM,
 
 MS Pocket PC 2002 
 
@@ -260,54 +260,54 @@ INSERT INTO tbl_products (productID, categoryID, name, description, customers_ra
 
 PalmOS 
 
-', '0', '250', '50794.jpg', '11111', '50794_s.jpg', '0', '0', '', '1', '160x160, 33MHz, 8MB, 4MB ROM, ñòèëóñ, keypad,
+', '0', '250', '50794.jpg', '11111', '50794_s.jpg', '0', '0', '', '1', '160x160, 33MHz, 8MB, 4MB ROM, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, keypad,
 
 PalmOS 
 
 ', '280', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('98', '57', 'Nec Mobile Pro P300e', '3.5’’, 240 õ 320, 206MHz, 64MB, 32MB ROM,
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('98', '57', 'Nec Mobile Pro P300e', '3.5ï¿½ï¿½, 240 ï¿½ 320, 206MHz, 64MB, 32MB ROM,
 
-MS Pocket PC 2002 ', '0', '377', '42514.jpg', '11111', '42514_s.jpg', '0', '0', '', '1', '3.5’’, 240 õ 320, 206MHz, 64MB, 32MB ROM,
+MS Pocket PC 2002 ', '0', '377', '42514.jpg', '11111', '42514_s.jpg', '0', '0', '', '1', '3.5ï¿½ï¿½, 240 ï¿½ 320, 206MHz, 64MB, 32MB ROM,
 
 MS Pocket PC 2002 ', '400', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('99', '51', 'Rover Computers RoverBook Voya', 'Cel 1.7GHz, 15.1’’ TFT, 128MB, 20.0GB,
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('99', '51', 'Rover Computers RoverBook Voya', 'Cel 1.7GHz, 15.1ï¿½ï¿½ TFT, 128MB, 20.0GB,
 
-AGP, CD-ROM, 56Ê, 10/100 Eth, Win XP ', '0', '1080', '44893.jpg', '0', '44893_s.jpg', '0', '0', '', '1', 'Cel 1.7GHz, 15.1’’ TFT, 128MB, 20.0GB,
+AGP, CD-ROM, 56ï¿½, 10/100 Eth, Win XP ', '0', '1080', '44893.jpg', '0', '44893_s.jpg', '0', '0', '', '1', 'Cel 1.7GHz, 15.1ï¿½ï¿½ TFT, 128MB, 20.0GB,
 
-AGP, CD-ROM, 56Ê, 10/100 Eth, Win XP ', '0', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('100', '51', 'IBM ThinkPad A31p', 'P-IV 1.7GHz, 15’’ TFT, 256MB,
+AGP, CD-ROM, 56ï¿½, 10/100 Eth, Win XP ', '0', '');
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('100', '51', 'IBM ThinkPad A31p', 'P-IV 1.7GHz, 15ï¿½ï¿½ TFT, 256MB,
 
-60.0GB, 64MB AGP, DVD-R/CD-RW, 56Ê,
+60.0GB, 64MB AGP, DVD-R/CD-RW, 56ï¿½,
 
-10/100 Eth, wireless, WinXP Pro ', '0', '2610', '27183.jpg', '11111', '27183_s.jpg', '0', '0', '', '1', 'P-IV 1.7GHz, 15’’ TFT, 256MB,
+10/100 Eth, wireless, WinXP Pro ', '0', '2610', '27183.jpg', '11111', '27183_s.jpg', '0', '0', '', '1', 'P-IV 1.7GHz, 15ï¿½ï¿½ TFT, 256MB,
 
-60.0GB, 64MB AGP, DVD-R/CD-RW, 56Ê,
+60.0GB, 64MB AGP, DVD-R/CD-RW, 56ï¿½,
 
 10/100 Eth, wireless, WinXP Pro ', '2870', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('101', '51', 'IBM ThinkPad T30 2366-89G', 'P-IV 2000GHz, 14.1’’ TFT, 256MB,
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('101', '51', 'IBM ThinkPad T30 2366-89G', 'P-IV 2000GHz, 14.1ï¿½ï¿½ TFT, 256MB,
 
-40.0GB, 16MB AGP, DVD-ROM, 56Ê, 10/100 Eth,
+40.0GB, 16MB AGP, DVD-ROM, 56ï¿½, 10/100 Eth,
 
-wireless, WinXP Pro ', '4.6', '3170', '39947.jpg', '11111', '39947_s.jpg', '3', '0', '', '1', 'P-IV 2000GHz, 14.1’’ TFT, 256MB,
+wireless, WinXP Pro ', '4.6', '3170', '39947.jpg', '11111', '39947_s.jpg', '3', '0', '', '1', 'P-IV 2000GHz, 14.1ï¿½ï¿½ TFT, 256MB,
 
-40.0GB, 16MB AGP, DVD-ROM, 56Ê, 10/100 Eth,
+40.0GB, 16MB AGP, DVD-ROM, 56ï¿½, 10/100 Eth,
 
 wireless, WinXP Pro ', '3400', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('102', '51', 'Toshiba Tecra 9100', 'P-IV 1.4GHz, 14.1’’ TFT, 256MB,
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('102', '51', 'Toshiba Tecra 9100', 'P-IV 1.4GHz, 14.1ï¿½ï¿½ TFT, 256MB,
 
-20GB, 16MB AGP, DVD-ROM, 56Ê, 10/100 Eth,
+20GB, 16MB AGP, DVD-ROM, 56ï¿½, 10/100 Eth,
 
 wireless, WinXP Pro 
-', '2.72', '2310', '28187.jpg', '11111', '28187_s.jpg', '5', '0', '', '1', 'P-IV 1.4GHz, 14.1’’ TFT, 256MB,
+', '2.72', '2310', '28187.jpg', '11111', '28187_s.jpg', '5', '0', '', '1', 'P-IV 1.4GHz, 14.1ï¿½ï¿½ TFT, 256MB,
 
-20GB, 16MB AGP, DVD-ROM, 56Ê, 10/100 Eth,
+20GB, 16MB AGP, DVD-ROM, 56ï¿½, 10/100 Eth,
 
 wireless, WinXP Pro ', '2571', '');
-INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('103', '51', 'Fujitsu Siemens LifeBook P-111', 'TM5800 733MHz, 8.9’’ TFT, 256MB,
+INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('103', '51', 'Fujitsu Siemens LifeBook P-111', 'TM5800 733MHz, 8.9ï¿½ï¿½ TFT, 256MB,
 
-20GB, 4MB AGP, 56Ê, 10/100 Eth, WinXP ', '0', '1503', '42499.jpg', '1111', '42499_s.jpg', '0', '0', '', '1', 'TM5800 733MHz, 8.9’’ TFT, 256MB,
+20GB, 4MB AGP, 56ï¿½, 10/100 Eth, WinXP ', '0', '1503', '42499.jpg', '1111', '42499_s.jpg', '0', '0', '', '1', 'TM5800 733MHz, 8.9ï¿½ï¿½ TFT, 256MB,
 
-20GB, 4MB AGP, 56Ê, 10/100 Eth, WinXP ', '0', '');
+20GB, 4MB AGP, 56ï¿½, 10/100 Eth, WinXP ', '0', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('104', '58', 'IBM NetVista M42', 'P-IV 2.0GHz, 256MB PC2100 DDR SDRAM, 40GB,
 
 CD-ROM, AGP, 10/100 Eth, WinXP Pro ', '2.5', '1152', '42623.jpg', '0', '42623_s.jpg', '1', '0', '', '1', 'P-IV 2.0GHz, 256MB PC2100 DDR SDRAM, 40GB,
@@ -333,7 +333,7 @@ INSERT INTO tbl_products (productID, categoryID, name, description, customers_ra
 
 And strike it does. For in Harry`s second year at Hogwarts, fresh torments and horrors arise, including an outrageously stuck-up new professor, Gilderoy Lockheart, a spirit named Moaning Myrtle who haunts the girls` bathroom, and the unwanted attentions of Ron Weasley`s younger sister, Ginny. 
 
-But each of these seem minor annoyances when the real trouble begins, and someone — or something — starts turning Hogwarts students to stone. Could it be Draco Malfoy, a more poisonous rival than ever? Could it possibly be Hagrid, whose mysterious past is finally told? Or could it be the one everyone at Hogwarts most suspects...Harry Potter himself!
+But each of these seem minor annoyances when the real trouble begins, and someone ï¿½ or something ï¿½ starts turning Hogwarts students to stone. Could it be Draco Malfoy, a more poisonous rival than ever? Could it possibly be Hagrid, whose mysterious past is finally told? Or could it be the one everyone at Hogwarts most suspects...Harry Potter himself!
 
 
 ', '5', '5', '15795.jpg', '111111', '15795s.jpg', '2', '1', '', '1', 'The Dursleys were so mean and hideous that summer that all Harry Potter wanted was to get back to the Hogwarts School for Witchcraft and Wizardry. But just as he`s packing his bags, Harry receives a warning from a strange, impish creature named Dobby who says that if Harry Potter returns to Hogwarts, disaster will strike...', '0', '');
@@ -345,3 +345,5 @@ INSERT INTO tbl_special_offers (offerID, productID, sort_order) VALUES (5, 64, '
 INSERT INTO tbl_special_offers (offerID, productID, sort_order) VALUES (3, 81, '1');
 INSERT INTO tbl_special_offers (offerID, productID, sort_order) VALUES (4, 72, '2');
 INSERT INTO tbl_special_offers (offerID, productID, sort_order) VALUES (1, 101, '3');
+INSERT INTO tbl_special_offers (offerID, productID, sort_order) VALUES (6, 1, '5');
+INSERT INTO tbl_special_offers (offerID, productID, sort_order) VALUES (7, 16, '6');

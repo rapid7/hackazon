@@ -1,13 +1,22 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Product as Product;
+use \App\Model\Category as Category;
+use \App\Model\SpecialOffers as SpecialOffers;
+
 class Home extends \App\Page {
+
+    const COUNT_RND_PRODUCTS = 3; //count products for rnd block of main page
 
 	public function action_index(){
 
-        $model = new \App\Model\Category($this->pixie);
-        $this->view->sidebar = $model->getRootCategoriesSidebar();
-
+        $category = new Category($this->pixie);
+        $product = new Product($this->pixie);
+        $special_offers = new SpecialOffers($this->pixie);
+        $this->view->sidebar = $category->getRootCategoriesSidebar();
+        $this->view->rnd_products = $product->getRndProduct(self::COUNT_RND_PRODUCTS);
+        $this->view->special_offers = $special_offers->getSpecialOffers();
         $this->view->common_path = $this->common_path;
 		$this->view->subview = 'home/home';
 		$this->view->message = "Index page";

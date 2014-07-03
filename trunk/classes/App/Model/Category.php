@@ -31,7 +31,7 @@ class Category extends \PHPixie\ORM\Model {
         return $sidebar;
     }
 
-    protected  function getChild($parent){
+    public  function getChild($parent){
         $child = array();
         $subcategories = $this->pixie->orm->get('Category')->where('parent',$parent)->order_by('name','asc')->find_all();
         if($subcategories){
