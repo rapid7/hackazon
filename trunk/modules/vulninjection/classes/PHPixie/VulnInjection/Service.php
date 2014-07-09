@@ -33,26 +33,32 @@ class Service {
 	public function __construct($pixie, $config = 'default') {
 		$this->pixie = $pixie;
                 $this->settings = $pixie->config->get("vulninjection/{$config}");
-
-
-/*		
-		$login_providers = $pixie->config->get("auth.{$config}.login", false);
-		if (!$login_providers)
-			throw new \Exception("No login providers have been configured.");
-			
-		foreach(array_keys($login_providers) as $provider) 
-			$this->login_providers[$provider] = $pixie->auth->build_login($provider, $this, $config);
-		
-		$role_driver = $pixie->config->get("auth.{$config}.roles.driver", false);
-		if ($role_driver)
-			$this->role_driver = $pixie->auth->build_role($role_driver, $config);
-		
-		$this->check_login();
- 
- */
+                
+                //Manage settings
+                $this->filterPost();
+                $this->filterGet();
 	}
 	
+        private function filterPost(){
+            foreach($_POST as $key=>$value){
+                if(!array_key_exists($key, $this->settings['inputs'])){
+                    //Prevent any by default
+                    $_POST[$key] = mysql_real_escape_string( htmlspecialchars($value) );
+                }else{
+                    if(!in_array('xss', $this->settings['inputs'][$key])){
+                        $_POST[$key] = htmlspecialchars($_POST[$key]);
+                    }
+                    if(!in_array('sql', $this->settings['inputs'][$key])){
+                        $_POST[$key] = mysql_real_escape_string($_POST[$key]);
+                    }
+                }
+            }
+        }
 	
+        private function filterGet(){
+            
+        }
+        
 	/**
 	 * Returns the required section
 	 *
