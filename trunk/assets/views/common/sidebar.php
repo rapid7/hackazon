@@ -10,7 +10,7 @@
                         <li><a href="/category/view/<?=$subcategory['categoryID']; ?>"><?=$subcategory['name']; ?></a></li>
                     <?php endforeach;?>
                 </ul>
-            <?endif;?>
+            <?php endif;?>
             </li>
         <?php endforeach; ?>
     </ul>

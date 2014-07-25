@@ -1,4 +1,4 @@
-<?$j=1;?>
+<?php $j=1;?>
 <?php foreach($special_offers as $product):?>
     <?php if($j==1 || $j==4) echo '<div class="row">'?>
         <div class="col-lg-4 col-md-4 col-sm-6">
