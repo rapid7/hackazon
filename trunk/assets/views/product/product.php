@@ -21,9 +21,11 @@
 
 <div class="section">
     <div class="container">
-        <div class="col-md-12">
+        <div class="col-md-8 col-md-offset-2">
             <div class="thumbnail">
-                <img class="img-responsive" src="/products_pictures/<?=$product['picture']?>" alt="">
+                <a data-toggle="lightbox" data-title="<?=$product['name']?>" href="/products_pictures/<?=$product['picture']?>">
+                    <img class="img-responsive preview-image" src="/products_pictures/<?=$product['picture']?>" alt="">
+                </a>
                 <div class="caption-full">
                     <h4 class="pull-right">$<?=$product['price']?></h4>
                     <h4><a href="#"><?=$product['name']?></a></h4>
@@ -51,13 +53,11 @@
             </div>
 
             <div class="well">
-
                 <div class="text-right">
-                    <a class="btn btn-success">Leave a Review</a>
+                    <?php include($common_path."review_form.php")?>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#reviewForm">Leave a Review</button>
                 </div>
-
                 <hr>
-
                 <div class="row">
                     <div class="col-md-12">
                         <span class="glyphicon glyphicon-star"></span>
