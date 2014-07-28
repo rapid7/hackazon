@@ -1,5 +1,5 @@
 <!--<div class="col-md-3">-->
-<li class="dropdown">
+<div class="dropdown sidebar-menu-inside">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="sidebar-link">Shop By Department <b class="caret"></b></a>
     <ul class="dropdown-menu menu">
         <?php foreach ($sidebar as $value): ?>
@@ -14,7 +14,7 @@
             </li>
         <?php endforeach; ?>
     </ul>
-</li>
+</div>
 <!--</div>-->
 
 
