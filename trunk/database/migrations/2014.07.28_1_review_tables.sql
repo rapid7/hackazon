@@ -1,0 +1,1 @@
+ALTER TABLE `tbl_review` ADD COLUMN `rating` TINYINT(2) NOT NULL DEFAULT 0;
