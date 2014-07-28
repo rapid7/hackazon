@@ -1,4 +1,4 @@
 <?php
-    return array(
-                'common_path' => substr($_SERVER['DOCUMENT_ROOT'],0,-3).'assets/views/common/'
-    );
+return array(
+    'common_path' => dirname(dirname(__DIR__)) . '/assets/views/common/'
+);

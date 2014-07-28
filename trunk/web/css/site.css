@@ -1,3 +1,36 @@
+.col-xs-5ths,
+.col-sm-5ths,
+.col-md-5ths,
+.col-lg-5ths {
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.col-xs-5ths {
+    width: 20%;
+    float: left;
+}
+@media (min-width: 768px) {
+    .col-sm-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+@media (min-width: 992px) {
+    .col-md-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+@media (min-width: 1200px) {
+    .col-lg-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
 #logincontrol{
     position: absolute;
     top: 10px;
@@ -146,6 +179,24 @@ form.signin .error {
     float: right;
 }
 
+.product-list .img-box {
+    height: 212px;
+    width: 100%;
+    padding: 9px;
+}
+
+.product-list .product-description {
+    max-height: 3em;
+    height: 3em;
+    overflow-y: hidden;
+}
+
+.product-list h4 {
+    max-height: 2em;
+    height: 2em;
+    overflow-y: hidden;
+}
+
 .preview-image {
     width: auto !important;
     max-width: 160px !important;
@@ -155,4 +206,3 @@ form.signin .error {
 #textReview {
     resize: none;
 }
-
