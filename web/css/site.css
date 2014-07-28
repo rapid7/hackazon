@@ -146,3 +146,13 @@ form.signin .error {
     float: right;
 }
 
+.preview-image {
+    width: auto !important;
+    max-width: 160px !important;
+    max-height: 160px !important;
+}
+
+#textReview {
+    resize: none;
+}
+

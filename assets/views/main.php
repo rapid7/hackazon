@@ -18,6 +18,9 @@
         <link href="/css/site.css" rel="stylesheet">
         <link href="/css/sidebar.css" rel="stylesheet">
         <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/css/ekko-lightbox.css" rel="stylesheet">
+        <link href="/css/star-rating.min.css" rel="stylesheet">
+
 
         <!-- JavaScript -->
         <script src="/js/jquery-1.10.2.js"></script>
@@ -26,6 +29,8 @@
         <script src="/js/jquery.validate.min.js"></script>
         <script src="/js/site.js"></script>
         <script src="/js/jquery.inputmask.js"></script>
+        <script src="/js/ekko-lightbox.js"></script>
+        <script src="/js/star-rating.min.js"></script>
 
     </head>
 
