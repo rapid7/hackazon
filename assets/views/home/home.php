@@ -61,7 +61,7 @@
         <!-- /.container -->
     </div>
 
-
+    <?php /**
     <!-- /.section-colored -->
     <div class="col-lg-12 text-center">
         <h2>Special Offers for You</h2>
@@ -78,6 +78,40 @@
         <!-- /.container -->
     </div>
     <!-- /.section -->
+     */ ?>
+
+    <?php
+    /**
+     * @var $special_offers \App\Model\Product[]
+     * @var $topViewedProducts \App\Model\Product[]
+     * @var $relatedToVisitedProducts \App\Model\Product[]
+     * @var $bestChoiceProducts \App\Model\Product[]
+     */
+
+    $sectionData = [
+        'title' => 'Special Offers for You',
+        'products' => $special_offers
+    ];
+    include("product_section.php");
+
+    $sectionData = [
+        'title' => 'Top 5 Viewed',
+        'products' => $topViewedProducts
+    ];
+    include("product_section.php");
+
+    $sectionData = [
+        'title' => 'Related to Visited',
+        'products' => $relatedToVisitedProducts
+    ];
+    include("product_section.php");
+
+    $sectionData = [
+        'title' => 'Best Choice',
+        'products' => $bestChoiceProducts
+    ];
+    include("product_section.php");
+    ?>
 
     <div class="section-colored">
         <div class="container">

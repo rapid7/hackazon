@@ -1,7 +1,13 @@
 <?php
 
 namespace App\Model;
+use PHPixie\DB\PDOV\Result;
 
+/**
+ * Class SpecialOffers.
+ * @property Product product_offers
+ * @package App\Model
+ */
 class SpecialOffers extends Product {
 
     public $table = 'tbl_special_offers';
@@ -28,4 +34,12 @@ class SpecialOffers extends Product {
        return $special_offers;
     }
 
+    /**
+     * @param int $count
+     * @return mixed|Result
+     */
+    public function getSpecialOffersList($count = 5)
+    {
+        return $this->pixie->orm->get('SpecialOffers')->order_by('sort_order','asc')->limit($count)->find_all();
+    }
 }
