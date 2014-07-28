@@ -91,3 +91,7 @@ ul.menu li:hover ul li:last-child a:hover {
     color: #fff;
     background: transparent;
 }
+
+.sidebar-menu-inside {
+    margin-top: 30px;
+}
