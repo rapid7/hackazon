@@ -53,7 +53,8 @@
                             </li>
                         </ul>
                     </li>
-                    <li><a href="/blog">Curt</a>
+                    <li><a href="/blog">Blog</a>
+                    <li><a href="/cart">Cart</a>
                     <?php endif ?>
                 </ul>
 
