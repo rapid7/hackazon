@@ -35,7 +35,14 @@ class Product extends \PHPixie\ORM\Model {
         )
     );
 
-    public function getProductsCategory($categoryID){
+    protected $has_many = array(
+        'reviews'=>array(
+            'model'=>'Review',
+            'key'=>'productID'
+        )
+    );
+
+    public function getProductsCategory($categoryID) {
         $items = array();
         $products = $this->pixie->orm->get('Product')->where('categoryID',$categoryID)->order_by('name','asc')->find_all();
         if($products){
@@ -59,7 +66,8 @@ class Product extends \PHPixie\ORM\Model {
                 'price' => $product->Price,
                 'customers_votes'  => $product->customer_votes,
                 'customers_rating'  => $product->customers_rating,
-                'picture' => $product->picture
+                'picture' => $product->picture,
+                'reviews' => $product->getReviews()
             );
         }
         return $productData;
@@ -197,4 +205,8 @@ class Product extends \PHPixie\ORM\Model {
         $annotation = substr($annotation, 0, strrpos($annotation, ' '));
         return $annotation;
     }
+    public function getReviews() {
+        return $this->reviews->where('moder', '=', Review::APPROVED)->find_all();
+    }
+
 }
