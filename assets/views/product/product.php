@@ -1,3 +1,12 @@
+<script>
+    $(function() {
+        $("#add_to_cart").click(function(){
+            $("#cart_form").submit();
+            return false;
+        });
+    });
+</script>
+
 <div class="row">
 
     <div class="col-lg-12">
@@ -19,6 +28,18 @@
                     <h4 class="pull-right">$<?=$product['price']?></h4>
                     <h4><a href="#"><?=$product['name']?></a></h4>
                     <p><?=$product['description']?></p>
+                    <form id="cart_form" action="/cart/add" method="post">
+                        <div class="text-right">
+                            <label for="qty">Qty</label>
+                            <select id="qty" name="qty">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <input type="hidden" name="product_id" value="<?=$product['productID']?>">
+                            <a class="btn btn-primary" id="add_to_cart" href="#">Add to cart</a>
+                        </div>
+                    </form>
                 </div>
                 <div class="ratings">
                     <p class="pull-right"><?=$product['customers_votes']?> reviews</p>
@@ -85,4 +106,3 @@
     </div>
 </div>
 <div class="row">
-

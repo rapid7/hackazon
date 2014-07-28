@@ -79,7 +79,7 @@ class Product extends \PHPixie\ORM\Model {
         return $rnd_array;
     }
 
-    protected function getProductData($product){
+    public function getProductData($product){
         return array(
             'productID' => $product->productID,
             'name' => $product->name,
