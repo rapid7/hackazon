@@ -16,7 +16,7 @@ class Review extends \App\Page
                 $username = !is_null($user) ? $user->username : $this->request->post('userName');
                 $rating = (int)$this->request->post('starValue');
                 $review = $this->request->post('textReview');
-                $email = !is_null($user) ? $user->emal : $this->request->post('userEmail');
+                $email = !is_null($user) ? $user->email : $this->request->post('userEmail');
                 $model->productID = $product->productID;
                 $model->add('product', $product);
                 $model->addReview($username, $email, $review, $rating);

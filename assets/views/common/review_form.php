@@ -11,7 +11,7 @@
                                 <?php
                                 $user = $this->pixie->auth->user();
                                 $readonly = !is_null($user) ? 'readonly' : '';
-                                $name = !is_null($user) ? $user->name : '';
+                                $name = !is_null($user) ? $user->username : '';
                                 $email = !is_null($user) ? $user->email : '';
                                 ?>
                                 <input type="text" maxlength="100" required class="form-control" placeholder="Name" name="userName" id="userName" <?php echo $readonly; ?> value="<?php echo $name; ?>">
