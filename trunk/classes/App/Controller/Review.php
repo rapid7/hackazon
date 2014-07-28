@@ -21,12 +21,10 @@ class Review extends \App\Page
                 $model->add('product', $product);
                 $model->addReview($username, $email, $review, $rating);
                 $this->redirect('/product/view/'.$product->productID);
-
             } else
                 $this->redirect('/404');
             } catch (\Exception $e) {
-                //$this->redirect('/404');
-                var_dump($e);
+                $this->redirect('/404');
             }
         }
     }
