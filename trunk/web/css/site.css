@@ -206,3 +206,139 @@ form.signin .error {
 #textReview {
     resize: none;
 }
+
+.section + .home-top-product-section {
+    padding-top: 0;
+}
+
+
+/* Nivo slider */
+.theme-bar.slider-wrapper {
+    border: 0 !important;
+    border-radius: 4px;
+}
+
+/* Label style */
+.label.label-info {
+    background-color:#3a87ad;
+}
+
+.label.label-important {
+    background-color:#d9534f;
+}
+
+/* Alert style */
+.alert {
+    padding:10px;
+}
+
+/* Well style */
+.well {
+    border:0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.well.well-small {
+    padding: 10px;
+}
+.well.well-small ul.nav-list {
+    background-color:#ffffff;
+    border-radius: 2px;
+    padding:14px;
+}
+
+/* Article style */
+.article img {
+    float:right;
+    width:40%;
+}
+
+/* Product lists */
+.product-list-inline-small {
+    padding-left:0;
+}
+.product-list-inline-small li {
+    list-style:none;
+}
+
+.product-list-inline-small .price {
+    font-size:125%;
+    padding:5px 10px 5px 10px;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Use for rotating price (IE9+) */
+    -webkit-transform:rotate(355deg);
+    -moz-transform:rotate(355deg);
+    -o-transform:rotate(355deg);
+    -ms-transform:rotate(355deg);
+}
+.product-list-inline-large .thumbnail {
+    padding:10px;
+    margin-bottom:30px;
+    border:none;
+}
+.product-list-inline-large .thumbnail.light {
+    background-color:#f5f5f5;
+}
+.product-list-inline-large .thumbnail.dark {
+    background-color:#eeeeee;
+}
+.product-list-inline-large .thumbnail .price {
+    font-size:200%;
+    line-height:150%;
+    position:absolute;
+    z-index:10;
+    margin-left:-15px;
+    margin-top:-10px;
+    width:115px;
+    text-align:center;
+    padding-left:5px;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Use for rotating price (IE9+) */
+    -webkit-transform:rotate(350deg);
+    -moz-transform:rotate(350deg);
+    -o-transform:rotate(350deg);
+    -ms-transform:rotate(350deg);
+}
+.product-list-inline-large .thumbnail .price.price-over {
+    /* Use for rotating price (IE9+) */
+    -webkit-transform:rotate(355deg);
+    -moz-transform:rotate(355deg);
+    -o-transform:rotate(355deg);
+    -ms-transform:rotate(355deg);
+}
+.product-list-inline-large .thumbnail .price sup {
+    font-size:60%;
+}
+.product-list-inline-large .thumbnail .caption {
+    text-align:center;
+}
+.product-list-inline-large .thumbnail .btn-block {
+    margin:0 0 -20px 0;
+}
+
+/* Product detail */
+.product-detail .price {
+    font-size:400%;
+    line-height:150%;
+    position:absolute;
+    z-index:10;
+    text-align:center;
+    padding-left:10px;
+    padding-right:10px;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Use for rotating price (IE9+) */
+    -webkit-transform:rotate(5deg);
+    -moz-transform:rotate(5deg);
+    -o-transform:rotate(5deg);
+    -ms-transform:rotate(5deg);
+}
+
+.product-detail .well .btn {
+    margin-bottom:15px;
+}
