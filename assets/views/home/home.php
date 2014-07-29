@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\Model\Product[] $special_offers
+ * @var array $topProductBlocks
+ */
+?>
     <div id="myCarousel" class="carousel slide">
         <!-- Indicators -->
         <ol class="carousel-indicators">
@@ -61,56 +67,79 @@
         <!-- /.container -->
     </div>
 
-    <?php /**
-    <!-- /.section-colored -->
-    <div class="col-lg-12 text-center">
-        <h2>Special Offers for You</h2>
-        <hr>
-    </div>
-
-    <div class="section">
+    <div class="section home-top-product-section">
         <div class="container">
             <div class="row">
-                <?php include("special_offers.php")?>
+                <div class="col-xs-12 col-sm-8">
+
+                    <!-- START CONTENT ITEM -->
+                    <div class="row">
+                        <div class="col-xs-9">
+                            <h2>Special selection</h2>
+                        </div>
+                        <?php /* <div class="col-xs-3">
+                            <div class="social-icons pull-right">
+                                <a href="#"><img alt="facebook" src="img/icon-facebook.png"></a>
+                                <a href="#"><img alt="twitter" src="img/icon-twitter.png"></a>
+                                <a href="#"><img alt="linkedin" src="img/icon-linkedin.png"></a>
+                                <a href="#"><img alt="rss" src="img/icon-rss.png"></a>
+                            </div>
+                        </div> */ ?>
+                    </div>
+                    <!-- END CONTENT ITEM -->
+
+                    <!-- START CONTENT ITEM -->
+                    <div class="row product-list-inline-small">
+                        <?php /** @var \App\Model\SpecialOffers $specOffer */ ?>
+                        <?php foreach($special_offers as $specOffer): ?>
+                            <?php $product = $specOffer->product_offers; ?>
+                            <?php include __DIR__ . '/product_item.php'; ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <!-- END CONTENT ITEM -->
+
+                    <!-- START CONTENT ITEM -->
+                    <?php include __DIR__ . '/top_reviews.php'; ?>
+                    <!-- END CONTENT ITEM -->
+
+                </div>
+
+                <div class="hidden-xs col-sm-4 col-md-4 col-lg-4">
+                    <br>
+                    <?php // Output right blocks of links ?>
+                    <?php foreach ($topProductBlocks as $productBlock): ?>
+                        <?php include __DIR__ . '/top_products_block.php'; ?>
+                    <?php endforeach; ?>
+
+                    <!-- START CONTENT ITEM -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="slider-wrapper theme-light">
+                                <div id="slider2" class="nivoslider">
+                                    <img src="/images/banner_01-v3.jpg" alt="" title="This is an example of an optional long caption text" />
+                                    <img src="/images/banner_02-v3.jpg" alt="" title="" />
+                                    <img src="/images/banner_03-v3.jpg" alt="" title="" />
+                                    <img src="/images/banner_04-v3.jpg" alt="" title="Another caption" />
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                    <!-- END CONTENT ITEM -->
+
+                </div>
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.container -->
     </div>
-    <!-- /.section -->
-     */ ?>
 
     <?php
-    /**
-     * @var $special_offers \App\Model\Product[]
-     * @var $topViewedProducts \App\Model\Product[]
-     * @var $relatedToVisitedProducts \App\Model\Product[]
-     * @var $bestChoiceProducts \App\Model\Product[]
-     */
-
-    $sectionData = [
-        'title' => 'Special Offers for You',
-        'products' => $special_offers
-    ];
-    include("product_section.php");
-
-    $sectionData = [
-        'title' => 'Top 5 Viewed',
-        'products' => $topViewedProducts
-    ];
-    include("product_section.php");
-
-    $sectionData = [
-        'title' => 'Related to Visited',
-        'products' => $relatedToVisitedProducts
-    ];
-    include("product_section.php");
-
-    $sectionData = [
-        'title' => 'Best Choice',
-        'products' => $bestChoiceProducts
-    ];
-    include("product_section.php");
+    // Output product sections
+    /** @var array $productSections */
+    foreach ($productSections as $sectionData) {
+        if (count($sectionData['products'])) {
+            include("product_section.php");
+        }
+    }
     ?>
 
     <div class="section-colored">

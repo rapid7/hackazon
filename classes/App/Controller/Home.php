@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Model\Product as Product;
 use \App\Model\Category as Category;
+use App\Model\Review;
 use \App\Model\SpecialOffers as SpecialOffers;
 
 class Home extends \App\Page {
@@ -12,37 +13,70 @@ class Home extends \App\Page {
     /**
      * @var int Count of products in top viewed products on homepage.
      */
-    protected $topViewedCount = 5;
+    protected $topViewedCount = 4;
 
     /**
      * @var int Count of products in related to visited products on homepage.
      */
-    protected $relatedToVisitedCount = 10;
+    protected $relatedToVisitedCount = 8;
 
     /**
      * @var int Count of products in best choice block on homepage.
      */
-    protected $bestChoiceCount = 5;
+    protected $bestChoiceCount = 4;
 
     /**
      * @var int Count of reviews on homepage.
      */
-    protected $reviewsCount = 5;
+    protected $reviewsCount = 2;
 
 
 	public function action_index()
     {
+        $mostPopularProductsCount = 3;
+        $bestSellingProductsCount = 3;
+        $specialOffersCount = 3;
+
         $category = new Category($this->pixie);
         $product = new Product($this->pixie);
         $special_offers = new SpecialOffers($this->pixie);
+        $review = new Review($this->pixie);
         $this->view->sidebar = $category->getRootCategoriesSidebar();
         $this->view->rnd_products = $product->getRndProduct(self::COUNT_RND_PRODUCTS);
-        $this->view->topViewedProducts = $product->getRandomProducts($this->topViewedCount);
-        $this->view->topViewedProducts = $product->getRandomProducts($this->topViewedCount);
-        $this->view->relatedToVisitedProducts = $product->getRandomProducts($this->relatedToVisitedCount);
+        //$this->view->topViewedProducts = $product->getRandomProducts($this->topViewedCount);
+        $this->view->relatedToVisitedProducts = $product->getVisitedProducts(); //$product->getRandomProducts($this->relatedToVisitedCount);
         $this->view->bestChoiceProducts = $product->getRandomProducts($this->bestChoiceCount);
+        $this->view->mostPopularProducts = $product->getRandomProducts($mostPopularProductsCount);
+        $this->view->bestSellingProducts = $product->getRandomProducts($bestSellingProductsCount);
+        $this->view->special_offers = $special_offers->getRandomOffers($specialOffersCount);
+        $this->view->selectedReviews = $review->getRandomReviews($this->reviewsCount);
 
-        $this->view->special_offers = $special_offers->getSpecialOffersList()->as_array();
+        $this->view->productSections = array(
+//            'top_viewed' => array(
+//                'title' => 'Top 5 Viewed',
+//                'products' => $this->view->topViewedProducts
+//            ),
+            'related_to_viewed' => array(
+                'title' => 'Related to Visited',
+                'products' => $this->view->relatedToVisitedProducts
+            ),
+            'best_choice' => array(
+                'title' => 'Best Choice',
+                'products' => $this->view->bestChoiceProducts
+            )
+        );
+
+        $this->view->topProductBlocks = array(
+            'most_popular' => array(
+                'title' => "Top $bestSellingProductsCount most popular",
+                'products' => $this->view->mostPopularProducts
+            ),
+            'best_selling' => array(
+                'title' => "Top $bestSellingProductsCount best selling",
+                'products' => $this->view->bestSellingProducts
+            )
+        );
+
         $this->view->common_path = $this->common_path;
 		$this->view->subview = 'home/home';
 		$this->view->message = "Index page";

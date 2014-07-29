@@ -180,9 +180,29 @@ form.signin .error {
 }
 
 .product-list .img-box {
-    height: 212px;
+    height: 235px;
     width: 100%;
-    padding: 9px;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.home-top-product-section .thumbnail {
+    padding: 4px;
+}
+
+.home-top-product-section .thumbnail .img-box {
+    height: 220px;
+    width: 100%;
+    padding: 0;
+    text-align: center;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out 0s;
+}
+
+.home-top-product-section .thumbnail .img-box img {
+    max-width: 100%;
+    width: 100%;
+    margin-bottom: 0;
 }
 
 .product-list .product-description {
@@ -211,6 +231,55 @@ form.signin .error {
     padding-top: 0;
 }
 
+.home-top-product-section {
+    padding-bottom: 0;
+}
+
+.nav.nav-list > li > a {
+    padding: 5px 10px;
+    margin: 0 -10px;
+}
+
+.nav.nav-list .nav-header {
+    font-weight: bold;
+    padding: 0 0 10px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e3e3e3;
+}
+
+.dropdown-content {
+    /* For using a div in a dropdown to show some info */
+    padding: 0 20px 5px 20px;
+    width: 200px;
+}
+
+.dropdown-content-wide {
+    width: 300px;
+}
+
+.dropdown-content form,
+.dropdown-content address {
+    padding: 0;
+    margin: 0;
+}
+
+.social-icons {
+    padding: 20px 0 0 10px;
+    width: 120px
+}
+
+.input-micro {
+    width: 20px;
+    text-align: center;
+}
+
+.table-order .input-group {
+    max-width: 240px;
+}
+
+.nav-tabs {
+    margin-bottom: 20px;
+}
 
 /* Nivo slider */
 .theme-bar.slider-wrapper {
@@ -341,4 +410,40 @@ form.signin .error {
 
 .product-detail .well .btn {
     margin-bottom:15px;
+}
+
+.text-center h2,
+.home-top-product-section h2,
+.home-top-product-section h5,
+.home-top-product-section h4 {
+    font-family: 'McLaren',cursive;
+}
+
+.article .review-icon-box {
+    float: right;
+    width: 40%;
+    height: 150px;
+}
+
+.article .review-icon {
+    -ms-transform: scale(4);
+    -moz-transform: scale(4);
+    -webkit-transform: scale(4);
+    transform: scale(8);
+    color: #3A87AD;
+    left: 50%;
+    top: 50%;
+    position: relative;
+}
+
+.home-product-sections {
+    padding-bottom: 50px;
+}
+
+.home-top-product-section .product-annotation .text-block,
+.home-top-product-section .product-annotation {
+    height: 1.5em;
+}
+.home-top-product-section .product-annotation .text-block {
+    display: block;
 }

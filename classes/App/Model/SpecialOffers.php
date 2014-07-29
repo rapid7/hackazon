@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Model;
+use App\Helpers\ArraysHelper;
 use PHPixie\DB\PDOV\Result;
+use PHPixie\ORM;
 
 /**
  * Class SpecialOffers.
@@ -41,5 +43,28 @@ class SpecialOffers extends Product {
     public function getSpecialOffersList($count = 5)
     {
         return $this->pixie->orm->get('SpecialOffers')->order_by('sort_order','asc')->limit($count)->find_all();
+    }
+
+    /**
+     * Selects {$maxCount} random reviews from DB.
+     *
+     * @param int $maxCount Maximum count of selected items
+     *      (if table contains less items).
+     * @return array
+     */
+    public function getRandomOffers($maxCount)
+    {
+        /** @var ORM $orm */
+        $orm = $this->pixie->orm;
+        $offerCount = $orm->get('specialOffers')->count_all();
+        $offsets = ArraysHelper::getRandomArray($maxCount, 1, $offerCount);
+        $offers = [];
+        // Query for every product with given offset
+        foreach ($offsets as $offset) {
+            $offer = $orm->get('specialOffers')->offset($offset - 1)->find();
+            $offers[] = $offer;
+        }
+
+        return $offers;
     }
 }
