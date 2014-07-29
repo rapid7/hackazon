@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use PHPixie\View;
+
 class User extends \App\Page {
 
 
@@ -70,15 +72,27 @@ class User extends \App\Page {
         if ($this->request->method == 'POST') {
             $dataUser = $this->getDataUser();
 
-           if($this->model->checkExistingUser($dataUser)){
-               $this->view->errorMessage = "User already registered";
-               foreach ($dataUser as $key=>$value)
+            if($this->model->checkExistingUser($dataUser)){
+                $this->view->errorMessage = "User already registered";
+                foreach ($dataUser as $key=>$value)
                     $this->view->$key = $value;
             }else{
                 $this->model->RegisterUser($dataUser);
                 $this->pixie->auth
                     ->provider('password')
                     ->login($dataUser['username'], $dataUser['password']);
+
+                $emailView = $this->pixie->view('user/register_email');
+                $emailView->data = $dataUser;
+
+                $emailData = $this->model->getEmailData($dataUser['email']);
+                $this->pixie->email->send(
+                    $emailData['to'],
+                    $emailData['from'],
+                    'You have successfully registered on hackazon.com',
+                    $emailView->render()
+                );
+
                 $this->redirect('/account');
             }
         }
@@ -108,8 +122,8 @@ class User extends \App\Page {
             $new_passw = $this->request->post('password');
             $confirm_passw = $this->request->post('cpassword');
             if(!empty($username) && !empty($recover_passw) && !empty($new_passw) && !empty($confirm_passw)){
-                if($confirm_passw === $new_passw && $this->model->checkRecoverPass($username,$recover_passw)){
-                    if($this->model->changeUserPassword($username,$new_passw))
+                if($confirm_passw === $new_passw && $this->model->checkRecoverPass($username, $recover_passw)){
+                    if($this->model->changeUserPassword($username, $new_passw))
                         $this->view->successMessage = "The password has been changed successfully";
                     $this->view->subview = 'user/recover';
                 }
