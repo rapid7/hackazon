@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+/**
+ * Class Product
+ * @property \App\Model\Product model
+ * @package App\Controller
+ */
 class Product extends \App\Page {
 
     public function action_index() {
@@ -13,8 +18,8 @@ class Product extends \App\Page {
 
         $this->view->product = $this->model->getProduct($productID);
         $this->view->pageTitle = $this->model->getPageTitle($productID);
+        $this->model->checkProductInCookie($productID);
+
         $this->view->subview = 'product/product';
     }
-
-
 }

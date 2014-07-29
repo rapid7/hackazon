@@ -54,6 +54,9 @@ $(document).ready(function () {
         event.preventDefault();
         $(this).ekkoLightbox();
     });
+
+    // Run the slideshows on the page
+    $('.nivoslider').nivoSlider();
 });
 
 

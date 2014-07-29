@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Helpers\ArraysHelper;
 use PHPixie\ORM;
 
 /**
@@ -13,6 +14,7 @@ use PHPixie\ORM;
  * @property float Price
  * @property float customers_rating
  * @property string picture
+ * @property int categoryID
  * @package App\Model
  */
 class Product extends \PHPixie\ORM\Model {
@@ -110,23 +112,7 @@ class Product extends \PHPixie\ORM\Model {
      * @return array
      */
     private function getRndArray($count_rnd, $max_array_value){
-        $rnd_array = array();
-        srand();
-        // Limit the selected count to the max boundary.
-        if ($count_rnd > $max_array_value) {
-            $count_rnd = $max_array_value;
-        }
-
-        for ($i=0;$i<$count_rnd;) {
-            //Only append values which are not in the array.
-            $value = rand(1, $max_array_value);
-            if (in_array($value, $rnd_array)) {
-                continue;
-            }
-            $rnd_array[] = $value;
-            $i++;
-        }
-        return $rnd_array;
+        return ArraysHelper::getRandomArray($count_rnd, 1, $max_array_value);
     }
 
     /**
@@ -156,11 +142,18 @@ class Product extends \PHPixie\ORM\Model {
     /**
      * Returns either brief description of product if it exists, or trims
      *      full description.
+     * @param null $length
      * @return mixed|string
      */
-    public function getAnnotation()
+    public function getAnnotation($length = null)
     {
-        return $this->_getBrief($this->description);
+        $annoLength = $this->annotation_length;
+        if (!is_null($length)) {
+            $this->annotation_length = $length;
+        }
+        $annotation = $this->_getBrief($this->description);
+        $this->annotation_length = $annoLength;
+        return $annotation;
     }
 
     /**
@@ -191,6 +184,50 @@ class Product extends \PHPixie\ORM\Model {
             'customers_rating'  => $product->customers_rating,
             'picture' => $product->picture
         );
+    }
+
+    public function checkProductInCookie($productId)
+    {
+        $productIds = $this->pixie->cookie->get('visited_products');
+        if (!$productIds) {
+            $productIds = ',';
+        }
+        if (strpos($productIds, ",$productId,") === false) {
+            $this->pixie->cookie->set('visited_products', $productIds . $productId . ',', 3600 * 24 * 365, '/');
+        }
+    }
+
+    /**
+     * Fetches no more than $count visited products based on cookies.
+     * @param int $count
+     * @return array
+     */
+    public function getVisitedProducts($count = 4)
+    {
+        $productIds = $this->pixie->cookie->get('visited_products');
+        $ids = preg_split('/,/', $productIds, -1, PREG_SPLIT_NO_EMPTY);
+        $idsCount = count($ids);
+        // Return empty array if there is no ids in cookies.
+        if (!$idsCount) {
+            return [];
+        }
+
+        // Select no more then $count product ids
+        $slicedIdsKeys = array_rand($ids, $count > $idsCount ? $idsCount : ($count < 1 ? 1 : $count));
+        if (!is_array($slicedIdsKeys)) {
+            $slicedIdsKeys = array($slicedIdsKeys);
+        }
+        shuffle($slicedIdsKeys);
+        $idsToSelect = array();
+        foreach ($slicedIdsKeys as $key) {
+            $idsToSelect[$key] = $ids[$key];
+        }
+
+        // Select needed products by their ids
+        /** @var Product $product */
+        $product = $this->pixie->orm->get('product');
+        return $product->where('productID', 'IN',
+            $this->pixie->db->expr('(' . implode(',', $idsToSelect) . ')'))->find_all()->as_array();
     }
 
     /**
