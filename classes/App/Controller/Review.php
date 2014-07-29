@@ -8,7 +8,6 @@ class Review extends \App\Page
     public function action_send()
     {
         if ($this->request->method == 'POST') {
-            try {
             $product = $this->pixie->orm->get('Product')->where('productID', (int)$this->request->post('productID'))->find();
             if ($product->loaded()) {
                 $user = $this->pixie->auth->user();
@@ -21,10 +20,6 @@ class Review extends \App\Page
                 $model->add('product', $product);
                 $model->addReview($username, $email, $review, $rating);
                 $this->redirect('/product/view/'.$product->productID);
-            } else
-                $this->redirect('/404');
-            } catch (\Exception $e) {
-                $this->redirect('/404');
             }
         }
     }
