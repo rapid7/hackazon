@@ -48,6 +48,7 @@ class User extends \PHPixie\ORM\Model {
         $user = $this->pixie->orm->get('User')->where('username',$login)->find();
         if($user->loaded())
             return $user;
+        return null;
     }
 
     public function saveOAuthUser($username,$oauth_uid, $oauth_provider){
@@ -63,6 +64,8 @@ class User extends \PHPixie\ORM\Model {
         $user = $this->pixie->orm->get('User')->where('email',$email)->find();
 
         if($user->loaded()){
+            $host = $this->pixie->config->get('parameters.host');
+            $host = $host ? $host : 'http://hackazon.com';
 
             return array(
                 'to' => $email,
@@ -70,7 +73,7 @@ class User extends \PHPixie\ORM\Model {
                 'subject' => 'recovering password',
                 'text' => 'Hello, '.$user->username.'.
 Recovering link is here
-http://hackazon.com/user/recover?username='.$user->username.'&recover='.$this->getTempPassword($user),
+' . $host . '/user/recover?username='.$user->username.'&recover='.$this->getTempPassword($user),
             );
         }
         return null;
@@ -97,19 +100,21 @@ http://hackazon.com/user/recover?username='.$user->username.'&recover='.$this->g
         $user->save();
         if($user->loaded())
             return $password;
+
+        return null;
     }
 
     public function checkRecoverPass($username, $recover_passw){
-        $user = $this->loadUserModel(substr($username,2));
-            if($user && md5(substr($recover_passw,2)) === $user->recover_passw)
+        $user = $this->loadUserModel($username);
+            if($user && md5($recover_passw) === $user->recover_passw)
                 return true;
             else
                 return false;
     }
 
     public function changeUserPassword($username, $new_passw){
-        $user = $this->loadUserModel(substr($username,2));
-        if($user){
+        $user = $this->loadUserModel($username);
+        if ($user) {
             $user->password = $this->pixie->auth->provider('password')->hash_password($new_passw);
             $user->recover_passw = null;
             $user->save();
@@ -118,5 +123,4 @@ http://hackazon.com/user/recover?username='.$user->username.'&recover='.$this->g
         }
         return false;
     }
-
 }
