@@ -6,6 +6,7 @@ use \App\Model\Category as Category;
 use App\Model\Review;
 use \App\Model\SpecialOffers as SpecialOffers;
 use PHPixie\DB\PDOV\Connection;
+use App\DataImport\BestBuyReviewImporter;
 
 class Home extends \App\Page {
 
@@ -43,7 +44,7 @@ class Home extends \App\Page {
         $randomProductsCount = 8;
 
         // Count of reviews after each product section.
-        $productSectionReviewCount = 2;
+        $productSectionReviewCount = 3;
 
         $category = new Category($this->pixie);
         $product = new Product($this->pixie);
@@ -159,6 +160,31 @@ class Home extends \App\Page {
 
         $this->redirect('/');
 	}
+
+    /**
+     * Method for generating reviews from outer source.
+     */
+    public function generateReviews()
+    {
+        set_time_limit(300);
+        // Get product ids as parents for reviews
+        $res = $this->pixie->db->query('select')->table('tbl_products')->fields('productID')->execute();
+        $productIds = array();
+        foreach ($res as $row) {
+            $productIds[] = (int) $row->productID;
+        }
+
+        $importer = new BestBuyReviewImporter($this->pixie);
+        $reviews = $importer->getReviews(500);
+
+        foreach ($reviews as $rev) {
+            $review = new Review($this->pixie);
+            $review->values($rev);
+            $parentKey = array_rand($productIds);
+            $review->productID = $productIds[$parentKey];
+            $review->save();
+        }
+    }
 
     /**
      * @return int
