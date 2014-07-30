@@ -22,9 +22,10 @@ class Page extends \PHPixie\Controller {
         $config = $this->pixie->config->get('page');
         $this->view->common_path = $config['common_path'];
         $this->common_path = $config['common_path'];
-        $this->view->sidebar = $this->getSidebar();
 
-
+        $category = new Category($this->pixie);
+        $this->view->sidebar = $category->getCategoryTreeArray();
+        //$this->view->sidebar = $this->getSidebar();
 
         $className = $this->get_real_class($this);
         $this->view->search_category = $this->getSearchCategory($className);
@@ -56,8 +57,8 @@ class Page extends \PHPixie\Controller {
     public function get_real_class($obj) {
         $classname = get_class($obj);
 
-        if (preg_match('@\\\\([\w]+)$@', $classname, $matches)) {
-            $classname = $matches[1];
+        if (preg_match('@\\\\(?<class_name>[\w]+)$@', $classname, $matches)) {
+            $classname = $matches['class_name'];
         }
 
         return $classname;
@@ -69,7 +70,6 @@ class Page extends \PHPixie\Controller {
     }
 
     protected function getSearchCategory($className) {
-        $search_category = '';
         switch ($className) {
             case 'Category':
                 $category = new Category($this->pixie);

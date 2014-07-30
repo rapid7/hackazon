@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \App\Model\Product[] $special_offers
+ * @var \App\Model\Product[] $otherCustomersProducts
  * @var array $topProductBlocks
  */
 ?>
@@ -77,14 +78,7 @@
                         <div class="col-xs-9">
                             <h2>Special selection</h2>
                         </div>
-                        <?php /* <div class="col-xs-3">
-                            <div class="social-icons pull-right">
-                                <a href="#"><img alt="facebook" src="img/icon-facebook.png"></a>
-                                <a href="#"><img alt="twitter" src="img/icon-twitter.png"></a>
-                                <a href="#"><img alt="linkedin" src="img/icon-linkedin.png"></a>
-                                <a href="#"><img alt="rss" src="img/icon-rss.png"></a>
-                            </div>
-                        </div> */ ?>
+                        <?php include __DIR__ . '/social_links.php'; ?>
                     </div>
                     <!-- END CONTENT ITEM -->
 
@@ -143,17 +137,15 @@
     ?>
 
     <div class="section-colored">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>What Other Customers Are Looking At Right Now</h2>
-                    <hr>
-                </div>
-                <?php include("rnd_product.php")?>
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container -->
+
+                <?php
+                $sectionData = array(
+                    'title' => 'What Other Customers Are Looking At Right Now',
+                    'products' => $otherCustomersProducts
+                );
+                include(__DIR__ . "/product_section.php");
+                ?>
+
     </div>
     <!-- /.section-colored -->
 
@@ -166,7 +158,7 @@
                     <h4>Sign up for mailing list and get the best products and best price!</h4>
                 </div>
                 <div class="col-lg-4 col-md-4">
-                    <a class="btn btn-lg btn-primary pull-right" href="http://startbootstrap.com">Sign up</a>
+                    <a class="btn btn-lg btn-primary pull-right" href="/user/login">Sign up</a>
                 </div>
             </div>
             <!-- /.row -->
@@ -175,3 +167,4 @@
         <!-- /.container -->
     </div>
 
+    <?php include __DIR__ . '/category_list.php'; ?>
