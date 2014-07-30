@@ -103,40 +103,61 @@ class Home extends \App\Page {
 		$this->view->subview = '404';
 		$this->view->message = "Index page";
 	}
-        
+
+    /**
+     * DB installation script.
+     */
     public function action_install()
     {
-            //$this->view->subview = '';
-            //Remove tables
-            $tables = $this->pixie->db->get()->execute("SELECT GROUP_CONCAT(table_name) as tbl FROM information_schema.tables  WHERE table_schema = (SELECT DATABASE())");
-            $tblRemove = "";
-            foreach($tables as $table){
-                if($table->tbl != "")
-                    $tblRemove = "DROP TABLE IF EXISTS " . $table->tbl;
+        /** @var Connection $conn */
+        $conn = $this->pixie->db->get()->conn;
+
+        //$this->view->subview = '';
+        // Remove Foreign Keys
+        $sql = "SELECT tc.TABLE_NAME `table`, tc.CONSTRAINT_NAME `fk` "
+                . "FROM information_schema.TABLE_CONSTRAINTS tc "
+                . "WHERE tc.CONSTRAINT_SCHEMA=(SELECT DATABASE()) AND tc.CONSTRAINT_TYPE='FOREIGN KEY'";
+
+        $foreignKeys = $this->pixie->db->get()->execute($sql);
+        $sqls = array();
+        foreach ($foreignKeys as $fk) {
+            if ($fk != "") {
+                $sqls[] = "ALTER TABLE `{$fk->table}` DROP FOREIGN KEY `{$fk->fk}`;";
             }
-            
-            if($tblRemove != "") $this->pixie->db->get()->execute($tblRemove);
+        }
 
-            //Install schema
-            $dbScript = $this->pixie-> root_dir . "database/db.sql";
+        if (count($sqls)) {
+            $conn->exec(implode("\n", $sqls));
+        }
 
-            /** @var Connection $conn */
-            $conn = $this->pixie->db->get()->conn;
-
-            $conn->exec(file_get_contents($dbScript));
-  
-            $demoScript = $this->pixie-> root_dir . "database/demo_database.sql";
-            $conn->exec(file_get_contents($demoScript));
-            
-            foreach(scandir($this->pixie-> root_dir . "database/migrations") as $file){
-                $file = $this->pixie-> root_dir . "database/migrations/" . $file;
-                if(is_file($file)){
-                    $conn->exec(file_get_contents($file));
-                }
+        //Remove tables
+        $tables = $this->pixie->db->get()->execute("SELECT GROUP_CONCAT(table_name) as tbl FROM information_schema.tables  WHERE table_schema = (SELECT DATABASE())");
+        $tblRemove = "";
+        foreach ($tables as $table) {
+            if ($table->tbl != "") {
+                $tblRemove = "DROP TABLE IF EXISTS " . $table->tbl;
             }
+        }
 
-            return $this->redirect('/');
+        if ($tblRemove != "") $this->pixie->db->get()->execute($tblRemove);
 
+        // Install schema
+        $dbScript = $this->pixie->root_dir . "database/db.sql";
+        $conn->exec(file_get_contents($dbScript));
+
+        // Install migrations
+        foreach (scandir($this->pixie->root_dir . "database/migrations") as $file) {
+            $file = $this->pixie->root_dir . "database/migrations/" . $file;
+            if (is_file($file)) {
+                $conn->exec(file_get_contents($file));
+            }
+        }
+
+        // Install demo data
+        $demoScript = $this->pixie->root_dir . "database/demo_database.sql";
+        $conn->exec(file_get_contents($demoScript));
+
+        $this->redirect('/');
 	}
 
     /**
