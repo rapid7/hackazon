@@ -44,6 +44,7 @@ class BestBuyReviewImporter
 
         $total = 0;
         $curPage = 1;
+        $utcTZ = new \DateTimeZone('UTC');
         while (true) {
             $pageReviews = $this->getPage($curPage++);
             if (!count($pageReviews)) {
@@ -54,7 +55,8 @@ class BestBuyReviewImporter
                 if (!isset($rev['reviewer']) || !isset($rev['reviewer'][0])) {
                     continue;
                 }
-                $date = new \DateTime(strtotime($rev['submissionTime']));
+                $date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $rev['submissionTime'], $utcTZ);
+
                 if ((int) $date->format('Y') > date('Y')) {
                     continue;
                 }
