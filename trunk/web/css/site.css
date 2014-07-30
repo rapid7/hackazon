@@ -413,9 +413,9 @@ form.signin .error {
 }
 
 .text-center h2,
-.home-top-product-section h2,
-.home-top-product-section h5,
-.home-top-product-section h4 {
+.article h2,
+.article h5,
+.article h4 {
     font-family: 'McLaren',cursive;
 }
 
