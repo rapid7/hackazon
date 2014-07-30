@@ -447,3 +447,32 @@ form.signin .error {
 .home-top-product-section .product-annotation .text-block {
     display: block;
 }
+
+.product-item-ratings {
+    padding-left: 0px;
+    padding-right: 20px;
+}
+
+.home-top-product-section .thumbnail .img-box img {
+    max-width: 100%;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.thumbnail > img, .thumbnail a > img {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.thumbnail .special-offer-img  img{
+    height: 155px;
+    width: 100%;
+    padding: 0;
+    text-align: center;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out 0s;
+}
+
+.product-detail .product-image {
+    margin: auto;
+}
