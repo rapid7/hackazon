@@ -22,18 +22,21 @@ class Page extends \PHPixie\Controller {
         $config = $this->pixie->config->get('page');
         $this->view->common_path = $config['common_path'];
         $this->common_path = $config['common_path'];
-
-        $category = new Category($this->pixie);
-        $this->view->sidebar = $category->getCategoryTreeArray();
-        //$this->view->sidebar = $this->getSidebar();
-
         $className = $this->get_real_class($this);
-        $this->view->search_category = $this->getSearchCategory($className);
-        $this->view->search_subcategories = $this->getAllCategories($this->view->sidebar);
 
-        if ($className != "Home") {
-            $model = new \App\Model\Category($this->pixie);
-            $this->view->categories = $model->getRootCategories();
+        if (!($className == 'Home' && $this->request->param('action') == 'install')) {
+            $category = new Category($this->pixie);
+            $this->view->sidebar = $category->getCategoryTreeArray();
+            //$this->view->sidebar = $this->getSidebar();
+
+
+            $this->view->search_category = $this->getSearchCategory($className);
+            $this->view->search_subcategories = $this->getAllCategories($this->view->sidebar);
+
+            if ($className != "Home") {
+                $model = new \App\Model\Category($this->pixie);
+                $this->view->categories = $model->getRootCategories();
+            }
         }
 
         $this->vulninjection = $this->pixie->vulninjection->service(strtolower($className));
