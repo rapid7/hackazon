@@ -391,7 +391,7 @@ form.signin .error {
 
 /* Product detail */
 .product-detail .price {
-    font-size:400%;
+    font-size:300%;
     line-height:150%;
     position:absolute;
     z-index:10;
