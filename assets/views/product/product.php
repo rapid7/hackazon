@@ -18,74 +18,137 @@
     </div>
 
 </div>
-
 <div class="section">
     <div class="container">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="thumbnail">
+        <div class="row product-detail">
+            <div class="col-xs-12 col-sm-5 col-md-4">
                 <a data-toggle="lightbox" data-title="<?= $product['name'] ?>"
                    href="/products_pictures/<?= $product['picture'] ?>">
-                    <img class="img-responsive preview-image" src="/products_pictures/<?= $product['picture'] ?>"
+                    <img class="img-responsive product-image" src="/products_pictures/<?= $product['picture'] ?>"
                          alt="">
                 </a>
-
-                <div class="caption-full">
-                    <h4 class="pull-right">$<?= $product['price'] ?></h4>
-                    <h4><a href="#"><?= $product['name'] ?></a></h4>
-
-                    <p><?= $product['description'] ?></p>
-
-                    <form id="cart_form" action="/cart/add" method="post">
-                        <div class="text-right">
-                            <label for="qty">Qty</label>
-                            <select id="qty" name="qty">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                            <input type="hidden" name="product_id" value="<?= $product['productID'] ?>">
-                            <a class="btn btn-primary" id="add_to_cart" href="#">Add to cart</a>
-                        </div>
-                    </form>
-                </div>
-                <div class="ratings">
-                    <p class="pull-right"><?= $product['customers_votes'] ?> reviews</p>
-
-                    <p>
-                        <?php include($common_path . "rating_stars.php") ?>
-                        <?= $product['customers_rating'] ?> stars
-                    </p>
-                </div>
             </div>
-
-            <div class="well">
-                <div class="text-right">
-                    <?php include($common_path . "review_form.php") ?>
-                    <button class="btn btn-success" data-toggle="modal" data-target="#reviewForm">Leave a Review
-                    </button>
-                </div>
-                <?php foreach ($product['reviews'] as $review) { ?>
-                    <hr>
+            <div class="hidden-xs col-sm-2 col-md-1">
+                <!-- Additional pictures -->
+            </div>
+            <div class="col-xs-12 col-sm-5 col-md-7">
+                <!-- START CONTENT ITEM -->
+                <div class="well">
                     <div class="row">
-                        <div class="col-md-12">
-                            <?php for ($i = 1; $i < 6; $i++) {
-                                if ($i > $review->rating) {
-                                    ?>
-                                    <span class="glyphicon glyphicon-star-empty"></span>
-                                <?php } else { ?>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                <?php
-                                }
-                            }
-                            echo $review->username; ?>
-                            <span class="pull-right"><?php echo $review->getDateLabel(); ?></span>
-                            <p><?php echo $review->review; ?></p>
+                        <div class="col-xs-6 col-sm-5 col-md-7">
+                            <strong>Product Name:</strong> <span><?= $product['name'] ?></span><br>
+                        </div>
+                        <div class="col-xs-6 col-sm-7 col-md-5">
+                            <span class="label label-important price">$<?= $product['price'] ?></span>
                         </div>
                     </div>
-                <?php } ?>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-5 col-md-7">
+                            <div class="ratings product-item-ratings">
+                                <p class="pull-right"><?= $product['customers_votes'] ?> reviews</p>
+
+                                <p>
+                                    <?php include($common_path . "rating_stars.php") ?>
+                                    <?= $product['customers_rating'] ?> stars
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h3>Description</h3>
+
+                            <p><?= $product['description'] ?></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3">
+                            <a class="btn btn-block btn-default"><span class="glyphicon glyphicon-chevron-left"></span>
+                                Back</a>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <form id="cart_form" action="/cart/add" method="post" class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label for="count"
+                                           class="col-xs-12 col-sm-3 col-md-3 col-lg-2 control-label">Count</label>
+
+                                    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
+                                        <div class="text-right">
+                                            <input type="hidden" name="product_id" value="<?= $product['productID'] ?>">
+                                            <select class="form-control" id="qty" name="qty">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </div>
+                                        </div>
+                                    </div>
+                            </form>
+                        </div>
+                        <div class="col-xs-12 col-md-3">
+                            <a class="btn btn-block btn-primary" id="add_to_cart" href="#"><span
+                                    class="glyphicon glyphicon-shopping-cart"></span> Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- END CONTENT ITEM -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- START CONTENT ITEM -->
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#offers" data-toggle="tab">Special Offers</a></li>
+                        <li class=""><a href="#bestsell" data-toggle="tab">Best selling products</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="row tab-pane active" id="offers">
+                            <?php include __DIR__ . '/small_productlist.php'; ?>
+                        </div>
+                        <div class="row tab-pane" id="bestsell">
+                            <?php include __DIR__ . '/big_productlist.php'; ?>
+                        </div>
+                    </div>
+                </div>
+                <!-- END CONTENT ITEM -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="well">
+                    <div class="text-right">
+                        <?php
+                        include($common_path . "review_form.php")
+                        ?>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#reviewForm">Leave a Review
+                        </button>
+                    </div>
+                    <?php foreach ($product['reviews'] as $review) { ?>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <?php for ($i = 1; $i < 6; $i++) {
+                                    if ($i > $review->rating) {
+                                        ?>
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                    <?php } else { ?>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                    <?php
+                                    }
+                                }
+                                echo $review->username; ?>
+                                <span class="pull-right"><?php echo $review->getDateLabel(); ?></span>
+
+                                <p><?php echo $review->review; ?></p>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-<div class="row">
