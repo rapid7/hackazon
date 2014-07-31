@@ -518,3 +518,10 @@ form.signin .error {
     display: inline-block;
     width: 100%;
 }
+#checkout-alert-info {
+    position: absolute;
+    top: 41px;
+    right: 13px;
+    z-index: 1000;
+    width: 261px;
+}

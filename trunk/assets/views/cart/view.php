@@ -1,31 +1,67 @@
 <script>
     function update_qty(itemId, qty)
     {
+        var priceItem = parseInt($("#row_span_item_" + itemId).html());
+        var priceTotal = priceItem * qty;
+        $("#row_span_total_" + itemId).empty().append(priceTotal);
+
         $.ajax({
             url:'/cart/update',
             type:"POST",
             data: {qty: qty, itemId: itemId},
             dataType:"json",
             success: function(data){
-                if (qty == 0) {
+                if (qty <= 0) {
                     $("#tr_item_" + itemId).remove();
                 }
                 $("#items_qty").html(data.items_qty);
                 $("#total_price").html(data.total_price);
-                alert('Your cart has been updated');//TODO: Do Bootstrap style, .alert() does not work
+                $("#checkout-alert-info").empty().append('<div class="alert alert-info"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Your cart has been updated</strong></div>');
+                setTimeout('$(".alert-info").alert("close");', 3000);
+
             },
             fail: function() {
                 alert( "error" );
             }
         });
     }
+
     $(function () {
+        $("#empty_cart").click(function(){
+            $.ajax({
+                url:'/cart/empty',
+                type:"POST",
+                dataType:"json",
+                success: function(data){
+                    $(".tr_items").remove();
+                    $("#items_qty").html(0);
+                    $("#total_price").html(0);
+                    $("#checkout-alert-info").empty().append('<div class="alert alert-info"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Your cart has been deleted</strong></div>');
+                    setTimeout('$(".alert-info").alert("close");', 3000);
+                },
+                fail: function() {
+                    alert( "error" );
+                }
+            });
+        });
+        $(".close").click(function(){
+            $(".alert-info").alert('close');
+        });
         $(".plus_btn").click(function() {
-            //console.warn($(this).parents('tr').children('input'));TODO
+            var qty = parseInt($('#input_' + $(this).attr('data-id')).val()) + 1;
+            $('#input_' + $(this).attr('data-id')).val(qty);
+            update_qty($(this).attr('data-id'), qty);
+        });
+        $(".minus_btn").click(function() {
+            var qty = parseInt($('#input_' + $(this).attr('data-id')).val()) - 1;
+            if (qty < 0) return;
+            $('#input_' + $(this).attr('data-id')).val(qty);
+            update_qty($(this).attr('data-id'), qty);
         });
     });
 
 </script>
+
 <div class="container">
 
     <div class="row">
@@ -36,36 +72,7 @@
                 </li>
                 <li class="active">My Cart</li>
             </ol>
-
-            <?php
-            /*foreach ($items as $item):?>
-                <?php
-                $product = $item->getProduct();
-                ?>
-                <tr id="tr_item_<?php echo $item->id?>">
-                    <td>
-                        <img class="img-responsive img-home-portfolio" style="width:100px" src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>">
-                    </td>
-                    <td>
-                        <h4><a href="/product/view/<?=$product['productID']?>"><?=$product['name']?></a></h4>
-                    </td>
-                    <td>
-                        <h4>$<?=$product['price']?></h4>
-                    </td>
-                    <td>
-                        <h4><select id="qty_selected" onchange="update_qty(<?=$item->id?>, this.value)">
-                            <?php
-                            for ($i = 0;$i <= 10;$i++) {
-                                $selected = '';
-                                if ($i == $item->qty) {
-                                    $selected = 'selected="selected"';
-                                }
-                                echo '<option ' . $selected . ' value="' . $i . '">' . $i . '</option>';
-                            }?>
-                        </select></h4>
-                    </td>
-                </tr>
-            <?php endforeach;*/?>
+            <div id="checkout-alert-info"></div>
         </div>
 
 
@@ -104,7 +111,7 @@
                     <?php
                     $product = $item->getProduct();
                     ?>
-                    <tr id="tr_item_<?php echo $item->id?>">
+                    <tr class="tr_items" id="tr_item_<?php echo $item->id?>">
                         <td class="hidden-xs"><img class="img-responsive img-home-portfolio" style="width:100px" src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>"></td>
                         <td>
                             <h4><a href="/product/view/<?=$product['productID']?>"><?=$product['name']?></a></h4>
@@ -113,13 +120,13 @@
 
                             <div class="input-group">
 														<span class="input-group-btn">
-															<button class="btn btn-default minus_btn" type="button">
+															<button data-id="<?php echo $item->id?>" class="btn btn-default minus_btn" type="button">
 																<span class="glyphicon glyphicon-minus">
 															</span></button>
 														</span>
-                                <input type="text" onchange="update_qty(<?=$item->id?>, this.value)" class="form-control" value="<?php echo $item->qty?>">
+                                <input type="text" id="input_<?php echo $item->id?>" onchange="update_qty(<?php echo $item->id?>, this.value)" class="form-control" value="<?php echo $item->qty?>">
 														<span class="input-group-btn">
-															<button class="btn btn-default plus_btn" type="button">
+															<button data-id="<?php echo $item->id?>" class="btn btn-default plus_btn" type="button">
 																<span class="glyphicon glyphicon-plus">
 															</span></button>
 														</span>
@@ -127,10 +134,10 @@
 
                         </td>
                         <td align="right">
-                            <span>$ <?php echo $item->price?>,- </span>
+                            <span>$ <span id="row_span_item_<?php echo $item->id?>"><?php echo $item->price?></span>,- </span>
                         </td>
                         <td align="right">
-                            <span>$ <?php echo $item->price*$item->qty?>,- </span>
+                            <span>$ <span id="row_span_total_<?php echo $item->id?>"><?php echo $item->price*$item->qty?></span>,- </span>
                         </td>
                     </tr>
                     <?php endforeach;?>
@@ -189,10 +196,10 @@
         </div>
         <div class="row">
             <div class="col-xs-4">
-                <a href="products.html" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Continue shopping</a>
+                <a href="/" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Continue shopping</a>
             </div>
             <div class="col-xs-4">
-                <button class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Empty cart</button>
+                <button class="btn btn-default" id="empty_cart"><span class="glyphicon glyphicon-trash"></span> Empty cart</button>
             </div>
             <div class="col-xs-4">
                 <button class="btn btn-primary pull-right" data-target="#step2" data-toggle="tab">Next <span class="glyphicon glyphicon-chevron-right"></span></button>
