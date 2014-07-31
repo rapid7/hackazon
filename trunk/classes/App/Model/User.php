@@ -2,12 +2,28 @@
 
 namespace App\Model;
 
+/**
+ * Class User.
+ * @property WishList|WishList[] wishlists
+ * @property WishList[] lists
+ * @package App\Model
+ */
 class User extends \PHPixie\ORM\Model {
 
     public $table = 'tbl_users';
     public $id_field = 'id';
 
-    public function checkExistingUser($dataUser){
+	private $defaultWishList = null;
+
+	protected $has_many = array(
+		'wishlists' => array(
+            'model' => 'wishList',
+            'key' => 'user_id'
+        )
+	);
+
+
+	public function checkExistingUser($dataUser){
         if(iterator_count($this->getUserByUsername($dataUser['username'])) > 0 || iterator_count($this->getUserByEmail($dataUser['email']))>0 )
             return true;
         else
@@ -122,5 +138,130 @@ Recovering link is here
                 return true;
         }
         return false;
+    }
+
+	/**
+	 * @param WishList $list
+	 * @return $this
+	 */
+	public function addWishList(WishList $list)
+	{
+		if ($this->wishlists->containsById($list)) {
+			return $this;
+		}
+
+		$this->add('wishlists', $list);
+        $list->save();
+		return $this;
+	}
+
+	/**
+	 * @param WishList $list
+	 * @return $this
+	 */
+	public function removeWishList(WishList $list)
+	{
+		// If collection doesn't contain wish list, just stop
+		if (!$this->wishlists->containsById($list)) {
+			return $this;
+		}
+
+		// Else search for
+		$itemInList = $this->wishlists->filterOneBy(array('id' => $list->id));
+		if ($itemInList) {
+			$this->remove('wishlists', $itemInList);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Returns default wish list.
+	 * If there is no default wish list, method marks first list as default
+	 * and returns it.
+	 * @return null|WishList
+	 */
+	public function getDefaultWishList()
+	{
+		if (!$this->loaded()) {
+			return null;
+		}
+
+		if ($this->defaultWishList instanceof WishList) {
+			return $this->defaultWishList;
+		}
+
+        if (!$this->wishlists->count_all()) {
+            return null;
+        }
+
+
+		$first = null;
+        /** @var WishList $list */
+		foreach ($this->lists as $list) {
+			if (!$first) {
+				$first = $list;
+			}
+			if ($list->isDefault()) {
+				$this->setDefaultWishList($list);
+				return $this->defaultWishList;
+			}
+		}
+
+		if ($first instanceof WishList) {
+			$this->setDefaultWishList($first);
+		}
+
+		return $this->defaultWishList;
+	}
+
+	/**
+	 * Sets one of users wishlists as a default.
+	 * @param WishList $wishList
+	 * @return $this User himself for chaining
+	 * @throws \InvalidArgumentException If wishlist isn't a users one.
+	 */
+	public function setDefaultWishList(WishList $wishList)
+	{
+		if (!$wishList->loaded()) {
+			throw new \InvalidArgumentException("Can't set empty (not loaded) Wish List as default for user.");
+		}
+
+		$newDefault = null;
+
+        /** @var WishList $list */
+		foreach ($this->lists as $list) {
+			if ($wishList->id == $list->id) {
+				if (!$list->isDefault()) {
+					$list->setDefault();
+					$list->save();
+                    $wishList->setDefault();
+				}
+                $this->defaultWishList = $list;
+				$newDefault = $list;  // Check that given wishlist really exists in users wishlists.
+
+			} else {
+				if ($list->isDefault()) {
+					$list->setDefault(false);
+					$list->save();
+				}
+			}
+		}
+
+		// If given wishlist is foreign to user, notify user about illegal argument
+		// User can set as a default only his own wishlists
+		if ($newDefault === null) {
+			throw new \InvalidArgumentException("Can't set empty (not loaded) Wish List as default for user.");
+		}
+
+		return $this;
+	}
+
+    public function get($propertyName)
+    {
+        if ($propertyName == 'lists') {
+            return $this->wishlists->find_all()->as_array();
+        }
+        return null;
     }
 }

@@ -849,3 +849,6 @@ INSERT INTO `tbl_review` (`reviewID`, `productID`, `username`, `email`, `review`
   (498,	8,	'Mirosmom',	'eml497_mirosmom@example.com',	'Love that it is kind of magnetized. seems to hold in place whether it is propped up or just closed. Very basic.',	'2014-07-28 09:26:19',	0,	4),
   (499,	81,	'SnackLady',	'eml498_snacklady@example.com',	'Great case, keeps things in tact and safe! Only issue is the right bracket which holds the tablet in covers the power on/off button. Otherwise it is a nice hard case and can swivel the tablet to position horizontally or vertically. I would say it is a little on the expensive side though - mid 30 dollar range!',	'2014-07-28 09:25:00',	0,	4),
   (500,	36,	'Mirosmom',	'eml499_mirosmom@example.com',	'Just using for backup memory on tablet. Works great. The price was perfect because it was on sale.',	'2014-07-28 09:24:40',	0,	5);
+
+INSERT INTO `tbl_users` (`id`, `username`, `password`, `user_phone`, `email`, `oauth_provider`, `oauth_uid`, `created_on`, `last_login`, `active`, `recover_passw`) VALUES
+  (1,	'test_user',	'7d4a69db92c867d9b0060653c44733bf:108853d9fae39d4bb',	'+1(999) 123-1231',	'test_user@example.com',	'',	'',	'2014-07-31 12:14:27',	'2014-07-31 15:43:01',	1,	'415af5ab8dcd28c948963a83ac474756');

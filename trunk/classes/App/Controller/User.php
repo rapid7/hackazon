@@ -9,10 +9,14 @@ class User extends \App\Page {
 
 
     public function action_login() {
-        if (!is_null($this->pixie->auth->user()))
+        if (!is_null($this->pixie->auth->user())) {
             $this->redirect('/account');
-                
+        }
+
+        $this->view->returnUrl = $this->request->get('return_url', '');
+
         if ($this->request->method == 'POST') {
+            //var_dump($this->view->returnUrl); exit;
             $login = $this->model->checkLoginUser($this->request->post('username'));
             $password = $this->request->post('password');
 
@@ -29,16 +33,23 @@ class User extends \App\Page {
 
                     $user->last_login = date('Y-m-d H:i:s');
                     $user->save();
+
                     //On successful login redirect the user to
-                    //our protected page
-                    return $this->redirect('/account');
+                    //our protected page, or return_url, if specified
+                    if ($this->view->returnUrl) {
+                        $this->redirect($this->view->returnUrl);
+                        return;
+                    }
+
+                    $this->redirect('/account');
+                    return;
                 }
             }
             $this->view->username = $this->request->post('username');
             $this->view->errorMessage = "Username or password are incorrect.";
         }
         //Include 'login.php' subview
-        
+
         $this->view->subview = 'user/login';
     }
     

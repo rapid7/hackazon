@@ -497,3 +497,24 @@ form.signin .error {
 .product-detail .product-image {
     margin: auto;
 }
+
+.wishlist {
+    min-height: 500px;
+}
+
+.wishlist .logo-container {
+    padding: 40px 0;
+}
+
+.wishlist h1 {
+    margin-bottom: 30px;
+}
+
+.wishlist .search-field-box {
+    width: 70%;
+}
+
+.wishlist .search-field {
+    display: inline-block;
+    width: 100%;
+}

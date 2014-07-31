@@ -7,6 +7,7 @@ namespace App;
  *
  * @property-read \PHPixie\DB $db Database module
  * @property-read \PHPixie\ORM $orm ORM module
+ * @property-read \PHPixie\Auth $auth Auth module
  */
 class Pixie extends \PHPixie\Pixie {
 	protected $modules = array(

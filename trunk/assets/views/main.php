@@ -75,8 +75,8 @@
                     <button id="loginbtn" class="submit button" type="submit">Sign in</button>
                     <p>
                         <a class="forgot" href="/user/password">Forgot your password?</a>
-                        <a class="restore" href="/user/register">New user?</a></br>
-                        <a class="forgot" href="/facebook">Login via Facebook</a></br>
+                        <a class="restore" href="/user/register">New user?</a><br>
+                        <a class="forgot" href="/facebook">Login via Facebook</a><br>
                         <a class="forgot" href="/twitter">Login via Twitter</a>
                     </p>        
                 </fieldset>

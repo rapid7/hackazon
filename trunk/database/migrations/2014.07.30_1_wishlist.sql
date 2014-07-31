@@ -6,6 +6,7 @@ CREATE TABLE `tbl_wish_list` (
   `user_id` mediumint(8) unsigned NOT NULL,
   `name` varchar(64) NOT NULL,
   `type` varchar(16) NOT NULL DEFAULT 'public',
+  `is_default` tinyint unsigned NOT NULL DEFAULT '0',
   `created` datetime NOT NULL,
   `modified` datetime NULL
 ) COMMENT='' ENGINE='InnoDB' COLLATE 'utf8_general_ci';
