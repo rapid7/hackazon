@@ -39,8 +39,9 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Wish List <b class="caret"></b></a>
+                        <a href="/wishlist" class="dropdown-toggle" data-toggle="dropdown">Wish List <b class="caret"></b></a>
                         <ul class="dropdown-menu">
+                            <li><a href="<?php echo $controller->generateUrl('default', array('controller' => 'wishlist')); ?>">Wish Lists</a></li>
                             <li><a href="full-width.html">Full Width Page</a>
                             </li>
                             <li><a href="sidebar.html">Sidebar Page</a>
@@ -55,6 +56,8 @@
                     </li>
                     <li><a href="/blog">Blog</a>
                     <li><a href="/cart">Cart</a>
+                    <?php else: ?>
+                        <li><a href="<?php echo $controller->generateUrl('default', array('controller' => 'wishlist', 'action' => ''))?>">Wish List</a>
                     <?php endif ?>
                 </ul>
 

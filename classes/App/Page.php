@@ -22,7 +22,9 @@ class Page extends \PHPixie\Controller {
         $config = $this->pixie->config->get('page');
         $this->view->common_path = $config['common_path'];
         $this->common_path = $config['common_path'];
+        $this->view->returnUrl = '';
         $className = $this->get_real_class($this);
+        $this->view->controller = $this;
 
         if (!($className == 'Home' && $this->request->param('action') == 'install')) {
             $category = new Category($this->pixie);
@@ -96,4 +98,20 @@ class Page extends \PHPixie\Controller {
         return $all_categories;
     }
 
+    /**
+     * Generates URL by given name and parameters.
+     *
+     * @param string $route Route name
+     * @param array $params controller, action, and so on
+     * @param bool $absolute Whether link is absolute or not
+     * @param string $protocol
+     * @return string
+     */
+    public function generateUrl($route = 'default', array $params = array(), $absolute = false, $protocol = 'http')
+    {
+        if (!isset($params['action'])) {
+            $params['action'] = false;
+        }
+        return $this->pixie->router->get($route)->url($params, $absolute, $protocol);
+    }
 }

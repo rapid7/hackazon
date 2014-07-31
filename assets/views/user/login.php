@@ -32,7 +32,7 @@
 
             <div class="row" style="width: 400px; padding-left: 30px;">
 
-                <form role="form" method="POST" action="/user/login" id="loginForm">
+                <form role="form" method="POST" action="/user/login<?php echo $returnUrl ? '?return_url=' . rawurlencode($returnUrl) : ''; ?> " id="loginForm">
                     <div class="row">
                         <div class="form-group">
                             <label for="username">Username or email <span style="color: red">*</span></label>
