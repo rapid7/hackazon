@@ -56,7 +56,7 @@ class CartItems extends \PHPixie\ORM\Model {
 
         $cart = $this->pixie->orm->get('Cart')->getCart();
 
-        if ($qty == 0) {
+        if ($qty <= 0) {
             $cart->total_price -= $item->price * $item->qty;
             $cart->items_count -= 1;
             $cart->items_qty -= $item->qty;
@@ -73,7 +73,7 @@ class CartItems extends \PHPixie\ORM\Model {
         }
         $cart->save();
 
-        if ($qty == 0) {
+        if ($qty <= 0) {
             $item->delete();
             return true;
         }
