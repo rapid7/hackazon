@@ -8,9 +8,16 @@
 $j = 0;
 $productCount = count($productListData['products']);
 $lastProductNum = $productCount - 1;
-$perRow = 4;
+$perRow = isset($perRow) && is_numeric($perRow) ? $perRow : 4;
+$colClasses = "col-md-3 col-lg-3";
+if ($perRow == 3) {
+    $colClasses = "col-md-4 col-lg-4";
+}
 ?>
-<div class="container product-list">
+<?php if (!isset($productListData['hide_container']) || !$productListData['hide_container']): ?>
+    <div class="container product-list">
+<?php endif; ?>
+
 <?php foreach($productListData['products'] as $product):
     $specialOffer = $product;
     if ($product instanceof App\Model\SpecialOffers) {
@@ -19,7 +26,7 @@ $perRow = 4;
 
     $product->setAnnotationLength(60);
     $firstInRow = (0 == $j % $perRow && $j <= $lastProductNum);
-    $lastInRow = ($j > 0 && (0 == ($j + 1) % $perRow || $j == $lastProductNum)); ?>
+    $lastInRow = ((0 == ($j + 1) % $perRow || $j == $lastProductNum)); ?>
 
     <?php if ($firstInRow):  ?>
     <div class="row">
@@ -28,14 +35,8 @@ $perRow = 4;
             <!-- START CONTENT ITEM -->
             <div class="product-list-inline-large">
     <?php endif; ?>
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
-                    <div class="thumbnail light">
-                        <?php /*<div class="caption">
-                            <h4 class="pull-right">$<?php $_($product->Price); ?></h4>
-                            <h4><a href="/product/view/<?php $_($product->productID); ?>"><?php $_($product->name); ?></a></h4>
-                            <p class="product-description"><?php $_($product->getAnnotation()); ?></p>
-                        </div>  */ ?>
-
+                <div class="col-xs-12 col-sm-6 <?php echo $colClasses; ?>">
+                    <div class="thumbnail light product-item" data-id="<?php echo $product->id(); ?>">
                         <div class="img-box">
                             <a href="/product/view/<?php echo $product->productID; ?>">
                                 <span class="label label-info price">$<?php echo $product->Price; ?></span>
@@ -64,4 +65,6 @@ $perRow = 4;
     $j++;
     ?>
 <?php endforeach;?>
-</div>
+<?php if (!isset($productListData['hide_container']) || !$productListData['hide_container']): ?>
+    </div>
+<?php endif; ?>

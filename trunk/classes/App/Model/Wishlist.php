@@ -19,6 +19,8 @@ namespace App\Model;
  * @property string created
  * @property string modified
  * @property User owner
+ * @property WishListItem|WishListItem[] items
+ * @property Product|Product[] products
  * @package App\Model
  */
 class WishList extends BaseModel
@@ -38,10 +40,16 @@ class WishList extends BaseModel
 	);
 
 	protected $has_many = array(
-		'items'=>array(
-			'model'=>'wishListItem',
-			'key'=>'id'
-		)
+        'items' => array(
+            'model' => 'wishListItem',
+            'key' => 'wish_list_id'
+        ),
+        'products' => array(
+            'model' => 'product',
+            'through' => 'tbl_wish_list_item',
+            'key' => 'wish_list_id',
+            'foreign_key' => 'product_id'
+        )
 	);
 
 	public function isDefault()

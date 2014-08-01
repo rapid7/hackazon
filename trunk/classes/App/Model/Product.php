@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Helpers\ArraysHelper;
+use App\Pixie;
 use PHPixie\ORM;
 
 /**
@@ -15,6 +16,7 @@ use PHPixie\ORM;
  * @property float customers_rating
  * @property string picture
  * @property int categoryID
+ * @property Pixie pixie
  * @package App\Model
  */
 class Product extends \PHPixie\ORM\Model {
@@ -41,6 +43,12 @@ class Product extends \PHPixie\ORM\Model {
         'reviews'=>array(
             'model'=>'Review',
             'key'=>'productID'
+        ),
+        'in_wishlists' => array(
+            'model' => 'wishList',
+            'through' => 'tbl_wish_list_item',
+            'foreign_key' => 'wish_list_id',
+            'key' => 'product_id'
         )
     );
 
@@ -246,4 +254,19 @@ class Product extends \PHPixie\ORM\Model {
         return $this->reviews->where('moder', '=', Review::APPROVED)->find_all();
     }
 
+    public function isInUserWishList(User $user = null)
+    {
+        if ($user === null || !$user->loaded() || !$this->loaded()) {
+            return false;
+        }
+
+        $num = $this->pixie->db->query('count')->table('tbl_products', 'p')
+            ->join(array('tbl_wish_list_item', 'wli'), array('wli.product_id', 'p.productID'))
+            ->join(array('tbl_wish_list', 'wl'), array('wl.id', 'wli.wish_list_id'))
+            ->where('wl.user_id', '=', $user->id())
+            ->where('p.productID', '=', $this->id())
+            ->execute();
+
+        return $num > 0;
+    }
 }

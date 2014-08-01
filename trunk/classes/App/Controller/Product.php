@@ -18,6 +18,7 @@ class Product extends \App\Page {
         $productID = $this->request->param('id');
 
         $this->view->product = $this->model->getProduct($productID);
+        $this->view->productObj = $this->model->where('productID', '=', $productID)->find_all()->current();
         $this->view->pageTitle = $this->model->getPageTitle($productID);
         $offers = new SpecialOffers($this->pixie);
         $this->view->special_offers = $offers->getRandomOffers(5);

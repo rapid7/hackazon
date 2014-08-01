@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Model;
+use App\Pixie;
 
 /**
  * Class User.
  * @property WishList|WishList[] wishlists
  * @property WishList[] lists
+ * @property Pixie pixie
  * @package App\Model
  */
 class User extends \PHPixie\ORM\Model {
@@ -263,5 +265,36 @@ Recovering link is here
             return $this->wishlists->find_all()->as_array();
         }
         return null;
+    }
+
+    public function createNewWishList($name = 'New Wish List', $type = WishList::TYPE_PRIVATE)
+    {
+        $wishList = new WishList($this->pixie);
+
+        if (!$wishList->isValidType($type)) {
+            $type = WishList::TYPE_PRIVATE;
+        }
+
+        $wishList->type = $type;
+        $wishList->name = $name;
+        $wishList->created = date('Y-m-d H:i:s');
+
+        $this->addWishList($wishList);
+        $wishList->save();
+        return $wishList;
+    }
+
+    public function removeProductFromWishLists($productId)
+    {
+        if (!$this->loaded()) {
+            return;
+        }
+
+        $this->pixie->db->query('delete')->table($this->pixie->orm->get('wishListItem')->table, 'wli')
+            ->join(array('tbl_products', 'p'), array('wli.product_id', 'p.productID'))
+            ->join(array('tbl_wish_list', 'wl'), array('wl.id', 'wli.wish_list_id'))
+            ->where('wl.user_id', '=', $this->id())
+            ->where('p.productID', '=', $productId)
+            ->execute();
     }
 }

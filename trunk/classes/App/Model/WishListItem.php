@@ -14,13 +14,15 @@ namespace App\Model;
  * Class WishListItem
  * @property int id
  * @property WishList wishlist
+ * @property int wish_list_id
  * @property Product product
+ * @property int  product_id
  * @property string created
  * @package App\Model
  */
 class WishListItem extends BaseModel
 {
-    public $table = 'tbl_wish_list';
+    public $table = 'tbl_wish_list_item';
     public $id_field = 'id';
 
     protected $belongs_to = array(
@@ -30,7 +32,7 @@ class WishListItem extends BaseModel
         ),
         'product' => array(
             'model' => 'product',
-            'key' => 'productID'
+            'key' => 'product_id'
         )
     );
 } 
