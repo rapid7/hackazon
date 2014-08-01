@@ -525,3 +525,56 @@ form.signin .error {
     z-index: 1000;
     width: 261px;
 }
+
+.add-to-wish-list-dropdown.dropdown .btn {
+    margin-bottom: 0;
+}
+
+.wishlist .list-group-item.active a {
+    color: #fff;
+}
+
+.wishlist .product-list {
+    min-height: 300px;
+    margin-bottom: 20px;
+}
+
+.wishlist .search-form {
+    padding-left: 0;
+    margin-top: 0;
+    width: 50%
+}
+
+.wishlist .search-form input[type=search],
+.wishlist .search-form input[type=text] {
+    width: 100%;
+}
+
+.wishlist .top-buttons {
+    margin-bottom: 30px;
+}
+
+.wishlist .products .container {
+    width: auto;
+}
+
+.wishlist .product-item .item-actions {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: none;
+}
+
+.wishlist .product-item:hover .item-actions {
+    display: block;
+}
+
+.wishlist .product-item .item-action-icon {
+    margin-left: 5px;
+}
+
+.wishlist .product-item .item-action-icon:first-child {
+    margin-left: 0
+}

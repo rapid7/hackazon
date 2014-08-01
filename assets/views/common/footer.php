@@ -6,3 +6,10 @@
         </div>
     </div>
 </footer>
+
+<script type="text/x-template" id="tplAlertContent">
+    <div class="text-center">
+        <a href="#" class="btn btn-primary js-yes">Yes</a>
+        <a href="#" class="btn btn-danger js-no">No</a>
+    </div>
+</script>

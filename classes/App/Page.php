@@ -114,4 +114,11 @@ class Page extends \PHPixie\Controller {
         }
         return $this->pixie->router->get($route)->url($params, $absolute, $protocol);
     }
+
+    public function jsonResponse($responseData)
+    {
+        $this->response->body = json_encode($responseData);
+        $this->response->headers['Content-Type'] = 'application/json';
+        $this->execute = false;
+    }
 }

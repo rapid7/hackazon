@@ -1,3 +1,97 @@
+function bsModalWindow(content, title, footer) {
+    title = title || 'Alert!';
+
+    var modal = $('<div class="modal fade bs-example-modal-sm bs-alert-popup" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">\
+        <div class="modal-dialog modal-sm">\
+            <div class="modal-content">\
+                <div class="modal-header">\
+                    <button data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>\
+                    <h4 id="mySmallModalLabel" class="modal-title">' + title + '</h4>\
+                </div>\
+                <div class="modal-body">\
+                    ' + content + '\
+                </div>\
+                ' + (footer ? '<div class="modal-footer">' + footer + '</div>' : '') + '\
+            </div>\
+        </div> \
+    </div>');
+
+    modal.appendTo(document.body);
+    modal.modal({});
+
+    return modal;
+}
+
+function bsAlert(title) {
+    var modal = bsModalWindow($('#tplAlertContent').html(), title || 'Alert!'),
+        deferred = $.Deferred();
+
+    modal.on('hidden.bs.modal', function () {
+        modal.remove();
+        deferred.reject();
+    });
+
+    modal.on('click', '.js-yes, .js-no', function (ev) {
+        ev.preventDefault();
+        modal.modal('hide');
+        if ($(ev.target).is('.js-yes')) {
+            deferred.resolve();
+        } else {
+            deferred.reject();
+        }
+    });
+
+    return deferred;
+}
+
+function bsEditWishList(wishList) {
+
+    wishList = wishList || {
+        name: 'New Wish List',
+        type: 'private'
+    };
+
+
+    var isEdit = !!wishList.id;
+    var title = isEdit ? 'Edit Wish List' : 'Add Wish List';
+    var buttonTitle = isEdit ? 'Save' : 'Add';
+
+    var modal = bsModalWindow($('#tplEditWishListForm').html(), title,
+                '<a href="#" class="btn btn-primary js-submit">' + buttonTitle + '</a>'),
+        deferred = $.Deferred();
+
+
+
+    modal.find('input[name="name"]').val(wishList.name);
+    modal.find('select[name="type"]').val(wishList.type);
+    modal.find('input[name="id"]').val(wishList.id);
+
+    modal.on('hidden.bs.modal', function () {
+        modal.remove();
+        deferred.reject();
+    });
+
+    modal.on('click', '.js-submit', function (ev) {
+        ev.preventDefault();
+
+        var result = {
+            id: modal.find('input[name="id"]').val(),
+            name: modal.find('input[name="name"]').val(),
+            type: modal.find('select[name="type"]').val()
+        };
+
+        if (!result.name || !result.type) {
+            return;
+        }
+
+        modal.modal('hide');
+        deferred.resolve(result);
+    });
+
+    return deferred;
+}
+
+
 $(document).ready(function () {
 
     $('a.login-window').click(function () {
@@ -57,6 +151,225 @@ $(document).ready(function () {
 
     // Run the slideshows on the page
     $('.nivoslider').nivoSlider();
+
+    // Controls product detail widget
+    $('.product-detail').each(function () {
+        var $productBlock = $(this);
+
+        $productBlock.on('click', '.js-add-to-wish-list', function (ev) {
+            var title, $link, $dropdown, $button;
+            $link = $(ev.target);
+            $dropdown = $link.closest('.dropdown');
+            $button = $dropdown.find('.dropdown-toggle'); // Button in dropdown
+            var $textLink = $button.length ? $button : $link;
+            title = $textLink.text(); //
+
+            ev.preventDefault();
+            var id = $link.data('id');
+            var wishListId = $link.data('wishlist-id');
+
+            if (!id) {
+                return;
+            }
+
+            $.ajax('/wishlist/add-product/' + id, {
+                data: {
+                    wishlist_id: wishListId
+                },
+                dataType: 'json',
+                timeout: 10000,
+                type: 'POST',
+                beforeSend: function () {
+                    $textLink.attr('disabled', 'disabled');
+                    $textLink.text('Adding to Wish List...')
+                },
+                complete: function () {
+                    $textLink.removeAttr('disabled');
+                    $textLink.text(title);
+                }
+
+            }).success(function () {
+                var result = $('<div class="alert alert-success" role="alert">Successfully added to your wishlist.</div>');
+                if ($dropdown.length) {
+                    $dropdown.replaceWith(result);
+                } else {
+                    $link.replaceWith(result);
+                }
+
+            }).error(function () {
+                $link.replaceWith($('<div class="alert alert-danger" role="alert">Error while adding to wishlist.</div>'));
+            });
+        });
+
+        $productBlock.on('click', '.js-remove-from-wish-list', function (ev) {
+            var $link, id, wishListItemId, title;
+
+            ev.preventDefault();
+            $link = $(ev.target);
+            title = $link.text();
+
+            id = $link.data('id');
+            wishListItemId = $link.data('wish-list-item-id');
+
+            $.ajax('/wishlist/remove-product/' + id, {
+                data: {
+                    wish_list_item_id: wishListItemId
+                },
+                dataType: 'json',
+                timeout: 10000,
+                type: 'POST',
+                beforeSend: function () {
+                    $link.attr('disabled', 'disabled');
+                    $link.text('Removing from your Wish List...')
+                },
+                complete: function () {
+                    $link.removeAttr('disabled');
+                    $link.text(title);
+                }
+
+            }).success(function () {
+                var result = $('<div class="alert alert-success" role="alert">Successfully removed from your wishlist.</div>');
+                $link.replaceWith(result);
+
+            }).error(function () {
+                $link.replaceWith($('<div class="alert alert-danger" role="alert">Error while removing product from wishlist.</div>'));
+            });
+        });
+
+    });
+
+    $('.wishlist').each(function () {
+        var $wishlist = $(this),
+            buttonTemplate = $(
+                '<div class="item-actions">' +
+                '<a class="item-action-icon remove-from-list js-remove-from-list" title="Remove from Wish List"><span class="glyphicon glyphicon-remove-circle"></span></a>' +
+                '</div>'
+            );
+
+
+        if ($wishlist.data('access') == 'owner') {
+            $wishlist.find('.product-item').each(function () {
+                var $product = $(this);
+                $product.append(buttonTemplate.clone());
+            });
+        }
+
+        $wishlist.on('click', '.js-remove-from-list', function (ev) {
+            var $link, id;
+
+            ev.preventDefault();
+            $link = $(ev.target);
+
+            id = $link.closest('.product-item').data('id');
+
+            $.ajax('/wishlist/remove-product/' + id, {
+                dataType: 'json',
+                timeout: 10000,
+                type: 'POST',
+                beforeSend: function () {
+                    $link.remove();
+                },
+                complete: function () {
+                }
+
+            }).success(function (response) {
+                if (response.success) {
+                    location.reload();
+                }
+
+            }).error(function () {
+            });
+        });
+
+        $wishlist.on('click', '.js-add-wish-list', function (ev) {
+            ev.preventDefault();
+            var $link = $(ev.target);
+
+            bsEditWishList()
+            .then(function (result) {
+                $.ajax('/wishlist/new', {
+                    data: result,
+                    dataType: 'json',
+                    timeout: 10000,
+                    type: 'POST',
+                    beforeSend: function () {
+                        $link.attr('disabled', 'disabled');
+                    },
+                    complete: function () {
+                        $link.removeAttr('disbled');
+                    }
+
+                }).success(function (response) {
+                    if (response.success) {
+                        location.pathname = '/wishlist/view/' + response.id;
+                    }
+                });
+            });
+        });
+
+        $wishlist.on('click', '.js-delete-wish-list', function (ev) {
+            ev.preventDefault();
+            var $link = $(ev.target);
+
+            bsAlert("Are you sure?")
+            .then(function () {
+                var id = $link.closest('.wishlist').data('id');
+                if (!id) {
+                    return;
+                }
+
+                $.ajax('/wishlist/delete/' + id, {
+                    dataType: 'json',
+                    timeout: 10000,
+                    type: 'POST',
+                    beforeSend: function () {
+                        $link.attr('disabled', 'disabled');
+                    },
+                    complete: function () {
+                        $link.removeAttr('disbled');
+                    }
+
+                }).success(function (response) {
+                    if (response.success) {
+                        location.pathname = '/wishlist';
+                    }
+                });
+            });
+        });
+
+        $wishlist.on('click', '.js-edit-wish-list', function (ev) {
+            ev.preventDefault();
+            var $link = $(ev.target),
+                id = $wishlist.data('id');
+
+            bsEditWishList({
+                id: id,
+                name: $wishlist.data('name'),
+                type: $wishlist.data('type')
+            })
+                .then(function (result) {
+                    $.ajax('/wishlist/edit/' + id, {
+                        data: result,
+                        dataType: 'json',
+                        timeout: 10000,
+                        type: 'POST',
+                        beforeSend: function () {
+                            $link.attr('disabled', 'disabled');
+                        },
+                        complete: function () {
+                            $link.removeAttr('disbled');
+                        }
+
+                    }).success(function (response) {
+                        if (response.success) {
+                            location.pathname = '/wishlist/view/' + response.id;
+                        }
+                    });
+                });
+        });
+
+
+    });
 });
 
 

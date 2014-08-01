@@ -29,4 +29,4 @@ ALTER TABLE `tbl_wish_list_item`
 ADD FOREIGN KEY (`wish_list_id`) REFERENCES `tbl_wish_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `tbl_wish_list_item`
-ADD FOREIGN KEY (`id`) REFERENCES `tbl_products` (`productID`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD FOREIGN KEY (`product_id`) REFERENCES `tbl_products` (`productID`) ON DELETE CASCADE ON UPDATE CASCADE;

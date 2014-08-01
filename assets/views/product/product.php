@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-    <div class="row product-detail">
+    <div class="row product-detail" data-id="<?= $product['productID'] ?>">
         <div class="col-xs-12 col-sm-5 col-md-4">
             <a data-toggle="lightbox" data-title="<?= $product['name'] ?>"
                href="/products_pictures/<?= $product['picture'] ?>">
@@ -68,6 +68,8 @@
                         <h3>Description</h3>
 
                         <p><?= $product['description'] ?></p>
+
+                        <?php include __DIR__ . '/_wishlist_button.php'; ?>
                     </div>
                 </div>
                 <hr>
