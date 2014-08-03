@@ -39,8 +39,7 @@ class CartItems extends \PHPixie\ORM\Model {
     public function getAllItems()
     {
         $cart = $this->pixie->orm->get('Cart')->getCart();
-        $items = $this->where('cart_id',$cart->id)->order_by('created_at','asc')->find_all();
-        return $items;
+        return $this->where('cart_id',$cart->id)->order_by('created_at','asc')->find_all()->as_array();
     }
 
     public function getProduct()

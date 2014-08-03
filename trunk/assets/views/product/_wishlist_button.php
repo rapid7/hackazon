@@ -1,6 +1,6 @@
 <?php
 $userObj = $this->pixie->auth->user();
-$userWishLists = $userObj->wishlists->find_all()->as_array();
+$userWishLists = $userObj ? $userObj->wishlists->find_all()->as_array() : array();
 ?>
 <div class="wish-list-button-block js-wish-list-button-block">
     <?php if ($userObj): ?>

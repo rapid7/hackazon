@@ -49,7 +49,7 @@
 }
 
 #loginusericon {
-    float: right;
+    /*float: right;*/
     margin-left: 10px;
 }
 
@@ -577,4 +577,14 @@ form.signin .error {
 
 .wishlist .product-item .item-action-icon:first-child {
     margin-left: 0
+}
+
+ul.nav li a {
+    padding: 15px 10px !important;
+}
+#logincontrol ul.nav li a {
+    padding: 8px 10px !important;
+}
+ul.nav li.grey a {
+    color: grey;
 }

@@ -55,7 +55,6 @@
                         </ul>
                     </li>
                     <li><a href="/blog">Blog</a>
-                    <li><a href="/cart">Cart</a>
                     <?php else: ?>
                         <li><a href="<?php echo $controller->generateUrl('default', array('controller' => 'wishlist', 'action' => ''))?>">Wish List</a>
                     <?php endif ?>
@@ -64,6 +63,8 @@
             </div>
             <!-- /.navbar-collapse -->
             <div id="logincontrol">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
                 <div id="loginuser">
                     <?php if (!is_null($this->pixie->auth->user())): ?>
                         <a href="/user/logout" class="login-window" style="color:white">Logout</a>
@@ -72,8 +73,24 @@
                         <a href="#login-box" class="login-window" style="color:white">Login / Sign In</a>
                     <?php endif ?>
                 </div>
+                    <li style="width:20px">&nbsp;
+                    </li>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-shopping-cart"></span></a>
+                        <ul class="dropdown-menu">
+                            <?php
+                            $cart = $this->pixie->orm->get('Cart')->getCart();
+                            $items = $this->pixie->orm->get('CartItems')->getAllItems();
+                            foreach ($items as $item) {
+                                echo '<li><a href="/product/view/' . $item->product_id . '"><span class="pull-left"><small>' . $item->qty . 'x</small> ' . $item->name . '</span> &nbsp; <small class="pull-right label label-info">$ ' . $item->price * $item->qty . ',-</small></a></li>';
+                            }?>
+                            <li class="divider"></li>
+                            <li><a href="/cart/view">Show all items in shopping cart <i class="glyphicon glyphicon-chevron-right"></i></a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-
         </div>
         <!-- /.container -->
     </nav>
