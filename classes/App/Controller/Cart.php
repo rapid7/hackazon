@@ -29,6 +29,8 @@ class Cart extends \App\Page {
         $this->view->items = $items;
         $this->view->itemQty = $cart->items_qty;
         $this->view->totalPrice = $cart->total_price;
+        $this->view->tab = 'overview';
+        $this->view->step = 'shipping';
     }
 
     public function action_update() {
