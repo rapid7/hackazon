@@ -40,6 +40,7 @@
         <script src="/js/jquery.nivo.slider.pack.js"></script>
         <script src="/js/respond.min.js"></script>
         <script src="/js/star-rating.min.js"></script>
+        <script src="/js/jquery.form-validator.min.js"></script>
         <script src="/js/site.js"></script>
     </head>
 

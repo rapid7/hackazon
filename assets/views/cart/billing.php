@@ -1,3 +1,6 @@
+<?php include __DIR__ . '/cart_header.php'; ?>
+<div class="tab-pane active" id="step3">
+
 <div class="tab-pane" id="step3">
     <div class="row">
         <div class="col-xs-12 col-sm-6">
@@ -69,3 +72,4 @@
         </div>
     </div>
 </div>
+    <?php include __DIR__ . '/cart_footer.php'; ?>
