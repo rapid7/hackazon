@@ -61,7 +61,19 @@
             });
         });
         $(".confirm-address").click(function(){
-
+            var elem = this;
+            $.ajax({
+                url:'/checkout/shipping',
+                type:"POST",
+                dataType:"json",
+                data: {address_id: $(this).attr('data-id')},
+                success: function(){
+                    window.location.href="/checkout/billing";
+                },
+                fail: function() {
+                    alert( "error" );
+                }
+            });
         });
     });
 
@@ -82,6 +94,7 @@
         <button data-id="<?php echo $address->id?>" style="width:47%" class="btn btn-default btn-xs delete-address">Delete</button>
         </div>
     <?php endforeach;?>
+    <div style="clear:both"></div>
     <div class="row">
         <div class="col-xs-12 col-sm-6">
             <form id="shippingForm" class="form-horizontal well">

@@ -19,6 +19,7 @@ class CustomerAddress extends \PHPixie\ORM\Model {
         $this->phone = $post['phone'];
         $this->customer_id = $this->pixie->auth->user()->id;
         $this->save();
+        return $this->id;
     }
 
     public function getAll()
