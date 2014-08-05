@@ -30,7 +30,7 @@ class Cart extends \App\Page {
         $this->view->itemQty = $cart->items_qty;
         $this->view->totalPrice = $cart->total_price;
         $this->view->tab = 'overview';
-        $this->view->step = 'shipping';
+        $this->view->step = $this->pixie->orm->get('Cart')->getStepLabel();//last step
     }
 
     public function action_update() {
