@@ -86,7 +86,7 @@
         <b><?php echo $address->full_name ?></b><br />
         <?php echo $address->address_line_1 ?><br />
         <?php echo $address->address_line_2 ?><br />
-        <?php echo $address->city . $address->region . $address->zip ?><br />
+        <?php echo $address->city  . ' ' .  $address->region  . ' ' .  $address->zip ?><br />
         <?php echo $address->country_id ?><br />
         <?php echo $address->phone ?><br />
         <button data-id="<?php echo $address->id?>" style="margin-bottom:5px;width:100%" class="btn btn-primary btn-sm confirm-address">Ship to this address</button>

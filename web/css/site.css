@@ -588,3 +588,6 @@ ul.nav li a {
 ul.nav li.grey a {
     color: grey;
 }
+.address_confirmation {
+    border: #e5e5e5 solid 1px;margin-bottom:5px;padding:5px
+}

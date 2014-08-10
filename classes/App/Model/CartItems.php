@@ -6,40 +6,52 @@ class CartItems extends \PHPixie\ORM\Model {
 
     public $table = 'tbl_cart_items';
     public $id_field = 'id';
+    private $_cart;
+
+    public function setCart()
+    {
+        $this->_cart = $this->pixie->orm->get('Cart')->getCart();
+    }
+
+    public function getCart()
+    {
+        if (empty($this->_cart)) {
+            $this->setCart();
+        }
+        return $this->_cart;
+    }
 
     public function addItems($productId, $qty)
     {
         $product = $this->pixie->orm->get('Product')->where('productID', $productId)->find();
-        $cart = $this->pixie->orm->get('Cart')->getCart();
 
         $itemExist = $this->where(
             'and', array(
                 array('product_id', '=', $productId),
-                array('cart_id', '=', $cart->id)
+                array('cart_id', '=', $this->getCart()->id)
             ))->find();
         if ($itemExist->loaded()) {//update existed
             $itemExist->qty += $qty;
             $itemExist->save();
         } else {//create new item
-            $this->cart_id = $cart->id;
+            $this->cart_id = $this->getCart()->id;
             $this->created_at = date('Y-m-d H:i:s');
             $this->product_id = $productId;
             $this->qty = $qty;
             $this->price = $product->Price;
             $this->name= $product->name;
             $this->save();
-            $cart->items_count += 1;
+            $this->getCart()->items_count += 1;
         }
-        $cart->total_price += $product->Price * $qty;
-        $cart->items_qty += $qty;
-        $cart->save();
+        $this->getCart()->total_price += $product->Price * $qty;
+        $this->getCart()->items_qty += $qty;
+        $this->getCart()->save();
         $this->pixie->session->flash('added_product_name', $product->name);
     }
 
     public function getAllItems()
     {
-        $cart = $this->pixie->orm->get('Cart')->getCart();
-        return $this->where('cart_id',$cart->id)->order_by('created_at','asc')->find_all()->as_array();
+        return $this->where('cart_id',$this->getCart()->id)->order_by('created_at','asc')->find_all()->as_array();
     }
 
     public function getProduct()
@@ -53,24 +65,22 @@ class CartItems extends \PHPixie\ORM\Model {
     {
         $item = $this->where('id', $itemId)->find();
 
-        $cart = $this->pixie->orm->get('Cart')->getCart();
-
         if ($qty <= 0) {
-            $cart->total_price -= $item->price * $item->qty;
-            $cart->items_count -= 1;
-            $cart->items_qty -= $item->qty;
+            $this->getCart()->total_price -= $item->price * $item->qty;
+            $this->getCart()->items_count -= 1;
+            $this->getCart()->items_qty -= $item->qty;
         } else {
-            $cart->items_count += 1;
+            $this->getCart()->items_count += 1;
             $diffQty = $item->qty - $qty;
             if ($diffQty > 0) {
-                $cart->items_qty -= $diffQty;
-                $cart->total_price -= $item->price * $diffQty;
+                $this->getCart()->items_qty -= $diffQty;
+                $this->getCart()->total_price -= $item->price * $diffQty;
             } else {
-                $cart->items_qty += abs($diffQty);
-                $cart->total_price += abs($item->price * $diffQty);
+                $this->getCart()->items_qty += abs($diffQty);
+                $this->getCart()->total_price += abs($item->price * $diffQty);
             }
         }
-        $cart->save();
+        $this->getCart()->save();
 
         if ($qty <= 0) {
             $item->delete();
@@ -78,5 +88,15 @@ class CartItems extends \PHPixie\ORM\Model {
         }
         $item->qty = $qty;
         $item->save();
+    }
+
+    public function getItemsTotal()
+    {
+        $items = $this->getAllItems();
+        $total = 0;
+        foreach ($items as $item) {
+            $total += $item->price * $item->qty;
+        }
+        return $total;
     }
 }

@@ -59,16 +59,46 @@
             update_qty($(this).attr('data-id'), qty);
         });
         $("#step1_next").click(function() {
-            <?php if (is_null($this->pixie->auth->user())): ?>
-                window.location.href = "<?php echo '/user/login?return_url=' . rawurlencode('/checkout/shipping');?>"
-            <?php else : ?>
-                window.location.href = "/checkout/shipping";
-            <?endif;?>
+            $.ajax({
+                url:'/cart/setMethods',
+                type:"POST",
+                data: $("#methods").serialize(),
+                dataType:"json",
+                success: function(data) {
+                    <?php if (is_null($this->pixie->auth->user())): ?>
+                    window.location.href = "<?php echo '/user/login?return_url=' . rawurlencode('/checkout/shipping');?>"
+                    <?php else : ?>
+                    window.location.href = "/checkout/shipping";
+                    <?endif;?>
+                },
+                fail: function() {
+                    alert( "error" );
+                }
+            });
         })
     });
 
 </script>
 
+<?php
+if (count($items) == 0) :?>
+    <div class="container">
+
+    <div class="row">
+        <div class="col-md-9 col-sm-8">
+            <h1 class="page-header">Shopping Cart</h1>
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a>
+                </li>
+                <li class="active">My Cart</li>
+            </ol>
+            <div id="checkout-alert-info"></div>
+            <h1>Your card is empty</h1>
+        </div>
+
+    </div>
+
+<?php exit;endif;?>
 <?php include __DIR__ . '/cart_header.php'; ?>
     <div class="tab-pane active" id="step1">
         <div class="row">
@@ -121,20 +151,19 @@
                     <?php endforeach;?>
                     <tr>
                         <td align="right" colspan="3">
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" id="methods">
                                 <fieldset>
                                     <div class="form-group">
                                         <label class="col-xs-4 control-label">shipping: </label>
                                         <div class="col-xs-8">
-                                            <select class="form-control">
-                                                <option>mail</option>
-                                                <option>collect</option>
-                                                <option>express</option>
+                                            <select class="form-control" name="shipping_method">
+                                                <option value="mail">mail</option>
+                                                <option value="collect">collect</option>
+                                                <option value="express">express</option>
                                             </select>
                                         </div>
                                     </div>
                                 </fieldset>
-                            </form>
                         </td>
                         <td align="right" colspan="2">
                             <span class="label label-success">free</span>
@@ -142,15 +171,14 @@
                     </tr>
                     <tr>
                         <td align="right" colspan="3">
-                            <form class="form-horizontal">
                                 <fieldset>
                                     <div class="form-group">
                                         <label class="col-xs-4 control-label">payment: </label>
                                         <div class="col-xs-8">
-                                            <select class="form-control">
-                                                <option>wire transfer</option>
-                                                <option>paypal</option>
-                                                <option>creditcard</option>
+                                            <select class="form-control" name="payment_method">
+                                                <option value="wire transfer">wire transfer</option>
+                                                <option value="paypal">paypal</option>
+                                                <option value="creditcard">creditcard</option>
                                             </select>
                                         </div>
                                     </div>
