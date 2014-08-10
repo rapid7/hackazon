@@ -20,7 +20,7 @@
         'shipping' => array('/checkout/shipping' => 'step 2:</b> Shipping address'),
         'billing' => array('/checkout/billing' => 'step 3:</b> Billing address'),
         'confirmation' => array('/checkout/confirmation' => 'step 4:</b> Confirmation'),
-        'place_order' => array('/checkout/place_order' => 'step 5:</b> Place order'),
+        'order' => array('/checkout/order' => 'step 5:</b> Place order'),
     );?>
     <div class="row">
         <div class="col-xs-12">

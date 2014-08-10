@@ -86,7 +86,7 @@
             <b><?php echo $address->full_name ?></b><br />
             <?php echo $address->address_line_1 ?><br />
             <?php echo $address->address_line_2 ?><br />
-            <?php echo $address->city . $address->region . $address->zip ?><br />
+            <?php echo $address->city  . ' ' .  $address->region  . ' ' .  $address->zip ?><br />
             <?php echo $address->country_id ?><br />
             <?php echo $address->phone ?><br />
             <button data-id="<?php echo $address->id?>" style="margin-bottom:5px;width:100%" class="btn btn-primary btn-sm confirm-address">Bill to this address</button>
@@ -158,7 +158,7 @@
 
     <div class="row">
         <div class="col-xs-6">
-            <button class="btn btn-default" onclick="window.location.href='/cart/view'"><span class="glyphicon glyphicon-chevron-left"></span> Overview</button>
+            <button class="btn btn-default" onclick="window.location.href='/checkout/shipping'"><span class="glyphicon glyphicon-chevron-left"></span> Shipping step</button>
         </div>
         <div class="col-xs-6">
             <button id="btn_billing" class="btn btn-primary pull-right" data-target="#step3" data-toggle="tab">Bill to this address <span class="glyphicon glyphicon-chevron-right icon-white"></span></button>

@@ -1,4 +1,5 @@
-<div class="tab-pane" id="step5">
+<?php include __DIR__ . '/cart_header.php'; ?>
+<div class="tab-pane active" id="step5">
     <div class="row">
         <div class="col-xs-12 col-sm-6">
             <h2>Payment success</h2>
@@ -14,7 +15,8 @@
         <div class="col-xs-6">
         </div>
         <div class="col-xs-6">
-            <a href="index.html" class="btn btn-primary pull-right">Go to home <span class="glyphicon glyphicon-chevron-right"></span></a>
+            <a href="/" class="btn btn-primary pull-right">Go to home <span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
     </div>
 </div>
+<?php include __DIR__ . '/cart_footer.php'; ?>

@@ -49,4 +49,13 @@ class Cart extends \App\Page {
         $this->pixie->orm->get('Cart')->getCart();
         $this->execute=false;
     }
+
+    public function action_setMethods() {
+        $cart = $this->pixie->orm->get('Cart')->getCart();
+        $cart->shipping_method = $this->request->post('shipping_method');
+        $cart->payment_method = $this->request->post('payment_method');
+        $cart->save();
+        $this->execute=false;
+        $this->pixie->orm->get('Cart')->updateLastStep(CartModel::STEP_SHIPPING);
+    }
 }
