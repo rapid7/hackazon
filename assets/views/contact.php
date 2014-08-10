@@ -1,4 +1,29 @@
+<script>
+    $(function () {
+        $.validate({
+            form : '#contactForm',
+            modules : 'security',
+            onError : function() {
+            },
+            onSuccess : function() {
+                $.ajax({
+                    url:'/contact',
+                    type:"POST",
+                    dataType:"json",
+                    data: $("#contactForm").serialize(),
+                    success: function(data){
+                        $(".alert").empty().append('Thank you for your question. We will contact you as soon');
 
+                    },
+                    fail: function() {
+                        alert( "error" );
+                    }
+                });
+                return false; // Will stop the submission of the form
+            }
+        });
+    });
+</script>
     <div class="container">
       
       <div class="row">
@@ -23,33 +48,27 @@
         <div class="col-sm-8">
           <h3>Let's Get In Touch!</h3>
           <p>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-			<?php  
 
-                // check for a successful form post  
-                if (isset($_GET['s'])) echo "<div class=\"alert alert-success\">".$_GET['s']."</div>";  
-          
-                // check for a form error  
-                elseif (isset($_GET['e'])) echo "<div class=\"alert alert-danger\">".$_GET['e']."</div>";  
+            <div class="alert alert-success"></div>
 
-			?>
-            <form role="form" method="POST" action="contact-form-submission.php">
+            <form role="form" method="POST" id="contactForm">
 	            <div class="row">
 	              <div class="form-group col-lg-4">
 	                <label for="input1">Name</label>
-	                <input type="text" name="contact_name" class="form-control" id="input1">
+	                <input type="text" name="contact_name" class="form-control" id="input1" data-validation="length" data-validation-length="min5">
 	              </div>
 	              <div class="form-group col-lg-4">
 	                <label for="input2">Email Address</label>
-	                <input type="email" name="contact_email" class="form-control" id="input2">
+	                <input type="email" name="contact_email" class="form-control" id="input2" data-validation="email">
 	              </div>
 	              <div class="form-group col-lg-4">
 	                <label for="input3">Phone Number</label>
-	                <input type="phone" name="contact_phone" class="form-control" id="input3">
+	                <input type="phone" name="contact_phone" class="form-control" id="input3" data-validation="number">
 	              </div>
 	              <div class="clearfix"></div>
 	              <div class="form-group col-lg-12">
 	                <label for="input4">Message</label>
-	                <textarea name="contact_message" class="form-control" rows="6" id="input4"></textarea>
+	                <textarea name="contact_message" class="form-control" rows="6" id="input4" data-validation="length" data-validation-length="min10"></textarea>
 	              </div>
 	              <div class="form-group col-lg-12">
 	                <input type="hidden" name="save" value="contact">
