@@ -370,4 +370,15 @@ class Wishlist extends Page
         $this->view->productCount = $wishList->products->count_all();
         $this->view->subview = 'wishlist/show';
     }
+
+    /**
+     * Search users and wishLists by username or email
+     */
+    public function action_search()
+    {
+        $searchQuery = $this->request->post('search');
+        $result = $this->pixie->orm->get('Wishlist')->searchWishLists($searchQuery);
+        echo json_encode($result);
+        $this->execute = false;
+    }
 } 

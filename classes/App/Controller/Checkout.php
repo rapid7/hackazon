@@ -4,6 +4,9 @@ use App\Model\Cart as CartModel;
 
 class Checkout extends \App\Page {
 
+    /**
+     * require auth
+     */
     public function before()
     {
         if (is_null($this->pixie->auth->user())) {
@@ -12,7 +15,11 @@ class Checkout extends \App\Page {
         parent::before();
     }
 
-    public function restrictActions($actionStep)
+    /**
+     * validate restrict for actions by last step checkout
+     * @param int $actionStep
+     */
+    protected function restrictActions($actionStep)
     {
         $lastStep = $this->pixie->orm->get('Cart')->getCart()->last_step;
         if ($lastStep == CartModel::STEP_ORDER && $actionStep != CartModel::STEP_ORDER) {
@@ -23,6 +30,11 @@ class Checkout extends \App\Page {
         }
     }
 
+    /**
+     * 1. Set cart customer
+     * 2. if ajax create/update customer addresses
+     * 3. default show shipping step
+     */
     public function action_shipping() {
         $this->restrictActions(CartModel::STEP_SHIPPING);
         $customerAddresses = $this->pixie->orm->get('CustomerAddress')->getAll();
@@ -47,6 +59,10 @@ class Checkout extends \App\Page {
         }
     }
 
+    /**
+     * if ajax create/update customer addresses
+     * default show billing step
+     */
     public function action_billing() {
         $this->restrictActions(CartModel::STEP_BILLING);
         $customerAddresses = $this->pixie->orm->get('CustomerAddress')->getAll();
@@ -66,6 +82,9 @@ class Checkout extends \App\Page {
         }
     }
 
+    /**
+     * ajax action return CustomerAddress json by address id
+     */
     public function action_getAddress()
     {
         $post = $this->request->post();
@@ -75,6 +94,9 @@ class Checkout extends \App\Page {
         echo json_encode($address);
     }
 
+    /**
+     * delete address by id
+     */
     public function action_deleteAddress()
     {
         $post = $this->request->post();
@@ -83,6 +105,9 @@ class Checkout extends \App\Page {
         $this->execute = false;
     }
 
+    /**
+     * show confirmation step
+     */
     public function action_confirmation()
     {
         $this->restrictActions(CartModel::STEP_CONFIRM);
@@ -92,13 +117,19 @@ class Checkout extends \App\Page {
         $this->view->cart = $this->pixie->orm->get('Cart')->getCart();
     }
 
+    /**
+     * ajax action which create order
+     */
     public function action_placeOrder()
     {
         $this->restrictActions(CartModel::STEP_ORDER);
-        //$this->pixie->orm->get('Cart')->placeOrder();
+        $this->pixie->orm->get('Cart')->placeOrder();
         $this->execute = false;
     }
 
+    /**
+     * show order step success
+     */
     public function action_order()
     {
         $this->restrictActions(CartModel::STEP_ORDER);

@@ -32,16 +32,7 @@
         </div>
         <div class="col-lg-7">
             <h1>Find a Wish List</h1>
-
-            <form action="/wishlist/search" role="search" class="form-inline">
-                <div class="form-group search-field-box">
-                    <input type="text" class="form-control search-field"
-                           placeholder="Type a person's name or email address"/>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-default" type="submit">Search</button>
-                </div>
-            </form>
+            <?php include __DIR__ . '/_search_form.php'; ?>
         </div>
     </div>
 

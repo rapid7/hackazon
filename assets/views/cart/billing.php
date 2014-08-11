@@ -82,7 +82,7 @@
 <div class="tab-pane active" id="step3">
 
     <?php foreach ($this->customerAddresses as $address) :?>
-        <div class="col-sm-2" style="padding:5px;margin-right:5px;margin-bottom:5px;border: #e5e5e5 solid 1px">
+        <div class="col-sm-2 blockShadow">
             <b><?php echo $address->full_name ?></b><br />
             <?php echo $address->address_line_1 ?><br />
             <?php echo $address->address_line_2 ?><br />

@@ -39,13 +39,7 @@ $isWishListOwner = $user->id() == $wishList->user_id;
 
             <div class="clearfix class=">
 
-            <form class="navbar-form navbar-left search-form" role="search" action="/wishlist/search">
-                <div class="form-group search-field-box">
-                    <input type="search" class="form-control" placeholder="Type a person's name or email address"
-                           name="q">
-                </div>
-                <button type="submit" class="btn btn-default">Search</button>
-            </form>
+                <?php include __DIR__ . '/_search_form.php'; ?>
 
             <div class="btn-group pull-right top-buttons">
                 <button type="button" class="btn btn-default js-add-wish-list">Add Wish List</button>

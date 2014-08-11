@@ -4,24 +4,26 @@ use App\Model\Cart as CartModel;
 
 class Cart extends \App\Page {
 
+    /**
+     * show overview page
+     */
     public function action_index() {
         $this->redirect('/cart/view');
     }
 
+    /**
+     * Add product to cart
+     */
     public function action_add() {
         $qty = $this->request->post('qty');
         $productId = $this->request->post('product_id');
         $this->pixie->orm->get('CartItems')->addItems($productId, $qty);
-        //$this->redirect('/cart/added');//TODO page added products
         $this->redirect('/cart/view');
     }
-    public function action_added() {
-        if ($this->pixie->session->get('flash_added_product_name') == '') {
-            $this->redirect('/cart/view');
-        }
-        $this->view->subview = 'cart/added';
-    }
 
+    /**
+     * show overview page
+     */
     public function action_view() {
         $cart = $this->pixie->orm->get('Cart')->getCart();
         $items = $this->pixie->orm->get('CartItems')->getAllItems();
@@ -33,6 +35,9 @@ class Cart extends \App\Page {
         $this->view->step = $this->pixie->orm->get('Cart')->getStepLabel();//last step
     }
 
+    /**
+     * update cart items qty
+     */
     public function action_update() {
         $qty = $this->request->post('qty');
         $itemId = $this->request->post('itemId');
@@ -43,6 +48,9 @@ class Cart extends \App\Page {
         echo json_encode($res);
     }
 
+    /**
+     * clean cart
+     */
     public function action_empty() {
         $cart = $this->pixie->orm->get('Cart')->getCart();
         $cart->delete();
@@ -50,6 +58,9 @@ class Cart extends \App\Page {
         $this->execute=false;
     }
 
+    /**
+     * set shipping & payment methods
+     */
     public function action_setMethods() {
         $cart = $this->pixie->orm->get('Cart')->getCart();
         $cart->shipping_method = $this->request->post('shipping_method');

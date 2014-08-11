@@ -588,6 +588,13 @@ ul.nav li a {
 ul.nav li.grey a {
     color: grey;
 }
-.address_confirmation {
-    border: #e5e5e5 solid 1px;margin-bottom:5px;padding:5px
+.blockShadow {
+    border: #e5e5e5 solid 1px;margin-bottom:5px;padding:5px;
+    padding:5px;margin-right:5px;margin-bottom:10px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
