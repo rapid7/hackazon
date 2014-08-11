@@ -1,9 +1,4 @@
 <div class="row">
-    <div class="col-lg-12">
-        <?php include($common_path . "breadcrumbs.php") ?>
-    </div>
-</div>
-<div class="row">
     <div class="col-xs-12 col-sm-3">
         <br/>
         <!-- START CONTENT ITEM -->
@@ -72,10 +67,15 @@
                                 ?>
                                 <div class="col-xs-4 col-sm-3">
                                     <div class="thumbnail">
-                                        <a href="/product/view/<?= $item->productID ?>"><img src="/products_pictures/<?= $item->thumbnail ?>" alt=""></a>
+                                        <a href="/product/view/<?= $item->productID ?>"><img
+                                                src="/products_pictures/<?= $item->thumbnail ?>" alt=""></a>
+
                                         <div class="caption">
                                             <a href="/product/view/<?= $item->productID ?>"><?= $item->name ?></a>
-                                            <p><?= $item->getAnnotation(40) ?> <span class="label label-info price pull-right">$<?= $item->Price ?></span></p>
+
+                                            <p><?= $item->getAnnotation(40) ?> <span
+                                                    class="label label-info price pull-right">$<?= $item->Price ?></span>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -90,23 +90,4 @@
             <div class="alert alert-info">No products found.</div>
         <?php } ?>        <!-- END CONTENT ITEM -->
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-12">
-        <!-- START CONTENT ITEM -->
-        <ul class="pagination pull-right">
-            <li class="disabled"><a href="#">&laquo;</a></li>
-            <li class="active"><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li><a href="#">&hellip;</a></li>
-            <li><a href="#">93</a></li>
-            <li><a href="#">&raquo;</a></li>
-        </ul>
-        <!-- END CONTENT ITEM -->
-    </div>
-</div>
-
 </div>

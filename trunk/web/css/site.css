@@ -606,3 +606,11 @@ ul.nav li.grey a {
 .option-variants {
     margin-bottom: 30px;
 }
+
+.no-product-icon {
+    transform: scale(8);
+    color: #3A87AD;
+    left: 50%;
+    top: 40%;
+    position: absolute;
+}

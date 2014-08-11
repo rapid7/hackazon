@@ -11,14 +11,9 @@ class Category extends \App\Page
         $category = $this->model->loadCategory($categoryID);
         if ($category instanceof \App\Model\Category) {
             $this->view->pageTitle = $category->name;
-            $childs = $category->children->find_all()->as_array();
-            if (count($childs) > 0) {
-                $this->view->subCategories = $childs;
-                $this->view->productPage = false;
-            } else {
-                $this->view->products = $category->products->find_all()->as_array();
-                $this->view->productPage = true;
-            }
+            $childs = $category->nested->children()->find_all()->as_array();
+            $this->view->subCategories = $childs;
+            $this->view->products = $category->products->find_all()->as_array();
             $this->view->subview = 'category/category';
             $this->view->breadcrumbs = $this->getBreadcrumbs($category);
         }
