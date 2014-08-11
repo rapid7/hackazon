@@ -158,6 +158,8 @@ class Cart extends \PHPixie\ORM\Model {
         $order->customer_firstname = $customer->username;
         $order->customer_email = $customer->email;
         $order->customer_id = $customer->id;
+        $order->payment_method = $this->getCart()->payment_method;
+        $order->shipping_method = $this->getCart()->shipping_method;
         $order->status = 'complete';
         $order->save();
 

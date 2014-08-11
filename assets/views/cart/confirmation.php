@@ -27,11 +27,11 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>Peronsal info</th>
+                        <th>Personal info</th>
                     </tr>
                     <tr>
                         <td>
-                            <div class="address_confirmation">
+                            <div class="blockShadow">
                             <?php $shippingAddress = $cart->getShippingAddress()?>
                                 <h3>Shipping Address</h3>
                                 <b><?php echo $shippingAddress->full_name ?></b><br />
@@ -41,7 +41,7 @@
                                 <?php echo $shippingAddress->country_id ?><br />
                                 <?php echo $shippingAddress->phone ?><br />
                             </div>
-                            <div class="address_confirmation">
+                            <div class="blockShadow">
                                 <?php $billingAddress = $cart->getBillingAddress()?>
                                 <h3>Billing Address</h3>
                                 <b><?php echo $billingAddress->full_name ?></b><br />
@@ -76,19 +76,19 @@
                 <tr>
                     <td><?php echo $item->name ?></td>
                     <td align="center"><?php echo $item->qty ?></td>
-                    <td align="right">€ <?php echo $item->price * $item->qty ?>,-</td>
+                    <td align="right">$ <?php echo $item->price * $item->qty ?>,-</td>
                 </tr>
                 <?php endforeach;?>
                 <tr>
                     <td>Shipping: <?php echo $cart->shipping_method;?></td>
-                    <td align="right" colspan="2">€ 0,-</td>
+                    <td align="right" colspan="2">$ 0,-</td>
                 </tr>
                 <tr>
                     <td>Payment: <?php echo $cart->payment_method;?></td>
-                    <td align="right" colspan="2">€ 0,-</td>
+                    <td align="right" colspan="2">$ 0,-</td>
                 </tr>
                 <tr>
-                    <td align="right" colspan="3"><strong>€ <?php echo $cart->getCartItemsModel()->getItemsTotal();?>,-</strong></td>
+                    <td align="right" colspan="3"><strong>$ <?php echo $cart->getCartItemsModel()->getItemsTotal();?>,-</strong></td>
                 </tr>
                 </tbody>
             </table>
