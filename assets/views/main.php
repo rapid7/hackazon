@@ -60,6 +60,8 @@
         </div>
         <!-- /.container -->
 
+
+
         <div id="login-box" class="login-popup">
             <a href="#" class="close"><img src="/images/close_pop.png" class="btn_close" title="Close Window" alt="Close" /></a>
             <form method="post" class="signin" action="/user/login" id="loginForm">

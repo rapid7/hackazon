@@ -25,19 +25,14 @@ class Page extends \PHPixie\Controller {
         $this->view->returnUrl = '';
         $className = $this->get_real_class($this);
         $this->view->controller = $this;
-
         if (!($className == 'Home' && $this->request->param('action') == 'install')) {
-            $category = new Category($this->pixie);
-            $this->view->sidebar = $category->getCategoryTreeArray();
-            //$this->view->sidebar = $this->getSidebar();
-
-
+            $category = new \App\Model\Category($this->pixie);
+            $this->view->sidebar = $category->getCategoriesSidebar();
             $this->view->search_category = $this->getSearchCategory($className);
             $this->view->search_subcategories = $this->getAllCategories($this->view->sidebar);
 
             if ($className != "Home") {
-                $model = new \App\Model\Category($this->pixie);
-                $this->view->categories = $model->getRootCategories();
+                $this->view->categories = $category->getRootCategories();
             }
         }
 
@@ -69,11 +64,6 @@ class Page extends \PHPixie\Controller {
         return $classname;
     }
 
-    protected function getSidebar() {
-        $category = new Category($this->pixie);
-        return $category->getRootCategoriesSidebar();
-    }
-
     protected function getSearchCategory($className) {
         switch ($className) {
             case 'Category':
@@ -89,9 +79,9 @@ class Page extends \PHPixie\Controller {
     protected function getAllCategories($categories) {
         $all_categories = array();
         foreach ($categories as $category) {
-            $all_categories[] = $category['name'];
-            foreach ($category['child'] as $subcategory) {
-                $all_categories[] = $subcategory['name'];
+            $all_categories[] = $category->name;
+            foreach ($category->childs as $subcategory) {
+                $all_categories[] = $subcategory->name;
             }
         }
         sort($all_categories);
