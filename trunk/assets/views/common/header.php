@@ -26,7 +26,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Your account <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="portfolio-1-col.html">1 Column Portfolio</a>
+                            <li><a href="/account/orders">My orders</a>
                             </li>
                             <li><a href="portfolio-2-col.html">2 Column Portfolio</a>
                             </li>
