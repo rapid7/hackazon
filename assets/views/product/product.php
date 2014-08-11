@@ -10,11 +10,9 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header"><?= $pageTitle ?></h1>
                 <?php include($common_path . "multiple_breadcrumbs.php") ?>
             </div>
         </div>
-
         <div class="row">
             <div class="col-xs-9">
                 <h2><?= $product->name; ?></h2>
