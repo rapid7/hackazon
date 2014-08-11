@@ -852,3 +852,26 @@ INSERT INTO `tbl_review` (`reviewID`, `productID`, `username`, `email`, `review`
 
 INSERT INTO `tbl_users` (`id`, `username`, `password`, `user_phone`, `email`, `oauth_provider`, `oauth_uid`, `created_on`, `last_login`, `active`, `recover_passw`) VALUES
   (1,	'test_user',	'7d4a69db92c867d9b0060653c44733bf:108853d9fae39d4bb',	'+1(999) 123-1231',	'test_user@example.com',	'',	'',	'2014-07-31 12:14:27',	'2014-07-31 15:43:01',	1,	'415af5ab8dcd28c948963a83ac474756');
+
+INSERT INTO `tbl_product_options` (optionID, name) VALUES ('', 'Color');
+INSERT INTO `tbl_products_opt_val_variant` (variantID, optionID, name) VALUES ('', LAST_INSERT_ID(), 'Red'), ('', LAST_INSERT_ID(), 'Blue'), ('', LAST_INSERT_ID(), 'Green'), ('', LAST_INSERT_ID(), 'Yellow');
+
+INSERT INTO `tbl_product_options` (optionID, name) VALUES ('', 'Brand');
+INSERT INTO `tbl_products_opt_val_variant` (variantID, optionID, name) VALUES ('', LAST_INSERT_ID(), 'Brand1'), ('', LAST_INSERT_ID(), 'Brand2'), ('', LAST_INSERT_ID(), 'Brand3'), ('', LAST_INSERT_ID(), 'Brand4');
+
+INSERT INTO `tbl_product_options` (optionID, name) VALUES ('', 'Quality');
+INSERT INTO `tbl_products_opt_val_variant` (variantID, optionID, name) VALUES ('', LAST_INSERT_ID(), 'Brand New'), ('', LAST_INSERT_ID(), 'Used/Preowned'), ('', LAST_INSERT_ID(), 'Refurbished');
+
+ALTER TABLE `tbl_product_options_values` CHANGE COLUMN `ID` `ID` INT(11) NOT NULL AUTO_INCREMENT; 
+
+INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 7, 1);
+INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 7, 7);
+INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 7, 9);
+
+INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 68, 2);
+INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 68, 6);
+INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 68, 11);
+
+INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 72, 4);
+INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 72, 5);
+INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 72, 10);
