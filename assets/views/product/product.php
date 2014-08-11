@@ -47,6 +47,15 @@
                 <div class="well">
                     <div class="row">
                         <div class="col-xs-6 col-sm-5 col-md-7">
+                            <?php if (count($options) > 0) { ?>
+                            <div class="option-variants">
+                                <?php foreach ($options as $variant) { ?>
+                                    <strong><?= $variant->option->name; ?>:</strong> <span><?= $variant->name; ?></span>
+                                    <br>
+
+                                <?php } ?>
+                            </div>
+                            <?php } ?>
                             <div class="ratings product-item-ratings">
                                 <p class="pull-right"><?= $product->customer_votes ?> reviews</p>
 

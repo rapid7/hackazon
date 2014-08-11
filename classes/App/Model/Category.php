@@ -39,10 +39,6 @@ class Category extends \PHPixie\ORM\Model {
     );
 
     protected $has_many = array(
-        'children' => array(
-            'model' => 'category',
-            'key' => 'parent'
-        ),
         'products' => array(
             'model' => 'product',
             'through' => 'tbl_category_product',

@@ -55,7 +55,14 @@ class Product extends \PHPixie\ORM\Model {
             'through' => 'tbl_category_product',
             'foreign_key' => 'CategoryID',
             'key' => 'ProductID'
+        ),
+        'options' => array(
+            'model' => 'OptionValue',
+            'through' => 'tbl_product_options_values',
+            'foreign_key' => 'variantID',
+            'key' => 'productID'
         )
+
     );
 
     public function getProduct($productID){

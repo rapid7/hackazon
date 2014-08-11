@@ -23,6 +23,7 @@ class Product extends \App\Page
         $productID = $this->request->param('id');
         $this->view->product = $this->model->where('productID', '=', $productID)->find();
         if ($this->view->product->loaded()) {
+            $this->view->options = $this->view->product->options->find_all()->as_array();
             $this->view->pageTitle = $this->model->getPageTitle($productID);
             $this->view->breadcrumbs = $this->getBreadcrumbs();
             $offers = new SpecialOffers($this->pixie);
