@@ -31,8 +31,8 @@ class Pixie extends \PHPixie\Pixie {
                 $http_status = "503 Service Temporarily Unavailable";
                 header($_SERVER["SERVER_PROTOCOL"].' '.$http_status);
                 header("Status: ".$http_status);
-                //print_r($exception);
-                echo("Sorry, something is wrong" . $exception->getMessage());
+                var_dump($exception);
+                echo("Sorry, something is wrong. " . $exception->getMessage());
             }
         }
 }
