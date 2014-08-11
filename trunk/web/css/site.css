@@ -360,7 +360,7 @@ form.signin .error {
     z-index:10;
     margin-left:-15px;
     margin-top:-10px;
-    width:115px;
+    width:135px;
     text-align:center;
     padding-left:5px;
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -598,3 +598,8 @@ ul.nav li.grey a {
     -moz-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+.thumbnail .category-list-product {
+    height: 266px;
+    width: 100%;
+}
+

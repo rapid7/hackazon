@@ -29,6 +29,8 @@ class Category extends \PHPixie\ORM\Model {
     public $table = 'tbl_categories';
     public $id_field = 'categoryID';
 
+    public $childs = [];
+
     protected $belongs_to = array(
         'parentCategory' => array(
             'model' => 'category',
@@ -40,134 +42,93 @@ class Category extends \PHPixie\ORM\Model {
         'children' => array(
             'model' => 'category',
             'key' => 'parent'
+        ),
+        'products' => array(
+            'model' => 'product',
+            'through' => 'tbl_category_product',
+            'key' => 'CategoryID',
+            'foreign_key' => 'ProductID'
         )
     );
 
-    public function getRootCategories(){
-        return $this->pixie->db->query('select')
-                            ->table('tbl_categories')
-                            ->where('parent', 0)
-                            ->execute();    
-    
-    }
-
-    public function getRootCategoriesSidebar(){
-        $sidebar = array();
-        $categories = $this->pixie->orm->get('Category')->where('parent',0)->order_by('name','asc')->find_all();
-        if($categories){
-            foreach ($categories as $category){
-                $sidebar[] = array(
-                    'categoryID' => $category->categoryID,
-                    'name' => $category->name,
-                    'parent' => null,
-                    'child' => $this->getChild($category->categoryID)
-                );
-            }
-        }
-        return $sidebar;
-    }
-
-    public  function getChild($parent){
-        $child = array();
-        $subcategories = $this->pixie->orm->get('Category')->where('parent',$parent)->order_by('name','asc')->find_all();
-        if($subcategories){
-            foreach ($subcategories as $subcategory){
-                $child[] = array(
-                    'categoryID' => $subcategory->categoryID,
-                    'name' => $subcategory->name,
-                    'parent' => $parent,
-                    'child' => $this->getChild($subcategory->categoryID)
-                );
-            }
-        }
-        if(empty($child))
-            return null;
-        else
-            return $child;
-    }
+    protected $extensions = array(
+        'nested'=>'\PHPixie\ORM\Extension\Nested'
+    );
 
     public  function getPageTitle($categoryID){
-        $category =$this->loadCategory($categoryID);
+        $category = $this->loadCategory($categoryID);
         if($category)
             return $category->name;
         return '';
     }
 
-    public function checkCategoryChild($categoryID){
-        $category =$this->loadCategory($categoryID);
-        if($category && $category){
-            $child = $this->pixie->orm->get('Category')->where('parent', $category->categoryID)->find();
-            if($child->loaded())
-                return true;
-        }
-        return false;
-    }
-
-    protected function loadCategory($categoryID){
+    public function loadCategory($categoryID){
         $category = $this->pixie->orm->get('Category')->where('categoryID', $categoryID)->find();
         if($category->loaded())
             return $category;
         return null;
     }
 
-    public function getSubCategories($parent){
-        $subcategories = array();
-        $sub= $this->pixie->orm->get('Category')->where('parent',$parent)->order_by('name','asc')->find_all();
-        if($sub){
-            foreach ($sub as $category){
-                $subcategories[] = array(
-                    'categoryID' => $category->categoryID,
-                    'name' => $category->name,
-                    'products_count' => $category->products_count,
-                    'description' => $category->description,
-                    'picture' => $category->picture
-                );
-            }
-        }
-        return $subcategories;
+    public function getRootCategories(){
+        return $this->pixie->db->query('select')
+                            ->table('tbl_categories')
+                            ->where('depth', 1)
+                            ->order_by('lpos', 'asc')
+                            ->execute();    
+    
     }
 
-    /**
-     * Builds array representation of category tree.
-     *
-     * @return array|null
-     */
-    public function getCategoryTreeArray()
-    {
-        $res = $this->pixie->orm->get('Category')->order_by('name','asc')->find_all()->as_array();
-        return $this->buildCaregoryTree($res);
+    public function parents() {
+        if (!$this->loaded())
+            throw new \Exception("The model is not loaded");
+        return $this->pixie->orm->get($this->model_name)
+            ->where('lpos', '<', $this->lpos)->where('rpos', '>', $this->rpos)->where('depth', '>', 0)
+            ->order_by('lpos', 'asc')->find_all();
     }
 
-    /**
-     * Recoursively builds category tree from plain array.
-     *
-     * @param array $categories
-     * @param int $parentId
-     * @return array|null
-     */
-    protected function buildCaregoryTree(array &$categories = array(), $parentId = 0)
+    public function getChildrenIDs() {
+        if (!$this->loaded())
+            throw new \Exception("The model is not loaded");
+        $result = [];
+        $ids = $this->pixie->db->query('select')->table($this->table)
+            ->fields($this->id_field)->where('lpos', '>', $this->lpos)
+            ->where('rpos', '<', $this->rpos)->where('depth', '>', 0)->execute()->as_array();
+        if (count($ids)) {
+            array_walk($ids, function($item) use(&$result) {
+                $result[] = $item->categoryID;
+            });
+        }
+        return $result;
+    }
+
+
+    public function getCategoriesSidebar(){
+        $categories = $this->pixie->orm->get('Category')->where('depth', 'IN', $this->pixie->db->expr('(0, 1, 2)'))->order_by('lpos', 'asc')->order_by('name','asc')->find_all()->as_array();
+        return $this->generateTree($categories);
+    }
+
+    protected function generateTree(array &$categories)
     {
-        if (!count($categories)) {
-            return null;
+        $results = [];
+        if (count($categories) > 0) {
+            /* Extract root category */
+            $root = array_shift($categories);
+            $generateItems = function ($level, $lft, $rgt) use (&$categories, &$generateItems) {
+                $result = [];
+                //Main Level
+                foreach ($categories as $value) {
+                    if ($value->depth == $level && $value->lpos >= $lft && $value->rpos <= $rgt) {
+                        $result[] = $value;
+                    }
+                }
+                foreach ($result as &$value) {
+                    $value->childs = $generateItems($level + 1, $value->lpos, $value->rpos);
+                }
+                return $result;
+            };
+            /* Get Lft Rgt for Root */
+            $results = $generateItems(1, (int)$root->lpos, (int)$root->rpos);
         }
-        $resultCategories = array();
-
-        /** @var Category $category */
-        foreach ($categories as $key => $category) {
-            if ($category->parent == $parentId) {
-                $resultCategories[] = array(
-                    'categoryID' => $category->categoryID,
-                    'name' => $category->name,
-                    'parent' => $category->parent
-                );
-                unset($categories[$key]);
-            }
-        }
-
-        foreach ($resultCategories as $key => $category) {
-            $resultCategories[$key]['child'] = $this->buildCaregoryTree($categories, $category['categoryID']);
-        }
-
-        return $resultCategories;
+        return $results;
     }
 }

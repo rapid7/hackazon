@@ -2,25 +2,38 @@
 
 namespace App\Controller;
 
-use App\Model\Product as Product;
+class Category extends \App\Page
+{
 
-class Category extends \App\Page {
-
-    public function action_view() {
-        $product = new Product($this->pixie);
+    public function action_view()
+    {
         $categoryID = $this->request->param('id');
-
-        $this->view->pageTitle = $this->model->getPageTitle($categoryID);
-        $this->view->productPage = true;
-        if($this->model->checkCategoryChild($categoryID)){
-            $this->view->subCategories = $this->model->getSubCategories($categoryID);
-            $this->view->productPage = false;
+        $category = $this->model->loadCategory($categoryID);
+        if ($category instanceof \App\Model\Category) {
+            $this->view->pageTitle = $category->name;
+            $childs = $category->children->find_all()->as_array();
+            if (count($childs) > 0) {
+                $this->view->subCategories = $childs;
+                $this->view->productPage = false;
+            } else {
+                $this->view->products = $category->products->find_all()->as_array();
+                $this->view->productPage = true;
+            }
+            $this->view->subview = 'category/category';
+            $this->view->breadcrumbs = $this->getBreadcrumbs($category);
         }
-        else{
-            $this->view->products = $product->getProductsCategory($categoryID);
-        }
+    }
 
-        $this->view->subview = 'category/category';
+    private function getBreadcrumbs(&$category)
+    {
+        $breadcrumbs = [];
+        $parents = $category->parents();
+        $breadcrumbs['/'] = 'Home';
+        foreach ($parents as $p) {
+            $breadcrumbs['/category/view/' . $p->categoryID] = $p->name;
+        }
+        $breadcrumbs[''] = $category->name;
+        return $breadcrumbs;
     }
 
 }

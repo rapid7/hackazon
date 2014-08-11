@@ -1,20 +1,112 @@
-<?php if(!empty($products)):?>
-    <?php foreach($products as $product):?>
-        <div class="col-sm-4 col-lg-4 col-md-4">
-            <div class="thumbnail">
-                <img src="/products_pictures/<?=$product['thumbnail']?>" alt="">
-                    <div class="caption">
-                        <h4 class="pull-right">$<?=$product['price']?></h4>
-                        <h4><a href="/product/view/<?=$product['productID']?>"><?=$product['name']?></a></h4>
-                        <p><?=$product['annotation']?></p>
-                    </div>
-                    <div class="ratings">
-                        <p class="pull-right"><?=$product['customers_votes']?> reviews</p>
-                        <p><?php include($common_path."rating_stars.php")?></p>
-                    </div>
+<div class="row">
+    <div class="col-lg-12">
+        <?php include($common_path . "breadcrumbs.php") ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <br/>
+        <!-- START CONTENT ITEM -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="well well-small">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Brands</li>
+                        <li class="active"><a href="#"><span class="glyphicon glyphicon-ok"></span> Brand A</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-ok"></span> Brand B</a></li>
+                        <li class="active"><a href="#"><span class="glyphicon glyphicon-ok"></span> Brand C</a></li>
+                        <hr>
+                        <li class="nav-header">Price</li>
+                        <li class="active"><a href="#"><span class="glyphicon glyphicon-ok"></span> &euro; 10 - &euro;
+                                50</a></li>
+                        <li class="active"><a href="#"><span class="glyphicon glyphicon-ok"></span> &euro; 50 - &euro;
+                                100</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-ok"></span> &euro; 100 - &euro; 250</a></li>
+                        <hr>
+                        <li class="nav-header">Color</li>
+                        <li><a href="#"><span class="glyphicon glyphicon-ok"></span> Orange</a></li>
+                        <li class="active"><a href="#"><span class="glyphicon glyphicon-ok"></span> Red</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-ok"></span> Yellow</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    <?php endforeach;?>
-<?php else:?>
-    <span>No products found.</span>
-<?php endif;?>
+        <!-- END CONTENT ITEM -->
+        <!-- START CONTENT ITEM -->
+        <div class="row">
+            <div class="hidden-xs col-sm-12">
+                <div class="slider-wrapper theme-light">
+                    <div class="ribbon"></div>
+                    <div id="slider2" class="nivoslider">
+                        <img src="/images/banner_01-v3.jpg" alt=""
+                             title="This is an example of an optional long caption text"/>
+                        <img src="/images/banner_02-v3.jpg" alt="" title=""/>
+                        <img src="/images/banner_03-v3.jpg" alt="" title=""/>
+                        <img src="/images/banner_04-v3.jpg" alt="" title="Another caption"/>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+    <!-- END CONTENT ITEM -->
+    <div class="col-xs-12 col-sm-9">
+        <!-- START CONTENT ITEM -->
+        <div class="row">
+            <div class="col-xs-12 col-sm-9">
+                <h2><?= $pageTitle ?></h2>
+            </div>
+        </div>
+        <!-- END CONTENT ITEM -->
+        <?php if (count($products) > 0) {
+            $rows = count($products) % 4 == 0 ? count($products) / 4 : ceil(count($products) / 4);
+            for ($r = 0; $r < $rows; $r++) {
+                ?>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="row product-list-inline-small">
+                            <?php
+                            $count = count($products) < 4 ? count($products) : 4;
+                            for ($cnt = 0; $cnt < $count; $cnt++) {
+                                $item = array_shift($products);
+                                ?>
+                                <div class="col-xs-4 col-sm-3">
+                                    <div class="thumbnail">
+                                        <a href="/product/view/<?= $item->productID ?>"><img src="/products_pictures/<?= $item->thumbnail ?>" alt=""></a>
+                                        <div class="caption">
+                                            <a href="/product/view/<?= $item->productID ?>"><?= $item->name ?></a>
+                                            <p><?= $item->getAnnotation(40) ?> <span class="label label-info price pull-right">$<?= $item->Price ?></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            <?php
+            }
+        } else {
+            ?>
+            <div class="alert alert-info">No products found.</div>
+        <?php } ?>        <!-- END CONTENT ITEM -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <!-- START CONTENT ITEM -->
+        <ul class="pagination pull-right">
+            <li class="disabled"><a href="#">&laquo;</a></li>
+            <li class="active"><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li><a href="#">&hellip;</a></li>
+            <li><a href="#">93</a></li>
+            <li><a href="#">&raquo;</a></li>
+        </ul>
+        <!-- END CONTENT ITEM -->
+    </div>
+</div>
+
+</div>

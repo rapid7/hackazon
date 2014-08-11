@@ -49,21 +49,14 @@ class Product extends \PHPixie\ORM\Model {
             'through' => 'tbl_wish_list_item',
             'foreign_key' => 'wish_list_id',
             'key' => 'product_id'
+        ),
+        'categories' => array(
+            'model' => 'Category',
+            'through' => 'tbl_category_product',
+            'foreign_key' => 'CategoryID',
+            'key' => 'ProductID'
         )
     );
-
-    public function getProductsCategory($categoryID) {
-        $items = array();
-        $products = $this->pixie->orm->get('Product')->where('categoryID',$categoryID)->order_by('name','asc')->find_all();
-        if($products){
-            $config = $this->pixie->config->get('product');
-            $this->annotation_length = $config['annotation_length'];
-            foreach ($products as $product)
-                $items[] = $this->getProductData($product);
-        }
-        return $items;
-    }
-
 
     public function getProduct($productID){
         $productData = array();
@@ -269,4 +262,5 @@ class Product extends \PHPixie\ORM\Model {
 
         return $num > 0;
     }
+
 }

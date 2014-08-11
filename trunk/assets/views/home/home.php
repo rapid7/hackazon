@@ -47,23 +47,23 @@
 
     <div class="section">
         <!--<div class="section-colored text-center">-->
-            <div class="container">
+        <div class="container">
 
-                <div class="row well">
-                    <div class="col-lg-12">
-                        <div class="col-lg-4 col-md-4">
-                            <h3><i class="fa fa-pencil"></i><a href="user/register"> Register on the site</a></h3>
-                        </div>
-                        <div class="col-lg-4 col-md-4">
-                            <h3><i class="fa fa-thumbs-up"></i> Get the Best Price</h3>
-                        </div>
-                        <div class="col-lg-4 col-md-4">
-                            <h3><i class="fa fa-shopping-cart"></i> By with pleasure</h3>
-                        </div>
+            <div class="row well">
+                <div class="col-lg-12">
+                    <div class="col-lg-4 col-md-4">
+                        <h3><i class="fa fa-pencil"></i><a href="user/register"> Register on the site</a></h3>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <h3><i class="fa fa-thumbs-up"></i> Get the Best Price</h3>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <h3><i class="fa fa-shopping-cart"></i> By with pleasure</h3>
                     </div>
                 </div>
             </div>
-            <!-- /.row -->
+        </div>
+        <!-- /.row -->
         <!--</div>-->
         <!-- /.container -->
     </div>
@@ -85,7 +85,7 @@
                     <!-- START CONTENT ITEM -->
                     <div class="row product-list-inline-small">
                         <?php /** @var \App\Model\SpecialOffers $specOffer */ ?>
-                        <?php foreach($special_offers as $specOffer): ?>
+                        <?php foreach ($special_offers as $specOffer): ?>
                             <?php $product = $specOffer->product_offers; ?>
                             <?php include __DIR__ . '/product_item.php'; ?>
                         <?php endforeach; ?>
@@ -110,10 +110,11 @@
                         <div class="col-xs-12">
                             <div class="slider-wrapper theme-light">
                                 <div id="slider2" class="nivoslider">
-                                    <img src="/images/banner_01-v3.jpg" alt="" title="This is an example of an optional long caption text" />
-                                    <img src="/images/banner_02-v3.jpg" alt="" title="" />
-                                    <img src="/images/banner_03-v3.jpg" alt="" title="" />
-                                    <img src="/images/banner_04-v3.jpg" alt="" title="Another caption" />
+                                    <img src="/images/banner_01-v3.jpg" alt=""
+                                         title="This is an example of an optional long caption text"/>
+                                    <img src="/images/banner_02-v3.jpg" alt="" title=""/>
+                                    <img src="/images/banner_03-v3.jpg" alt="" title=""/>
+                                    <img src="/images/banner_04-v3.jpg" alt="" title="Another caption"/>
                                 </div>
                             </div>
                             <br>
@@ -126,25 +127,22 @@
         </div>
     </div>
 
-    <?php
-    // Output product sections
-    /** @var array $productSections */
-    foreach ($productSections as $sectionData) {
-        if (count($sectionData['products'])) {
-            include("product_section.php");
-        }
+<?php
+// Output product sections
+/** @var array $productSections */
+foreach ($productSections as $sectionData) {
+    if (count($sectionData['products'])) {
+        include("product_section.php");
     }
-    ?>
+}
+?>
 
     <div class="section-colored">
 
-                <?php
-                $sectionData = array(
-                    'title' => 'What Other Customers Are Looking At Right Now',
-                    'products' => $otherCustomersProducts
-                );
-                include(__DIR__ . "/product_section.php");
-                ?>
+        <?php
+        $sectionData = array('title' => 'What Other Customers Are Looking At Right Now', 'products' => $otherCustomersProducts);
+        include(__DIR__ . "/product_section.php");
+        ?>
 
     </div>
     <!-- /.section-colored -->
@@ -166,5 +164,4 @@
         </div>
         <!-- /.container -->
     </div>
-
-    <?php include __DIR__ . '/category_list.php'; ?>
+<?php include __DIR__ . '/category_list.php'; ?>

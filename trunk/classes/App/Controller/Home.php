@@ -46,11 +46,9 @@ class Home extends \App\Page {
         // Count of reviews after each product section.
         $productSectionReviewCount = 3;
 
-        $category = new Category($this->pixie);
         $product = new Product($this->pixie);
         $special_offers = new SpecialOffers($this->pixie);
         $review = new Review($this->pixie);
-        //$this->view->sidebar = $category->getRootCategoriesSidebar();
         //$this->view->topViewedProducts = $product->getRandomProducts($this->topViewedCount);
 
         $this->view->rnd_products = $product->getRndProduct(self::COUNT_RND_PRODUCTS);
