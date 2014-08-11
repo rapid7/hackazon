@@ -78,4 +78,29 @@ class WishList extends BaseModel
         }
         return false;
     }
+
+    /**
+     * Search Users and wishLists by username or email
+     * @param string $searchQuery
+     * @return array
+     */
+    public function searchWishlists($searchQuery)
+    {
+         $users = $this->pixie->orm->get('User')
+            ->where(
+                array('email', 'like', '%' . $searchQuery . '%'),
+                array('or', array('username', 'like', '%' . $searchQuery . '%'))
+            )->find_all()->as_array();
+        $userList = array();
+        foreach ($users as $user) {
+            if ($user->id == $this->pixie->auth->user()->id) continue;
+            $userList[$user->id] = $user->as_array();
+            $userList[$user->id]['wishLists'] = array();
+            foreach ($user->lists as $list) {
+                if ($list->type != 'public') continue;
+                $userList[$user->id]['wishLists'][] = $list->as_array();
+            }
+        }
+        return $userList;
+    }
 }

@@ -13,6 +13,10 @@ class Cart extends \PHPixie\ORM\Model {
     const STEP_CONFIRM   = 4;
     const STEP_ORDER     = 5;
 
+    /**
+     * get current cart
+     * @return Cart
+     */
     public function getCart(){
         if (empty($this->_cart)) {
             $this->setCart();
@@ -32,6 +36,11 @@ class Cart extends \PHPixie\ORM\Model {
         $this->_cart = $cart;
     }
 
+    /**
+     * Create new cart by session_id
+     * @param string $uid session_id
+     * @return Cart
+     */
     private function createNewCart($uid)
     {
         $this->pixie->db->query('insert')->table('tbl_cart')
@@ -41,12 +50,20 @@ class Cart extends \PHPixie\ORM\Model {
         return $this->pixie->orm->get('Cart')->where('id',$lastId)->find();
     }
 
+    /**
+     * @param int $uid
+     * @return Cart|bool
+     */
     private function getCartByUID($uid)
     {
         $cart = $this->pixie->orm->get('Cart')->where('uid',$uid)->find();
         return $cart->loaded() ? $cart : false;
     }
 
+    /**
+     * @param int $addressId
+     * @param string $type (shipping|billing)
+     */
     public function updateAddress($addressId, $type)
     {
         $cart = $this->getCart();
@@ -56,6 +73,10 @@ class Cart extends \PHPixie\ORM\Model {
         $this->updateLastStep($step);
     }
 
+    /**
+     * update last confirmed step
+     * @param int $step
+     */
     public function updateLastStep($step)
     {
         $cart = $this->getCart();
@@ -65,6 +86,10 @@ class Cart extends \PHPixie\ORM\Model {
         }
     }
 
+    /**
+     * return label by last step
+     * @return string
+     */
     public function getStepLabel()
     {
         $cart = $this->getCart();
@@ -108,6 +133,9 @@ class Cart extends \PHPixie\ORM\Model {
         return $this->pixie->orm->get('CartItems');
     }
 
+    /**
+     * set customer_id and email to cart
+     */
     public function setCustomer()
     {
         $this->getCart()->customer_id = $this->pixie->auth->user()->id;
@@ -117,6 +145,9 @@ class Cart extends \PHPixie\ORM\Model {
         $this->getCart()->save();
     }
 
+    /**
+     * create order, order_addresses, order_items
+     */
     public function placeOrder()
     {
         //$this->pixie->db->get()->execute("BEGIN TRANSACTION");//start transaction

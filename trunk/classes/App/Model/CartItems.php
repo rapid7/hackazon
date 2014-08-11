@@ -21,6 +21,11 @@ class CartItems extends \PHPixie\ORM\Model {
         return $this->_cart;
     }
 
+    /**
+     * Create cart item
+     * @param int $productId
+     * @param int $qty
+     */
     public function addItems($productId, $qty)
     {
         $product = $this->pixie->orm->get('Product')->where('productID', $productId)->find();
@@ -61,6 +66,12 @@ class CartItems extends \PHPixie\ORM\Model {
         return $product;
     }
 
+    /**
+     * Update items qty, remove items
+     * @param int $itemId
+     * @param int $qty
+     * @return bool
+     */
     public function updateItems($itemId, $qty)
     {
         $item = $this->where('id', $itemId)->find();
