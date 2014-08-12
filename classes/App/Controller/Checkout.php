@@ -90,8 +90,7 @@ class Checkout extends \App\Page {
         $post = $this->request->post();
         $addressId = $post['address_id'];
         $address = $this->pixie->orm->get('CustomerAddress')->getById($addressId);
-        $this->execute = false;
-        echo json_encode($address);
+        $this->jsonResponse($address);
     }
 
     /**

@@ -276,7 +276,7 @@ class Page extends Controller {
         if ($isControllerLevel) {
             if (!$config->has($actionName)) {
                 $context = $config->getCurrentContext();
-                $context->addContext(Context::createFromData($actionName, []));
+                $context->addContext(Context::createFromData($actionName, [], $context));
             }
             $service->goDown($actionName);
         }
