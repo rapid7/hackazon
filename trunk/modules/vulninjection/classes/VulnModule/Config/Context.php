@@ -88,11 +88,11 @@ class Context
     {
         $context = new Context($name, [], $type);
         $context->setParent($parent);
-        $context->setFields($data['fields']);
-        $context->setVulnerabilities($data['vulnerabilities']);
+        $context->setFields(array_key_exists('fields', $data) ? $data['fields'] : array());
+        $context->setVulnerabilities(array_key_exists('vulnerabilities', $data) ? $data['vulnerabilities'] : array());
 
         // Add contexts forms contexts
-        if (is_array($data['forms'])) {
+        if (array_key_exists('forms', $data) && is_array($data['forms'])) {
             foreach ($data['forms'] as $formName => $formData) {
                 self::checkValidName($formName);
                 $formContext = self::createFromData($formName, $formData, $context, self::TYPE_FORM);
@@ -103,7 +103,7 @@ class Context
         // Add contexts sub-contexts
         $blocks = ['contexts', 'actions'];
         foreach ($blocks as $block) {
-            if (is_array($data[$block])) {
+            if (array_key_exists($block, $data) && is_array($data[$block])) {
                 foreach ($data[$block] as $subContextName => $subContextData) {
                     self::checkValidName($subContextName);
                     $subContext = self::createFromData($subContextName, $subContextData, $context, self::TYPE_DEFAULT);
