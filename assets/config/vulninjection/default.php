@@ -36,13 +36,70 @@
  * 
  */
 
-return array(
-	'sql' => array('select', 
-                               array(
-                                   'Double-up Single Quotes' => true, /*true-false*/
-                                   'SanitizationLevel' => 'none',
-                                   'PatternMatchingStyle' => 'Keywords',
-                                   'SanitizationParameters' => array()
-				   )
-				),
-);
+//return array(
+//	'sql' => array('select',
+//                               array(
+//                                   'Double-up Single Quotes' => true, /*true-false*/
+//                                   'SanitizationLevel' => 'none',
+//                                   'PatternMatchingStyle' => 'Keywords',
+//                                   'SanitizationParameters' => array()
+//				   )
+//				),
+//);
+
+
+return [
+    'fields' => [   // Separate request params, either from GET or POST
+    ],
+
+    'forms' => [    // Forms with fields
+    ],
+
+    'contexts' => [     // Custom contexts
+    ],
+
+    'vulnerabilities' => [
+        'sql' => [      // SQL Injections params
+            'select' => [
+                'Double-up Single Quotes' => true, /*true-false*/
+                'SanitizationLevel' => 'none',
+                'PatternMatchingStyle' => 'Keywords',
+                'SanitizationParameters' => []
+            ],
+
+            'insert' => [
+                'Double-up Single Quotes' => true, /*true-false*/
+                'SanitizationLevel' => 'none',
+                'PatternMatchingStyle' => 'Keywords',
+                'SanitizationParameters' => []
+            ],
+            'update' => [
+                'Double-up Single Quotes' => true, /*true-false*/
+                'SanitizationLevel' => 'none',
+                'PatternMatchingStyle' => 'Keywords',
+                'SanitizationParameters' => []
+            ],
+            'delete' => [
+                'Double-up Single Quotes' => true, /*true-false*/
+                'SanitizationLevel' => 'none',
+                'PatternMatchingStyle' => 'Keywords',
+                'SanitizationParameters' => []
+            ],
+        ],
+
+        'xss' => [     // XSS params
+            'blind' => false
+        ],
+
+        'csrf' => [    // CSRF params
+            'enabled' => false
+        ],
+
+        'referrer' => [
+            'enabled' => false,
+            'hosts' => [$_SERVER['HTTP_HOST']],
+            'protocols' => ['http', 'https'],
+            'paths' => ['/']
+        ]
+    ]
+];

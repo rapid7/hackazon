@@ -91,7 +91,7 @@ class Request
 		if ($key == null)
 			return $params;
 		$val = $this->pixie->arr($params, $key, $default);
-		
+
 		if ($filter_xss)
 			return $this->filter_xss($val);
 			

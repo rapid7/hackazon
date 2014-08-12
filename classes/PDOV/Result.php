@@ -9,13 +9,13 @@ namespace PHPixie\DB\PDOV;
 class Result extends \PHPixie\DB\Result
 {
 
-	/**
-	 * Initializes new result object
-	 *
-	 * @param PDOStatement $stmt PDO Statement
-	 * @return void
-	 * @link http://php.net/manual/en/class.pdostatement.php
-	 */
+    /**
+     * Initializes new result object
+     *
+     * @param \PDOStatement $stmt PDO Statement
+     * @return \PHPixie\DB\PDOV\Result
+     * @link http://php.net/manual/en/class.pdostatement.php
+     */
 	public function __construct($stmt)
 	{
 		$this->_result = $stmt;

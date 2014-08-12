@@ -2,18 +2,35 @@
 
 namespace App;
 
+use App\Exception\HttpException;
 use App\Model\Category as Category;
+use PHPixie\Controller;
+use PHPixie\Exception\PageNotFound;
+use PHPixie\View;
+use VulnModule\Config\Context;
+use VulnModule\Csrf\CsrfToken;
+use VulnModule\VulnInjection\Service as VulnService;
 
 /**
  * Base controller
  *
  * @property-read \App\Pixie $pixie Pixie dependency container
+ * @property-read \App\Core\Request $request Pixie dependency container
  */
-class Page extends \PHPixie\Controller {
+class Page extends Controller {
 
+    const TOKEN_PREFIX = '_csrf_';
+
+    /**
+     * @var View
+     */
     protected $view;
     protected $common_path;
     protected $model;
+
+    /**
+     * @var VulnService
+     */
     protected $vulninjection;
     protected $errorMessage;
 
@@ -22,17 +39,31 @@ class Page extends \PHPixie\Controller {
         $config = $this->pixie->config->get('page');
         $this->view->common_path = $config['common_path'];
         $this->common_path = $config['common_path'];
-        $this->view->returnUrl = '';
         $className = $this->get_real_class($this);
+        $this->view->returnUrl = '';
         $this->view->controller = $this;
+
+        $controllerName = strtolower($className);
+
+        // Create vulnerability service.
+        $this->vulninjection = $this->pixie->vulninjection->service($controllerName);
+        $this->pixie->setVulnService($this->vulninjection);
+
+        // Check referrer for system-wide level
+        $this->vulninjection->checkReferrer();
+
+        // Switch vulnerability config to the controller level
+        $this->vulninjection->goDown($controllerName);
+
         if (!($className == 'Home' && $this->request->param('action') == 'install')) {
-            $category = new \App\Model\Category($this->pixie);
+            $category = new Category($this->pixie);
             $this->view->sidebar = $category->getCategoriesSidebar();
             $this->view->search_category = $this->getSearchCategory($className);
             $this->view->search_subcategories = $this->getAllCategories($this->view->sidebar);
 
             if ($className != "Home") {
-                $this->view->categories = $category->getRootCategories();
+                $model = new Category($this->pixie);
+                $this->view->categories = $model->getRootCategories();
             }
         }
 
@@ -49,6 +80,8 @@ class Page extends \PHPixie\Controller {
 
     public function after() {
         $this->response->body = $this->view->render();
+        // Exit controller-level vulnerability context.
+        $this->vulninjection->goUp();
     }
 
     /**
@@ -105,10 +138,141 @@ class Page extends \PHPixie\Controller {
         return $this->pixie->router->get($route)->url($params, $absolute, $protocol);
     }
 
+    /**
+     * Send response as JSON.
+     * @param $responseData
+     */
     public function jsonResponse($responseData)
     {
         $this->response->body = json_encode($responseData);
         $this->response->headers['Content-Type'] = 'application/json';
         $this->execute = false;
+    }
+
+    /**
+     * var_dump beautiful dump.
+     */
+    public function dumpx()
+    {
+        call_user_func_array([$this->pixie->debug, 'dumpx'], func_get_args());
+    }
+
+    /**
+     * Dump and exit script.
+     */
+    public function dump()
+    {
+        call_user_func_array([$this->pixie->debug, 'dump'], func_get_args());
+    }
+
+    /**
+     * @param $value
+     * @param null $field
+     * @return mixed
+     */
+    public function filterStoredXSS($value, $field = null)
+    {
+        return $this->pixie->getVulnService()->filterStoredXSSIfNeeded($field, $value);
+    }
+
+    /**
+     * @param $tokenId
+     * @param null $value
+     * @return bool
+     */
+    public function isTokenValid($tokenId, $value = null)
+    {
+        $service = $this->pixie->getVulnService();
+        if (!$service) {
+            return true;
+        }
+
+        $fullTokenId = self::TOKEN_PREFIX . $tokenId;
+
+        if ($value === null) {
+            $value = $this->request->method == 'POST'
+                ? $this->request->post($fullTokenId) : $this->request->get($fullTokenId);
+        }
+
+        // Check if we need to filter this injection
+        if ($service->csrfIsEnabled()) {
+            return true;
+        }
+
+        if (!$value) {
+            return false;
+        }
+
+        return $service->getTokenManager()->isTokenValid(new CsrfToken($fullTokenId, $value));
+    }
+
+    /**
+     * @param $tokenId
+     */
+    public function removeToken($tokenId)
+    {
+        $service = $this->pixie->getVulnService();
+        if (!$service) {
+            return;
+        }
+
+        $fullTokenId = self::TOKEN_PREFIX . $tokenId;
+        $service->getTokenManager()->removeToken($fullTokenId);
+    }
+
+    /**
+     * @param $tokenId
+     * @return string
+     */
+    public function renderTokenField($tokenId)
+    {
+        $service = $this->pixie->getVulnService();
+        if (!$service) {
+            return '';
+        }
+        return $service->renderTokenField(self::TOKEN_PREFIX . $tokenId);
+    }
+
+    public function checkCsrfToken($tokenId, $removeToken = true)
+    {
+        if (!$this->isTokenValid($tokenId)) {
+            throw new HttpException('Invalid token!', 400, null, 'Bad Request');
+        }
+        if ($removeToken) {
+            $this->removeToken($tokenId);
+        }
+    }
+
+    public function run($action)
+    {
+        $action = 'action_'.$action;
+
+        if (!method_exists($this, $action))
+            throw new PageNotFound("Method {$action} doesn't exist in ".get_class($this));
+
+        $this->execute = true;
+        $this->before();
+        
+        $service = $this->pixie->getVulnService();
+        $config = $service->getConfig();
+        $isControllerLevel = $config->getLevel() <= 1;
+        $actionName = $this->request->param('action');
+
+        if ($isControllerLevel) {
+            if (!$config->has($actionName)) {
+                $context = $config->getCurrentContext();
+                $context->addContext(Context::createFromData($actionName, []));
+            }
+            $service->goDown($actionName);
+        }
+
+        if ($this->execute)
+            $this->$action();
+        if ($this->execute)
+            $this->after();
+
+        if ($isControllerLevel) {
+            $service->goUp();
+        }
     }
 }

@@ -48,4 +48,66 @@ class ArraysHelper
         }
         return $randomArray;
     }
+
+    /**
+     * Merge several arrays in such way, that values with equal keys are not duplicated in result.
+     * @return array
+     */
+    public static function arrayMergeRecursiveDistinct()
+    {
+        $arrays = func_get_args();
+        foreach ($arrays as $key => $array) {
+            $arrays[$key] = (array) $array;
+        }
+
+        $result = [];
+        foreach ($arrays as $array) {
+            $result = self::arrayMergeRecursiveDistinctWalker($result, $array);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Helper recursive walker for arrayMergeRecursiveDistinct().
+     * Merges two arrays.
+     * @see arrayMergeRecursiveDistinct()
+     * @param array $array1
+     * @param array $array2
+     * @return array
+     */
+    protected static function arrayMergeRecursiveDistinctWalker(array $array1, array $array2)
+    {
+        $merged = $array1;
+
+        if (count($array2) && self::onlyHasNumericKeys($merged)) {
+            return $array2;
+        }
+
+        foreach ($array2 as $key => $value) {
+            if (is_array($value) && isset ($merged[$key]) && is_array($merged[$key])) {
+                $merged[$key] = self::arrayMergeRecursiveDistinctWalker($merged[$key], $value);
+            } else {
+                $merged[$key] = $value;
+            }
+        }
+
+        return $merged;
+    }
+
+    /**
+     * Checks whether given array only has numeric keys.
+     * @param $array
+     * @return bool
+     */
+    private static function onlyHasNumericKeys($array)
+    {
+        foreach ($array as $key => $value) {
+            if (!is_numeric($key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 } 
