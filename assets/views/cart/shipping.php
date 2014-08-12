@@ -82,7 +82,7 @@
 
     <?php foreach ($this->customerAddresses as $address) :?>
         <div class="col-sm-2 blockShadow">
-        <b><?php echo $address->full_name ?></b><br />
+        <b><?php echo $_($address->full_name, 'full_name') ?></b><br />
         <?php echo $address->address_line_1 ?><br />
         <?php echo $address->address_line_2 ?><br />
         <?php echo $address->city  . ' ' .  $address->region  . ' ' .  $address->zip ?><br />
