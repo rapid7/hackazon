@@ -5,6 +5,7 @@ namespace PHPixie\DB\PDOV;
 /**
  * PDO Database implementation.
  * @package Database
+ * @method exec
  */
 class Connection extends \PHPixie\DB\Connection {
 
