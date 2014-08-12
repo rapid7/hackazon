@@ -1,12 +1,16 @@
 <?php
 
 namespace PHPixie\DB\PDOV;
+use PHPixie\DB;
+
 
 /**
  * PDO implementation of the database Query
+ * @property Connection $_db
  * @package Database
  */
-class Query extends \PHPixie\DB\Query {
+class Query extends DB\Query
+{
 
     /**
      * Type of the database, e.g. mysql, pgsql etc.
@@ -22,17 +26,17 @@ class Query extends \PHPixie\DB\Query {
 
     /**
      * Settings for the current query
-     * @var settings
+     * @var string
      */
     protected $_settings;
 
     /**
      * Creates a new query object, checks which driver we are using and set the character used for quoting
      *
-     * @param DB $db   Database connection
+     * @param \PHPixie\DB $db Database connection
      * @param string $type Query type. Available types: select, update, insert, delete, count
-     * @return void
-     * @see \PHPixie\DB\Query::__construct()
+     * @return \PHPixie\DB\PDOV\Query
+    @see \PHPixie\DB\Query::__construct()
      */
     public function __construct($db, $type) {
         parent::__construct($db, $type);
@@ -43,7 +47,7 @@ class Query extends \PHPixie\DB\Query {
     /**
      * Set/get settings for the execute query.
      *
-     * @param string $str     String to be enclosed in quotes
+     * @param string $val     String to be enclosed in quotes
      * @return string  String surrounded with quotes
      */
     public function settings($val = null) {
@@ -67,18 +71,21 @@ class Query extends \PHPixie\DB\Query {
      * If a string is passed escapes a field by enclosing it in specified quotes.
      * If you pass an \PHPixie\DB\Expression object the value will be inserted into the query unescaped
      *
-     * @param mixed $field     Field to be escaped or an \PHPixie\DB\Expression object
+     * @param mixed $field Field to be escaped or an \PHPixie\DB\Expression object
      *                         if the field must not be escaped
+     * @param bool $prepend_table
      * @return string  Escaped field representation
      * @see \PHPixie\DB\Expression
      */
-    public function escape_field($field) {
+    public function escape_field($field, $prepend_table = true) {
 
-        if (is_object($field) && $field instanceof \PHPixie\DB\Expression) {
+        if (is_object($field) && $field instanceof DB\Expression) {
             return $field->value;
         }
         $field = explode('.', $field);
         if (count($field) == 1) {
+            if(!$prepend_table)
+                return $this->quote($field[0]);
             array_unshift($field, $this->last_alias());
         }
         $str = $this->quote($field[0]) . '.';
@@ -91,27 +98,41 @@ class Query extends \PHPixie\DB\Query {
     /**
      * Replaces the value with ? and appends it to the parameters array
      * If you pass an \PHPixie\DB\Expression object the value will be inserted into the query unescaped
-     * @param mixed $val     Value to be escaped or an \PHPixie\DB\Expression object
+     *
+     * @param mixed $val Value to be escaped or an \PHPixie\DB\Expression object
      *                       if the value must not be escaped
-     * @param array  &$params Reference to parameters array
+     * @param array &$params Reference to parameters array
+     * @param string|null $columnName Name of the column
      * @return string  Escaped value representation
      */
-    public function escape_value($val, &$params) {
-        if ($val instanceof \PHPixie\DB\Expression) {
+    public function escape_value($val, &$params, $columnName = null) {
+        if ($val instanceof DB\Expression) {
             return $val->value;
         }
-        if ($val instanceof \PHPixie\DB\Query) {
+        if ($val instanceof DB\Query) {
             return $this->subquery($val, $params);
         }
-        $val = "'" . $val ."'";
+
+        if ($service = $this->getVulnService()) {
+            // Filter stored XSS if this vulnerability isn't enabled in config.
+            $val = $service->filterStoredXSSIfNeeded($columnName, $val);
+
+            // Filter SQL Injections
+            $sqlInjectionParams = $service->getSqlInjectionParams($columnName);
+            if ($sqlInjectionParams['is_vulnerable']) {
+                return "'" . $val ."'";
+            }
+        }
+
         $params[] = $val;
-        return $val; //'?';
+
+        return '?';
     }
 
     /**
      * Gets the SQL for a subquery and appends its parameters to current ones
      *
-     * @param \PHPixie\DB\Query $query Query builder for the subquery
+     * @param DB\Query $query Query builder for the subquery
      * @param array  &$params Reference to parameters array
      * @return string  Subquery SQL
      */
@@ -124,9 +145,10 @@ class Query extends \PHPixie\DB\Query {
     /**
      * Gets the SQL for a table to select from
      *
-     * @param string|\PHPixie\DB\Expression|\PHPixie\DB\Query|array $table Table representation
-     * @param array  &$params Reference to parameters array
-     * @param string &alias   Alias for this table
+     * @param string|DB\Expression|DB\Query|array $table Table representation
+     * @param array &$params Reference to parameters array
+     * @throws \Exception
+     * @internal param $string &alias   Alias for this table
      * @return string  Table SQL
      */
     public function escape_table($table, &$params) {
@@ -146,10 +168,10 @@ class Query extends \PHPixie\DB\Query {
         if ($alias == null)
             $alias = $this->last_alias();
 
-        if ($table instanceof \PHPixie\DB\Query)
+        if ($table instanceof DB\Query)
             return "{$this->subquery($table, $params)} AS {$alias}";
 
-        if ($table instanceof \PHPixie\DB\Expression)
+        if ($table instanceof DB\Expression)
             return "({$table->value}) AS {$alias}";
 
         throw new \Exception("Parameter type " . get_class($table) . " cannot be used as a table");
@@ -158,6 +180,7 @@ class Query extends \PHPixie\DB\Query {
     /**
      * Builds a query and fills the $params array with parameter values
      *
+     * @throws \Exception
      * @return array     An array with a prepared query string and an array of parameters
      */
     public function query() {
@@ -173,6 +196,7 @@ class Query extends \PHPixie\DB\Query {
                 if (isset($this->_data[0]) && is_array($this->_data[0])) { // Batch insert
                     $first_row = true;
                     $columns_array = array();
+
                     foreach ($this->_data as $row) {
                         $columns = '';
                         $values = '';
@@ -187,7 +211,7 @@ class Query extends \PHPixie\DB\Query {
                                 }
                                 $columns .= $this->quote($key);
                                 $columns_array[] = $key;
-                                $values .= $this->escape_value($val, $params);
+                                $values .= $this->escape_value($val, $params, $key);
                             }
                             $query .= "({$columns}) VALUES({$values})";
                         } else {
@@ -197,7 +221,7 @@ class Query extends \PHPixie\DB\Query {
                                 } else {
                                     $first = false;
                                 }
-                                $values .= $this->escape_value($row[$col], $params);
+                                $values .= $this->escape_value($row[$col], $params, $col);
                             }
                             $query .= ", ({$values})";
                         }
@@ -215,7 +239,7 @@ class Query extends \PHPixie\DB\Query {
                             $first = false;
                         }
                         $columns .= $this->quote($key);
-                        $values .= $this->escape_value($val, $params);
+                        $values .= $this->escape_value($val, $params, $key);
                     }
                     $query .= "({$columns}) VALUES({$values})";
                 }
@@ -282,7 +306,7 @@ class Query extends \PHPixie\DB\Query {
                         $first = false;
                     }
 
-                    $query .= "{$this->quote($key)} = {$this->escape_value($val, $params)}";
+                    $query .= "{$this->quote($key)} = {$this->escape_value($val, $params, $key)}";
                 }
                 $query .= " ";
             }
@@ -318,9 +342,9 @@ class Query extends \PHPixie\DB\Query {
                 $query = "({$query}) ";
                 foreach ($this->_union as $union) {
                     $query .= $union[1] ? "UNION ALL " : "UNION ";
-                    if ($union[0] instanceof \PHPixie\DB\Query) {
+                    if ($union[0] instanceof DB\Query) {
                         $query .= $this->subquery($union[0], $params);
-                    } elseif ($union[0] instanceof \PHPixie\DB\Expression) {
+                    } elseif ($union[0] instanceof DB\Expression) {
                         $query .= "({$union[0]->value}) ";
                     } else {
                         throw new \Exception("You can only use query builder instances or \$pixie->db->expr() for unions");
@@ -359,7 +383,7 @@ class Query extends \PHPixie\DB\Query {
             if ($value_is_field) {
                 $param = $this->escape_field($p['value']);
             } else {
-                $param = $this->escape_value($p['value'], $params);
+                $param = $this->escape_value($p['value'], $params, $p['field']);
             }
             return $this->escape_field($p['field']) . ' ' . $p['operator'] . ' ' . $param;
         }
@@ -380,7 +404,14 @@ class Query extends \PHPixie\DB\Query {
 
         return $conds;
 
-        throw new \Exception("Cannot parse condition:\n" . var_export($p, true));
+        //throw new \Exception("Cannot parse condition:\n" . var_export($p, true));
     }
 
+    /**
+     * @return \VulnModule\VulnInjection\Service
+     */
+    public function getVulnService()
+    {
+        return $this->_db->pixie->getVulnService();
+    }
 }

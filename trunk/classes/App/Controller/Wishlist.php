@@ -10,7 +10,7 @@
 namespace App\Controller;
 
 
-use App\Exception\Forbidden;
+use App\Exception\ForbiddenException;
 use App\Model\Product;
 use App\Model\User;
 use App\Model\WishListItem;
@@ -38,7 +38,7 @@ class Wishlist extends Page
 		// Offer to create a new wishlist.
 
 		if ($this->user == null) {
-			$this->view->subview = 'wishlist/no_list';
+			$this->view['subview'] = 'wishlist/no_list';
 			return;
 		}
 
@@ -47,7 +47,7 @@ class Wishlist extends Page
 		if ($wishList) {
             $this->showDefaultWishList();
 		} else {
-            $this->view->subview = 'wishlist/no_list';
+            $this->view['subview'] = 'wishlist/no_list';
 		}
 	}
 
@@ -73,14 +73,14 @@ class Wishlist extends Page
 
     /**
      * Create new wish list.
-     * @throws \App\Exception\Forbidden
+     * @throws \App\Exception\ForbiddenException
      */
     public function action_new()
     {
         $this->prepare();
 
         if (!$this->user) {
-            throw new Forbidden();
+            throw new ForbiddenException();
         }
 
         if ($this->request->method != 'POST') {
@@ -102,14 +102,14 @@ class Wishlist extends Page
     }
 
     /**
-     * @throws \App\Exception\Forbidden
+     * @throws \App\Exception\ForbiddenException
      */
     public function action_edit()
     {
         $this->prepare();
 
         if (!$this->user) {
-            throw new Forbidden();
+            throw new ForbiddenException();
         }
 
         if ($this->request->method != 'POST') {
@@ -151,7 +151,7 @@ class Wishlist extends Page
 
     /**
      * Sets given wish list as default for user.
-     * @throws \App\Exception\Forbidden
+     * @throws \App\Exception\ForbiddenException
      * @throws \Exception
      */
     public function action_set_default()
@@ -162,7 +162,7 @@ class Wishlist extends Page
         }
 
         if (!$this->user) {
-            throw new Forbidden();
+            throw new ForbiddenException();
         }
 
         $id = $this->request->post('id');
@@ -173,7 +173,7 @@ class Wishlist extends Page
         $wishList = $this->getWishList($id);
 
         if ($wishList->owner->id() != $this->user->id()) {
-            throw new Forbidden();
+            throw new ForbiddenException();
         }
 
         $this->user->setDefaultWishList($wishList);
@@ -192,7 +192,7 @@ class Wishlist extends Page
 
     /**
      * Add product to the list.
-     * @throws \App\Exception\Forbidden
+     * @throws \App\Exception\ForbiddenException
      * @throws \Exception
      */
     public function action_add_product()
@@ -203,7 +203,7 @@ class Wishlist extends Page
         }
 
         if (!$this->user) {
-            throw new Forbidden();
+            throw new ForbiddenException();
         }
 
         $productId = $this->request->param('id');
@@ -251,7 +251,7 @@ class Wishlist extends Page
 
     /**
      * Removes product from list
-     * @throws \App\Exception\Forbidden
+     * @throws \App\Exception\ForbiddenException
      * @throws \Exception
      */
     public function action_delete_product()
@@ -262,7 +262,7 @@ class Wishlist extends Page
         }
 
         if (!$this->user) {
-            throw new Forbidden();
+            throw new ForbiddenException();
         }
 
         $productId = $this->request->param('id');
@@ -282,7 +282,7 @@ class Wishlist extends Page
 
     /**
      * Removes given wish list.
-     * @throws \App\Exception\Forbidden
+     * @throws \App\Exception\ForbiddenException
      * @throws \Exception
      */
     public function action_delete()
@@ -293,7 +293,7 @@ class Wishlist extends Page
         }
 
         if (!$this->user) {
-            throw new Forbidden();
+            throw new ForbiddenException();
         }
 
         $id = $this->request->param('id');
@@ -304,7 +304,7 @@ class Wishlist extends Page
         $wishList = $this->getWishList($id);
 
         if ($wishList->owner->id() != $this->user->id()) {
-            throw new Forbidden();
+            throw new ForbiddenException();
         }
 
         $wishList->delete();

@@ -17,7 +17,7 @@ use PHPixie\ORM\Model;
  * Class BaseModel.
  * Extends PHPixie model with helper methods.
  *
- * @property Pixie pixie
+ * @property Pixie $pixie
  * @package App\Model
  */
 class BaseModel extends Model

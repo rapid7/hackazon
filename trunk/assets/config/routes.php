@@ -1,5 +1,12 @@
 <?php
 return array(
+    'error' => array(
+        '/error/<id>',
+        array(
+            'controller' => 'error',
+            'action' => 'view'
+        ),
+    ),
     'wishlist_add_product' => array('/wishlist/add-product/<id>',
         array(
             'controller' => 'WishList',

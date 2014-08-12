@@ -2,6 +2,9 @@
 
 namespace PHPixie\DB\PDOV;
 
+
+use App\Pixie;
+
 /**
  * PDO Database implementation.
  * @package Database
@@ -9,11 +12,14 @@ namespace PHPixie\DB\PDOV;
  */
 class Connection extends \PHPixie\DB\Connection {
 
+    /**
+     * @var Pixie
+     */
     public $pixie;
 
     /**
      * Connection object
-     * @var PDO
+     * @var \PDO
      * @link http://php.net/manual/en/class.pdo.php
      */
     public $conn;
@@ -25,7 +31,12 @@ class Connection extends \PHPixie\DB\Connection {
     public $db_type;
 
     /**
-     * Vilnerability settings for current controller.
+     * @var array
+     */
+    protected $dispErrorStates;
+
+    /**
+     * Vulnerability settings for current controller.
      * @var string
      */
     private $_settings;
@@ -33,14 +44,17 @@ class Connection extends \PHPixie\DB\Connection {
     /**
      * Initializes database connection
      *
+     * @param $pixie
      * @param string $config Name of the connection to initialize
-     * @return void
+     * @return \PHPixie\DB\PDOV\Connection
      */
     public function __construct($pixie, $config) {
         parent::__construct($pixie, $config);
 
         $this->conn = new \PDO(
-                $pixie->config->get("db.{$config}.connection"), $pixie->config->get("db.{$config}.user", ''), $pixie->config->get("db.{$config}.password", '')
+            $pixie->config->get("db.{$config}.connection"),
+            $pixie->config->get("db.{$config}.user", ''),
+            $pixie->config->get("db.{$config}.password", '')
         );
         $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->db_type = strtolower(str_replace('PDO_', '', $this->conn->getAttribute(\PDO::ATTR_DRIVER_NAME)));
@@ -53,10 +67,12 @@ class Connection extends \PHPixie\DB\Connection {
      * Builds a new Query implementation
      *
      * @param string $type Query type. Available types: select,update,insert,delete,count
-     * @return Query_PDOV_Driver  Returns a PDO implementation of a Query.
+     * @param array $settings
+     * @return Query Returns a PDO implementation of a Query.
      * @see Query_Database
      */
     public function query($type, $settings = array()) {
+        /** @var Query $query */
         $query = $this->pixie->db->query_driver('PDOV', $this, $type);
         $query->settings($this->_settings);
         return $query;
@@ -113,24 +129,56 @@ class Connection extends \PHPixie\DB\Connection {
     /**
      * Executes a prepared statement query
      *
-     * @param string   $query  A prepared statement query
-     * @param array     $params Parameters for the query
-     * @return Result_PDO_Driver    PDO implementation of a database result
-     * @throws \Exception If the query resulted in an error
+     * @param string $query A prepared statement query
+     * @param array $params Parameters for the query
+     * @throws \Exception
+     * @return Result   PDO implementation of a database result
      * @see Database_Result
      */
     public function execute($query, $params = array()) {
-        return $this->pixie->db->result_driver('PDOV', $this->conn->query($query));
-        
-        /*
-          $cursor = $this->conn->prepare($query);
-          if (!$cursor->execute($params))
-          {
-          $error = $cursor->errorInfo();
-          throw new Exception("Database error:\n".$error[2]." \n in query:\n{$query}");
-          }
-          return $this->pixie->db->result_driver('PDOV', $cursor);
-         */
+        //return $this->pixie->db->result_driver('PDOV', $this->conn->query($query));
+
+        $this->startBlindness();
+
+        $stmt = $this->conn->prepare($query);
+        if (!$stmt->execute($params)) {
+            $error = $stmt->errorInfo();
+            throw new \Exception("Database error:\n" . $error[2] . " \n in query:\n{$query}");
+        }
+        $result = $this->pixie->db->result_driver('PDOV', $stmt);
+
+        $this->stopBlindness();
+
+        return $result;
     }
 
+    public function startBlindness()
+    {
+        $vulns = $this->getVulns();
+
+        if ($vulns['sql'] && $vulns['sql']['blind']) {
+            $this->dispErrorStates[] = $this->pixie->debug->display_errors;
+            $this->pixie->debug->display_errors = false;
+        }
+    }
+
+
+    public function stopBlindness()
+    {
+        $vulns = $this->getVulns();
+
+        if ($vulns['sql'] && $vulns['sql']['blind'] && count($this->dispErrorStates)) {
+            $this->dispErrorStates[] = $this->pixie->debug->display_errors;
+            $this->pixie->debug->display_errors = array_pop($this->dispErrorStates);
+        }
+    }
+
+    protected function getVulns()
+    {
+        $service = $this->pixie->getVulnService();
+        if (!$service) {
+            return [];
+        }
+        return $service->getVulnerabilities();
+    }
 }

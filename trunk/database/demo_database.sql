@@ -862,7 +862,7 @@ INSERT INTO `tbl_products_opt_val_variant` (variantID, optionID, name) VALUES ('
 INSERT INTO `tbl_product_options` (optionID, name) VALUES ('', 'Quality');
 INSERT INTO `tbl_products_opt_val_variant` (variantID, optionID, name) VALUES ('', LAST_INSERT_ID(), 'Brand New'), ('', LAST_INSERT_ID(), 'Used/Preowned'), ('', LAST_INSERT_ID(), 'Refurbished');
 
-ALTER TABLE `tbl_product_options_values` CHANGE COLUMN `ID` `ID` INT(11) NOT NULL AUTO_INCREMENT; 
+ALTER TABLE `tbl_product_options_values` CHANGE COLUMN `ID` `ID` INT(11) NOT NULL AUTO_INCREMENT;
 
 INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 7, 1);
 INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 7, 7);

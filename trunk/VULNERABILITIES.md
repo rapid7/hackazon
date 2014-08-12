@@ -1,0 +1,189 @@
+Vulnerabilities Config
+======================
+
+Here you can find description of how to set up vulnerability config.
+
+The app allows to turn on/off following vulnerabilities:
+ 
+* XSS
+    - reflected (immediately outputted in the response after user request)
+    - stored (in DB or other storage)
+ 
+* CSRF
+    - referer
+    - token
+    
+* SQL Injections
+    - usual (with error output)
+    - blind (when there is no error output, or when the behavior 
+    of the app slightly changes after injecting SQL)
+    
+
+## XSS
+
+XSS Injection is a malicious JS code, sent in the request in URL params, 
+request body, headers and so on. 
+
+### Reflected XSS
+
+Reflected XSS injections occur while outputting passed by user unescaped 
+malicious HTML and JS code. It plays a one-time role, because is shown 
+only once for single link click or other user operation.
+
+To make it possible, enable them for certain fields:
+
+```php
+return [
+    'fields' => [
+        'q' => ['xss']
+    ],
+    'vulnerabilities' => [
+        'xss' => [
+            'enabled' => true
+        ]
+    ]
+];
+```
+
+In code you can allow vulnerability by using `$_` function:
+
+```php
+<p><?php $_($request->question, 'q'); ?></p>
+```
+
+You need to indicate `q` parameter from config, because property names in view
+can differ from names in requests, and that's why we can't escape all vars 
+before the rendering.
+
+### Stored XSS
+
+Stored XSS Injections behave the same as ordinary ones, but they are more 
+dangerous, because they are stored in persistent storage (DB). By default
+app will filter script tags in variables before storing in the DB.
+
+To enable them you should use the next config:
+
+```php
+return [
+    'fields' => [
+        'q' => ['xss']
+    ],
+    'vulnerabilities' => [
+        'xss' => [
+            'enabled' => true,
+            'stored' => true
+        ]
+    ]
+];
+```
+
+If this vulnerability is enabled for a field, the field will **NOT** be filtered for tags
+before storing in the database (for INSERT and UPDATE operations only for insert values, not in WHERE clause, or anything else). 
+And after this it will be outputted without escaping like Reflected XSS. Other fields will be filtered always.
+
+
+You can also filter for **Stored XSS** in controller using following code (in case DB field and request params have 
+different names):
+ 
+```php
+$this->filterStoredXSS($value, 'field_name_in_config');
+```
+
+
+## CSRF
+
+CSRF attack allows hacker to perform a visibly valid action, such as create a user, 
+post a message, transfer money, etc. on behalf of the user. To perform this type
+of attack, user must be authenticated. Usually, a session based token can prevent 
+this kind of attacks.
+To enable this vulnerability for certain context (controller, or form), use next config:
+
+```php
+return [
+   'fields' => [
+       'q' => ['csrf']
+   ],
+   'vulnerabilities' => [
+       'csrf' => [
+           'enabled' => true,
+       ]
+   ]
+];
+```
+
+Csrf is configured for entire context, so it is not needed to be added to single fields.
+
+### Referrer
+
+For some controllers it's necessary to filter referrer. For others not.
+For example, we want almost all pages via GET-request to be available from 
+Google and other searchers. But for some POST request we'd like to be sure 
+that client made this request from pages of our website. It generally won't help
+against hackers, because of ease of tampering the Referrer header, but as
+a first line of defence it's worth to be implemented.
+
+Here's how you can enable it in config:
+
+```php
+return [
+   'fields' => [
+       'q' => ['csrf']
+   ],
+   'vulnerabilities' => [
+       'referrer' => [
+           'enabled' => false,
+           'hosts' => [$_SERVER['HTTP_HOST']],
+           'protocols' => ['http', 'https'],
+           'methods' => ['POST'],
+           'paths' => ['/']     // from which to  
+       ]
+   ]
+];
+```
+
+## SQL Injections
+
+SQL Injections are specially prepared values for legal fields that brake the original
+query by splitting it, commenting out parts of it and so on. 
+
+### Usual SQL Injections
+
+Usual injections can be performed by many methods, but the base is the same.
+Hacker splits original query by two parts using variable values like this:
+
+```php
+$name = $_POST['name'];  // $_POST['name'] == "a'='a' OR 1=1 #"
+$query = "SELECT name, password FROM user WHERE name='" . $name . "' AND role = 'user'";
+```
+
+So, part `' AND role = 'user'` is commented out and query fetches all users.
+Escaping values and using prepared statements successfully helps to prevent this kind of attacks.
+
+
+### Blind SQL Injections
+
+Blind injections behave are the same as usual ones, but the observable output is different.
+Hacker doesn't see any error output. He can be sure whether the injection was successful 
+only by observing the results of request. If the injection was successful hacker only sees
+blank page or page with some changes depending on particular website.
+
+Here is how you can enable blindness for SQL Injections:
+
+```php
+return [
+   'fields' => [
+       'q' => ['sql']
+   ],
+   'vulnerabilities' => [
+       'sql' => [
+            'blind' => true
+        ]
+    ]
+];
+```
+
+
+Vulnerability Module Structure
+==============================
+
+

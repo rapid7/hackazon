@@ -26,7 +26,7 @@
                                <div class="panel-heading">
                                    <h4 class="panel-title">
                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $obj->faqID; ?>">
-                                         <?php echo $obj->question; ?>
+                                         <?php echo $_($obj->question, 'userQuestion'); ?>
                                        </a>
                                   </h4>
                                </div>
@@ -40,9 +40,8 @@
                     </div>
                 </div>
             </div>
-        <?php endif ?>        
-        
-        
+        <?php endif ?>
+
         <?php if (isset($this->errorMessage)):  ?>
             <div class="panel panel-default">
                 <?php echo $this->errorMessage; ?>
@@ -59,12 +58,13 @@
                     <label for="userQuestion">Question</label>
                     <textarea class="form-control" name="userQuestion" id="userQuestion" placeholder="Type your question here..."></textarea>
                   </div>
+                    <?php echo $_token('faq'); ?>
                   <button type="submit" class="btn btn-default">Submit</button>
                 </form>
         </div>
     </div>
   <script>
-  
+
   // When the browser is ready...
   $(function() {
 
