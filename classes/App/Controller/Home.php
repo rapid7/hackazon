@@ -152,6 +152,31 @@ class Home extends \App\Page {
             }
         }
 
+        try {
+
+            $pixie = $this->pixie;
+            $db = $pixie->db;
+            $dirIterator = new \DirectoryIterator($this->pixie->root_dir . "database/post_migration");
+            /** @var \SplFileInfo $fileInfo */
+            foreach ($dirIterator as $fileInfo) {
+                if ($fileInfo->isFile() && $fileInfo->isReadable()) {
+                    $ext = strtolower($fileInfo->getExtension());
+                    $filePath = $fileInfo->getRealPath();
+
+                    if ($ext == 'sql') {
+                        $conn->exec(file_get_contents($filePath));
+
+                    } else if ($ext == 'php') {
+                        $runner = function () use ($filePath, $pixie, $db) {
+                            include $filePath;
+                        };
+                        $runner();
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {}
+
         // Install demo data
         $demoScript = $this->pixie->root_dir . "database/demo_database.sql";
         $conn->exec(file_get_contents($demoScript));
