@@ -2,7 +2,6 @@
     $(function () {
         $.validate({
             form : '#billingForm',
-            modules : 'security',
             onError : function() {
             },
             onSuccess : function() {

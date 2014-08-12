@@ -2,7 +2,6 @@
     $(function () {
         $.validate({
             form : '#shippingForm',
-            modules : 'security',
             onError : function() {
             },
             onSuccess : function() {
