@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <form class="form-horizontal" role="form" method="POST" action="/review/send" id="sendForm">
-                    <input type="hidden" required name="productID" id="productID" value="<?php echo $product['productID']; ?>">
+                    <input type="hidden" required name="productID" id="productID" value="<?php echo $product->productID; ?>">
                     <fieldset>
                         <legend class="text-left">Review Form</legend>
                         <div class="form-group">
