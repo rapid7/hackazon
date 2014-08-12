@@ -3,6 +3,7 @@
 namespace VulnModule\VulnInjection;
 
 
+use App\Exception\ForbiddenException;
 use App\Pixie;
 use PHPixie\Auth\Login\Provider;
 use PHPixie\Auth\Role\Driver;
@@ -113,6 +114,9 @@ class Service
     public function addControllerContext($name)
     {
         $this->controllerSettings = $this->pixie->config->get("vulninjection/{$name}");
+        if (!is_array($this->controllerSettings)) {
+            $this->controllerSettings = array();
+        }
         $controllerContext = Context::createFromData($name, $this->controllerSettings, $this->config->getRootContext());
         $this->config->addControllerContext($controllerContext);
 
@@ -260,16 +264,17 @@ class Service
      */
     public function getVulnerabilities()
     {
-        return $this->config ? $this->config->getVulnerabilities() : [];
+        return $this->config ? $this->config->getVulnerabilities() : array();
     }
 
     /**
      * @param string $type xss, sql and so on
+     * @return array
      */
     public function getVulnerability($type)
     {
         $vulns = $this->getVulnerabilities();
-        return $vulns[$type];
+        return $vulns[$type] ? $vulns[$type] : array();
     }
 
     /**
@@ -277,7 +282,7 @@ class Service
      */
     public function getFields()
     {
-        return $this->config ? $this->config->getFields() : [];
+        return $this->config ? $this->config->getFields() : array();
     }
 
     /**
@@ -389,8 +394,53 @@ class Service
         return is_array($csrf) && $csrf['enabled'];
     }
 
+    /**
+     * Checks current referrer to be allowed
+     */
     public function checkReferrer()
     {
+        $vuln = $this->getVulnerability('referrer');
+        if ($vuln['enabled']) {
+            return;
+        }
 
+        $referrer = $_SERVER['HTTP_REFERER'];
+        $parts = parse_url($referrer);
+
+        $host = $parts['host'];
+        $method = $_SERVER['REQUEST_METHOD'];
+        $proto = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+        $path = $parts['path'];
+
+        $isFilterable = $this->checkIsIn($method, $vuln['methods'])
+            && $this->checkIsIn(strtolower($proto), $vuln['protocols']);
+
+          //$this->pixie->debug->dumpx($method, $host, $proto, $isFilterable);
+        if ($isFilterable
+            && ((!$path || !$this->referrerPathIsAllowed($path, $vuln['paths']))
+                || (!$host || !$this->checkIsIn($host, $vuln['hosts'])))
+        ) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private function checkIsIn($value, $array)
+    {
+        return is_array($array) && count($array) && in_array($value, $array);
+    }
+
+    private function referrerPathIsAllowed($path, $paths)
+    {
+        if (!is_array($paths) || !count($paths)) {
+            return true;
+        }
+
+        foreach ($paths as $item) {
+            if (strpos($path, $item) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
