@@ -110,6 +110,7 @@ class Home extends \App\Page {
     {
         /** @var \PDO $conn */
         $conn = $this->pixie->db->get()->conn;
+        $conn->setAttribute(\PDO::ATTR_TIMEOUT, 300);
 
         //$this->view->subview = '';
         // Remove Foreign Keys
