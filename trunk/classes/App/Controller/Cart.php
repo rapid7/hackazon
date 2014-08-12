@@ -44,8 +44,7 @@ class Cart extends \App\Page {
         $this->pixie->orm->get('CartItems')->updateItems($itemId, $qty);
         $cart = $this->pixie->orm->get('Cart')->getCart();
         $res = array('items_qty' => $cart->items_qty, 'total_price' => $cart->total_price);
-        $this->execute=false;
-        echo json_encode($res);
+        $this->jsonResponse($res);
     }
 
     /**

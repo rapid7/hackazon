@@ -93,12 +93,12 @@ if (count($items) == 0) :?>
                 <li class="active">My Cart</li>
             </ol>
             <div id="checkout-alert-info"></div>
-            <h1>Your card is empty</h1>
+            <h1>Your cart is empty</h1>
         </div>
 
     </div>
 
-<?php exit;endif;?>
+<?php return; endif;?>
 <?php include __DIR__ . '/cart_header.php'; ?>
     <div class="tab-pane active" id="step1">
         <div class="row">
@@ -212,4 +212,4 @@ if (count($items) == 0) :?>
             </div>
         </div>
     </div>
-<?php include __DIR__ . '/cart_footer.php'; ?>
+<?php include __DIR__ . '/cart_footer.php';
