@@ -46,7 +46,7 @@
 
     <body>
 
-        <?php include($common_path."header.php")?>
+        <?php include($common_path . "header.php") ?>
 
         <?php //include($common_path."topbar.php")?>
 
@@ -56,7 +56,7 @@
 
 
         <div class="container" >
-            <?php include($common_path."footer.php")?>
+            <?php include($common_path . "footer.php") ?>
         </div>
         <!-- /.container -->
 
@@ -64,31 +64,40 @@
 
         <div id="login-box" class="login-popup">
             <a href="#" class="close"><img src="/images/close_pop.png" class="btn_close" title="Close Window" alt="Close" /></a>
-            <form method="post" class="signin" action="/user/login" id="loginForm">
-                <fieldset class="textbox">
-                    <label class="username">
-                        <span>Username or email</span>
-                        <input id="username" name="username" value="" type="text" autocomplete="on" placeholder="Username">
-                    </label>
-                    <br/>
-                    <label class="password">
-                        <span>Password</span>
-                        <input id="password" name="password" value="" type="password" placeholder="Password">
-                    </label>
-                    <button id="loginbtn" class="submit button" type="submit">Sign in</button>
-                    <p>
-                        <a class="forgot" href="/user/password">Forgot your password?</a>
-                        <a class="restore" href="/user/register">New user?</a><br>
-                        <a class="forgot" href="/facebook">Login via Facebook</a><br>
-                        <a class="forgot" href="/twitter">Login via Twitter</a>
-                    </p>        
-                </fieldset>
+            <form role="form" method="post" class="signin" action="/user/login" id="loginForm">
+                <h2>Please login <small></small></h2>
+                <hr class="colorgraph">
+
+                <div class="form-group">
+                    <input type="text" name="username" id="username" class="form-control input-lg" placeholder="Username or Email" tabindex="1">
+                </div>
+
+                <div class="form-group">
+                    <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
+                </div>
+
+
+                <hr class="colorgraph">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6"><button id="loginbtn"  type="submit" class="btn btn-success btn-block btn-lg">Sign In</button></div>
+                    <div class="col-xs-6 col-md-6">
+                        <div>
+                            <span class="login-social-span">Or login via</span>
+                            <ul class="list-unstyled list-inline list-social-icons">
+
+                                <li class="tooltip-social facebook-link"><a href="/facebook" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-2x"></i></a></li>
+                                <li class="tooltip-social twitter-link"><a href="/twitter" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-2x"></i></a></li>
+                            </ul>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 col-md-6"><a href="/user/password" class="btn btn-info btn-lg" style="width:100%">Forgot your password?</a></div>
+                    <div class="col-xs-6 col-md-6"><a href="/user/register" class="btn btn-info btn-lg" style="width:100%">New user?</a></div>
+                </div>
             </form>
         </div>
-
-        <!--<div>
-            <a href="/facebook/popup" onclick="return popup(this,'fblogin')">Login via Facebook Popup</a>
-        </div>-->
 
         <script>
             //A very basic way to open a popup
@@ -103,33 +112,31 @@
 
         <script>
 
-    // When the browser is ready...
-    $(function() {
+            // When the browser is ready...
+            $(function() {
+                // Setup form validation on the #register-form element
+                $("#loginForm").validate({
+                    // Specify the validation rules
+                    rules: {
+                        username: {
+                            required: true
+                        },
+                        password: "required"
+                    },
+                    // Specify the validation error messages
+                    messages: {
+                        username: "Please enter username or valid email address",
+                        password: "Please enter your password"
+                    },
+                    submitHandler: function(form) {
+                        form.submit();
+                    }
+                });
 
-      // Setup form validation on the #register-form element
-      $("#loginForm").validate({
-          // Specify the validation rules
-          rules: {
-              username: {
-                  required: true
-              },
-              password: "required"
-          },
-          // Specify the validation error messages
-          messages: {
-              username: "Please enter username or valid email address",
-              password: "Please enter your password"
-          },
+            });
 
-          submitHandler: function(form) {
-              form.submit();
-          }
-      });
+        </script>        
 
-    });
-
-    </script>        
-        
     </body>
 
 </html>
