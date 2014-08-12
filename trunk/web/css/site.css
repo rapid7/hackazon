@@ -70,8 +70,9 @@
 
 /* You can customize to your needs  */
 .login-popup {
+    min-width: 500px;
     display: none;
-    background: #333;
+    background: white;
     padding: 10px;
     border: 2px solid #ddd;
     float: left;
@@ -82,15 +83,24 @@
     z-index: 99999;
     box-shadow: 0px 0px 20px #999;
     /* CSS3 */
-        -moz-box-shadow: 0px 0px 20px #999;
+    -moz-box-shadow: 0px 0px 20px #999;
     /* Firefox */
-        -webkit-box-shadow: 0px 0px 20px #999;
+    -webkit-box-shadow: 0px 0px 20px #999;
     /* Safari, Chrome */
-	border-radius: 3px 3px 3px 3px;
+    border-radius: 3px 3px 3px 3px;
     -moz-border-radius: 3px;
     /* Firefox */
-        -webkit-border-radius: 3px;
+    -webkit-border-radius: 3px;
     /* Safari, Chrome */;
+}
+
+.login-social-span
+{
+    float: left;
+    margin-top: 7px;
+    margin-right: 15px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 img.btn_close {
@@ -104,7 +114,7 @@ fieldset {
 
 form.signin .textbox label {
     display: block;
-    
+
 }
 
 form.signin .textbox span {
@@ -133,15 +143,7 @@ form.signin .textbox input {
     width: 200px;
 }
 
-form.signin input:-moz-placeholder {
-    color: #bbb;
-    text-shadow: 0 0 2px #000;
-}
 
-form.signin input::-webkit-input-placeholder {
-    color: #bbb;
-    text-shadow: 0 0 2px #000;
-}
 
 .button {
     background: -moz-linear-gradient(center top, #f3f3f3, #dddddd);

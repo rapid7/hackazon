@@ -71,6 +71,7 @@ body {
 /* Social Icons Styles */
 .list-social-icons {
     margin-bottom: 45px;
+    margin-top: 7px;
 }
 
 .tooltip-social a {
