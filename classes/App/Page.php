@@ -6,6 +6,7 @@ use App\Exception\HttpException;
 use App\Model\Category as Category;
 use PHPixie\Controller;
 use PHPixie\Exception\PageNotFound;
+use PHPixie\ORM\Model;
 use PHPixie\View;
 use VulnModule\Config\Context;
 use VulnModule\Csrf\CsrfToken;
@@ -26,6 +27,10 @@ class Page extends Controller {
      */
     protected $view;
     protected $common_path;
+
+    /**
+     * @var Model Corresponding model of the controller, i.e. Faq for Faq controller, etc.
+     */
     protected $model;
 
     /**
@@ -233,6 +238,12 @@ class Page extends Controller {
         return $service->renderTokenField(self::TOKEN_PREFIX . $tokenId);
     }
 
+    /**
+     * Checks whether token is real and if not - throws an exception.
+     * @param $tokenId
+     * @param bool $removeToken
+     * @throws Exception\HttpException
+     */
     public function checkCsrfToken($tokenId, $removeToken = true)
     {
         if (!$this->isTokenValid($tokenId)) {
@@ -243,6 +254,9 @@ class Page extends Controller {
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function run($action)
     {
         $action = 'action_'.$action;
@@ -252,7 +266,8 @@ class Page extends Controller {
 
         $this->execute = true;
         $this->before();
-        
+
+        // Check referrer vulnerabilities
         $service = $this->pixie->getVulnService();
         $config = $service->getConfig();
         $isControllerLevel = $config->getLevel() <= 1;

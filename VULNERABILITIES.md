@@ -141,6 +141,9 @@ return [
 ];
 ```
 
+If request has protocol and method as in the config, and in such circumstances 
+Referrer is missing, or host or path is wrong, the exception is rising.  
+
 ## SQL Injections
 
 SQL Injections are specially prepared values for legal fields that brake the original
