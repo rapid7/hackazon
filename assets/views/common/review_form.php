@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <form class="form-horizontal" role="form" method="POST" action="/review/send" id="sendForm">
+                <form class="form-horizontal js-review-form" role="form" method="POST" action="/review/send" id="sendForm">
                     <input type="hidden" required name="productID" id="productID" value="<?php echo $product->productID; ?>">
                     <fieldset>
                         <legend class="text-left">Review Form</legend>
@@ -30,7 +30,8 @@
                         <div class="form-group">
                             <div class="col-md-12">
                                 <textarea class="form-control" id="textReview" name="textReview"
-                                          placeholder="Input your review here..." required maxlength="500"></textarea>
+                                          placeholder="Input your review here..." required maxlength="500"
+                                          data-bv-container="tooltip" ></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -46,3 +47,15 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('.js-review-form').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+        });
+    });
+</script>
