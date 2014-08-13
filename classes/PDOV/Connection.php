@@ -141,11 +141,15 @@ class Connection extends \PHPixie\DB\Connection {
         $this->startBlindness();
 
         $stmt = $this->conn->prepare($query);
-        if (!$stmt->execute($params)) {
-            $error = $stmt->errorInfo();
-            throw new \Exception("Database error:\n" . $error[2] . " \n in query:\n{$query}");
+        try {
+            if (!$stmt->execute($params)) {
+                $error = $stmt->errorInfo();
+                throw new \Exception("Database error:\n" . $error[2] . " \n in query:\n{$query}");
+            }
+            $result = $this->pixie->db->result_driver('PDOV', $stmt);
+        } catch (\Exception $e) {
+            throw new \Exception("Database error:\n" . $error[2] . " \n in query:\n{$query}", 0, $e);
         }
-        $result = $this->pixie->db->result_driver('PDOV', $stmt);
 
         $this->stopBlindness();
 
