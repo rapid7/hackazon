@@ -2,11 +2,7 @@
     <div class="container">
 
         <div class="row">
-
             <div class="col-lg-12">
-                <h1 class="page-header">
-                    
-                </h1>
                 <ol class="breadcrumb">
                     <li><a href="/">Home</a>
                     </li>
@@ -28,11 +24,10 @@
                 </div>
             <?php endif; ?>
 
-            <div class="section">
+            <div class="row">
                 <form role="form" method="post" action="/user/password" id="passwordForm">
                     <div class="form-group">
-                        <label for="userEmail">Email address</label>
-                        <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
+                        <input type="email" class="form-control input-lg" name="email" id="email" placeholder="Enter email">
                     </div>
                     <div class="row">
                         <div class="col-xs-6 col-md-6"><button id="loginbtn"  type="submit" class="btn btn-success btn-block btn-lg">Restore</button></div>

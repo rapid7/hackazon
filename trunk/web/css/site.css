@@ -619,3 +619,8 @@ ul.nav li.grey a {
 .form-group .tooltip .tooltip-arrow {
     top: auto !important;
 }
+
+.breadcrumb{
+    margin-left: -16px;
+    margin-right: -16px;
+}

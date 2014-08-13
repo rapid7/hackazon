@@ -3,18 +3,13 @@
 <div class="container">
 
     <div class="row">
-
         <div class="col-lg-12">
-            <h1 class="page-header">Registration
-                <small>Join us</small>
-            </h1>
             <ol class="breadcrumb">
                 <li><a href="index.html">Home</a>
                 </li>
                 <li class="active">Registration</li>
             </ol>
         </div>
-
     </div>
     <!-- /.row -->
 
@@ -29,7 +24,7 @@
 
     <div class="row" >
 
-        <form role="form" method="post" class="signin" action="/user/login" id="loginForm">
+        <form role="form" method="post" class="signin" action="/user/login" id="registerForm">
             <h2>Please Sign Up <small>It's free and always will be.</small></h2>
             <hr class="colorgraph">
             <div class="row">
@@ -48,17 +43,17 @@
                 <input type="text" name="display_name" id="display_name" class="form-control input-lg" placeholder="Display Name" tabindex="3">
             </div>
             <div class="form-group">
-                <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
+                <input type="email" maxlength="100" required name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
             </div>
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
-                        <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
+                        <input type="password" maxlength="100" required name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
+                        <input type="password" maxlength="100" required name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
                     </div>
                 </div>
             </div>
@@ -95,79 +90,25 @@
                 <div class="col-xs-6 col-md-6"><a href="/user/login" class="btn btn-info btn-lg" style="width:100%">Existing User?</a></div>
             </div>
         </form>
-
-
-        <!--
-        <form role="form" method="POST" action="/user/register" id="registerForm">
-            <div class="row">
-                <div class="form-group">
-                    <label for="username">Name <span style="color: red">*</span></label>
-                    <input type="text" name="username" class="form-control" id="username" value="<?= (isset($username) ? $username : null) ?>">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Address <span style="color: red">*</span></label>
-                    <input type="email" name="email" class="form-control" id="email" value="<?= (isset($email) ? $email : null) ?>">
-                </div>
-                <div class="form-group">
-                    <label for="userphone">Phone Number</label>
-                    <input name="user_phone" class="form-control" id="user_phone" value="<?= (isset($user_phone) ? $user_phone : null) ?>">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password <span style="color: red">*</span></label>
-                    <input type="password" name="password" class="form-control" id="password">
-                </div>
-                <div class="form-group">
-                    <label for="cpassword">Confirm Password <span style="color: red">*</span></label>
-                    <input type="password" name="cpassword" class="form-control" id="cpassword">
-                </div>
-                
-                <div class="clearfix"></div>
-                <div class="form-group col-lg-12">
-                    <input type="hidden" name="save" value="contact">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </div>
-        </form>
-        -->
     </div>
     <!-- /.row -->
-
-
 </div>
 <!-- /.container -->
 
 <script>
-
-// When the browser is ready...
     $(function() {
 
-        // Setup form validation on the #register-form element
-        $("#registerForm").validate({
-            // Specify the validation rules
-            rules: {
-                username: "required",
-                email: {
-                    required: true,
-                    email: true
+        jQuery(function($) {
+            $('#registerForm').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
                 },
-                password: "required",
-                cpassword: {
-                    required: true,
-                    equalTo: '#password'
-                }
-            },
-            // Specify the validation error messages
-            messages: {
-                username: "Please enter a valid username.",
-                email: "Please enter a valid email address"
-            },
-            submitHandler: function(form) {
-                form.submit();
-            }
+                container: 'tooltip'
+            });
         });
 
         $("#user_phone").inputmask("+1(999) 999-9999");
-
     });
-
 </script>

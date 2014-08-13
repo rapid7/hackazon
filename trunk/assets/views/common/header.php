@@ -92,11 +92,14 @@
                     </li>
                 </ul>
             </div>
-            <div class="row">
-                <div class="col-xs-2 col-md-2">
+            <div class="row" style="min-width: 1000px">
+                <div class="col-xs-2 col-md-2" style="padding-left: 0px">
                     <?php include($common_path . "sidebar.php") ?>
                 </div>
-                <div class="col-xs-10 col-md-10">
+                <div class="col-xs-1 col-md-1">
+                    <span style="font-size: 16px; color: #d9534f; padding-left: 15px">Search</span>
+                </div>
+                <div class="col-xs-9 col-md-9" style="padding-right: 0px">
                     <?php include($common_path . "search.php") ?>
                 </div>
             </div>
