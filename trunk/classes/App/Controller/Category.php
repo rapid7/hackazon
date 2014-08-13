@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\SearchFilters\FilterFabric;
 
 class Category extends \App\Page
 {
@@ -11,11 +12,13 @@ class Category extends \App\Page
         $category = $this->model->loadCategory($categoryID);
         if ($category instanceof \App\Model\Category) {
             $this->view->pageTitle = $category->name;
+            $this->view->filterFabric = new FilterFabric($this->pixie, $this->request, $category->products);
             $childs = $category->nested->children()->find_all()->as_array();
             $this->view->subCategories = $childs;
-            $this->view->products = $category->products->find_all()->as_array();
+            $this->view->products = $this->view->filterFabric->getResults();
             $this->view->subview = 'category/category';
             $this->view->breadcrumbs = $this->getBreadcrumbs($category);
+
         }
     }
 
