@@ -29,7 +29,6 @@
         <link href="/css/nivo-themes/light/light.css" rel="stylesheet">
         <link href="/css/bootstrapValidator.css" rel="stylesheet">
 
-
         <!-- JavaScript -->
         <script src="/js/jquery-1.10.2.js"></script>
         <script src="/js/jquery-migrate-1.2.1.js"></script>
@@ -64,7 +63,7 @@
 
         <div id="login-box" class="login-popup">
             <a href="#" class="close" data-toggle="tooltip" data-placement="top" title="Close"><i class="glyphicon glyphicon-remove"></i></a>
-            <form role="form" method="post" class="signin js-review-form" action="/user/login" id="loginForm">
+            <form role="form" method="post" class="signin" action="/user/login" id="loginForm">
                 <h2>Please login <small></small></h2>
                 <hr class="colorgraph">
 
@@ -113,24 +112,13 @@
         <script>
 
             jQuery(function ($) {
-                $('.js-review-form').bootstrapValidator({
+                $('#loginForm').bootstrapValidator({
                     feedbackIcons: {
                         valid: 'glyphicon glyphicon-ok',
                         invalid: 'glyphicon glyphicon-remove',
                         validating: 'glyphicon glyphicon-refresh'
                     },
-                    container: 'tooltip',
-                    fields: {
-                        textReview: {
-                            message: 'Please pwrite your review'
-                        },
-                        userName: {
-                            group: '.field-group'
-                        },
-                        userEmail: {
-                            group: '.field-group'
-                        }
-                    }
+                    container: 'tooltip'
                 });
             });
 

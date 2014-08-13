@@ -21,6 +21,14 @@ return array(
         ),
         'POST'
     ),
+
+    'wishlist_new' => array('/wishlist/new',
+        array(
+            'controller' => 'WishList',
+            'action' => 'new'
+        ),
+        'POST'
+    ),
 	'default' => array('(/<controller>(/<action>(/<id>)))',
         array(
             'controller' => 'home',

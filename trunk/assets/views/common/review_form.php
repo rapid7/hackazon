@@ -17,7 +17,7 @@
                                 <input type="text" maxlength="100" required class="form-control" placeholder="Name" name="userName" id="userName" <?php echo $readonly; ?> value="<?php $_($name, 'name'); ?>">
                             </div>
                             <div class="col-md-6 field-group">
-                                <input type="email" maxlength="100" required class="form-control" placeholder="Email" name="userEmail" id="userEmail" <?php echo $readonly; ?> value="<?php $_($email, 'email'); ?>">
+                                <input type="email" maxlength="100" required class="form-control" placeholder="Email" name="userEmail" id="userEmail" <?php echo $readonly && $user->email ? $readonly : ''; ?> value="<?php $_($email, 'email'); ?>">
                             </div>
                         </div>
 
@@ -51,6 +51,7 @@
 <script type="text/javascript">
     jQuery(function ($) {
         $('.js-review-form').bootstrapValidator({
+            exclude: ['sendreview'],
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
                 invalid: 'glyphicon glyphicon-remove',

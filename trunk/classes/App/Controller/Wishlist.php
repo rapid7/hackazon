@@ -11,6 +11,7 @@ namespace App\Controller;
 
 
 use App\Exception\ForbiddenException;
+use App\Exception\HttpException;
 use App\Model\Product;
 use App\Model\User;
 use App\Model\WishListItem;
@@ -38,7 +39,7 @@ class Wishlist extends Page
 		// Offer to create a new wishlist.
 
 		if ($this->user == null) {
-			$this->view['subview'] = 'wishlist/no_list';
+			$this->view->subview = 'wishlist/no_list';
 			return;
 		}
 
@@ -47,7 +48,7 @@ class Wishlist extends Page
 		if ($wishList) {
             $this->showDefaultWishList();
 		} else {
-            $this->view['subview'] = 'wishlist/no_list';
+            $this->view->subview = 'wishlist/no_list';
 		}
 	}
 
@@ -89,6 +90,18 @@ class Wishlist extends Page
 
         $name = $this->request->post('name', 'New Wish List');
         $type = $this->request->post('type', \App\Model\WishList::TYPE_PRIVATE);
+
+        if (!$name || !$type) {
+            if ($this->request->is_ajax()) {
+                $this->jsonResponse(['error' => 1]);
+                return;
+            } else {
+                throw new HttpException('Invalid request', 400, 'Bad Request');
+            }
+        }
+
+        $this->checkCsrfToken('wishlist_add', !$this->request->is_ajax());
+
         $wishList = $this->user->createNewWishList($name, $type);
 
         if ($this->request->is_ajax()) {
