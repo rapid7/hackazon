@@ -31,9 +31,9 @@
         </div>
         <div class="row product-detail" data-id="<?= $product->productID; ?>">
             <div class="col-xs-12 col-sm-5 col-md-4">
-                <a data-toggle="lightbox" data-title="<?= $product->name ?>"
-                   href="/products_pictures/<?= $product->picture ?>">
-                    <img class="img-responsive product-image" src="/products_pictures/<?= $product->picture; ?>"
+                <a data-toggle="lightbox" data-title="<?php $_($product->name, 'name'); ?>"
+                   href="/products_pictures/<?php $_($product->picture, 'picture'); ?>">
+                    <img class="img-responsive product-image" src="/products_pictures/<?php $_($product->picture, 'picture'); ?>"
                          alt="">
                 </a>
             </div>
@@ -59,7 +59,7 @@
 
                                 <p>
                                     <?php include($common_path . "rating_stars.php") ?>
-                                    <?= $product->customers_rating ?> stars
+                                    <?php $_($product->customers_rating, 'customers_rating') ?> stars
                                 </p>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                         <div class="col-xs-12">
                             <h3>Description</h3>
 
-                            <p><?= $product->description ?></p>
+                            <p><?php $_($product->description, 'description'); ?></p>
 
                             <?php include __DIR__ . '/_wishlist_button.php'; ?>
                         </div>
@@ -155,10 +155,10 @@
                                     <?php
                                     }
                                 }
-                                echo $review->username; ?>
+                                $_($review->username, 'username'); ?>
                                 <span class="pull-right"><?php echo $review->getDateLabel(); ?></span>
 
-                                <p><?php echo $review->review; ?></p>
+                                <p><?php $_($review->review, 'review'); ?></p>
                             </div>
                         </div>
                     <?php } ?>
