@@ -26,7 +26,7 @@
                                <div class="panel-heading">
                                    <h4 class="panel-title">
                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $obj->faqID; ?>">
-                                         <?php echo $_($obj->question, 'userQuestion'); ?>
+                                         <?php $_($obj->question, 'userQuestion'); ?>
                                        </a>
                                   </h4>
                                </div>
@@ -76,7 +76,7 @@
                 required: true,
                 email: true
             },
-            userQuestion: "required",
+            userQuestion: "required"
         },
         // Specify the validation error messages
         messages: {
