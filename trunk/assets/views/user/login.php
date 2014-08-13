@@ -31,20 +31,20 @@
 
 
         <div class="row">
-            <form role="form" class="signin" method="POST" action="/user/login<?php echo $returnUrl ? '?return_url=' . rawurlencode($returnUrl) : ''; ?> " id="loginForm">
+            <form role="form" class="signin" method="POST" action="/user/login<?php echo $returnUrl ? '?return_url=' . rawurlencode($returnUrl) : ''; ?> " id="loginPageForm">
                 <h2>Please login <small></small></h2>
                 <hr class="colorgraph">
                 <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
-                            <input type="text" name="username" class="form-control input-lg" id="username" placeholder="Username or Email" value="<?= (isset($username) ? $username : null) ?>">
+                            <input type="text" maxlength="100" required name="username" class="form-control input-lg" id="username" placeholder="Username or Email" value="<?= (isset($username) ? $username : null) ?>">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
-                            <input type="password" name="password" class="form-control input-lg" placeholder="Password" id="password">
+                            <input type="password" maxlength="100" required name="password" class="form-control input-lg" placeholder="Password" id="password">
                         </div>
                     </div>
                 </div>
@@ -77,24 +77,13 @@
 
     <script>
         jQuery(function ($) {
-            $('#loginForm').bootstrapValidator({
+            $('#loginPageForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
                     invalid: 'glyphicon glyphicon-remove',
                     validating: 'glyphicon glyphicon-refresh'
                 },
-                container: 'tooltip',
-                fields: {
-                    textReview: {
-                        message: 'Please pwrite your review'
-                    },
-                    userName: {
-                        group: '.field-group'
-                    },
-                    userEmail: {
-                        group: '.field-group'
-                    }
-                }
+                container: 'tooltip'
             });
         });
     </script>
