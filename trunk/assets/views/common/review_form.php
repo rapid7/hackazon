@@ -7,17 +7,17 @@
                     <fieldset>
                         <legend class="text-left">Review Form</legend>
                         <div class="form-group">
-                            <div class="col-md-6">
+                            <div class="col-md-6 field-group">
                                 <?php
                                 $user = $this->pixie->auth->user();
                                 $readonly = !is_null($user) ? 'readonly' : '';
                                 $name = !is_null($user) ? $user->username : '';
                                 $email = !is_null($user) ? $user->email : '';
                                 ?>
-                                <input type="text" maxlength="100" required class="form-control" placeholder="Name" name="userName" id="userName" <?php echo $readonly; ?> value="<?php echo $name; ?>">
+                                <input type="text" maxlength="100" required class="form-control" placeholder="Name" name="userName" id="userName" <?php echo $readonly; ?> value="<?php $_($name, 'name'); ?>">
                             </div>
-                            <div class="col-md-6">
-                                <input type="email" maxlength="100" required class="form-control" placeholder="Email" name="userEmail" id="userEmail" <?php echo $readonly; ?> value="<?php echo $email; ?>">
+                            <div class="col-md-6 field-group">
+                                <input type="email" maxlength="100" required class="form-control" placeholder="Email" name="userEmail" id="userEmail" <?php echo $readonly; ?> value="<?php $_($email, 'email'); ?>">
                             </div>
                         </div>
 
@@ -60,6 +60,12 @@
             fields: {
                 textReview: {
                     message: 'Please pwrite your review'
+                },
+                userName: {
+                    group: '.field-group'
+                },
+                userEmail: {
+                    group: '.field-group'
                 }
             }
         });
