@@ -66,6 +66,18 @@ function bsEditWishList(wishList) {
     modal.find('select[name="type"]').val(wishList.type);
     modal.find('input[name="id"]').val(wishList.id);
 
+    var form = modal.find('form');
+    form.bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        container: 'tooltip',
+        fields: {
+        }
+    });
+
     modal.on('hidden.bs.modal', function () {
         modal.remove();
         deferred.reject();
@@ -74,10 +86,14 @@ function bsEditWishList(wishList) {
     modal.on('click', '.js-submit', function (ev) {
         ev.preventDefault();
 
+        if (!form.isValid()) {
+            return;
+        }
         var result = {
             id: modal.find('input[name="id"]').val(),
             name: modal.find('input[name="name"]').val(),
-            type: modal.find('select[name="type"]').val()
+            type: modal.find('select[name="type"]').val(),
+            _csrf_wishlist_add: modal.find('input[name="_csrf_wishlist_add"]').val()
         };
 
         if (!result.name || !result.type) {
@@ -319,6 +335,9 @@ $(document).ready(function () {
                 }
 
                 $.ajax('/wishlist/delete/' + id, {
+                    data: {
+                        token: $wishlist.data('token')
+                    },
                     dataType: 'json',
                     timeout: 10000,
                     type: 'POST',

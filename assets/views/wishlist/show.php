@@ -15,7 +15,8 @@ $isWishListOwner = $user->id() == $wishList->user_id;
 
     <div class="row wishlist" data-access="<?php if ($isWishListOwner): ?>owner<?php else: ?>guest<?php endif; ?>"
         data-id="<?php echo $wishList->id(); ?>" data-name="<?php echo htmlspecialchars($wishList->name); ?>"
-        data-type="<?php echo $wishList->type; ?>">
+        data-type="<?php echo $wishList->type; ?>"
+        data-token="<?php $_token('wishlist'); ?>">
         <div class="col-lg-3">
             <div class="collapsible-block js-wish-my-lists">
                 <div class="block-header js-block-header">
@@ -27,7 +28,7 @@ $isWishListOwner = $user->id() == $wishList->user_id;
                         <li class="list-group-item <?php if ($wishList->id() == $list->id()): ?> list-group-item active<?php endif; ?>">
                             <span class="badge"><?php echo $list->items->count_all(); ?></span>
                             <a href="<?php echo $controller->generateUrl('default', array(
-                                'controller' => 'wishlist', 'action' => 'view', 'id' => $list->id))?>"><?php echo $list->name; ?></a>
+                                'controller' => 'wishlist', 'action' => 'view', 'id' => $list->id))?>"><?php $_($list->name, 'name'); ?></a>
                         </li>
                     <?php endforeach; ?>
                     </ul>
