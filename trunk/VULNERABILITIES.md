@@ -189,4 +189,86 @@ return [
 Vulnerability Module Structure
 ==============================
 
+The module consists of two parts: the config, and the mechanisms that use it.
 
+Config contains a tree of contexts, beginning at the root context (default.php config file),
+and then controller, action (in the `actions` section of the config), and, possibly, custom, contexts.
+
+At the moment configs are merged in such way, that fields and vulnerabilities are recursively
+merged using next algorithm:
+* If array is associative its values are merged with parent values
+* Else current values override parent ones.
+
+TODO: Maybe it makes sense to add some marks in config to help algorithm to choose the merge strategy.
+  For example, add '_inherit_' value in array to merge with parent, and '_override_' to override.
+  
+  
+## Vulnerability Processing
+
+For each vulnerability type it is supposed that you have enabled it in the corresponding config.
+
+#### XSS Reflected
+
+To filter XSS reflected you must output it using `$_()` method in views. If vulnerability is enabled, it will
+`htmlspecialchars` all characters.
+
+```php
+<?php $_($obj->question, 'userQuestion'); ?>
+```
+
+You must add field name from config, because variables can have different names and also object fields, or array values can be used. 
+And that's why it is not possible for this king of vulnerability to escape automatically.
+
+#### XSS Stored
+
+If stored XSS is enabled for field (field in DB table, mentioned in vulnerability config), the field is cleaned 
+  of `<script>` tags, `on-`-attributes, and `href="javascript:..."` attributes just before storing in the DB. 
+  Pretty simple filtering, but it saves us from malicious JS in DB.
+   
+#### SQL Injections
+
+If injection is enabled for field, it just becomes vulnerable for it. The requirement is that field name 
+ must match the DB field. By default (if error displaying is enabled), sql errors are shown to the client.
+ 
+Blind SQL injection differs from usual one just in that it won't show error messages on error.
+  
+#### CSRF 
+
+Each form should contain CSRF-token to prevent such attacks. And on request a controller must check its correctness.
+
+
+To add named token use next code: 
+```php
+<?php echo $_token('faq'); ?>  
+```
+
+To check it (with thrown Exception and without one):
+
+```php
+// throws Exception, and removes current token, good for not-ajax calls
+$this->checkCsrfToken('faq');
+ 
+// Does not throw 
+if ($this->isTokenValid($tokenId)) {
+    
+}
+
+// To get new token (for example for ajax forms)
+$tokenValue = $this->pixie->vulnService->getToken($tokenId);
+
+// To refresh
+$newValue = $this->pixie->vulnService->refreshToken($tokenId);
+```
+
+When CSRF injection is enabled for context, checking token always returns true
+   and token is not rendered on the page. 
+   
+#### Referrer check
+
+By default referrer check is performed on all POST requests and allowed host and paths are
+`Referrer` host equal to current host and paths starting at `/`. If this requirement is not met, 
+ Exception is thrown. 
+If referrer check vulnerability is enabled for context, the check always passes successfully for all
+ `Referrer` headers.
+   
+   

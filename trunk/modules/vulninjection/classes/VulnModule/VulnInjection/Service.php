@@ -443,4 +443,16 @@ class Service
 
         return false;
     }
+
+    public function getToken($tokenId)
+    {
+        $token = $this->getTokenManager()->getToken($tokenId);
+        return $token->getValue();
+    }
+
+    public function refreshToken($tokenId)
+    {
+        $token = $this->getTokenManager()->refreshToken($tokenId);
+        return $token->getValue();
+    }
 }

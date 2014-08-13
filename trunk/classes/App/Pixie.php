@@ -21,6 +21,7 @@ use VulnModule\VulnInjection;
  * @property-read \PHPixie\Email $email Email module
  * @property-read Request $request Request instance
  * @property-read Debug $debug Debug object
+ * @property-read VulnInjection\Service $vulnService Debug object
  */
 class Pixie extends \PHPixie\Pixie {
 
@@ -130,11 +131,17 @@ class Pixie extends \PHPixie\Pixie {
     public function setVulnService($vulnService)
     {
         $this->vulnService = $vulnService;
+        $this->addInstance('vulnService', $vulnService);
         return $this;
     }
 
     public function view_helper()
     {
         return new View\Helper($this);
+    }
+
+    public function addInstance($name, $object)
+    {
+        $this->instances[$name] = $object;
     }
 }
