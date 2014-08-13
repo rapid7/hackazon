@@ -616,3 +616,7 @@ ul.nav li.grey a {
     top: 40%;
     position: absolute;
 }
+
+.form-group .tooltip .tooltip-arrow {
+    top: auto !important;
+}
