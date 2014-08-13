@@ -27,6 +27,7 @@
         <link href="/css/nivo-slider.css" rel="stylesheet">
         <link href="/css/nivo-themes/bar/bar.css" rel="stylesheet">
         <link href="/css/nivo-themes/light/light.css" rel="stylesheet">
+        <link href="/css/bootstrapValidator.css" rel="stylesheet">
 
 
         <!-- JavaScript -->
@@ -35,6 +36,7 @@
         <script src="/js/bootstrap.js"></script>
         <script src="/js/modern-business.js"></script>
         <script src="/js/jquery.validate.min.js"></script>
+        <script src="/js/bootstrapValidator.min.js"></script>
         <script src="/js/jquery.inputmask.js"></script>
         <script src="/js/ekko-lightbox.js"></script>
         <script src="/js/jquery.nivo.slider.pack.js"></script>
