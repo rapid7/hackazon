@@ -34,7 +34,8 @@ class PriceFilter implements BaseFilter {
     }
 
     public function getSql(&$model) {
-        return '';
+        $values = $this->_valueVariants[$this->getValue()];
+        $model->where('Price', '>=', $values[0])->where('Price', '<=', $values[1]);
     }
 
     public function getFieldName() {
