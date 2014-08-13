@@ -31,17 +31,22 @@
 
 
         <div class="row">
-            <form role="form" method="POST" action="/user/login<?php echo $returnUrl ? '?return_url=' . rawurlencode($returnUrl) : ''; ?> " id="loginForm">
+            <form role="form" class="signin" method="POST" action="/user/login<?php echo $returnUrl ? '?return_url=' . rawurlencode($returnUrl) : ''; ?> " id="loginForm">
                 <h2>Please login <small></small></h2>
                 <hr class="colorgraph">
-
-                <div class="form-group">
-                    <label for="username">Username or email <span style="color: red">*</span></label>
-                    <input type="text" name="username" class="form-control" id="username" value="<?= (isset($username) ? $username : null) ?>">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="username" class="form-control input-lg" id="username" placeholder="Username or Email" value="<?= (isset($username) ? $username : null) ?>">
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="password">Password <span style="color: red">*</span></label>
-                    <input type="password" name="password" class="form-control" id="password">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="password" name="password" class="form-control input-lg" placeholder="Password" id="password">
+                        </div>
+                    </div>
                 </div>
 
 
@@ -71,27 +76,26 @@
     <!-- /.container -->
 
     <script>
-
-        // When the browser is ready...
-        $(function() {
-
-            // Setup form validation on the #register-form element
-            $("#registerForm").validate({
-                // Specify the validation rules
-                rules: {
-                    username: "required",
-                    password: "required"
+        jQuery(function ($) {
+            $('#loginForm').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
                 },
-                // Specify the validation error messages
-                messages: {
-                    username: "Please enter a password or email.",
-                    password: "Please enter a password"
-                },
-                submitHandler: function(form) {
-                    form.submit();
+                container: 'tooltip',
+                fields: {
+                    textReview: {
+                        message: 'Please pwrite your review'
+                    },
+                    userName: {
+                        group: '.field-group'
+                    },
+                    userEmail: {
+                        group: '.field-group'
+                    }
                 }
             });
         });
-
     </script>
     <!-- /.container -->

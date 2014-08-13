@@ -79,15 +79,8 @@ ul.menu li:hover ul li:last-child a:hover {
 	-moz-border-radius: 0 0 5px 0;
 }
 
-#sidebar-link{
-    text-decoration: none;
-    color: #777;
-}
-#sidebar-link:hover{
-    color: #fff;
-    background: transparent;
-}
+
 
 .sidebar-menu-inside {
-    margin-top: 30px;
+    margin-bottom: 8px;
 }
