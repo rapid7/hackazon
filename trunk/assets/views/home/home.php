@@ -5,45 +5,7 @@
  * @var array $topProductBlocks
  */
 ?>
-    <div id="myCarousel" class="carousel slide">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
-        </ol>
 
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <div class="fill" style="background-image:url('/images/attackstory.jpg');"></div>
-                <div class="carousel-caption">
-                    <h1>Modern Business - tell us your story.</h1>
-                </div>
-            </div>
-            <div class="item">
-                <div class="fill" style="background-image:url('/images/dance.png');"></div>
-                <div class="carousel-caption">
-                    <h1>Did all right thing?</h1>
-                </div>
-            </div>
-            <div class="item">
-                <div class="fill" style="background-image:url('/images/spiderman.jpg');"></div>
-                <div class="carousel-caption">
-                    <h1>Is your system protected?</a>
-                    </h1>
-                </div>
-            </div>
-        </div>
-
-        <!-- Controls -->
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-            <span class="icon-prev"></span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-            <span class="icon-next"></span>
-        </a>
-    </div>
 
     <div class="section">
         <!--<div class="section-colored text-center">-->
