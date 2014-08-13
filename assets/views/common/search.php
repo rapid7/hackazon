@@ -1,10 +1,9 @@
 <div class="row">
-    <div class="col-lg-1">
-        <span style="font-size: 16px; color: #d9534f">Search</span>
-    </div>
     <form role="search" action="/search" method="get" id="searchForm">
+
+
         <input type="hidden" name="id" value="<?= $search_category['value'] ?>">
-        <div class="col-lg-10">
+        <div class="col-xs-11 col-md-11">
             <div class="input-group">
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
@@ -16,7 +15,7 @@
                     </ul>
                 </div>
                 <!-- /btn-group -->
-                <input type="text" class="form-control" style="width: 170px;" maxlength="100" name="searchString"
+                <input type="text" class="form-control"  maxlength="100" name="searchString"
                        value="<?php echo isset($searchString) ? $searchString : ''; ?>">
             </div>
             <!-- /input-group -->

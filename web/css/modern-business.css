@@ -130,6 +130,7 @@ footer {
 }
 
 #container{
+    margin-top: 44px;
     min-height:100%;
     position:relative;
     /* Firefox */
@@ -139,7 +140,7 @@ footer {
     /* Opera */
     min-height: -o-calc(100% - 80px);
     /* Standard */
-    min-height: calc(100% - 80px);
+    min-height: calc(100% - 50px);
 }
 
 
