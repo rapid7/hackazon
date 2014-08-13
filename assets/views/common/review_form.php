@@ -59,7 +59,7 @@
             container: 'tooltip',
             fields: {
                 textReview: {
-                    message: 'Please pwrite your review'
+                    message: 'Please write your review'
                 },
                 userName: {
                     group: '.field-group'

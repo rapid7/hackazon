@@ -70,8 +70,8 @@ body {
 
 /* Social Icons Styles */
 .list-social-icons {
-    margin-bottom: 45px;
-    margin-top: 7px;
+    /*margin-bottom: 45px;*/
+    margin-top: -4px;
 }
 
 .tooltip-social a {
