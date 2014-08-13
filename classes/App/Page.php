@@ -67,8 +67,7 @@ class Page extends Controller {
             $this->view->search_subcategories = $this->getAllCategories($this->view->sidebar);
 
             if ($className != "Home") {
-                $model = new Category($this->pixie);
-                $this->view->categories = $model->getRootCategories();
+                $this->view->categories = $category->getRootCategories();
             }
         }
 
@@ -107,22 +106,24 @@ class Page extends Controller {
             case 'Category':
                 $category = new Category($this->pixie);
                 $search_category = $category->getPageTitle($this->request->param('id'));
+                $value = $this->request->param('id');
                 break;
             default:
                 $search_category = 'All';
+                $value = '';
+                break;
         }
-        return $search_category;
+        return  ['value' => $value, 'label' => $search_category] ;
     }
 
     protected function getAllCategories($categories) {
         $all_categories = array();
         foreach ($categories as $category) {
-            $all_categories[] = $category->name;
+            $all_categories[$category->categoryID] = $category->name;
             foreach ($category->childs as $subcategory) {
-                $all_categories[] = $subcategory->name;
+                $all_categories[$subcategory->categoryID] = $subcategory->name;
             }
         }
-        sort($all_categories);
         return $all_categories;
     }
 

@@ -389,6 +389,14 @@ $(document).ready(function () {
 
 
     });
+
+    /* Search Input */
+    $('#searchForm').on('click', '#searchValue a', function(e){
+       e.preventDefault();
+       $('#searchLabel').text($(this).text());
+       $('#searchForm input[type="hidden"][name="id"]').val($(this).data('item-id'));
+    });
+
 });
 
 
