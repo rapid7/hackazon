@@ -55,6 +55,12 @@
                 valid: 'glyphicon glyphicon-ok',
                 invalid: 'glyphicon glyphicon-remove',
                 validating: 'glyphicon glyphicon-refresh'
+            },
+            container: 'tooltip',
+            fields: {
+                textReview: {
+                    message: 'Please pwrite your review'
+                }
             }
         });
     });
