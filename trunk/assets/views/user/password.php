@@ -4,7 +4,7 @@
         <div class="row">
 
             <div class="col-lg-12">
-                <h1 class="page-header">Restore password
+                <h1 class="page-header">
                     
                 </h1>
                 <ol class="breadcrumb">
@@ -34,9 +34,12 @@
                         <label for="userEmail">Email address</label>
                         <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <div class="row">
+                        <div class="col-xs-6 col-md-6"><button id="loginbtn"  type="submit" class="btn btn-success btn-block btn-lg">Restore</button></div>
+                    </div>
                 </form>
             </div>
+
         <?php endif; ?>
     </div>
   <script>

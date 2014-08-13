@@ -35,14 +35,12 @@
         <script src="/js/jquery-migrate-1.2.1.js"></script>
         <script src="/js/bootstrap.js"></script>
         <script src="/js/modern-business.js"></script>
-        <script src="/js/jquery.validate.min.js"></script>
         <script src="/js/bootstrapValidator.min.js"></script>
         <script src="/js/jquery.inputmask.js"></script>
         <script src="/js/ekko-lightbox.js"></script>
         <script src="/js/jquery.nivo.slider.pack.js"></script>
         <script src="/js/respond.min.js"></script>
         <script src="/js/star-rating.min.js"></script>
-        <script src="/js/jquery.form-validator.min.js"></script>
         <script src="/js/site.js"></script>
     </head>
 
@@ -65,17 +63,17 @@
 
 
         <div id="login-box" class="login-popup">
-            <a href="#" class="close"><img src="/images/close_pop.png" class="btn_close" title="Close Window" alt="Close" /></a>
-            <form role="form" method="post" class="signin" action="/user/login" id="loginForm">
+            <a href="#" class="close" data-toggle="tooltip" data-placement="top" title="Close"><i class="glyphicon glyphicon-remove"></i></a>
+            <form role="form" method="post" class="signin js-review-form" action="/user/login" id="loginForm">
                 <h2>Please login <small></small></h2>
                 <hr class="colorgraph">
 
                 <div class="form-group">
-                    <input type="text" name="username" id="username" class="form-control input-lg" placeholder="Username or Email" tabindex="1">
+                    <input type="text" maxlength="100" required name="username" id="username" class="form-control input-lg" placeholder="Username or Email" tabindex="1">
                 </div>
 
                 <div class="form-group">
-                    <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
+                    <input type="password" maxlength="100" required name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
                 </div>
 
 
@@ -87,8 +85,8 @@
                             <span class="login-social-span">Or login via</span>
                             <ul class="list-unstyled list-inline list-social-icons">
 
-                                <li class="tooltip-social facebook-link"><a href="/facebook" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-2x"></i></a></li>
-                                <li class="tooltip-social twitter-link"><a href="/twitter" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-2x"></i></a></li>
+                                <li class="tooltip-social facebook-link"><a href="/facebook" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-3x"></i></a></li>
+                                <li class="tooltip-social twitter-link"><a href="/twitter" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-3x"></i></a></li>
                             </ul>
                             
                         </div>
@@ -114,27 +112,26 @@
 
         <script>
 
-            // When the browser is ready...
-            $(function() {
-                // Setup form validation on the #register-form element
-                $("#loginForm").validate({
-                    // Specify the validation rules
-                    rules: {
-                        username: {
-                            required: true
+            jQuery(function ($) {
+                $('.js-review-form').bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    container: 'tooltip',
+                    fields: {
+                        textReview: {
+                            message: 'Please pwrite your review'
                         },
-                        password: "required"
-                    },
-                    // Specify the validation error messages
-                    messages: {
-                        username: "Please enter username or valid email address",
-                        password: "Please enter your password"
-                    },
-                    submitHandler: function(form) {
-                        form.submit();
+                        userName: {
+                            group: '.field-group'
+                        },
+                        userEmail: {
+                            group: '.field-group'
+                        }
                     }
                 });
-
             });
 
         </script>        

@@ -97,10 +97,9 @@
 .login-social-span
 {
     float: left;
-    margin-top: 7px;
+    margin-top: 15px;
     margin-right: 15px;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 18px !important;
 }
 
 img.btn_close {

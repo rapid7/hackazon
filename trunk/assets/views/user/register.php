@@ -77,25 +77,23 @@
                 <hr class="colorgraph">
                 <div class="row">
                     <div class="col-xs-6 col-md-6"><input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
-                    <div class="col-xs-6 col-md-6"><a href="#" class="btn btn-success btn-block btn-lg">Sign In</a></div>
-                </div>
-                <br/>
-                <div class="row">        
                     <div class="col-xs-6 col-md-6">
-                        <ul class="list-unstyled list-inline list-social-icons">
-                            <li class="tooltip-social facebook-link"><a href="#facebook-page" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-2x"></i></a></li>
-                            <li class="tooltip-social linkedin-link"><a href="#linkedin-company-page" data-toggle="tooltip" data-placement="top" title="LinkedIn"><i class="fa fa-linkedin-square fa-2x"></i></a></li>
-                            <li class="tooltip-social twitter-link"><a href="#twitter-profile" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-2x"></i></a></li>
-                            <li class="tooltip-social google-plus-link"><a href="#google-plus-page" data-toggle="tooltip" data-placement="top" title="Google+"><i class="fa fa-google-plus-square fa-2x"></i></a></li>
-                        </ul>
+                        <div>
+                            <span class="login-social-span">Or login via</span>
+                            <ul class="list-unstyled list-inline list-social-icons">
+
+                                <li class="tooltip-social facebook-link"><a href="/facebook" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-4x"></i></a></li>
+                                <li class="tooltip-social twitter-link"><a href="/twitter" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-4x"></i></a></li>
+                            </ul>
+                            
+                        </div>
                     </div>
                 </div>
-                <p>
-                    <a class="forgot" href="/user/password">Forgot your password?</a>
-                    <a class="restore" href="/user/register">New user?</a><br>
-                    <a class="forgot" href="/facebook">Login via Facebook</a><br>
-                    <a class="forgot" href="/twitter">Login via Twitter</a>
-                </p> 
+                <br/>
+                <div class="row">
+                    <div class="col-xs-6 col-md-6"><a href="/user/password" class="btn btn-info btn-lg" style="width:100%">Forgot your password?</a></div>
+                    <div class="col-xs-6 col-md-6"><a href="/user/login" class="btn btn-info btn-lg" style="width:100%">Existing User?</a></div>
+                </div>
             </form>
         
         
