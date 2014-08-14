@@ -84,23 +84,27 @@ class Wishlist extends Page
             throw new ForbiddenException();
         }
 
-        if ($this->request->method != 'POST') {
-            $this->redirect('/wishlist');
-        }
-
         $name = $this->request->post('name', 'New Wish List');
         $type = $this->request->post('type', \App\Model\WishList::TYPE_PRIVATE);
 
-        if (!$name || !$type) {
-            if ($this->request->is_ajax()) {
-                $this->jsonResponse(['error' => 1]);
+        if ($this->user->wishlists->count_all()) {
+            if ($this->request->method != 'POST') {
+                $this->redirect('/wishlist');
                 return;
-            } else {
-                throw new HttpException('Invalid request', 400, 'Bad Request');
             }
-        }
 
-        $this->checkCsrfToken('wishlist_add', !$this->request->is_ajax());
+            if (!$name || !$type) {
+                if ($this->request->is_ajax()) {
+                    $this->jsonResponse(['error' => 1]);
+                    return;
+                } else {
+                    throw new HttpException('Invalid request', 400, 'Bad Request');
+                }
+            }
+
+
+            $this->checkCsrfToken('wishlist_add', null, !$this->request->is_ajax());
+        }
 
         $wishList = $this->user->createNewWishList($name, $type);
 
@@ -319,6 +323,8 @@ class Wishlist extends Page
         if ($wishList->owner->id() != $this->user->id()) {
             throw new ForbiddenException();
         }
+
+        $this->checkCsrfToken('wishlist', $this->request->post('token'), !$this->request->is_ajax());
 
         $wishList->delete();
 

@@ -16,7 +16,7 @@ $isWishListOwner = $user->id() == $wishList->user_id;
     <div class="row wishlist" data-access="<?php if ($isWishListOwner): ?>owner<?php else: ?>guest<?php endif; ?>"
         data-id="<?php echo $wishList->id(); ?>" data-name="<?php echo htmlspecialchars($wishList->name); ?>"
         data-type="<?php echo $wishList->type; ?>"
-        data-token="<?php $_token('wishlist'); ?>">
+        data-token="<?php echo $this->pixie->vulnService->getToken('wishlist'); ?>">
         <div class="col-lg-3">
             <div class="collapsible-block js-wish-my-lists">
                 <div class="block-header js-block-header">

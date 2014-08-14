@@ -4,6 +4,7 @@ namespace VulnModule\VulnInjection;
 
 
 use App\Exception\ForbiddenException;
+use App\Page;
 use App\Pixie;
 use PHPixie\Auth\Login\Provider;
 use PHPixie\Auth\Role\Driver;
@@ -446,13 +447,13 @@ class Service
 
     public function getToken($tokenId)
     {
-        $token = $this->getTokenManager()->getToken($tokenId);
+        $token = $this->getTokenManager()->getToken(Page::TOKEN_PREFIX . $tokenId);
         return $token->getValue();
     }
 
     public function refreshToken($tokenId)
     {
-        $token = $this->getTokenManager()->refreshToken($tokenId);
+        $token = $this->getTokenManager()->refreshToken(Page::TOKEN_PREFIX . $tokenId);
         return $token->getValue();
     }
 }
