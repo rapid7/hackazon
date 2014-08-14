@@ -68,6 +68,7 @@ function bsEditWishList(wishList) {
 
     var form = modal.find('form');
     form.bootstrapValidator({
+        exclude: ['_csrf_wishlist_add'],
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
@@ -86,7 +87,7 @@ function bsEditWishList(wishList) {
     modal.on('click', '.js-submit', function (ev) {
         ev.preventDefault();
 
-        if (!form.isValid()) {
+        if (!form.bootstrapValidator('isValid')) {
             return;
         }
         var result = {

