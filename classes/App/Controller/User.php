@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Page;
 use PHPixie\View;
 
-class User extends \App\Page {
-
-
+/**
+ * Class User
+ * @package App\Controller
+ * @property \App\Model\User model
+ */
+class User extends Page {
 
     public function action_login() {
         if (!is_null($this->pixie->auth->user())) {
@@ -16,7 +20,7 @@ class User extends \App\Page {
         $this->view->returnUrl = $this->request->get('return_url', '');
 
         if ($this->request->method == 'POST') {
-            //var_dump($this->view->returnUrl); exit;
+
             $login = $this->model->checkLoginUser($this->request->post('username'));
             $password = $this->request->post('password');
 
@@ -54,22 +58,25 @@ class User extends \App\Page {
     }
     
     public function action_logout() {
-        if (!is_null($this->pixie->auth->user()))
+        if (!is_null($this->pixie->auth->user())) {
             $this->pixie->auth->logout();
+        }
         $this->redirect('/');
     }
 
     public function action_password() {
         if ($this->request->method == 'POST') {
             $email = $this->request->post('email');
+
             if(!empty($email)){
                 $emailData = $this->model->getEmailData($email);
                 if(!empty($emailData)){
                     $this->pixie->email->send($emailData['to'], $emailData['from'],$emailData['subject'],$emailData['text']);
                     $this->view->successMessage = "Check your email and restore password.";
-                }
-                else
+
+                } else {
                     $this->view->errorMessage = "Email is incorrect.";
+                }
             }
         }
         $this->view->subview = 'user/password';
@@ -77,36 +84,75 @@ class User extends \App\Page {
 
 
     public function action_register() {
-        if (!is_null($this->pixie->auth->user()))
+        if (!is_null($this->pixie->auth->user())) {
             $this->redirect('/account');
+        }
+
+        $errors = [];
         
         if ($this->request->method == 'POST') {
             $dataUser = $this->getDataUser();
+            $valid = true;
 
-            if($this->model->checkExistingUser($dataUser)){
-                $this->view->errorMessage = "User already registered";
-                foreach ($dataUser as $key=>$value)
+            if ($this->model->checkExistingUser($dataUser)) {
+                $errors[] = "User already registered";
+                $valid = false;
+            }
+
+            if ($valid) {
+//                if (!$dataUser['first_name']) {
+//                    $valid = false;
+//                    $errors[] = 'Please enter your first name.';
+//                }
+//
+//                if (!$dataUser['last_name']) {
+//                    $valid = false;
+//                    $errors[] = 'Please enter your last name.';
+//                }
+//
+                if (!$dataUser['username']) {
+                    $valid = false;
+                    $errors[] = 'Please enter your username.';
+                }
+
+                if (!$dataUser['email']) {
+                    $valid = false;
+                    $errors[] = 'Please enter your email.';
+                }
+
+                if (!$dataUser['password'] || $dataUser['password'] != $dataUser['password_confirmation']) {
+                    $valid = false;
+                    $errors[] = 'Passwords are missing or not equal.';
+                }
+
+                if ($valid) {
+                    $this->model->RegisterUser($dataUser);
+                    $this->pixie->auth
+                        ->provider('password')
+                        ->login($dataUser['username'], $dataUser['password']);
+
+                    $emailView = $this->pixie->view('user/register_email');
+                    $emailView->data = $dataUser;
+
+                    $emailData = $this->model->getEmailData($dataUser['email']);
+                    $this->pixie->email->send(
+                        $emailData['to'],
+                        $emailData['from'],
+                        'You have successfully registered on hackazon.com',
+                        $emailView->render()
+                    );
+
+                    $this->redirect('/account');
+                }
+            }
+
+            if (!$valid) {
+                foreach ($dataUser as $key => $value) {
                     $this->view->$key = $value;
-            }else{
-                $this->model->RegisterUser($dataUser);
-                $this->pixie->auth
-                    ->provider('password')
-                    ->login($dataUser['username'], $dataUser['password']);
-
-                $emailView = $this->pixie->view('user/register_email');
-                $emailView->data = $dataUser;
-
-                $emailData = $this->model->getEmailData($dataUser['email']);
-                $this->pixie->email->send(
-                    $emailData['to'],
-                    $emailData['from'],
-                    'You have successfully registered on hackazon.com',
-                    $emailView->render()
-                );
-
-                $this->redirect('/account');
+                }
             }
         }
+        $this->view->errorMessage = implode('<br>', $errors);
         $this->view->subview = 'user/register';
     }
 
@@ -137,6 +183,7 @@ class User extends \App\Page {
                     if($this->model->changeUserPassword($username, $new_passw))
                         $this->view->successMessage = "The password has been changed successfully";
                     $this->view->subview = 'user/recover';
+                    return;
                 }
             }
         }
@@ -147,13 +194,12 @@ class User extends \App\Page {
 
     private function getDataUser(){
         return array(
-            'username' => $this->request->post('username'),
+            'first_name' => $this->request->post('first_name'),
+            'last_name' => $this->request->post('last_name'),
             'email' => $this->request->post('email'),
-            'user_phone' => $this->request->post('user_phone'),
+            'username' => $this->request->post('username'),
             'password' =>  $this->request->post('password'),
+            'password_confirmation' =>  $this->request->post('password_confirmation'),
         );
     }
-
-
-
 }

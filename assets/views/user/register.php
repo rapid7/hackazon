@@ -24,36 +24,39 @@
 
     <div class="row" >
 
-        <form role="form" method="post" class="signin" action="/user/login" id="registerForm">
+        <form role="form" method="post" class="signin" action="/user/register" id="registerForm">
             <h2>Please Sign Up <small>It's free and always will be.</small></h2>
             <hr class="colorgraph">
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
-                        <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1">
+                        <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1" value="<?php $_($first_name, 'first_name'); ?>">
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
-                        <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2">
+                        <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2" value="<?php $_($last_name, 'last_name'); ?>">
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <input type="text" name="display_name" id="display_name" class="form-control input-lg" placeholder="Display Name" tabindex="3">
+                <input type="text" name="username" id="username" required class="form-control input-lg" placeholder="Username" tabindex="3" value="<?php $_($username, 'username'); ?>">
             </div>
             <div class="form-group">
-                <input type="email" maxlength="100" required name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
+                <input type="email" maxlength="100" required name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4" value="<?php $_($email, 'email'); ?>">
             </div>
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
-                        <input type="password" maxlength="100" required name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
+                        <input type="password" maxlength="100" required name="password" id="password"
+                               class="form-control input-lg" placeholder="Password" tabindex="5" value="<?php $_($password, 'password'); ?>">
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
-                        <input type="password" maxlength="100" required name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
+                        <input type="password" maxlength="100" required name="password_confirmation"
+                               id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password"
+                               tabindex="6" value="<?php $_($password_confirmation, 'password_confirmation'); ?>">
                     </div>
                 </div>
             </div>
@@ -105,10 +108,28 @@
                     invalid: 'glyphicon glyphicon-remove',
                     validating: 'glyphicon glyphicon-refresh'
                 },
-                container: 'tooltip'
+                container: 'tooltip',
+                fields: {
+                    password: {
+                        validators: {
+                            identical: {
+                                field: 'password_confirmation',
+                                message: 'The password and its confirm are not the same'
+                            }
+                        }
+                    },
+                    password_confirmation: {
+                        validators: {
+                            identical: {
+                                field: 'password',
+                                message: 'The password and its confirm are not the same'
+                            }
+                        }
+                    }
+                }
             });
         });
 
-        $("#user_phone").inputmask("+1(999) 999-9999");
+       // $("#user_phone").inputmask("+1(999) 999-9999");
     });
 </script>

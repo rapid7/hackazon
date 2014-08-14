@@ -8,6 +8,7 @@ use App\Core\View;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
 use PHPixie\Exception\PageNotFound;
+use VulnModule\Config\ModelInfoRepository;
 use VulnModule\VulnInjection;
 
 /**
@@ -22,6 +23,7 @@ use VulnModule\VulnInjection;
  * @property-read Request $request Request instance
  * @property-read Debug $debug Debug object
  * @property-read VulnInjection\Service $vulnService Debug object
+ * @property-read ModelInfoRepository $modelInfoRepository
  */
 class Pixie extends \PHPixie\Pixie {
 
@@ -45,6 +47,7 @@ class Pixie extends \PHPixie\Pixie {
     {
         $this->instance_classes['debug'] = '\\App\\Debug';
         $this->instance_classes['request'] = '\\App\\Core\\Request';
+        $this->instance_classes['modelInfoRepository'] = '\\VulnModule\\Config\\ModelInfoRepository';
     }
 	
 	protected function after_bootstrap(){

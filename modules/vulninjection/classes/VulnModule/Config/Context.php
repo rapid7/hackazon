@@ -10,6 +10,7 @@
 namespace VulnModule\Config;
 use App\Debug;
 use App\Helpers\ArraysHelper;
+use App\Pixie;
 use VulnModule\DataType\ArrayObject;
 
 /**
@@ -22,7 +23,7 @@ class Context
     const TYPE_DEFAULT = 0;     // Usual context
     const TYPE_FORM = 1;        // Form context
 
-    public static $vulnTypes = ['xss', 'sql', 'csrf'];
+    public static $vulnTypes = ['xss', 'sql', 'csrf', 'os_command'];
 
     public static $contextTypes = [
         self::TYPE_DEFAULT,
@@ -64,14 +65,21 @@ class Context
     protected $children = null;
 
     /**
+     * @var null|Pixie
+     */
+    protected $pixie = null;
+
+    /**
      * Constructs context.
      * @param string $name
      * @param array $children
      * @param int $type
+     * @param null $pixie
      */
-    public function __construct($name = '', array $children = [], $type = self::TYPE_DEFAULT)
+    public function __construct($name = '', array $children = [], $type = self::TYPE_DEFAULT, $pixie = null)
     {
         $this->children = $children;
+        $this->pixie = $pixie;
         $this->setName($name);
         $this->setType($type);
     }
@@ -79,14 +87,15 @@ class Context
     /**
      * Factory method to create context tree from config array.
      * @param $name
-     * @param $parent
      * @param array $data
+     * @param $parent
      * @param int $type
+     * @param null|Pixie $pixie
      * @return Context
      */
-    public static function createFromData($name, array $data = [], $parent = null, $type = self::TYPE_DEFAULT)
+    public static function createFromData($name, array $data = [], $parent = null, $type = self::TYPE_DEFAULT, $pixie = null)
     {
-        $context = new Context($name, [], $type);
+        $context = new Context($name, [], $type, $pixie);
         $context->setParent($parent);
         $context->setFields(array_key_exists('fields', $data) ? $data['fields'] : array());
         $context->setVulnerabilities(array_key_exists('vulnerabilities', $data) ? $data['vulnerabilities'] : array());
@@ -95,7 +104,7 @@ class Context
         if (array_key_exists('forms', $data) && is_array($data['forms'])) {
             foreach ($data['forms'] as $formName => $formData) {
                 self::checkValidName($formName);
-                $formContext = self::createFromData($formName, $formData, $context, self::TYPE_FORM);
+                $formContext = self::createFromData($formName, $formData, $context, self::TYPE_FORM, $pixie);
                 $context->addContext($formContext);
             }
         }
@@ -106,7 +115,7 @@ class Context
             if (array_key_exists($block, $data) && is_array($data[$block])) {
                 foreach ($data[$block] as $subContextName => $subContextData) {
                     self::checkValidName($subContextName);
-                    $subContext = self::createFromData($subContextName, $subContextData, $context, self::TYPE_DEFAULT);
+                    $subContext = self::createFromData($subContextName, $subContextData, $context, self::TYPE_DEFAULT, $pixie);
                     $context->addContext($subContext);
                 }
             }
@@ -154,6 +163,28 @@ class Context
     {
         $parentFields = $this->parent ? $this->parent->getFields() : [];
         $this->fields = ArraysHelper::arrayMergeRecursiveDistinct($parentFields, $fields);
+        $repo = $this->pixie->modelInfoRepository;
+
+        if (!$repo) {
+            return $this;
+        }
+
+        foreach ($this->fields as $field => $data) {
+            if ($data['db_field']) {
+                $parts = preg_split('/\./', $data['db_field'], -1, PREG_SPLIT_NO_EMPTY);
+                if (count($parts) < 2) {
+                    continue;
+                }
+
+                $info = $repo->getModelInfo($parts[0]);
+                if ($info === false) {
+                    continue;
+                }
+
+                $this->fields[$field]['db_table'] = $info['table'];
+                $this->fields[$field]['db_field_name'] = $parts[1];
+            }
+        }
 
         return $this;
     }
