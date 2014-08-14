@@ -84,6 +84,11 @@ class Service
     protected $sqlFiltrator;
 
     /**
+     * @var Config\ModelInfoRepository
+     */
+    protected $modelInfoRepository;
+
+    /**
      * Constructs an Auth instance for the specified configuration
      *
      * @param \PHPixie\Pixie $pixie Pixie dependency container
@@ -118,7 +123,7 @@ class Service
         if (!is_array($this->controllerSettings)) {
             $this->controllerSettings = array();
         }
-        $controllerContext = Context::createFromData($name, $this->controllerSettings, $this->config->getRootContext());
+        $controllerContext = Context::createFromData($name, $this->controllerSettings, $this->config->getRootContext(), Context::TYPE_DEFAULT, $this->pixie);
         $this->config->addControllerContext($controllerContext);
 
         return $this;

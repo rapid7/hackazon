@@ -26,17 +26,21 @@ class User extends \PHPixie\ORM\Model {
 
 
 	public function checkExistingUser($dataUser){
-        if(iterator_count($this->getUserByUsername($dataUser['username'])) > 0 || iterator_count($this->getUserByEmail($dataUser['email']))>0 )
+        if(
+            strlen($dataUser['username']) && iterator_count($this->getUserByUsername($dataUser['username'])) > 0
+            || strlen($dataUser['email']) && iterator_count($this->getUserByEmail($dataUser['email'])) > 0
+        ) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
 
     protected  function getUserByUsername($username) {
         return $this->pixie->db->query('select')
                                 ->table($this->table)
-                                ->where('username', $username)    
+                                ->where('username', $username)
                                 ->execute();  
     }
 
@@ -50,7 +54,15 @@ class User extends \PHPixie\ORM\Model {
     public function RegisterUser($dataUser) {
         $dataUser['password'] = $this->pixie->auth->provider('password')->hash_password($dataUser['password']);
         $dataUser['created_on'] = $dataUser['last_login'] = date('Y-m-d H:i:s');
-        $this->pixie->orm->get('User')->values($dataUser)->save();
+        $allowed = ['first_name', 'last_name', 'email', 'password', 'username'];
+        $allowedData = [];
+        foreach ($dataUser as $key => $field) {
+            if (in_array($key, $allowed)) {
+                $allowedData[$key] = $field;
+            }
+        }
+
+        $this->pixie->orm->get('User')->values($allowedData)->save();
     }
 
     public function checkLoginUser($login){

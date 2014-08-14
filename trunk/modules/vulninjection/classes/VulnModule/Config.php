@@ -71,7 +71,7 @@ class Config implements \ArrayAccess
         if (!is_array($data)) {
             $data = [];
         }
-        $context = Context::createFromData('root', $data);
+        $context = Context::createFromData('root', $data, null, Context::TYPE_DEFAULT, $this->pixie);
         $this->rootContext = $context;
         $this->currentContext = $this->rootContext;
 
