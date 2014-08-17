@@ -624,3 +624,41 @@ ul.nav li.grey a {
     margin-left: -16px;
     margin-right: -16px;
 }
+.f-left {
+    float:left;
+}
+#contactForm input{
+    width:195px;
+}
+#contactForm .r-margin{
+    margin-right: 0px !important;
+}
+.a-box-inner {
+    padding: 14px 18px;
+}
+.people-box {
+    float: left;
+    width: 225px;
+    float: left;
+    margin-top: 1%;
+    margin-right: 40px;
+    height: 241px;
+}
+.people-box .people-box-list {
+    height: 90px;
+}
+.people-box .remember {
+    width:100%;
+    margin-top: 10px;
+}
+.people-box .remembered {
+    margin-top: 28px;
+    text-align: center;
+    color: #008500;
+}
+.people-box:hover{
+    border:#999 solid 1px;
+}
+.toggle {
+    cursor: pointer;
+}

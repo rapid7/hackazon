@@ -6,7 +6,6 @@
  * Time: 11:38
  */
 
-
 namespace App\Controller;
 
 
@@ -22,6 +21,7 @@ use PHPixie\Exception\PageNotFound;
  * Class Wishlist.
  * @package App\Controller
  */
+
 class Wishlist extends Page
 {
 	/**
@@ -397,7 +397,30 @@ class Wishlist extends Page
     {
         $searchQuery = $this->request->post('search');
         $result = $this->pixie->orm->get('Wishlist')->searchWishLists($searchQuery);
-        echo json_encode($result);
-        $this->execute = false;
+        $this->jsonResponse($result);
+    }
+
+    public function action_remember()
+    {
+        $userId = $this->request->post('user_id');
+        $result = $this->pixie->orm->get('Wishlist')->remember($userId);
+        if ($result) {
+            $this->jsonResponse(['success' => 1]);
+        }
+    }
+
+    public function action_remove_follower()
+    {
+        $item = $this->pixie->orm->get('WishListFollowers')
+            ->where(
+                array('user_id', '=', $this->pixie->auth->user()->id),
+                array('and', array('follower_id', '=', $this->request->post('follower_id'))))
+            ->find();
+        if ($item->loaded()) {
+            $item->delete();
+            $this->jsonResponse(['success' => 1]);
+        } else {
+            $this->jsonResponse(['success' => 0]);
+        }
     }
 } 
