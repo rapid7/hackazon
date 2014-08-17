@@ -290,6 +290,9 @@ Recovering link is here
             foreach ($followers->as_array() as $u) {
                 $followerIds[] = $u->id;
             }
+            if (empty($followerIds)) {
+                return array();
+            }
             $followerIds = implode(',',$followerIds);
             $followers = $this->pixie->orm->get('User')
                 ->where('id', 'IN', $this->pixie->db->expr('(' . $followerIds . ')'))->find_all()->as_array();
