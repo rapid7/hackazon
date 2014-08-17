@@ -42,7 +42,7 @@
                                 c = c + 1;
                             }
                             if (cntList > 3) {
-                                output = output + '<li><a href="">See all 5 lists</a></li>';
+                                output = output + '<li>Total: ' + cntList + ' lists</li>';
                             }
                             if (data[i].remembered) {
                                 var remember = '<div class="remembered">Remembered</div>';
