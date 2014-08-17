@@ -92,15 +92,35 @@ class WishList extends BaseModel
                 array('or', array('username', 'like', '%' . $searchQuery . '%'))
             )->find_all()->as_array();
         $userList = array();
+        $followers = array();
+        if ($this->pixie->auth->user() !== null) {
+            $userFollowers = $this->pixie->orm->get('WishListFollowers')
+                ->where('user_id', $this->pixie->auth->user()->id)->find_all()->as_array();
+            foreach ($userFollowers as $userFollower) {
+                $followers[] = $userFollower->follower_id;
+            }
+        }
         foreach ($users as $user) {
             if ($user->id == $this->pixie->auth->user()->id) continue;
             $userList[$user->id] = $user->as_array();
+            $userList[$user->id]['remembered'] = in_array($user->id, $followers) ? true : false;
             $userList[$user->id]['wishLists'] = array();
+            $publicListExists = false;
             foreach ($user->lists as $list) {
                 if ($list->type != 'public') continue;
                 $userList[$user->id]['wishLists'][] = $list->as_array();
+                $publicListExists = true;
+            } if (!$publicListExists) {
+                unset($userList[$user->id]);
             }
         }
         return $userList;
+    }
+
+    public function remember($userId) {
+        $this->pixie->db->query('insert')->table('tbl_wishlist_followers')
+            ->data(array('user_id' => $this->pixie->auth->user()->id, 'follower_id' => $userId))
+            ->execute();
+        return $this->pixie->db->insert_id();
     }
 }

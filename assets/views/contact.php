@@ -1,25 +1,27 @@
 <script>
     $(function () {
-        $.validate({
-            form : '#contactForm',
-            onError : function() {
+        $('#contactForm').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
             },
-            onSuccess : function() {
-                $.ajax({
-                    url:'/contact',
-                    type:"POST",
-                    dataType:"json",
-                    data: $("#contactForm").serialize(),
-                    success: function(data){
-                        $(".alert").empty().append('Thank you for your question. We will contact you as soon');
+            container: 'tooltip'
+        }).on('success.form.bv', function(e) {
+            $.ajax({
+                url:'/contact',
+                type:"POST",
+                dataType:"json",
+                data: $("#contactForm").serialize(),
+                success: function(data){
+                    $(".alert").empty().append('Thank you for your question. We will contact you as soon').show();
 
-                    },
-                    fail: function() {
-                        alert( "error" );
-                    }
-                });
-                return false; // Will stop the submission of the form
-            }
+                },
+                fail: function() {
+                    alert( "error" );
+                }
+            });
+            return false; // Will stop the submission of the form
         });
     });
 </script>
@@ -48,28 +50,23 @@
           <h3>Let's Get In Touch!</h3>
           <p>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
 
-            <div class="alert alert-success"></div>
+            <div style="display: none" class="alert alert-success"></div>
 
-            <form role="form" method="POST" id="contactForm">
-	            <div class="row">
-	              <div class="form-group col-lg-4">
-	                <label for="input1">Name</label>
-	                <input type="text" name="contact_name" class="form-control" id="input1" data-validation="length" data-validation-length="min5">
+            <form role="form" method="POST" id="contactForm" class="form-horizontal">
+                  <div class="row form-group col-lg-4 field-group f-left r-margin">
+                    <input type="text" maxlength="100" required class="form-control" placeholder="Username or Email" name="userName" id="userName">
+                  </div>
+	              <div class="form-group col-lg-4 field-group f-left r-margin">
+	                <input type="email" name="contact_email" required class="form-control" id="input2" data-validation="email" placeholder="Email Address">
 	              </div>
-	              <div class="form-group col-lg-4">
-	                <label for="input2">Email Address</label>
-	                <input type="email" name="contact_email" class="form-control" id="input2" data-validation="email">
-	              </div>
-	              <div class="form-group col-lg-4">
-	                <label for="input3">Phone Number</label>
-	                <input type="phone" name="contact_phone" class="form-control" id="input3" data-validation="number">
+	              <div class="form-group col-lg-4 field-group f-left">
+	                <input type="phone" name="contact_phone" required class="form-control" id="input3" data-validation="number" placeholder="Phone Number">
 	              </div>
 	              <div class="clearfix"></div>
-	              <div class="form-group col-lg-12">
-	                <label for="input4">Message</label>
-	                <textarea name="contact_message" class="form-control" rows="6" id="input4" data-validation="length" data-validation-length="min10"></textarea>
+	              <div class="form-group col-lg-12 field-group">
+	                <textarea name="contact_message" required class="form-control" rows="6" id="input4" data-validation="length" data-validation-length="min10" placeholder="Message"></textarea>
 	              </div>
-	              <div class="form-group col-lg-12">
+	              <div class="form-group col-lg-12 field-group">
 	                <input type="hidden" name="save" value="contact">
 	                <button type="submit" class="btn btn-primary">Submit</button>
 	              </div>

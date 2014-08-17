@@ -21,6 +21,10 @@ class User extends \PHPixie\ORM\Model {
 		'wishlists' => array(
             'model' => 'wishList',
             'key' => 'user_id'
+        ),
+        'wishlistFollowers' => array(
+            'model' => 'WishListFollowers',
+            'key' => 'user_id'
         )
 	);
 
@@ -275,6 +279,21 @@ Recovering link is here
     {
         if ($propertyName == 'lists') {
             return $this->wishlists->find_all()->as_array();
+        }
+        if ($propertyName == 'wishlistFollowers') {
+            $followers = $this->pixie->db->query('select')->table($this->pixie->orm->get('User')->table, 'u')
+                ->join(array('tbl_wishlist_followers', 'wf'), array('wf.follower_id', 'u.id'))
+                ->fields('u.id')
+                ->where('wf.user_id', $this->id)
+                ->execute();
+            $followerIds = array();
+            foreach ($followers->as_array() as $u) {
+                $followerIds[] = $u->id;
+            }
+            $followerIds = implode(',',$followerIds);
+            $followers = $this->pixie->orm->get('User')
+                ->where('id', 'IN', $this->pixie->db->expr('(' . $followerIds . ')'))->find_all()->as_array();
+            return $followers;
         }
         return null;
     }

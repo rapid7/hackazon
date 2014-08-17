@@ -1,24 +1,40 @@
 <script>
     $(function () {
-        $.validate({
-            form : '#shippingForm',
-            onError : function() {
+        $('#shippingForm').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
             },
-            onSuccess : function() {
-                $.ajax({
-                    url:'/checkout/shipping',
-                    type:"POST",
-                    dataType:"json",
-                    data: $("#shippingForm").serialize(),
-                    success: function(data){
-                        window.location.href="/checkout/billing";
-                    },
-                    fail: function() {
-                        alert( "error" );
+            container: 'tooltip',
+            fields: {
+                zip: {
+                    validators: {
+                        stringLength: {
+                            min: 3,
+                            max: 10
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: 'The zip can only consist of number'
+                        }
                     }
-                });
-                return false; // Will stop the submission of the form
+                }
             }
+        }).on('success.form.bv', function(e) {
+            $.ajax({
+                url:'/checkout/shipping',
+                type:"POST",
+                dataType:"json",
+                data: $("#shippingForm").serialize(),
+                success: function(data){
+                    window.location.href="/checkout/billing";
+                },
+                fail: function() {
+                    alert( "error" );
+                }
+            });
+            return false; // Will stop the submission of the form
         });
         $("#btn_shipping").click(function(){
             $("#shippingForm").submit();
@@ -102,13 +118,13 @@
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="fullName">Full name:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="fullName" name="fullName" data-validation="length" data-validation-length="min5" type="text">
+                            <input class="form-control" id="fullName" name="fullName" required type="text">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="addressLine1">Address line 1:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" data-validation="length" data-validation-length="min5" id="addressLine1" name="addressLine1" type="text" placeholder="Street address, P.O. box, company name, c/o">
+                            <input class="form-control" required id="addressLine1" name="addressLine1" type="text" placeholder="Street address, P.O. box, company name, c/o">
                         </div>
                     </div>
                     <div class="form-group">
@@ -120,23 +136,23 @@
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="city">City:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" data-validation="required" id="city" name="city" type="text">
+                            <input class="form-control" required id="city" name="city" type="text">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="region">State/Province/Region:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" data-validation="required" id="region" name="region" type="text">
+                            <input class="form-control" required id="region" name="region" type="text">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="zip">ZIP:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" data-validation="number" data-validation-allowing="range[1;1000000]" id="zip" name="zip" type="text">
+                            <input class="form-control" required id="zip" name="zip" type="text">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label required class="col-xs-4 control-label" for="country_id">Country:</label>
+                        <label required class="col-xs-4 required control-label" for="country_id">Country:</label>
                         <div class="col-xs-8">
                             <select class="form-control" id="country_id" data-validation="required" name="country_id">
                                 <option value="RU">Russia</option>

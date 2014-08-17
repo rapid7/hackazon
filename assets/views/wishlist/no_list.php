@@ -34,6 +34,10 @@
             <h1>Find a Wish List</h1>
             <?php include __DIR__ . '/_search_form.php'; ?>
         </div>
+        <div class="products clearfix">
+            <div class="clearfix product-list"></div>
+        </div>
+
     </div>
 
 </div>
