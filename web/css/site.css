@@ -343,6 +343,9 @@ form.signin .error {
     -o-transform:rotate(355deg);
     -ms-transform:rotate(355deg);
 }
+.product-list-inline-small .thumbnail {
+    min-height: 280px;
+}
 .product-list-inline-large .thumbnail {
     padding:10px;
     margin-bottom:30px;

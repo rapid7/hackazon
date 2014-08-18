@@ -1,8 +1,6 @@
 <div class="row">
     <form role="search" action="/search" method="get" id="searchForm">
-
-
-        <input type="hidden" name="id" value="<?= $search_category['value'] ?>">
+        <input type="hidden" name="id" value="<?= $search_category['value'] ?>" />
         <div class="col-xs-11 col-md-11">
             <div class="input-group">
                 <div class="input-group-btn">
