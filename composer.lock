@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5099f7e5aa78aa3537976aef0305be31",
+    "hash": "517b24d93a09c908cbdfb1d24fa97bff",
     "packages": [
         {
             "name": "phpixie/auth",
@@ -60,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dracony/PHPixie-Core.git",
-                "reference": "38bfffda22101c8925278412dc3e7e1b3acd4a5a"
+                "reference": "18098764384057c94639a587c1f393dfeb3ef5ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dracony/PHPixie-Core/zipball/38bfffda22101c8925278412dc3e7e1b3acd4a5a",
-                "reference": "38bfffda22101c8925278412dc3e7e1b3acd4a5a",
+                "url": "https://api.github.com/repos/dracony/PHPixie-Core/zipball/18098764384057c94639a587c1f393dfeb3ef5ce",
+                "reference": "18098764384057c94639a587c1f393dfeb3ef5ce",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +98,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-06-15 00:29:39"
+            "time": "2014-06-18 15:44:08"
         },
         {
             "name": "phpixie/db",
@@ -244,6 +244,53 @@
             "time": "2014-05-22 00:42:52"
         },
         {
+            "name": "phpixie/paginate",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dracony/PHPixie-Paginate.git",
+                "reference": "dfc904855998f7b49f25a127041a3968d513cff1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dracony/PHPixie-Paginate/zipball/dfc904855998f7b49f25a127041a3968d513cff1",
+                "reference": "dfc904855998f7b49f25a127041a3968d513cff1",
+                "shasum": ""
+            },
+            "require": {
+                "phpixie/core": "2.*@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "PHPixie": "classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Tsiupa",
+                    "email": "draconyster@gmail.com",
+                    "homepage": "http://dracony.org"
+                }
+            ],
+            "description": "Pagination module for PHPixie",
+            "homepage": "http://phpixie.com",
+            "keywords": [
+                "orm",
+                "pagination"
+            ],
+            "time": "2014-04-06 09:33:02"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v4.3.1",
             "source": {
@@ -295,24 +342,17 @@
             "time": "2013-04-11 10:22:09"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "phpixie/core": 20,
         "phpixie/db": 20,
         "phpixie/orm": 20,
         "phpixie/auth": 20,
-        "phpixie/email": 20
+        "phpixie/email": 20,
+        "phpixie/paginate": 20
     },
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "platform": [],
+    "platform-dev": []
 }

@@ -1,53 +1,5 @@
 [
     {
-        "name": "phpixie/core",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/dracony/PHPixie-Core.git",
-            "reference": "38bfffda22101c8925278412dc3e7e1b3acd4a5a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/dracony/PHPixie-Core/zipball/38bfffda22101c8925278412dc3e7e1b3acd4a5a",
-            "reference": "38bfffda22101c8925278412dc3e7e1b3acd4a5a",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2014-06-15 00:29:39",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.*-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "PHPixie": "classes/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD"
-        ],
-        "authors": [
-            {
-                "name": "Roman Tsiupa",
-                "email": "draconyster@gmail.com",
-                "homepage": "http://dracony.org"
-            }
-        ],
-        "description": "PHPixie Framework",
-        "homepage": "http://phpixie.com",
-        "keywords": [
-            "framework"
-        ]
-    },
-    {
         "name": "phpixie/db",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -297,6 +249,103 @@
         "homepage": "http://phpixie.com",
         "keywords": [
             "email"
+        ]
+    },
+    {
+        "name": "phpixie/paginate",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/dracony/PHPixie-Paginate.git",
+            "reference": "dfc904855998f7b49f25a127041a3968d513cff1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/dracony/PHPixie-Paginate/zipball/dfc904855998f7b49f25a127041a3968d513cff1",
+            "reference": "dfc904855998f7b49f25a127041a3968d513cff1",
+            "shasum": ""
+        },
+        "require": {
+            "phpixie/core": "2.*@dev"
+        },
+        "time": "2014-04-06 09:33:02",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "PHPixie": "classes/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "authors": [
+            {
+                "name": "Roman Tsiupa",
+                "email": "draconyster@gmail.com",
+                "homepage": "http://dracony.org"
+            }
+        ],
+        "description": "Pagination module for PHPixie",
+        "homepage": "http://phpixie.com",
+        "keywords": [
+            "orm",
+            "pagination"
+        ]
+    },
+    {
+        "name": "phpixie/core",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/dracony/PHPixie-Core.git",
+            "reference": "18098764384057c94639a587c1f393dfeb3ef5ce"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/dracony/PHPixie-Core/zipball/18098764384057c94639a587c1f393dfeb3ef5ce",
+            "reference": "18098764384057c94639a587c1f393dfeb3ef5ce",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2014-06-18 15:44:08",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.*-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "PHPixie": "classes/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "authors": [
+            {
+                "name": "Roman Tsiupa",
+                "email": "draconyster@gmail.com",
+                "homepage": "http://dracony.org"
+            }
+        ],
+        "description": "PHPixie Framework",
+        "homepage": "http://phpixie.com",
+        "keywords": [
+            "framework"
         ]
     }
 ]
