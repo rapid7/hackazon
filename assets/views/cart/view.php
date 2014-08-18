@@ -152,6 +152,7 @@ if (count($items) == 0) :?>
                     <tr>
                         <td align="right" colspan="3">
                             <form class="form-horizontal" id="methods">
+                                <?php $_token('checkout_step_1'); ?>
                                 <fieldset>
                                     <div class="form-group">
                                         <label class="col-xs-4 control-label">shipping: </label>

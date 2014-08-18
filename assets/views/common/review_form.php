@@ -42,6 +42,7 @@
                             </div>
                         </div>
                     </fieldset>
+                    <?php $_token('review'); ?>
                 </form>
             </div>
         </div>

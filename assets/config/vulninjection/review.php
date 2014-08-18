@@ -24,6 +24,9 @@ return array(
         ],
         'xss' => [
             'stored' => true
+        ],
+        'csrf' => [
+            'enabled' => false
         ]
     ]
 );

@@ -70,8 +70,9 @@ class Helper extends \PHPixie\View\Helper
     /**
      * Render hidden CSRF field.
      * @param $tokenId
+     * @param bool $refresh
      */
-    public function token($tokenId)
+    public function token($tokenId, $refresh = true)
     {
         $service = $this->pixie->getVulnService();
 
@@ -79,7 +80,7 @@ class Helper extends \PHPixie\View\Helper
             echo '';
             return;
         }
-        echo $service->renderTokenField(Page::TOKEN_PREFIX . $tokenId);
+        echo $service->renderTokenField(Page::TOKEN_PREFIX . $tokenId, $refresh);
     }
 
     /**

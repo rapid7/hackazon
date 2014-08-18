@@ -44,6 +44,8 @@ class Checkout extends \App\Page {
             $cartModel->setCustomer();
         }
         if ($this->request->is_ajax()) {
+            $this->checkCsrfToken('checkout_step2', null, false);
+
             $post = $this->request->post();
             $addressId = isset($post['address_id']) ? $post['address_id'] : 0;
             if (!$addressId) {
@@ -66,7 +68,10 @@ class Checkout extends \App\Page {
     public function action_billing() {
         $this->restrictActions(CartModel::STEP_BILLING);
         $customerAddresses = $this->pixie->orm->get('CustomerAddress')->getAll();
+
         if ($this->request->is_ajax()) {
+            $this->checkCsrfToken('checkout_step3', null, false);
+
             $post = $this->request->post();
             $addressId = isset($post['address_id']) ? $post['address_id'] : 0;
             if (!$addressId) {
@@ -74,6 +79,7 @@ class Checkout extends \App\Page {
             }
             $this->pixie->orm->get('Cart')->updateAddress($addressId, 'billing');
             $this->execute = false;
+
         } else {
             $this->view->subview = 'cart/billing';
             $this->view->tab = 'billing';
@@ -122,6 +128,7 @@ class Checkout extends \App\Page {
     public function action_placeOrder()
     {
         $this->restrictActions(CartModel::STEP_ORDER);
+        $this->checkCsrfToken('checkout_step4', null, false);
         $this->pixie->orm->get('Cart')->placeOrder();
         $this->execute = false;
     }
