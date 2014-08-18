@@ -8,6 +8,8 @@ class Review extends \App\Page
     public function action_send()
     {
         if ($this->request->method == 'POST') {
+            $this->checkCsrfToken('review');
+
             $product = $this->pixie->orm->get('Product')->where('productID', $this->request->post('productID'))->find();
             if ($product->loaded()) {
                 $user = $this->pixie->auth->user();

@@ -61,6 +61,7 @@ class Cart extends \App\Page {
      * set shipping & payment methods
      */
     public function action_setMethods() {
+        $this->checkCsrfToken('checkout_step_1', null, !$this->request->is_ajax());
         $cart = $this->pixie->orm->get('Cart')->getCart();
         $cart->shipping_method = $this->request->post('shipping_method');
         $cart->payment_method = $this->request->post('payment_method');

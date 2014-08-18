@@ -63,4 +63,9 @@ class View extends \PHPixie\View implements \ArrayAccess
         include($this->path);
         return ob_get_clean();
     }
+
+    public function getToken($name)
+    {
+        return $this->pixie->vulnService->getToken($name);
+    }
 }

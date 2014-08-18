@@ -81,7 +81,7 @@
                 url:'/checkout/billing',
                 type:"POST",
                 dataType:"json",
-                data: {address_id: $(this).attr('data-id')},
+                data: {address_id: $(this).attr('data-id'), _csrf_checkout_step3: $(this).data('token') },
                 success: function(){
                     window.location.href="/checkout/confirmation";
                 },
@@ -98,13 +98,14 @@
 
     <?php foreach ($this->customerAddresses as $address) :?>
         <div class="col-sm-2 blockShadow">
-            <b><?php echo $address->full_name ?></b><br />
-            <?php echo $address->address_line_1 ?><br />
-            <?php echo $address->address_line_2 ?><br />
-            <?php echo $address->city  . ' ' .  $address->region  . ' ' .  $address->zip ?><br />
-            <?php echo $address->country_id ?><br />
-            <?php echo $address->phone ?><br />
-            <button data-id="<?php echo $address->id?>" style="margin-bottom:5px;width:100%" class="btn btn-primary btn-sm confirm-address">Bill to this address</button>
+            <b><?php echo $_($address->full_name, 'full_name'); ?></b><br />
+            <?php echo $_($address->address_line_1, 'address_line_1'); ?><br />
+            <?php echo $_($address->address_line_2, 'address_line_2'); ?><br />
+            <?php echo $_($address->city, 'city')  . ' ' .  $_($address->region, 'region')  . ' ' .  $_($address->zip, 'zip') ?><br />
+            <?php echo $_($address->country_id, 'country_id'); ?><br />
+            <?php echo $_($address->phone, 'phone'); ?><br />
+            <button data-id="<?php echo $address->id?>" style="margin-bottom:5px;width:100%" class="btn btn-primary btn-sm confirm-address"
+                    data-token="<?php echo $this->getToken('checkout_step3'); ?>">Bill to this address</button>
             <button data-id="<?php echo $address->id?>" style="width:48%" class="btn btn-default btn-xs edit-address">Edit</button>&nbsp;
             <button data-id="<?php echo $address->id?>" style="width:47%" class="btn btn-default btn-xs delete-address">Delete</button>
         </div>
@@ -167,6 +168,7 @@
                         </div>
                     </div>
                 </fieldset>
+                <?php $_token('checkout_step3', false); ?>
             </form>
         </div>
     </div>

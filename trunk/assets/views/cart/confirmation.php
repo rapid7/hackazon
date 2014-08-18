@@ -3,6 +3,7 @@
         $("#place_order").click(function(){
             $.ajax({
                 url:'/checkout/placeOrder',
+                data: { _csrf_checkout_step4: $(this).data('token') },
                 type:"POST",
                 dataType:"json",
                 success: function(data) {
@@ -34,22 +35,22 @@
                             <div class="blockShadow">
                             <?php $shippingAddress = $cart->getShippingAddress()?>
                                 <h3>Shipping Address</h3>
-                                <b><?php echo $shippingAddress->full_name ?></b><br />
-                                <?php echo $shippingAddress->address_line_1 ?><br />
-                                <?php echo $shippingAddress->address_line_2 ?><br />
-                                <?php echo $shippingAddress->city . ' ' . $shippingAddress->region . ' ' . $shippingAddress->zip ?><br />
-                                <?php echo $shippingAddress->country_id ?><br />
-                                <?php echo $shippingAddress->phone ?><br />
+                                <b><?php echo $_($shippingAddress->full_name, 'full_name'); ?></b><br />
+                                <?php echo $_($shippingAddress->address_line_1, 'address_line_1'); ?><br />
+                                <?php echo $_($shippingAddress->address_line_2, 'address_line_2'); ?><br />
+                                <?php echo $_($shippingAddress->city, 'city') . ' ' . $_($shippingAddress->region, 'region') . ' ' . $_($shippingAddress->zip, 'zip'); ?><br />
+                                <?php echo $_($shippingAddress->country_id, 'country_id'); ?><br />
+                                <?php echo $_($shippingAddress->phone, 'phone'); ?><br />
                             </div>
                             <div class="blockShadow">
                                 <?php $billingAddress = $cart->getBillingAddress()?>
                                 <h3>Billing Address</h3>
-                                <b><?php echo $billingAddress->full_name ?></b><br />
-                            <?php echo $billingAddress->address_line_1 ?><br />
-                            <?php echo $billingAddress->address_line_2 ?><br />
-                            <?php echo $billingAddress->city . ' ' . $billingAddress->region . ' ' . $billingAddress->zip ?><br />
-                            <?php echo $billingAddress->country_id ?><br />
-                            <?php echo $billingAddress->phone ?><br />
+                                <b><?php echo $_($billingAddress->full_name, 'full_name'); ?></b><br />
+                            <?php echo $_($billingAddress->address_line_1, 'address_line_1'); ?><br />
+                            <?php echo $_($billingAddress->address_line_2, 'address_line_2'); ?><br />
+                            <?php echo $_($billingAddress->city, 'city') . ' ' . $_($billingAddress->region, 'region') . ' ' . $_($billingAddress->zip, 'zip'); ?><br />
+                            <?php echo $_($billingAddress->country_id, 'country_id'); ?><br />
+                            <?php echo $_($billingAddress->phone, 'phone'); ?><br />
                                 </div>
                         </td>
                     </tr>
@@ -101,7 +102,8 @@
             <button class="btn btn-default" data-target="#step2" data-toggle="tab" onclick="window.location.href='/checkout/billing'"><span class="glyphicon glyphicon-chevron-left"></span> billing step</button>
         </div>
         <div class="col-xs-6">
-            <button class="btn btn-primary pull-right" data-target="#step4" data-toggle="tab" id="place_order">Place Order <span class="glyphicon glyphicon-chevron-right"></span></button>
+            <button class="btn btn-primary pull-right" data-target="#step4" data-toggle="tab" id="place_order"
+                    data-token="<?php echo $this->getToken('checkout_step4'); ?>">Place Order <span class="glyphicon glyphicon-chevron-right"></span></button>
         </div>
     </div>
 

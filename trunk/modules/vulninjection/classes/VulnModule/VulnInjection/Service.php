@@ -307,7 +307,7 @@ class Service
      * @param $table
      * @return mixed
      */
-    public function filterStoredXSSIfNeeded($key, $value, $table)
+    public function filterStoredXSSIfNeeded($key, $value, $table = null)
     {
         $fields = $this->getFields();
 
