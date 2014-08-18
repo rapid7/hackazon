@@ -2,6 +2,9 @@
 
 namespace App\SearchFilters;
 
+use App\Model\BaseModel;
+use App\Model\Model;
+
 class NameFilter implements BaseFilter {
 
     protected $_value;
@@ -23,6 +26,9 @@ class NameFilter implements BaseFilter {
         $this->_value = $value;
     }
 
+    /**
+     * @param BaseModel $model
+     */
     public function getSql(&$model) {
         $model->where('name', 'LIKE', '%'.$this->getValue().'%');
     }

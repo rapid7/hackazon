@@ -31,6 +31,22 @@ class Query extends DB\Query
     protected $_settings;
 
     /**
+     * Maps alias names to table names
+     * @var array
+     */
+    protected $_aliases = [];
+
+    /**
+     * @var bool
+     */
+    protected $isRoot = true;
+
+    /**
+     * @var null|Query
+     */
+    protected $parent = null;
+
+    /**
      * Creates a new query object, checks which driver we are using and set the character used for quoting
      *
      * @param \PHPixie\DB $db Database connection
@@ -115,10 +131,10 @@ class Query extends DB\Query
 
         if ($service = $this->getVulnService()) {
             // Filter stored XSS if this vulnerability isn't enabled in config.
-            $val = $service->filterStoredXSSIfNeeded($columnName, $val);
+            $val = $service->filterStoredXSSIfNeeded($columnName, $val, $this->_table);
 
             // Filter SQL Injections
-            $sqlInjectionParams = $service->getSqlInjectionParams($columnName);
+            $sqlInjectionParams = $service->getSqlInjectionParams($columnName, $this->_table);
             if ($sqlInjectionParams['is_vulnerable']) {
                 return "'" . $val ."'";
             }
@@ -132,11 +148,13 @@ class Query extends DB\Query
     /**
      * Gets the SQL for a subquery and appends its parameters to current ones
      *
-     * @param DB\Query $query Query builder for the subquery
+     * @param Query $query Query builder for the subquery
      * @param array  &$params Reference to parameters array
      * @return string  Subquery SQL
      */
     protected function subquery($query, &$params) {
+        $query->setIsRoot(false);
+        $query->setParent($this);
         $query = $query->query();
         $params = array_merge($params, $query[1]);
         return "({$query[0]}) ";
@@ -158,6 +176,8 @@ class Query extends DB\Query
             $table = $table[0];
         }
 
+        $this->getRootQuery()->addUsedAlias($alias);
+
         if (is_string($table)) {
             $table = $this->quote($table);
             if ($alias != null)
@@ -165,8 +185,10 @@ class Query extends DB\Query
             return $table;
         }
 
-        if ($alias == null)
+        if ($alias == null) {
             $alias = $this->last_alias();
+            $this->getRootQuery()->addUsedAlias($alias);
+        }
 
         if ($table instanceof DB\Query)
             return "{$this->subquery($table, $params)} AS {$alias}";
@@ -187,6 +209,9 @@ class Query extends DB\Query
 
         $query = '';
         $params = array();
+        if (!$this->parent) {
+            $this->_aliases = [];
+        }
 
         if ($this->_type == 'insert') {
             $query .= "INSERT INTO {$this->escape_table($this->_table, $params)} ";
@@ -413,5 +438,55 @@ class Query extends DB\Query
     public function getVulnService()
     {
         return $this->_db->pixie->getVulnService();
+    }
+
+    /**
+     * @param boolean $isRoot
+     */
+    public function setIsRoot($isRoot)
+    {
+        $this->isRoot = !!$isRoot;
+    }
+
+    /**
+     * @return null|Query
+     */
+    public function getRootQuery()
+    {
+        return $this->parent ? $this->parent->getRootQuery() : $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param null $parent
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUsedAliases()
+    {
+        return $this->_aliases;
+    }
+
+    public function addUsedAlias($alias)
+    {
+        if (!$alias) {
+            return;
+        }
+        if (!in_array($alias, $this->_aliases)) {
+            $this->_aliases[] = $alias;
+        }
     }
 }

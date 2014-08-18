@@ -304,16 +304,21 @@ class Service
     /**
      * @param $key
      * @param $value
+     * @param $table
      * @return mixed
      */
-    public function filterStoredXSSIfNeeded($key, $value)
+    public function filterStoredXSSIfNeeded($key, $value, $table)
     {
         $fields = $this->getFields();
 
-        if (array_key_exists($key, $fields) && in_array('xss', $fields[$key])) {
-            $vulns = $this->getVulnerabilities();
+        if (!($key = $this->getCanonicalKey($key, $table))) {
+            return $this->filterXSS($value);
+        }
 
-            if (array_key_exists('xss', $vulns) && $vulns['xss']['stored'] && !is_numeric($value)) {
+        if (in_array('xss', $fields[$key])) {
+            $vuln = $this->getVulnerability('xss');
+
+            if ($vuln['stored'] && !is_numeric($value)) {
                 return $value;
             }
         }
@@ -336,26 +341,21 @@ class Service
     /**
      * Retrieves parameters for sql injection for given column
      * @param $key
+     * @param $table
      * @return mixed
      */
-    public function getSqlInjectionParams($key)
+    public function getSqlInjectionParams($key, $table)
     {
-        $fields = $this->getFields();
-        $vulns = $this->getVulnerabilities();
+        $params = $this->getVulnerability('sql');
 
-        $params = $vulns['sql'];
-
-        // Simplify column name in case of fully-qualified names.
-        if (!array_key_exists($key, $fields)) {
-            $simpleColumnName = preg_replace('/.*?\\.([_\w\\d]+)$/i', '$1', trim(preg_replace('/`/', '', $key)));
-
-            if (array_key_exists($simpleColumnName, $fields)) {
-                $key = $simpleColumnName;
-            }
+        if (!($key = $this->getCanonicalKey($key, $table))) {
+            return $params;
         }
 
+        $fields = $this->getFields();
+
         // And if field contains SQL Injection, enable it.
-        if (array_key_exists($key, $fields) && in_array('sql', $fields[$key])) {
+        if (in_array('sql', $fields[$key])) {
             $params['is_vulnerable'] = true;
         }
 
@@ -421,7 +421,6 @@ class Service
         $isFilterable = $this->checkIsIn($method, $vuln['methods'])
             && $this->checkIsIn(strtolower($proto), $vuln['protocols']);
 
-          //$this->pixie->debug->dumpx($method, $host, $proto, $isFilterable);
         if ($isFilterable
             && ((!$path || !$this->referrerPathIsAllowed($path, $vuln['paths']))
                 || (!$host || !$this->checkIsIn($host, $vuln['hosts'])))
@@ -430,11 +429,23 @@ class Service
         }
     }
 
+    /**
+     * Checks that given value is really in array.
+     * @param $value
+     * @param $array
+     * @return bool
+     */
     private function checkIsIn($value, $array)
     {
         return is_array($array) && count($array) && in_array($value, $array);
     }
 
+    /**
+     * Check that referrer is allowed for given paths.
+     * @param $path
+     * @param $paths
+     * @return bool
+     */
     private function referrerPathIsAllowed($path, $paths)
     {
         if (!is_array($paths) || !count($paths)) {
@@ -450,15 +461,91 @@ class Service
         return false;
     }
 
+    /**
+     * Get or create (if empty) a fresh CSRF-token for a certain name.
+     * @param $tokenId
+     * @return string
+     */
     public function getToken($tokenId)
     {
         $token = $this->getTokenManager()->getToken(Page::TOKEN_PREFIX . $tokenId);
         return $token->getValue();
     }
 
+    /**
+     * Refresh and retrieve new CSRF-token for a given name.
+     * @param $tokenId
+     * @return string
+     */
     public function refreshToken($tokenId)
     {
         $token = $this->getTokenManager()->refreshToken(Page::TOKEN_PREFIX . $tokenId);
         return $token->getValue();
+    }
+
+    /**
+     * Get DB fields which map on vulnerability fields in current context.
+     * @return array
+     */
+    private function getDbFields()
+    {
+        return $this->getContextParams('db_fields');
+    }
+
+    /**
+     * Get all context params, or single one.
+     * @param null $name
+     * @return array
+     */
+    public function getContextParams($name = null)
+    {
+        $params = $this->config ? $this->config->getContextParams() : array();
+        if (!$name) {
+            return $params;
+        }
+
+        if (array_key_exists($name, $params)) {
+            return $params[$name];
+        }
+
+        return [];
+    }
+
+    /**
+     * Get canonical key name from vulnerability fields config
+     * @param $key
+     * @param $table
+     * @return null
+     */
+    public function getCanonicalKey($key, $table)
+    {
+        $fields = $this->getFields();
+        $dbFields = $this->getDbFields();
+
+        $dbKey = strtolower(trim(preg_replace('/`/', '', $key)));
+
+        $fieldExistsInConfig = false;
+
+        if (array_key_exists($key, $fields)) {
+            $fieldExistsInConfig = true;
+
+        } else if (array_key_exists($dbKey, $dbFields)) {
+            $fieldExistsInConfig = true;
+            $key = $dbFields[$dbKey];
+
+        } else if ($table) {
+            if (is_array($table)) {
+                $dbKey = $table[0].'.'.$dbKey;
+            } else {
+                $dbKey = $table.'.'.$dbKey;
+            }
+
+            if (array_key_exists($dbKey, $dbFields)) {
+                $fieldExistsInConfig = true;
+                $key = $dbFields[$dbKey];
+            }
+        }
+
+        return $fieldExistsInConfig ? $key : null;
     }
 }

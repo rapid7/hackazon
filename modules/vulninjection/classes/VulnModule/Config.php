@@ -243,4 +243,9 @@ class Config implements \ArrayAccess
     {
         return $this->currentContext;
     }
+
+    public function getContextParams()
+    {
+        return $this->currentContext->getParams();
+    }
 }

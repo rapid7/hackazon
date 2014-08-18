@@ -51,7 +51,7 @@ class Page extends \App\Page
         }
 
         // Determine OS and execute the ping command.
-        if (stristr(php_uname('s'), 'Windows NT')) {   // $this->dumpx(rawurlencode('/'), 'type ' . $path);
+        if (stristr(php_uname('s'), 'Windows NT')) {
             exec('type ' . $path, $content);
 
         } else {

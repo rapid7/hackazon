@@ -21,7 +21,8 @@ return [
         ],
         'recover' => [
             'db_field' => 'user.recover_passw'
-        ]
+        ],
+        'return_url' => []
     ],
 
     'actions' => [

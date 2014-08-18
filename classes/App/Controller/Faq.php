@@ -11,8 +11,8 @@ use App\Page;
 class Faq extends Page
 {
     public function action_index() {
-        $this->view['subview'] = 'pages/faq';
-        $this->view['entries'] = $this->model->getEntries();
+        $this->view->subview = 'pages/faq';
+        $this->view->entries = $this->model->getEntries();
     }
 
     public function action_add() {

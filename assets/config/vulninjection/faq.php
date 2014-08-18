@@ -11,15 +11,13 @@ $_REQUEST
 return [
     'fields' => [
         'q' => ['sql'],
-        'userQuestion' => ['xss'],
-        'question' => ['xss', 'sql']
-    ],
-
-    'actions' => [
-        'add' => [
-            'fields' => [
-                'max' => ['xss']
-            ]
+        'userQuestion' => [
+            'xss',
+            'db_field' => 'faq.question'
+        ],
+        'userEmail' => [
+            'xss', 'sql',
+            'db_field' => 'faq.email'
         ]
     ],
 
