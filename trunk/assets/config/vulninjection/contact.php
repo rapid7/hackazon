@@ -1,13 +1,28 @@
 <?php
 return array(
     'fields' => [
-        'name' => ['sql'],
-        'message' => ['sql']
+        'contact_name' => [
+            'sql',
+            'db_field' => 'contactMessages.name'
+        ],
+        'contact_email' => [
+            'db_field' => 'contactMessages.email'
+        ],
+        'contact_phone' => [
+            'db_field' => 'contactMessages.phone'
+        ],
+        'contact_message' => [
+            'xss',
+            'db_field' => 'contactMessages.message'
+        ]
     ],
 
     'vulnerabilities' => [
         'sql' => [
-            'blind' => true
+            'blind' => false
+        ],
+        'xss' => [
+            'stored' => true
         ]
     ]
 );

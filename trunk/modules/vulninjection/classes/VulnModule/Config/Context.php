@@ -8,7 +8,7 @@
 
 
 namespace VulnModule\Config;
-use App\Debug;
+
 use App\Helpers\ArraysHelper;
 use App\Pixie;
 use VulnModule\DataType\ArrayObject;
@@ -22,6 +22,9 @@ class Context
 {
     const TYPE_DEFAULT = 0;     // Usual context
     const TYPE_FORM = 1;        // Form context
+
+    /** @var array Different props */
+    protected $params = [];
 
     public static $vulnTypes = ['xss', 'sql', 'csrf', 'os_command'];
 
@@ -82,6 +85,7 @@ class Context
         $this->pixie = $pixie;
         $this->setName($name);
         $this->setType($type);
+        $this->params['db_fields'] = array();
     }
 
     /**
@@ -97,6 +101,9 @@ class Context
     {
         $context = new Context($name, [], $type, $pixie);
         $context->setParent($parent);
+        if ($parent) {
+            $context->setParams($parent->getParams());
+        }
         $context->setFields(array_key_exists('fields', $data) ? $data['fields'] : array());
         $context->setVulnerabilities(array_key_exists('vulnerabilities', $data) ? $data['vulnerabilities'] : array());
 
@@ -169,6 +176,10 @@ class Context
             return $this;
         }
 
+        if (!is_array($this->params['db_fields'])) {
+            $this->params['db_fields'] = array();
+        }
+
         foreach ($this->fields as $field => $data) {
             if ($data['db_field']) {
                 $parts = preg_split('/\./', $data['db_field'], -1, PREG_SPLIT_NO_EMPTY);
@@ -183,6 +194,7 @@ class Context
 
                 $this->fields[$field]['db_table'] = $info['table'];
                 $this->fields[$field]['db_field_name'] = $parts[1];
+                $this->params['db_fields'][strtolower($info['table'].'.'.$parts[1])] = $field;
             }
         }
 
@@ -352,5 +364,18 @@ class Context
     public function getFields()
     {
         return $this->fields;
+    }
+
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * @param array $params
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
     }
 }
