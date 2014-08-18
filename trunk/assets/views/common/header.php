@@ -20,6 +20,8 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/about">About Us</a>
                     </li>
+                    <li><a href="/faq">FAQ</a>
+                    </li>
                     <li><a href="/contact">Contact Us</a>
                     </li>
                     <?php if (!is_null($this->pixie->auth->user())): ?>

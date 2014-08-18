@@ -38,6 +38,7 @@ class Pixie extends \PHPixie\Pixie {
         'auth' => '\PHPixie\Auth',
         'vulninjection' => '\VulnModule\VulnInjection',
         'email' => '\PHPixie\Email',
+        'paginate' => '\PHPixie\Paginate',
     );
 
     /**
