@@ -1,3 +1,25 @@
+<script>
+  $(function(){
+    var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
+    while (m = re.exec(queryString)) {
+        queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+    $("#filter-block input[data-filter=brands]").on("change", function(e) {
+      queryParameters['brands'] = $(this).val();
+      location.search = $.param(queryParameters);
+    });
+
+    $("#filter-block input[data-filter=price]").on("change", function(e) {
+      queryParameters['price'] = $(this).val();
+      location.search = $.param(queryParameters);
+    });
+
+    $("#filter-block input[data-filter=quality]").on("change", function(e) {
+      queryParameters['quality'] = $(this).val();
+      location.search = $.param(queryParameters);
+    });
+  });
+</script>
 <div class="row">
     <div class="col-xs-12 col-sm-3">
         <br/>
@@ -5,54 +27,56 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="well well-small" id="filter-block">
+                  <form action="/search">
                     <legend>Brands</legend>
                     <?php
                     foreach ($filterFabric->getFilter('Brand')->getVariants() as $id => $name) {
-                        $isChecked = in_array($id, $filterFabric->getFilter('Brand')->getValue()) ? 'checked' : '';
+                        $isChecked = in_array($id, $filterFabric->getFilter('brandFilter')->getValue()) ? 'checked' : '';
                         ?>
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" data-type="filter"
                                        name="<?= $filterFabric->getFilter('Brand')->getFieldName() ?>[]"
-                                       value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param">
+                                       value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param" data-filter="brands">
                                 <?= $name ?>
                             </label>
                         </div>
                     <?php
                     }
                     ?>
-                    <hr>
+                    <hr />
                     <legend>Price</legend>
                         <?php
                         foreach ($filterFabric->getFilter('Price')->getVariants() as $id => $name) {
-                            $isChecked = $filterFabric->getFilter('Price')->getValue() == $id ? 'checked' : '';
+                            $isChecked = $filterFabric->getFilter('priceFilter')->getValue() == $id ? 'checked' : '';
                             $elemId = 'price-'.$id;
                             ?>
                             <div class="radio">
                                 <label for="<?=$elemId?>">
-                                    <input type="radio" name="<?= $filterFabric->getFilter('Price')->getFieldName() ?>" id="<?=$elemId?>" value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param">
-                                    <?= $filterFabric->getFilter('Price')->getLabel($id) ?>
+                                    <input type="radio" name="<?= $filterFabric->getFilter('Price')->getFieldName() ?>" id="<?=$elemId?>" value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param"  data-filter="price" />
+                                      <?= $filterFabric->getFilter('Price')->getLabel($id) ?>
                                 </label>
                             </div>
                         <?php
                         }
                         ?>
-                    <hr>
+                    <hr />
                     <legend>Quality</legend>
                     <?php
                     foreach ($filterFabric->getFilter('Quality')->getVariants() as $id => $name) {
-                        $isChecked = $filterFabric->getFilter('Quality')->getValue() == $id ? 'checked' : '';
+                        $isChecked = $filterFabric->getFilter('qualityFilter')->getValue() == $id ? 'checked' : '';
                         $elemId = 'quality-'.$id;
                         ?>
                         <div class="radio">
                             <label for="<?=$elemId?>">
-                                <input type="radio" name="<?= $filterFabric->getFilter('Quality')->getFieldName() ?>" id="<?=$elemId?>" value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param">
-                                <?= $name ?>
+                                <input type="radio" name="<?= $filterFabric->getFilter('Quality')->getFieldName() ?>" id="<?=$elemId?>" value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param"  data-filter="quality" />
+                                  <?= $name ?>
                             </label>
                         </div>
                     <?php
                     }
                     ?>
+                    </form>
                 </div>
             </div>
         </div>
