@@ -146,9 +146,11 @@ class Home extends \App\Page {
         $conn->exec(file_get_contents($dbScript));
 
         // Install migrations
+        $migrationSql = "";
         foreach (scandir($this->pixie->root_dir . "database/migrations") as $file) {
             $file = $this->pixie->root_dir . "database/migrations/" . $file;
             if (is_file($file)) {
+                //$migrationSql .= file_get_contents($file);
                 $conn->exec(file_get_contents($file));
             }
         }
