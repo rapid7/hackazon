@@ -12,4 +12,4 @@ CREATE TABLE `tbl_wishlist_followers` (
  KEY `tbl_follower_id_ibfk_2` (`follower_id`),
  CONSTRAINT `tbl_user_id_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tbl_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT `tbl_follower_id_ibfk_2` FOREIGN KEY (`follower_id`) REFERENCES `tbl_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
