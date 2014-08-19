@@ -11,7 +11,7 @@ CREATE TABLE `tbl_customer_address` (
   `phone` varchar(60) default NULL,
   `customer_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 
 DROP TABLE IF EXISTS `tbl_orders`;
@@ -26,7 +26,7 @@ CREATE TABLE `tbl_orders` (
   `comment` text,
   `customer_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 CREATE TABLE `tbl_order_address` (
   `id` int(11) NOT NULL auto_increment,
@@ -40,10 +40,10 @@ CREATE TABLE `tbl_order_address` (
   `phone` varchar(60) default NULL,
   `customerId` int(11) default NULL,
   `address_type` varchar(20) default NULL,
-  `order_id` int(11) default NULL,
+  `order_id` int(11) UNSIGNED default NULL,
   PRIMARY KEY  (`id`),
-  CONSTRAINT `FK_ORDER_ID` FOREIGN KEY (`id`) REFERENCES `tbl_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
+  CONSTRAINT `FK_ORDER_ID` FOREIGN KEY (`order_id`) REFERENCES `tbl_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 
 CREATE  TABLE `tbl_order_items` (
