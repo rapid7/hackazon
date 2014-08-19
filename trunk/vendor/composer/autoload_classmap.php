@@ -111,8 +111,6 @@ return array(
     'PHPixie\\Session' => $vendorDir . '/phpixie/core/classes/PHPixie/Session.php',
     'PHPixie\\View' => $vendorDir . '/phpixie/core/classes/PHPixie/View.php',
     'PHPixie\\View\\Helper' => $vendorDir . '/phpixie/core/classes/PHPixie/View/Helper.php',
-    'PHPixie\\VulnInjection' => $baseDir . '/modules/vulninjection/classes/PHPixie/VulnInjection.php',
-    'PHPixie\\VulnInjection\\Service' => $baseDir . '/modules/vulninjection/classes/PHPixie/VulnInjection/Service.php',
     'VulnModule\\Config' => $baseDir . '/modules/vulninjection/classes/VulnModule/Config.php',
     'VulnModule\\Config\\Context' => $baseDir . '/modules/vulninjection/classes/VulnModule/Config/Context.php',
     'VulnModule\\Config\\ModelInfoRepository' => $baseDir . '/modules/vulninjection/classes/VulnModule/Config/ModelInfoRepository.php',

@@ -129,30 +129,6 @@ class Service
         return $this;
     }
 
-//    private function filterPost()
-//    {
-//        if (isset($this->settings['inputs'])) {
-//            foreach ($_POST as $key => $value) {
-//                if (!array_key_exists($key, $this->settings['inputs'])) {
-//                    //Prevent any by default
-//                    $_POST[$key] = mysql_real_escape_string(htmlspecialchars($value));
-//                } else {
-//                    if (!in_array('xss', $this->settings['inputs'][$key])) {
-//                        $_POST[$key] = htmlspecialchars($_POST[$key]);
-//                    }
-//                    if (!in_array('sql', $this->settings['inputs'][$key])) {
-//                        $_POST[$key] = mysql_real_escape_string($_POST[$key]);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    private function filterGet()
-//    {
-//
-//    }
-
     /**
      * Returns the required section
      *

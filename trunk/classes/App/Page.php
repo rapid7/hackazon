@@ -71,7 +71,7 @@ class Page extends Controller {
             }
         }
 
-        $this->vulninjection = $this->pixie->vulninjection->service(strtolower($className));
+        //$this->vulninjection = $this->pixie->vulninjection->service(strtolower($className));
         //$this->pixie->db->get()->settings($this->vulninjection->getSection("sql"));
 
         $classModel = "App\\Model\\" . $className;
