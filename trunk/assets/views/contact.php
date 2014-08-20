@@ -1,5 +1,5 @@
 <script>
-    $(function () {
+    $(function() {
         $('#contactForm').bootstrapValidator({
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
@@ -9,89 +9,96 @@
             container: 'tooltip'
         }).on('success.form.bv', function(e) {
             $.ajax({
-                url:'/contact',
-                type:"POST",
-                dataType:"json",
+                url: '/contact',
+                type: "POST",
+                dataType: "json",
                 data: $("#contactForm").serialize(),
-                success: function(data){
+                success: function(data) {
                     $(".alert").empty().append('Thank you for your question. We will contact you as soon').show();
 
                 },
                 fail: function() {
-                    alert( "error" );
+                    alert("error");
                 }
             });
             return false; // Will stop the submission of the form
         });
     });
 </script>
-    <div class="container">
-      
-      <div class="row">
-      
+<div class="container">
+
+    <div class="row">
+
         <div class="col-lg-12">
-          <h1 class="page-header">Contact <small>We'd Love to Hear From You!</small></h1>
-          <ol class="breadcrumb">
-            <li><a href="/">Home</a></li>
-            <li class="active">Contact</li>
-          </ol>
-        </div>
-        
-        <div class="col-lg-12">
-          <!-- Embedded Google Map using an iframe - to select your location find it on Google maps and paste the link as the iframe src. If you want to use the Google Maps API instead then have at it! -->
-          <iframe width="100%" height="400px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?hl=en&amp;ie=UTF8&amp;ll=37.0625,-95.677068&amp;spn=56.506174,79.013672&amp;t=m&amp;z=4&amp;output=embed"></iframe>
+            <h1 class="page-header">Contact <small>We'd Love to Hear From You!</small></h1>
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active">Contact</li>
+            </ol>
         </div>
 
-      </div><!-- /.row -->
-      
-      <div class="row">
+        <div class="col-lg-12">
+            <!-- Embedded Google Map using an iframe - to select your location find it on Google maps and paste the link as the iframe src. If you want to use the Google Maps API instead then have at it! -->
+            <iframe width="100%" height="400px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?hl=en&amp;ie=UTF8&amp;ll=37.0625,-95.677068&amp;spn=56.506174,79.013672&amp;t=m&amp;z=4&amp;output=embed"></iframe>
+        </div>
+
+    </div><!-- /.row -->
+
+    <div class="row">
 
         <div class="col-sm-8">
-          <h3>Let's Get In Touch!</h3>
-          <p>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+            <h3>Let's Get In Touch!</h3>
+            <p>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
 
             <div style="display: none" class="alert alert-success"></div>
 
             <form role="form" method="POST" id="contactForm" class="form-horizontal">
-                  <div class="row form-group col-lg-4 field-group f-left r-margin">
+                <div class="row form-group col-lg-4 field-group f-left r-margin">
                     <input type="text" maxlength="100" required class="form-control" placeholder="Username or Email" name="contact_name" id="userName">
-                  </div>
-	              <div class="form-group col-lg-4 field-group f-left r-margin">
-	                <input type="email" name="contact_email" required class="form-control" id="input2" data-validation="email" placeholder="Email Address">
-	              </div>
-	              <div class="form-group col-lg-4 field-group f-left">
-	                <input type="phone" name="contact_phone" required class="form-control" id="input3" data-validation="number" placeholder="Phone Number">
-	              </div>
-	              <div class="clearfix"></div>
-	              <div class="form-group col-lg-12 field-group">
-	                <textarea name="contact_message" required class="form-control" rows="6" id="input4" data-validation="length" data-validation-length="min10" placeholder="Message"></textarea>
-	              </div>
-	              <div class="form-group col-lg-12 field-group">
-	                <input type="hidden" name="save" value="contact">
-	                <button type="submit" class="btn btn-primary">Submit</button>
-	              </div>
-              </div>
-            </form>
+                </div>
+                <div class="form-group col-lg-4 field-group f-left r-margin">
+                    <input type="email" name="contact_email" required class="form-control" id="input2" data-validation="email" placeholder="Email Address">
+                </div>
+                <div class="form-group col-lg-4 field-group f-left">
+                    <input type="phone" name="contact_phone" required class="form-control" id="input3" data-validation="number" placeholder="Phone Number">
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-12 field-group">
+                    <textarea name="contact_message" required class="form-control" rows="6" id="input4" data-validation="length" data-validation-length="min10" placeholder="Message"></textarea>
+                </div>
+                <div class="form-group col-lg-12 field-group">
+                    <input type="hidden" name="save" value="contact">
+                    <?php echo $_token('contact'); ?>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
         </div>
+        </form>
+
 
         <div class="col-sm-4">
-          <h3>Modern Business</h3>
-          <h4>A Start Bootstrap Template</h4>
-          <p>
-            5555 44th Street N.<br>
-            Bootstrapville, CA 32323<br>
-          </p>
-          <p><i class="fa fa-phone"></i> <abbr title="Phone">P</abbr>: (555) 984-3600</p>
-          <p><i class="fa fa-envelope-o"></i> <abbr title="Email">E</abbr>: <a href="mailto:feedback@startbootstrap.com">feedback@startbootstrap.com</a></p>
-          <p><i class="fa fa-clock-o"></i> <abbr title="Hours">H</abbr>: Monday - Friday: 9:00 AM to 5:00 PM</p>
-          <ul class="list-unstyled list-inline list-social-icons">
-            <li class="tooltip-social facebook-link"><a href="#facebook-page" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-2x"></i></a></li>
-            <li class="tooltip-social linkedin-link"><a href="#linkedin-company-page" data-toggle="tooltip" data-placement="top" title="LinkedIn"><i class="fa fa-linkedin-square fa-2x"></i></a></li>
-            <li class="tooltip-social twitter-link"><a href="#twitter-profile" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-2x"></i></a></li>
-            <li class="tooltip-social google-plus-link"><a href="#google-plus-page" data-toggle="tooltip" data-placement="top" title="Google+"><i class="fa fa-google-plus-square fa-2x"></i></a></li>
-          </ul>
+            <h3>Modern Business</h3>
+            <h4>Hackazon</h4>
+            <p>
+                5555 44th Street N.<br>
+                Bootstrapville, CA 32323<br>
+            </p>
+            <p><i class="fa fa-phone"></i> <abbr title="Phone">P</abbr>: (555) 984-3600</p>
+            <p><i class="fa fa-envelope-o"></i> <abbr title="Email">E</abbr>: <a href="mailto:feedback@startbootstrap.com">feedback@hackazon.webscantest.com</a></p>
+            <p><i class="fa fa-clock-o"></i> <abbr title="Hours">H</abbr>: Monday - Friday: 9:00 AM to 5:00 PM</p>
+            <ul class="list-unstyled list-inline list-social-icons">
+                <li class="tooltip-social facebook-link"><a href="#facebook-page" onclick="window.open(
+                        'http://vkontakte.ru/share.php?url=' + encodeURIComponent(location.href),
+                        'vkontakte-share-dialog',
+                        'width=626,height=436');
+                        return false;" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-2x"></i></a></li>
+                <li class="tooltip-social twitter-link"><a href="#twitter-profile" onclick="window.open(
+                        'https://twitter.com/share?url=' + encodeURIComponent(location.href),
+                        'twitter-share-dialog',
+                        'width=626,height=436');
+                        return false;" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-2x"></i></a></li>
+            </ul>
         </div>
+    </div>
+</div><!-- /.row -->
 
-      </div><!-- /.row -->
-
-    </div><!-- /.container -->
+</div><!-- /.container -->

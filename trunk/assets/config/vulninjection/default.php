@@ -10,32 +10,7 @@ return [
     ],
 
     'vulnerabilities' => [
-        'sql' => [      // SQL Injections params
-            'select' => [
-                'Double-up Single Quotes' => true, /*true-false*/
-                'SanitizationLevel' => 'none',
-                'PatternMatchingStyle' => 'Keywords',
-                'SanitizationParameters' => []
-            ],
-
-            'insert' => [
-                'Double-up Single Quotes' => true, /*true-false*/
-                'SanitizationLevel' => 'none',
-                'PatternMatchingStyle' => 'Keywords',
-                'SanitizationParameters' => []
-            ],
-            'update' => [
-                'Double-up Single Quotes' => true, /*true-false*/
-                'SanitizationLevel' => 'none',
-                'PatternMatchingStyle' => 'Keywords',
-                'SanitizationParameters' => []
-            ],
-            'delete' => [
-                'Double-up Single Quotes' => true, /*true-false*/
-                'SanitizationLevel' => 'none',
-                'PatternMatchingStyle' => 'Keywords',
-                'SanitizationParameters' => []
-            ],
+        'sql' => [   
         ],
 
         'xss' => [     // XSS params
