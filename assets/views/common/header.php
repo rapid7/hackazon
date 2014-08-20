@@ -29,13 +29,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="/account/orders">My orders</a>
                                 </li>
-                                <li><a href="portfolio-2-col.html">2 Column Portfolio</a>
-                                </li>
-                                <li><a href="portfolio-3-col.html">3 Column Portfolio</a>
-                                </li>
-                                <li><a href="portfolio-4-col.html">4 Column Portfolio</a>
-                                </li>
-                                <li><a href="portfolio-item.html">Single Portfolio Item</a>
+                                <li><a href="/account/documents">My documents</a>
                                 </li>
                             </ul>
                         </li>
@@ -43,19 +37,8 @@
                             <a href="/wishlist" class="dropdown-toggle" data-toggle="dropdown">Wish List <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php echo $controller->generateUrl('default', array('controller' => 'wishlist')); ?>">Wish Lists</a></li>
-                                <li><a href="full-width.html">Full Width Page</a>
-                                </li>
-                                <li><a href="sidebar.html">Sidebar Page</a>
-                                </li>
-                                <li><a href="/faq">FAQ</a>
-                                </li>
-                                <li><a href="404.html">404</a>
-                                </li>
-                                <li><a href="pricing.html">Pricing Table</a>
-                                </li>
                             </ul>
                         </li>
-                        <li><a href="/blog">Blog</a>
                         <?php else: ?>
                         <li><a href="<?php echo $controller->generateUrl('default', array('controller' => 'wishlist', 'action' => '')) ?>">Wish List</a>
                         <?php endif ?>
