@@ -32,7 +32,7 @@ return [
         ],
 
         'csrf' => [
-            'enabled' => true
+            'enabled' => false
         ]
     ]
 ];

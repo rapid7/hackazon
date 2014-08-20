@@ -2,7 +2,6 @@
 
 namespace VulnModule\VulnInjection;
 
-
 use App\Exception\ForbiddenException;
 use App\Page;
 use App\Pixie;
@@ -17,28 +16,27 @@ use VulnModule\Csrf\CsrfTokenManager;
  * Authorization Service.
  * @package    Auth
  */
-class Service
-{
+class Service {
+
     const PATTERN_XSS = '/<script.+?<\\/script>|\s+?on\w+=([\'"])[^\\1]*\\1|href=([\'"])javascript:[^\\2]*\\2/i';
 
-	/**
-	 * Pixie Dependency Container
-	 * @var Pixie
-	 */
-	public $pixie;
-	
-	/**
-	 * Name of the ORM model that represents a user 
-	 * @var string
-	 */
-	public $settings;
+    /**
+     * Pixie Dependency Container
+     * @var Pixie
+     */
+    public $pixie;
+
+    /**
+     * Name of the ORM model that represents a user 
+     * @var string
+     */
+    public $settings;
 
     /**
      * Name of controller settings
      * @var string
      */
     public $controllerSettings;
-
 
     /**
      * @var null|Config
@@ -96,8 +94,7 @@ class Service
      * @param null|string $controllerConfigName
      * @throw \Exception If no login providers were configured
      */
-    public function __construct($pixie, $rootConfig = 'default', $controllerConfigName = null)
-    {
+    public function __construct($pixie, $rootConfig = 'default', $controllerConfigName = null) {
         $this->pixie = $pixie;
         $this->settings = $pixie->config->get("vulninjection/{$rootConfig}");
         $this->config = new Config($this->pixie);
@@ -106,10 +103,6 @@ class Service
         if ($controllerConfigName !== null) {
             $this->addControllerContext($controllerConfigName);
         }
-
-//                //Manage settings
-//                $this->filterPost();
-//                $this->filterGet();
     }
 
     /**
@@ -117,8 +110,7 @@ class Service
      * @param $name
      * @return $this
      */
-    public function addControllerContext($name)
-    {
+    public function addControllerContext($name) {
         $this->controllerSettings = $this->pixie->config->get("vulninjection/{$name}");
         if (!is_array($this->controllerSettings)) {
             $this->controllerSettings = array();
@@ -135,89 +127,87 @@ class Service
      * @param $sectionName
      * @return array
      */
-	public function getSection($sectionName) {
-            if(isset($this->settings[$sectionName]))
-		return $this->settings[$sectionName];
-            return array();
-	}
+    public function getSection($sectionName) {
+        if (isset($this->settings[$sectionName]))
+            return $this->settings[$sectionName];
+        return array();
+    }
 
-	/**
-	 * Returns the name of the provider that the user is logged with
-	 *
-	 * @return string Name of the provider
-	 */
-	public function logged_with() {
-		return $this->logged_with;
-	}
-	
-	/**
-	 * Logs the user out
-	 *
-	 * @return void
-	 */
-	public function logout() {
-		$this->login_providers[$this->logged_with]->logout();
-		$this->logged_with = null;
-		$this->user = null;
-	}
-	
-	/**
-	 * Checks if the logged in user has the specified role
-	 *
-	 * @param string $role Role to check for.
-	 * @return bool If the user has the specified role
-	 * @throws \Exception If the role driver is not specified
-	 */
-	public function has_role($role) {
-		if ($this->role_driver == null)
-			throw new \Exception("No role configuration is present.");
-		
-		if ($this->user == null)
-			return false;
-			
-		return $this->role_driver->has_role($this->user, $role);
-		
-	}
-	
-	/**
-	 * Returns the login provider by name
-	 *
-	 * @param string $provider Name of the login provider
-	 * @return \PHPixie\Auth\Login\Provider Login provider
-	 */
-	public function provider($provider) {
-		return $this->login_providers[$provider];
-	}
-	
-	/**
-	 * Checks if the user is logged in via any of the 
-	 * login providers
-	 *
-	 * @return bool if the user is logged in
-	 */
-	public function check_login() {
-		foreach($this->login_providers as $provider)
-			if ($provider->check_login())
-				return true;
-				
-		return false;
-	}
+    /**
+     * Returns the name of the provider that the user is logged with
+     *
+     * @return string Name of the provider
+     */
+    public function logged_with() {
+        return $this->logged_with;
+    }
 
-	/**
-	 * Returns a new instance of the user model
-	 *
-	 * @return \PHPixie\ORM\Model Model representing the user
-	 */
-	public function user_model() {
-		return $this->pixie->orm->get($this->model);
-	}
+    /**
+     * Logs the user out
+     *
+     * @return void
+     */
+    public function logout() {
+        $this->login_providers[$this->logged_with]->logout();
+        $this->logged_with = null;
+        $this->user = null;
+    }
+
+    /**
+     * Checks if the logged in user has the specified role
+     *
+     * @param string $role Role to check for.
+     * @return bool If the user has the specified role
+     * @throws \Exception If the role driver is not specified
+     */
+    public function has_role($role) {
+        if ($this->role_driver == null)
+            throw new \Exception("No role configuration is present.");
+
+        if ($this->user == null)
+            return false;
+
+        return $this->role_driver->has_role($this->user, $role);
+    }
+
+    /**
+     * Returns the login provider by name
+     *
+     * @param string $provider Name of the login provider
+     * @return \PHPixie\Auth\Login\Provider Login provider
+     */
+    public function provider($provider) {
+        return $this->login_providers[$provider];
+    }
+
+    /**
+     * Checks if the user is logged in via any of the 
+     * login providers
+     *
+     * @return bool if the user is logged in
+     */
+    public function check_login() {
+        foreach ($this->login_providers as $provider)
+            if ($provider->check_login())
+                return true;
+
+        return false;
+    }
+
+    /**
+     * Returns a new instance of the user model
+     *
+     * @return \PHPixie\ORM\Model Model representing the user
+     */
+    public function user_model() {
+        return $this->pixie->orm->get($this->model);
+    }
 
     /**
      * @param $contextName
      * @return $this
      */
-    public function goDown($contextName)
-    {
+    public function goDown($contextName) {
         $this->config->goDown($contextName);
         $this->checkReferrer();
         return $this;
@@ -227,8 +217,7 @@ class Service
      * Finishes current context.
      * @return $this
      */
-    public function goUp()
-    {
+    public function goUp() {
         $this->config->goUp();
         return $this;
     }
@@ -236,16 +225,14 @@ class Service
     /**
      * @return null|Config
      */
-    public function getConfig()
-    {
+    public function getConfig() {
         return $this->config;
     }
 
     /**
      * @return array
      */
-    public function getVulnerabilities()
-    {
+    public function getVulnerabilities() {
         return $this->config ? $this->config->getVulnerabilities() : array();
     }
 
@@ -253,8 +240,7 @@ class Service
      * @param string $type xss, sql and so on
      * @return array
      */
-    public function getVulnerability($type)
-    {
+    public function getVulnerability($type) {
         $vulns = $this->getVulnerabilities();
         return $vulns[$type] ? $vulns[$type] : array();
     }
@@ -262,8 +248,7 @@ class Service
     /**
      * @return array
      */
-    public function getFields()
-    {
+    public function getFields() {
         return $this->config ? $this->config->getFields() : array();
     }
 
@@ -272,8 +257,7 @@ class Service
      * @param $value String to filter
      * @return mixed
      */
-    public function filterXSS($value)
-    {
+    public function filterXSS($value) {
         return preg_replace(self::PATTERN_XSS, '', $value);
     }
 
@@ -283,8 +267,7 @@ class Service
      * @param $table
      * @return mixed
      */
-    public function filterStoredXSSIfNeeded($key, $value, $table = null)
-    {
+    public function filterStoredXSSIfNeeded($key, $value, $table = null) {
         $fields = $this->getFields();
 
         if (!($key = $this->getCanonicalKey($key, $table))) {
@@ -305,10 +288,9 @@ class Service
     /**
      * @return SQLInjectionFiltrator
      */
-    public function getSqlFiltrator()
-    {
+    public function getSqlFiltrator() {
         if (!$this->sqlFiltrator) {
-             $this->sqlFiltrator = new SQLInjectionFiltrator();
+            $this->sqlFiltrator = new SQLInjectionFiltrator();
         }
 
         return $this->sqlFiltrator;
@@ -320,8 +302,7 @@ class Service
      * @param $table
      * @return mixed
      */
-    public function getSqlInjectionParams($key, $table)
-    {
+    public function getSqlInjectionParams($key, $table) {
         $params = $this->getVulnerability('sql');
 
         if (!($key = $this->getCanonicalKey($key, $table))) {
@@ -341,8 +322,7 @@ class Service
     /**
      * @return CsrfTokenManager
      */
-    public function getTokenManager()
-    {
+    public function getTokenManager() {
         if (!$this->csrfTokenManager) {
             $this->csrfTokenManager = new CsrfTokenManager();
         }
@@ -356,22 +336,20 @@ class Service
      * @param bool $refreshToken
      * @return string
      */
-    public function renderTokenField($tokenId, $refreshToken = true)
-    {
+    public function renderTokenField($tokenId, $refreshToken = true) {
         if ($refreshToken) {
             $value = $this->getTokenManager()->refreshToken($tokenId);
         } else {
             $value = $this->getTokenManager()->getToken($tokenId);
         }
-        return '<input type="hidden" name="'.$tokenId.'" value="'.$value->getValue().'">';
+        return '<input type="hidden" name="' . $tokenId . '" value="' . $value->getValue() . '">';
     }
 
     /**
      * Check whether CSRF Injection is enabled.
      * @return bool
      */
-    public function csrfIsEnabled()
-    {
+    public function csrfIsEnabled() {
         $csrf = $this->getVulnerability('csrf');
         return is_array($csrf) && $csrf['enabled'];
     }
@@ -379,8 +357,7 @@ class Service
     /**
      * Checks current referrer to be allowed
      */
-    public function checkReferrer()
-    {
+    public function checkReferrer() {
         $vuln = $this->getVulnerability('referrer');
         if ($vuln['enabled']) {
             return;
@@ -394,12 +371,9 @@ class Service
         $proto = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
         $path = $parts['path'];
 
-        $isFilterable = $this->checkIsIn($method, $vuln['methods'])
-            && $this->checkIsIn(strtolower($proto), $vuln['protocols']);
+        $isFilterable = $this->checkIsIn($method, $vuln['methods']) && $this->checkIsIn(strtolower($proto), $vuln['protocols']);
 
-        if ($isFilterable
-            && ((!$path || !$this->referrerPathIsAllowed($path, $vuln['paths']))
-                || (!$host || !$this->checkIsIn($host, $vuln['hosts'])))
+        if ($isFilterable && ((!$path || !$this->referrerPathIsAllowed($path, $vuln['paths'])) || (!$host || !$this->checkIsIn($host, $vuln['hosts'])))
         ) {
             throw new ForbiddenException();
         }
@@ -411,8 +385,7 @@ class Service
      * @param $array
      * @return bool
      */
-    private function checkIsIn($value, $array)
-    {
+    private function checkIsIn($value, $array) {
         return is_array($array) && count($array) && in_array($value, $array);
     }
 
@@ -422,8 +395,7 @@ class Service
      * @param $paths
      * @return bool
      */
-    private function referrerPathIsAllowed($path, $paths)
-    {
+    private function referrerPathIsAllowed($path, $paths) {
         if (!is_array($paths) || !count($paths)) {
             return true;
         }
@@ -442,8 +414,7 @@ class Service
      * @param $tokenId
      * @return string
      */
-    public function getToken($tokenId)
-    {
+    public function getToken($tokenId) {
         $token = $this->getTokenManager()->getToken(Page::TOKEN_PREFIX . $tokenId);
         return $token->getValue();
     }
@@ -453,8 +424,7 @@ class Service
      * @param $tokenId
      * @return string
      */
-    public function refreshToken($tokenId)
-    {
+    public function refreshToken($tokenId) {
         $token = $this->getTokenManager()->refreshToken(Page::TOKEN_PREFIX . $tokenId);
         return $token->getValue();
     }
@@ -463,8 +433,7 @@ class Service
      * Get DB fields which map on vulnerability fields in current context.
      * @return array
      */
-    private function getDbFields()
-    {
+    private function getDbFields() {
         return $this->getContextParams('db_fields');
     }
 
@@ -473,8 +442,7 @@ class Service
      * @param null $name
      * @return array
      */
-    public function getContextParams($name = null)
-    {
+    public function getContextParams($name = null) {
         $params = $this->config ? $this->config->getContextParams() : array();
         if (!$name) {
             return $params;
@@ -493,8 +461,7 @@ class Service
      * @param $table
      * @return null
      */
-    public function getCanonicalKey($key, $table)
-    {
+    public function getCanonicalKey($key, $table) {
         $fields = $this->getFields();
         $dbFields = $this->getDbFields();
 
@@ -504,16 +471,14 @@ class Service
 
         if (array_key_exists($key, $fields)) {
             $fieldExistsInConfig = true;
-
         } else if (array_key_exists($dbKey, $dbFields)) {
             $fieldExistsInConfig = true;
             $key = $dbFields[$dbKey];
-
         } else if ($table) {
             if (is_array($table)) {
-                $dbKey = $table[0].'.'.$dbKey;
+                $dbKey = $table[0] . '.' . $dbKey;
             } else {
-                $dbKey = $table.'.'.$dbKey;
+                $dbKey = $table . '.' . $dbKey;
             }
 
             if (array_key_exists($dbKey, $dbFields)) {
@@ -524,4 +489,5 @@ class Service
 
         return $fieldExistsInConfig ? $key : null;
     }
+
 }

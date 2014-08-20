@@ -70,10 +70,6 @@ class Page extends Controller {
                 $this->view->categories = $category->getRootCategories();
             }
         }
-
-        //$this->vulninjection = $this->pixie->vulninjection->service(strtolower($className));
-        //$this->pixie->db->get()->settings($this->vulninjection->getSection("sql"));
-
         $classModel = "App\\Model\\" . $className;
         if (class_exists($classModel)) {
             $this->model = new $classModel($this->pixie);

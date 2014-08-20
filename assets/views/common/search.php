@@ -14,7 +14,7 @@
                 </div>
                 <!-- /btn-group -->
                 <input type="text" class="form-control"  maxlength="100" name="searchString"
-                       value="<?php echo isset($searchString) ? $searchString : ''; ?>">
+                       value="">
             </div>
             <!-- /input-group -->
         </div>
