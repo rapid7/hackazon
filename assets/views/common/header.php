@@ -84,7 +84,7 @@
                     <span style="font-size: 16px; color: #d9534f; padding-left: 15px">Search</span>
                 </div>
                 <div class="col-xs-9 col-md-9" style="padding-right: 0px">
-                    <?php include($common_path . "search.php") ?>
+                    <?php include("/../search/search.php") ?>
                 </div>
             </div>
         </div>
