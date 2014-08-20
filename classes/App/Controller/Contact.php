@@ -11,7 +11,7 @@ class Contact extends \App\Page {
             $this->pixie->orm->get('ContactMessages')->create($post);
             $this->execute = false;
         }
-        $this->view->subview = 'contact';
+        $this->view->subview = 'pages/contact';
     }
 
 }
