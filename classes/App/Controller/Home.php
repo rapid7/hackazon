@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Model\Product as Product;
@@ -15,6 +16,7 @@ class Home extends \App\Page {
     /**
      * @var int Count of products in top viewed products on homepage.
      */
+
     protected $topViewedCount = 4;
 
     /**
@@ -32,9 +34,7 @@ class Home extends \App\Page {
      */
     protected $reviewsCount = 2;
 
-
-	public function action_index()
-    {
+    public function action_index() {
         $mostPopularProductsCount = 3;
         $bestSellingProductsCount = 3;
         $specialOffersCount = 3;
@@ -66,14 +66,12 @@ class Home extends \App\Page {
             'related_to_viewed' => array(
                 'title' => 'Related to Visited',
                 'products' => $this->view->relatedToVisitedProducts,
-                'reviews' => count($this->view->relatedToVisitedProducts)
-                        ? $review->getRandomReviews($productSectionReviewCount) : array()
+                'reviews' => count($this->view->relatedToVisitedProducts) ? $review->getRandomReviews($productSectionReviewCount) : array()
             ),
             'best_choice' => array(
                 'title' => 'Best Choice',
                 'products' => $this->view->bestChoiceProducts,
-                'reviews' => count($this->view->bestChoiceProducts)
-                        ? $review->getRandomReviews($productSectionReviewCount) : array()
+                'reviews' => count($this->view->bestChoiceProducts) ? $review->getRandomReviews($productSectionReviewCount) : array()
             ),
             'random' => array(
                 'title' => "",
@@ -93,21 +91,19 @@ class Home extends \App\Page {
         );
 
         $this->view->common_path = $this->common_path;
-		$this->view->subview = 'home/home';
-		$this->view->message = "Index page";
-	}
-	
-    public function action_404()
-    {
-		$this->view->subview = '404';
-		$this->view->message = "Index page";
-	}
+        $this->view->subview = 'home/home';
+        $this->view->message = "Index page";
+    }
+
+    public function action_404() {
+        $this->view->subview = '404';
+        $this->view->message = "Index page";
+    }
 
     /**
      * DB installation script.
      */
-    public function action_install()
-    {
+    public function action_install() {
         /** @var \PDO $conn */
         $conn = $this->pixie->db->get()->conn;
         $conn->setAttribute(\PDO::ATTR_TIMEOUT, 300);
@@ -139,7 +135,8 @@ class Home extends \App\Page {
             }
         }
 
-        if ($tblRemove != "") $this->pixie->db->get()->execute($tblRemove);
+        if ($tblRemove != "")
+            $this->pixie->db->get()->execute($tblRemove);
 
         // Install schema
         $dbScript = $this->pixie->root_dir . "database/db.sql";
@@ -171,24 +168,22 @@ class Home extends \App\Page {
 
                 if ($ext == 'sql') {
                     $res = $conn->exec(file_get_contents($filePath));
-
                 } else if ($ext == 'php') {
                     $runner = function () use ($filePath, $pixie, $db) {
-                        include $filePath;
-                    };
+                                include $filePath;
+                            };
                     $runner();
                 }
             }
         }
 
         $this->redirect('/');
-	}
+    }
 
     /**
      * Method for generating reviews from outer source.
      */
-    public function generateReviews()
-    {
+    public function generateReviews() {
         set_time_limit(300);
         // Get product ids as parents for reviews
         $res = $this->pixie->db->query('select')->table('tbl_products')->fields('productID')->execute();
@@ -212,64 +207,57 @@ class Home extends \App\Page {
     /**
      * @return int
      */
-    public function getBestChoiceCount()
-    {
+    public function getBestChoiceCount() {
         return $this->bestChoiceCount;
     }
 
     /**
      * @param int $bestChoiceCount
      */
-    public function setBestChoiceCount($bestChoiceCount)
-    {
+    public function setBestChoiceCount($bestChoiceCount) {
         $this->bestChoiceCount = $bestChoiceCount;
     }
 
     /**
      * @return int
      */
-    public function getRelatedToVisitedCount()
-    {
+    public function getRelatedToVisitedCount() {
         return $this->relatedToVisitedCount;
     }
 
     /**
      * @param int $relatedToVisitedCount
      */
-    public function setRelatedToVisitedCount($relatedToVisitedCount)
-    {
+    public function setRelatedToVisitedCount($relatedToVisitedCount) {
         $this->relatedToVisitedCount = $relatedToVisitedCount;
     }
 
     /**
      * @return int
      */
-    public function getReviewsCount()
-    {
+    public function getReviewsCount() {
         return $this->reviewsCount;
     }
 
     /**
      * @param int $reviewsCount
      */
-    public function setReviewsCount($reviewsCount)
-    {
+    public function setReviewsCount($reviewsCount) {
         $this->reviewsCount = $reviewsCount;
     }
 
     /**
      * @return int
      */
-    public function getTopViewedCount()
-    {
+    public function getTopViewedCount() {
         return $this->topViewedCount;
     }
 
     /**
      * @param int $topViewedCount
      */
-    public function setTopViewedCount($topViewedCount)
-    {
+    public function setTopViewedCount($topViewedCount) {
         $this->topViewedCount = $topViewedCount;
     }
+
 }
