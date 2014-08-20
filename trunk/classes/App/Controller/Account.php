@@ -16,12 +16,18 @@ class Account extends \App\Page {
     }
 
     public function action_index() {
-        $this->view->subview = 'account';
+        $this->view->subview = 'account/account';
     }
 
     public function action_orders() {
         $myOrders = $this->pixie->orm->get('Order')->getMyOrders();
         $this->view->myOrders = $myOrders;
         $this->view->subview = 'account/orders';
+    }
+    
+    public function action_documents() {
+        $myOrders = $this->pixie->orm->get('Order')->getMyOrders();
+        $this->view->myOrders = $myOrders;
+        $this->view->subview = 'account/documents';
     }
 }
