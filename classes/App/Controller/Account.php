@@ -63,7 +63,7 @@ class Account extends \App\Page {
 
         $this->view->pageTitle = ucwords(preg_replace('/\.html$/i', '', $page));
         $this->view->pageContent = implode("\n", $content);
-        $this->view->subview = 'pages/page';
+        $this->view->subview = 'account/document';
     }
 
 }
