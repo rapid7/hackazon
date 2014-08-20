@@ -19,7 +19,7 @@ return array(
 
     'vulnerabilities' => [
         'sql' => [
-            'blind' => false
+            'blind' => true
         ],
         'xss' => [
             'stored' => true
