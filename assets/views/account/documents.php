@@ -13,7 +13,7 @@
         <div class="col-lg-12">
             <ul>
             <?php foreach ($files as $file => $fileName): ?>
-                <li><a href="/page/show?page=<?php echo $_($fileName); ?>"><?php echo $_(ucwords($file)); ?></a></li>
+                <li><a href="/account/show?page=<?php echo $_($fileName); ?>"><?php echo $_(ucwords($file)); ?></a></li>
             <?php endforeach; ?>
             </ul>
         </div>
