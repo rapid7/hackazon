@@ -147,7 +147,7 @@ class Page extends Controller {
     public function jsonResponse($responseData)
     {
         $this->response->body = json_encode($responseData);
-        $this->response->headers['Content-Type'] = 'application/json';
+        $this->response->headers[] = 'Content-Type: application/json; charset=utf-8';
         $this->execute = false;
     }
 

@@ -3,6 +3,8 @@
 namespace App\Model;
 
 class Faq extends BaseModel {
+    public $table = 'tbl_faq';
+    public $id_field = 'faqID';
 
     public function getEntries() {
         return $this->pixie->db->query('select')
