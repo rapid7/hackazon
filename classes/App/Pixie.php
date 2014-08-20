@@ -4,10 +4,17 @@ namespace App;
 
 
 use App\Core\Request;
+use App\Core\Response;
 use App\Core\View;
+use App\EventDispatcher\EventDispatcher;
+use App\EventDispatcher\Events;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
+use App\Rest\RestService;
+use PHPixie\Controller;
+use PHPixie\Cookie;
 use PHPixie\Exception\PageNotFound;
+use PHPixie\ORM;
 use VulnModule\Config\ModelInfoRepository;
 use VulnModule\VulnInjection;
 
@@ -21,9 +28,14 @@ use VulnModule\VulnInjection;
  * @property-read VulnInjection $vulninjection Vulninjection module
  * @property-read \PHPixie\Email $email Email module
  * @property-read Request $request Request instance
+ * @property-read Response $response Request instance
  * @property-read Debug $debug Debug object
  * @property-read VulnInjection\Service $vulnService Debug object
  * @property-read ModelInfoRepository $modelInfoRepository
+ * @property-read EventDispatcher $dispatcher
+ * @property-read Cookie $cookie
+ * @property-read RestService $restService
+ * @method Controller|Rest\Controller controller
  */
 class Pixie extends \PHPixie\Pixie {
 
@@ -48,13 +60,19 @@ class Pixie extends \PHPixie\Pixie {
     {
         $this->instance_classes['debug'] = '\\App\\Debug';
         $this->instance_classes['request'] = '\\App\\Core\\Request';
+        $this->instance_classes['response'] = '\\App\\Core\\Response';
         $this->instance_classes['modelInfoRepository'] = '\\VulnModule\\Config\\ModelInfoRepository';
+        $this->instance_classes['dispatcher'] = '\\App\\EventDispatcher\\EventDispatcher';
+        $this->instance_classes['restRouteMatcher'] = '\\App\\Rest\\RouteMatcher';
+        $this->instance_classes['restService'] = '\\App\\Rest\\RestService';
     }
 	
 	protected function after_bootstrap(){
 		//Whatever code you want to run after bootstrap is done.
         $displayErrors = $this->getParameter('parameters.display_errors');
         $this->debug->display_errors = is_bool($displayErrors) ? $displayErrors : true;
+
+        $this->dispatcher->addListener(Events::KERNEL_PRE_EXECUTE, '\\App\\Rest\\KernelEventListeners::restRouteHandler');
 	}
 
     /**
@@ -95,14 +113,15 @@ class Pixie extends \PHPixie\Pixie {
     /**
      * Get param value without exception. Instead if value is missing, NULL is returned.
      * @param $name
+     * @param null $default
      * @return mixed|null
      */
-    public function getParameter($name)
+    public function getParameter($name, $default = null)
     {
         try {
             return $this->config->get($name);
         } catch (\Exception $e) {
-            return null;
+            return $default;
         }
     }
 
@@ -113,6 +132,11 @@ class Pixie extends \PHPixie\Pixie {
     public function request($route, $method = "GET", $post = array(), $get = array(), $param = array(), $server = array(), $cookie = array())
     {
         return new Request($this, $route, $method, $post, $get, $param, $server, $cookie);
+    }
+
+    public function response()
+    {
+        return new Response($this);
     }
 
     public function view($name)

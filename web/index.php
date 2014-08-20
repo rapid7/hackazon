@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ERROR);
+error_reporting(E_ERROR & ~E_NOTICE);
 $root = dirname(__DIR__);
 $loader = require $root.'/vendor/autoload.php';
 $loader->add('', $root.'/classes/');

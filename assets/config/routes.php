@@ -1,5 +1,11 @@
 <?php
 return array(
+    'rest' => array('/api(/<controller>(/<id>(/<property>)))',
+        array(
+            'controller' => 'Default',
+            'action' => 'get'
+        )
+    ),
     'error' => array(
         '/error/<id>',
         array(
