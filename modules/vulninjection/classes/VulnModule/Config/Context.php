@@ -194,7 +194,9 @@ class Context
 
                 $this->fields[$field]['db_table'] = $info['table'];
                 $this->fields[$field]['db_field_name'] = $parts[1];
-                $this->params['db_fields'][strtolower($info['table'].'.'.$parts[1])] = $field;
+
+                $fieldName = $info['table'].'.'.$parts[1];
+                $this->params['db_fields'][$fieldName] = $field;
             }
         }
 
