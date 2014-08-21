@@ -15,6 +15,8 @@ class ContactMessages extends \PHPixie\ORM\Model {
         if (!is_null($this->pixie->auth->user())) {
             $this->customer_id = $this->pixie->auth->user()->id;
         }
+        //var_dump($this->query()->query());
+        
         $this->save();
     }
 }

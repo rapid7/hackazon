@@ -1,4 +1,12 @@
 <?php
+/*
+$_GET
+$_POST
+$_FILES
+$_COOKIE
+$_SESSION
+$_REQUEST
+*/
 return [
     'fields' => [   // Separate request params, either from GET or POST
     ],
