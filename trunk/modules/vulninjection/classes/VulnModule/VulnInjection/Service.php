@@ -465,10 +465,12 @@ class Service {
         $fields = $this->getFields();
         $dbFields = $this->getDbFields();
 
-        $dbKey = strtolower(trim(preg_replace('/`/', '', $key)));
+        $dbKey = trim(preg_replace('/`/', '', $key));
 
         $fieldExistsInConfig = false;
-
+//        if (strpos($key, 'categoryID') !== false) {
+//            var_dump($key, $table, $dbKey, $fields, $dbFields); exit;
+//        }
         if (array_key_exists($key, $fields)) {
             $fieldExistsInConfig = true;
         } else if (array_key_exists($dbKey, $dbFields)) {
