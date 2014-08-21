@@ -44,8 +44,6 @@ class ErrorController extends Controller
 
     public function before()
     {
-        if ($this->error->getCode() != 406) {
-            //$this->prepareContentType();
-        }
+        $this->prepareContentType();
     }
 }

@@ -2,6 +2,7 @@
 return array(
     'excluded_models' => [
         'BaseModel',
-        'Model'
+        'Model',
+        'OrderAddress'
     ]
 );
