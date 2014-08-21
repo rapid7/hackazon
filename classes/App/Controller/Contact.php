@@ -13,5 +13,4 @@ class Contact extends \App\Page {
         }
         $this->view->subview = 'pages/contact';
     }
-
 }

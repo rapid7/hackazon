@@ -12,10 +12,15 @@ class Faq extends BaseModel {
             ->execute();
     }
     
-    public function addEntry($params){
-        $this->pixie->db->query('insert')->table('tbl_faq')
-            ->data(array('email' => $params['userEmail'], 'question' => $params['userQuestion']))
-            ->execute();
-        return $this->pixie->db->insert_id();  
+    public function create($post)
+    {
+        $this->email = $post['userEmail'];
+        $this->question = $post['userQuestion'];
+        $this->answer = 'Processing...';
+        if (!is_null($this->pixie->auth->user())) {
+            $this->customer_id = $this->pixie->auth->user()->id;
+        }
+        $this->save();
+        return $this;
     }
 }

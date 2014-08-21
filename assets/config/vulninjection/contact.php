@@ -12,17 +12,13 @@ return array(
             'db_field' => 'contactMessages.phone'
         ],
         'contact_message' => [
-            'xss',
             'db_field' => 'contactMessages.message'
         ]
     ],
 
     'vulnerabilities' => [
         'sql' => [
-            'blind' => true
+            'blind' => false
         ],
-        'xss' => [
-            'stored' => true
-        ]
     ]
 );
