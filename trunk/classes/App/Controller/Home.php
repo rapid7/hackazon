@@ -107,7 +107,8 @@ class Home extends \App\Page {
         /** @var \PDO $conn */
         $conn = $this->pixie->db->get()->conn;
         $conn->setAttribute(\PDO::ATTR_TIMEOUT, 300);
-
+        
+        $this->pixie->db->get()->execute("SET foreign_key_checks = 0;");
         //$this->view->subview = '';
         // Remove Foreign Keys
         $sql = "SELECT tc.TABLE_NAME `table`, tc.CONSTRAINT_NAME `fk` "
@@ -176,7 +177,7 @@ class Home extends \App\Page {
                 }
             }
         }
-
+        $this->pixie->db->get()->execute("SET foreign_key_checks = 1;");
         $this->redirect('/');
     }
 
