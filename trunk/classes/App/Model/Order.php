@@ -1,9 +1,16 @@
 <?php
 
 namespace App\Model;
+use PHPixie\ORM\Model;
 
-class Order extends \PHPixie\ORM\Model {
-
+/**
+ * Class Order
+ * @package App\Model
+ * @property Model $orderAddress
+ * @property int $customer_id
+ */
+class Order extends BaseModel
+{
     public $table = 'tbl_orders';
     public $id_field = 'id';
 
@@ -29,6 +36,6 @@ class Order extends \PHPixie\ORM\Model {
         if ($propertyName == 'increment_id') {
             return $this->id + 10000000;
         }
+        return null;
     }
-
 }

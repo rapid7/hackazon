@@ -24,7 +24,7 @@ class User extends Controller
     public function action_get()
     {
         if ($this->item->id() == $this->user->id()) {
-            parent::action_get();
+            return parent::action_get();
         } else {
             throw new NotFoundException();
         }

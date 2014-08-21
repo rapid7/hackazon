@@ -13,13 +13,16 @@ namespace App\Rest;
 use App\Core\Request;
 use App\Core\Response;
 use App\Exception\HttpException;
-use App\Exception\NotFoundException;
 use App\Model\User;
 use App\Pixie;
 use App\Rest\Events\PreActionEvent;
 use PHPixie\Auth\Login\Password;
 
 
+/**
+ * The Core of the RESTful service.
+ * @package App\Rest
+ */
 class RestService
 {
     /**
@@ -76,47 +79,44 @@ class RestService
         return $this->response;
     }
 
+    /**
+     * Does the real handling of the request.
+     * @param array $cookie
+     */
     protected function doHandleRequest($cookie = [])
     {
         $request = $this->request;
+        //$this->request->method = 'PATCH';
+        $request->adjustRequestContentType();
 
         $pixie = $this->pixie;
         $pixie->cookie->set_cookie_data($cookie);
         $controllerName = implode('', array_map('ucfirst', preg_split('/_/', $request->param('controller'))));
-
-        if (!$controllerName || $controllerName == 'Default') {
-            $className = $request->param('namespace', $pixie->app_namespace).'Rest\\NoneController';
-        } else {
-            $className = $request->param('namespace', $pixie->app_namespace).'Rest\\Controller\\'.$controllerName;
-        }
-
-        if (!class_exists($className)) {
-            if (!in_array($controllerName, $this->excludedModels)
-                && class_exists($pixie->app_namespace.'Model\\'.$controllerName)
-            ) {
-                $className = $request->param('namespace', $pixie->app_namespace) . 'Rest\\Controller';
-
-            } else {
-                throw new NotFoundException();
-            }
-        }
-
-        $controller = $pixie->controller($className);
-        $controller->request = $request;
-
-        // Inject model into the controller.
-        if (!$controller->getModelName()) {
-            $controller->setModelName($controllerName);
-        }
+        $controller = Controller::createController($controllerName, $request, $pixie);
 
         // Run all necessary filters
         $this->pixie->dispatcher->dispatch(Events::PRE_PROCESS_ACTION, new PreActionEvent($request, $controller));
 
         $action = strtolower($request->method);
-        if (!($controller instanceof NoneController) && !$request->param('id') && $this->request->method == 'GET') {
-            $action .= '_collection';
+        if (!($controller instanceof NoneController)) {
+            if (!$request->param('id') && $this->request->method == 'GET') {
+                $action .= '_collection';
+            }
+
+            if ($request->param('id') && $request->param('property')) {
+                $action .= '_'.$request->param('property');
+            }
         }
-        $controller->run($action);
+
+        $data = [];
+        if ($request->method == 'POST') {
+            $data = $request->post();
+        } else if (in_array($request->method, ['PUT', 'PATCH'])) {
+            $data = $request->put();
+        }
+        $params = ['data' => $data];
+
+        $controller->run($action, $params);
         $this->response = $controller->response;
     }
 
@@ -216,5 +216,13 @@ class RestService
         foreach ($modelNames as $modelName) {
             $this->excludeModel($modelName);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getExcludedModels()
+    {
+        return $this->excludedModels;
     }
 } 

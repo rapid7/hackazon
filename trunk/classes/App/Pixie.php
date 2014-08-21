@@ -35,6 +35,7 @@ use VulnModule\VulnInjection;
  * @property-read EventDispatcher $dispatcher
  * @property-read Cookie $cookie
  * @property-read RestService $restService
+ * @property-read \PHPixie\Paginate $paginate
  * @method Controller|Rest\Controller controller
  */
 class Pixie extends \PHPixie\Pixie {
@@ -66,7 +67,7 @@ class Pixie extends \PHPixie\Pixie {
         $this->instance_classes['restRouteMatcher'] = '\\App\\Rest\\RouteMatcher';
         $this->instance_classes['restService'] = '\\App\\Rest\\RestService';
     }
-	
+
 	protected function after_bootstrap(){
 		//Whatever code you want to run after bootstrap is done.
         $displayErrors = $this->getParameter('parameters.display_errors');
@@ -134,11 +135,19 @@ class Pixie extends \PHPixie\Pixie {
         return new Request($this, $route, $method, $post, $get, $param, $server, $cookie);
     }
 
+    /**
+     * @inheritdoc
+     * @return Response|\PHPixie\Response
+     */
     public function response()
     {
         return new Response($this);
     }
 
+    /**
+     * @@inheritdoc
+     * @return View|\PHPixie\View
+     */
     public function view($name)
     {
         return new View($this, $this->view_helper(), $name);
@@ -163,11 +172,20 @@ class Pixie extends \PHPixie\Pixie {
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     * @return View\Helper|\PHPixie\View\Helper
+     */
     public function view_helper()
     {
         return new View\Helper($this);
     }
 
+    /**
+     * Adds new object as a dependency.
+     * @param $name
+     * @param $object
+     */
     public function addInstance($name, $object)
     {
         $this->instances[$name] = $object;
