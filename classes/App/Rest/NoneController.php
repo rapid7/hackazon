@@ -23,6 +23,6 @@ class NoneController extends Controller
 
     public static function allowedMethods()
     {
-        return ['GET', 'OPTIONS'];
+        return ['GET', 'HEAD', 'OPTIONS'];
     }
 } 

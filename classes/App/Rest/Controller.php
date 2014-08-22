@@ -287,7 +287,7 @@ class Controller extends \PHPixie\Controller
     public static function allowedMethods()
     {
         return [
-            'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH' //, 'HEAD'
+            'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD', 'TRACE'
         ];
     }
 

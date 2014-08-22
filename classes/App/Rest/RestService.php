@@ -15,6 +15,8 @@ use App\Core\Response;
 use App\Exception\HttpException;
 use App\Model\User;
 use App\Pixie;
+use App\Rest\Auth\AuthFactory;
+use App\Rest\Auth\BasicProvider;
 use App\Rest\Events\PreActionEvent;
 use PHPixie\Auth\Login\Password;
 
@@ -53,6 +55,8 @@ class RestService
             $this->excludeModels($this->config['excluded_models']);
         }
 
+        $this->pixie->addInstanceClass('restAuthFactory', '\\App\\Rest\\Auth\\AuthFactory');
+
         // Hang REST event listeners
         $pixie->dispatcher->addListener(Events::PRE_PROCESS_ACTION, [$this, 'authenticationListener'], 100);
         $pixie->dispatcher->addListener(Events::PRE_PROCESS_ACTION, [$this, 'checkAllowedMethodsListener'], 10);
@@ -86,7 +90,6 @@ class RestService
     protected function doHandleRequest($cookie = [])
     {
         $request = $this->request;
-        //$this->request->method = 'PATCH';
         $request->adjustRequestContentType();
 
         $pixie = $this->pixie;
@@ -98,13 +101,17 @@ class RestService
         $this->pixie->dispatcher->dispatch(Events::PRE_PROCESS_ACTION, new PreActionEvent($request, $controller));
 
         $action = strtolower($request->method);
+        $action = $action == 'head' ? 'get' : $action;
         if (!($controller instanceof NoneController)) {
-            if (!$request->param('id') && $this->request->method == 'GET') {
-                $action .= '_collection';
-            }
+            if (!$request->param('id')) {
+                if (in_array($this->request->method, ['GET', 'HEAD'])) {
+                    $action .= '_collection';
+                }
 
-            if ($request->param('id') && $request->param('property')) {
-                $action .= '_'.$request->param('property');
+            } else {
+                if ($request->param('property')) {
+                    $action .= '_' . $request->param('property');
+                }
             }
         }
 
@@ -139,38 +146,12 @@ class RestService
      */
     public function authenticationListener(PreActionEvent $event)
     {
-        $headers = getallheaders();
+        $type = trim(strtolower($this->pixie->config->get('rest.auth.type')));
+        $type = $type ?: 'basic';
 
-        if (!$headers['Authorization'] || strpos($headers['Authorization'], 'Basic ') !== 0) {
-            $this->askForCredentials();
-        }
-
-        $parts = preg_split('/\s+/', $headers['Authorization'], 2, PREG_SPLIT_NO_EMPTY);
-        $credentials = explode(':', base64_decode($parts[1]));
-        $username = $credentials[0];
-        $password = $credentials[1];
-
-        if (!$username) {
-            $this->askForCredentials();
-        }
-
-        /** @var User $user */
-        $user = $this->pixie->orm->get('User')->where('username', $username)->find();
-
-        if(!$user->loaded()) {
-            $this->askForCredentials();
-        }
-
-        /** @var Password $provider */
-        $provider = $this->pixie->auth->provider('password');
-        $logged = $provider->login($username, $password);
-
-        if ($logged) {
-            $event->getController()->setUser($user);
-            return;
-        }
-
-        $this->askForCredentials();
+        $this->getAuthFactory()->get($type)
+            ->setController($event->getController())
+            ->authenticate();
     }
 
     /**
@@ -187,13 +168,6 @@ class RestService
         ) {
             throw new HttpException('Method Not Allowed', 405);
         }
-    }
-
-    private function askForCredentials()
-    {
-        header('WWW-Authenticate: Basic realm="Provide your credentials."');
-        header('HTTP/1.1 401 Unauthorized', true, 401);
-        exit;
     }
 
     /**
@@ -224,5 +198,13 @@ class RestService
     public function getExcludedModels()
     {
         return $this->excludedModels;
+    }
+
+    /**
+     * @return AuthFactory
+     */
+    public function getAuthFactory()
+    {
+        return $this->pixie->restAuthFactory;
     }
 } 

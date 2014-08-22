@@ -4,5 +4,8 @@ return array(
         'BaseModel',
         'Model',
         'OrderAddress'
+    ],
+    'auth' => [
+        'type' => 'token',  // default == 'basic'
     ]
 );

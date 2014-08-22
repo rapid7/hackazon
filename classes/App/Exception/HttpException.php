@@ -14,6 +14,8 @@ class HttpException extends \Exception
 {
     protected $statusMessage = '';
 
+    protected $data = [];
+
     public function __construct($message = '', $code = 0, \Exception $previous = null, $statusMessage = '')
     {
         $tmp = $this->message;
@@ -27,5 +29,23 @@ class HttpException extends \Exception
     public function getStatus()
     {
         return $this->getCode() . ' ' . ($this->statusMessage ?: $this->getMessage());
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @internal param array $data
+     */
+    public function setParameter($name, $value)
+    {
+        $this->data[$name] = $value;
     }
 }

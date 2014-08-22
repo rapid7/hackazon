@@ -68,7 +68,12 @@ class Pixie extends \PHPixie\Pixie {
         $this->instance_classes['restService'] = '\\App\\Rest\\RestService';
     }
 
-	protected function after_bootstrap(){
+    public function addInstanceClass($name, $class)
+    {
+        $this->instance_classes[$name] = $class;
+    }
+
+    protected function after_bootstrap(){
 		//Whatever code you want to run after bootstrap is done.
         $displayErrors = $this->getParameter('parameters.display_errors');
         $this->debug->display_errors = is_bool($displayErrors) ? $displayErrors : true;
