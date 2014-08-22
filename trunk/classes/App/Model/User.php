@@ -7,10 +7,12 @@ use App\Pixie;
  * Class User.
  * @property WishList|WishList[] wishlists
  * @property WishList[] lists
- * @property Pixie pixie
+ * @property Pixie $pixie
+ * @property string $username
+ * @property string $password
  * @package App\Model
  */
-class User extends \PHPixie\ORM\Model {
+class User extends BaseModel {
 
     public $table = 'tbl_users';
     public $id_field = 'id';
