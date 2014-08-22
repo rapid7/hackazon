@@ -4,6 +4,14 @@
         while (m = re.exec(queryString)) {
             queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
         }
+		function remove(arr, item) {
+			for(var i = arr.length; i--;) {
+				if(arr[i] == item) {
+				console.log(arr[i])
+					arr.splice(i, 1);
+				}
+			}
+		}
         $("#filter-block input[data-filter=brands]").on("change", function(e) {
             queryParameters['brands'] = $(this).val();
             location.search = $.param(queryParameters);
@@ -18,6 +26,13 @@
             queryParameters['quality'] = $(this).val();
             location.search = $.param(queryParameters);
         });
+		$("#filter-block input[type=reset]").on("click", function(e) {
+			queryParameters['quality'] = "";
+            queryParameters['price'] = "";
+            queryParameters['brands'] = "";
+			location.search = $.param(queryParameters);
+        });
+		
     });
 </script>
 <div class="row">
@@ -27,11 +42,12 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="well well-small" id="filter-block">
-                    <form action="/search">
+                    <form action="/search" name="filter-block">
                         <legend>Brands</legend>
                         <?php
                         foreach ($filterFabric->getFilter('Brand')->getVariants() as $id => $name) {
-                            $isChecked = in_array($id, $filterFabric->getFilter('brandFilter')->getValue()) ? 'checked' : '';
+                            //$isChecked = in_array($id, $filterFabric->getFilter('brandFilter')->getValue()) ? 'checked' : '';
+                        	$isChecked = $brand == $id ? 'checked' : '';
                             ?>
                             <div class="checkbox">
                                 <label>
@@ -48,7 +64,8 @@
                         <legend>Price</legend>
                         <?php
                         foreach ($filterFabric->getFilter('Price')->getVariants() as $id => $name) {
-                            $isChecked = $filterFabric->getFilter('priceFilter')->getValue() == $id ? 'checked' : '';
+                            //$isChecked = $filterFabric->getFilter('priceFilter')->getValue() == $id ? 'checked' : '';
+                        	$isChecked = $price == $id ? 'checked' : '';
                             $elemId = 'price-' . $id;
                             ?>
                             <div class="radio">
@@ -64,7 +81,8 @@
                         <legend>Quality</legend>
                         <?php
                         foreach ($filterFabric->getFilter('Quality')->getVariants() as $id => $name) {
-                            $isChecked = $filterFabric->getFilter('qualityFilter')->getValue() == $id ? 'checked' : '';
+                            //$isChecked = $filterFabric->getFilter('qualityFilter')->getValue() == $id ? 'checked' : '';
+                        	$isChecked = $quality == $id ? 'checked' : '';
                             $elemId = 'quality-' . $id;
                             ?>
                             <div class="radio">
@@ -76,6 +94,7 @@
                             <?php
                         }
                         ?>
+						<input type="reset" value="Reset" />
                     </form>
                 </div>
             </div>
@@ -128,9 +147,7 @@
                                         <div class="caption">
                                             <a href="/product/view/<?= $item->productID ?>"><?= $item->name ?></a>
 
-                                            <p><?= $item->getAnnotation(40) ?> <span
-                                                    class="label label-info price pull-right">$<?= $item->Price ?></span>
-                                            </p>
+
                                         </div>
                                     </div>
                                 </div>
