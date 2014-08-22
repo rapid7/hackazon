@@ -1,30 +1,3 @@
-<script>
-    $(function() {
-        $('#contactForm').bootstrapValidator({
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            container: 'tooltip'
-        }).on('success.form.bv', function(e) {
-            $.ajax({
-                url: '/contact',
-                type: "POST",
-                dataType: "json",
-                data: $("#contactForm").serialize(),
-                success: function(data) {
-                    $(".alert").empty().append('Thank you for your question. We will contact you as soon').show();
-
-                },
-                fail: function() {
-                    alert("error");
-                }
-            });
-            return false; // Will stop the submission of the form
-        });
-    });
-</script>
 <div class="container">
 
     <div class="row">
@@ -69,7 +42,7 @@
                 <div class="form-group col-lg-12 field-group">
                     <input type="hidden" name="save" value="contact">
                     <?php echo $_token('contact'); ?>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button id="form-submit" type="submit" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Submit</span></button>
                 </div>
         </div>
         </form>
@@ -87,18 +60,48 @@
             <p><i class="fa fa-clock-o"></i> <abbr title="Hours">H</abbr>: Monday - Friday: 9:00 AM to 5:00 PM</p>
             <ul class="list-unstyled list-inline list-social-icons">
                 <li class="tooltip-social facebook-link"><a href="#facebook-page" onclick="window.open(
-                        'http://vkontakte.ru/share.php?url=' + encodeURIComponent(location.href),
-                        'vkontakte-share-dialog',
-                        'width=626,height=436');
+                                'http://vkontakte.ru/share.php?url=' + encodeURIComponent(location.href),
+                                'vkontakte-share-dialog',
+                                'width=626,height=436');
                         return false;" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-2x"></i></a></li>
                 <li class="tooltip-social twitter-link"><a href="#twitter-profile" onclick="window.open(
-                        'https://twitter.com/share?url=' + encodeURIComponent(location.href),
-                        'twitter-share-dialog',
-                        'width=626,height=436');
+                                'https://twitter.com/share?url=' + encodeURIComponent(location.href),
+                                'twitter-share-dialog',
+                                'width=626,height=436');
                         return false;" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-2x"></i></a></li>
             </ul>
         </div>
     </div>
 </div><!-- /.row -->
 
-</div><!-- /.container -->
+<script>
+    $(function() {
+        Ladda.bind( 'input[type=submit]' );
+        
+        $('#contactForm').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            container: 'tooltip'
+        }).on('success.form.bv', function(e) {
+            var l = Ladda.create(document.querySelector( '#form-submit' ));
+            l.start();
+            $.ajax({
+                url: '/contact',
+                type: "POST",
+                dataType: "json",
+                data: $("#contactForm").serialize(),
+                success: function(data) {
+                    $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
+
+                },
+                fail: function() {
+                    $(".alert").empty().append('There is some error happened during processing your request.').show();
+                }
+            }).always(function() { l.stop(); });
+            return false; // Will stop the submission of the form
+        });
+    });
+</script>
