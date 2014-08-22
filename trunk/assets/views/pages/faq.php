@@ -64,7 +64,7 @@
 
 
     <div class="section">
-        <form role="form" method="post" action="/faq/add" id="faqForm">
+        <form role="form" method="post" action="/faq" id="faqForm">
             <div class="form-group">
                 <label for="userEmail">Email address</label>
                 <input type="email" class="form-control" name="userEmail" id="userEmail" placeholder="Enter email" required data-validation="email">
@@ -74,7 +74,7 @@
                 <textarea class="form-control" name="userQuestion" id="userQuestion" placeholder="Type your question here..." required></textarea>
             </div>
             <?php echo $_token('faq'); ?>
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button id="form-submit" type="submit" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Submit</span></button>
         </form>
     </div>
 </div>
@@ -89,6 +89,7 @@
 
 
     $(function() {
+
         $('#faqForm').bootstrapValidator({
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
@@ -97,13 +98,15 @@
             },
             container: 'tooltip'
         }).on('success.form.bv', function(e) {
+            var l = Ladda.create(document.querySelector( '#form-submit' ));
+            l.start();
             $.ajax({
                 url: '/faq',
                 type: "POST",
                 dataType: "json",
                 data: $("#faqForm").serialize(),
                 success: function(data) {
-                    $(".alert").empty().append('Thank you for your question. We will contact you as soon').show();
+                    $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
                     if (data.length) {
                         ko.applyBindings(model);
                         model.data(data);
@@ -116,7 +119,7 @@
                 fail: function() {
                     $(".alert").empty().append('There is some error happened during processing your request.').show();
                 }
-            });
+            }).always(function() { l.stop(); });
             return false;
         });
     });

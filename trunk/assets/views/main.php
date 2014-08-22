@@ -44,7 +44,11 @@
         
         <script src="/js/knockout-2.2.1.js"></script>
         <script src="/js/knockout.localStorage.js"></script>
-        <script src="/js/koExternalTemplateEngine_all.min.js"></script>         
+        <script src="/js/koExternalTemplateEngine_all.min.js"></script>  
+        
+        <link rel="stylesheet" href="/css/ladda-themeless.min.css">
+        <script src="/js/spin.min.js"></script>
+        <script src="/js/ladda.min.js"></script>
     </head>
 
     <body>
