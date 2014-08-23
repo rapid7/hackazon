@@ -156,6 +156,10 @@ Response:
 ```
 
 Collections are fetched in controller action `get_collection`.
+Additional information is provided in response header `Link` (as on GitHub):
+```
+Link: </api/category?page=1>; rel="current",</api/category?page=1>; rel="first",</api/category?page=4>; rel="last",</api/category?page=2>; rel="next"
+```
 
 
 Fetch single item:
