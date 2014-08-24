@@ -35,6 +35,13 @@ return array(
         ),
         'POST'
     ),
+    'search' => array('/search(/page-<page>)', array(
+        'controller' => 'Search',
+        'action' => 'index',
+        'page'   =>  1
+        ),
+        'GET'
+    ),
 	'default' => array('(/<controller>(/<action>(/<id>)))',
         array(
             'controller' => 'home',
