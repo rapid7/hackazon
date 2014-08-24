@@ -13,6 +13,7 @@ class Search extends Page {
 		$brand = $this->request->get('brands');
 		$price = $this->request->get('price');
 		$quality = $this->request->get('quality');
+		$current_page = $this->request->param('page');
 
 		$model = new Product($this->pixie);
 
@@ -31,6 +32,9 @@ class Search extends Page {
 				->where('name', 'LIKE', '%'.$name.'%');
 		}
 		if (!empty($price)) {
+			$pricesVariants = $this->view->filterFabric->getFilter("Price")->getVariants();
+			$this->_products
+				->where('Price', '>=', $pricesVariants[$price][0])->where('Price', '<=', $pricesVariants[$price][1]);
 		}
 		if (!empty($brand) && !empty($quality)) {
 			$this->_products
@@ -48,9 +52,19 @@ class Search extends Page {
 				->join('tbl_product_options_values',array('tbl_product_options_values.productID','tbl_products.productID'),'left')
 				->where("tbl_product_options_values.variantID", $quality);
 		}
-		$this->view->products = $this->_products->execute()->as_array();
+		
+
+		$pager = $this->pixie->paginate->db($this->_products, $current_page, 12);
+		$pager->set_url_route('search');
+ 
+		$pager->set_url_callback(function($page){
+			return "/page-$page";
+		});
+ 		$this->view->pager = $pager;
 		
 		$label = $this->view->filterFabric->getFilter('nameFilter')->getValue();
+
+		
 
 		$this->view->price = $price;
 		$this->view->brand = $brand;
