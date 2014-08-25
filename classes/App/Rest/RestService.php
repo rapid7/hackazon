@@ -13,13 +13,9 @@ namespace App\Rest;
 use App\Core\Request;
 use App\Core\Response;
 use App\Exception\HttpException;
-use App\Model\User;
 use App\Pixie;
 use App\Rest\Auth\AuthFactory;
-use App\Rest\Auth\BasicProvider;
 use App\Rest\Events\PreActionEvent;
-use PHPixie\Auth\Login\Password;
-
 
 /**
  * The Core of the RESTful service.

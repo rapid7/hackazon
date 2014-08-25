@@ -8,6 +8,7 @@
 
 
 namespace App\Rest;
+use App\Core\BaseController;
 use App\Core\Request;
 use App\Core\Response;
 use App\Exception\HttpException;
@@ -19,6 +20,7 @@ use App\Pixie;
 use PHPixie\ORM\Model;
 use PHPixie\ORM\Result;
 use PHPixie\Paginate\Pager\ORM as ORMPager;
+use VulnModule\Config\Context;
 
 /**
  * Base REST Controller.
@@ -27,7 +29,7 @@ use PHPixie\Paginate\Pager\ORM as ORMPager;
  * @property Request $request
  * @property Pixie $pixie
  */
-class Controller extends \PHPixie\Controller
+class Controller extends BaseController
 {
     const FORMAT_JSON = 'application/json';
     const FORMAT_XML = 'application/xml';
@@ -120,10 +122,26 @@ class Controller extends \PHPixie\Controller
     {
         $this->prepareContentType();
 
+        if ($this instanceof ErrorController) {
+            return;
+        }
+        $className = $this->get_real_class($this);
+        $controllerName = strtolower($className);
+
+        // Create vulnerability service.
+        $this->vulninjection = $this->pixie->vulninjection->service('rest');
+        $this->pixie->setVulnService($this->vulninjection);
+        //$this->vulninjection->checkReferrer();
+
+        // Switch vulnerability config to the controller level
+        $this->vulninjection->goDown('rest');
+
         if ($this->modelName) {
             if (class_exists($this->pixie->app_namespace."Model\\".$this->modelName)) {
                 $this->model = $this->pixie->orm->get($this->modelName);
             }
+        }  else {
+            echo $controllerName; exit;
         }
 
         if ($this->model && $this->request->param('id')) {
@@ -174,6 +192,10 @@ class Controller extends \PHPixie\Controller
 
         if (!is_string($this->response->body)) {
             $this->response->body = (string) $this->response->body;
+        }
+
+        if (!($this instanceof ErrorController)) {
+            parent::after();
         }
     }
 
@@ -410,7 +432,8 @@ class Controller extends \PHPixie\Controller
 
         $notEnoughFields = array_diff($dataFields, array_keys($data));
         if (count($notEnoughFields)) {
-            throw new HttpException('Please provide next fields: '.implode(', ', $notEnoughFields), 400, null, 'Bad Request');
+            $exception = new HttpException('Please provide next fields: '.implode(', ', $notEnoughFields), 400, null, 'Bad Request');
+            throw $exception;
         }
     }
 
@@ -427,7 +450,17 @@ class Controller extends \PHPixie\Controller
         $excessRequestFields = array_diff($keys, $dataFields);
 
         if (count($excessRequestFields)) {
-            throw new HttpException('Remove excess fields: '.implode(', ', $excessRequestFields), 400, null, 'Bad Request');
+            $exception = new HttpException('Remove excess fields: '.implode(', ', $excessRequestFields), 400, null, 'Bad Request');
+
+            // Inject XMLExternalEntity vulnerability
+            $vulnService = $this->pixie->vulnService;
+            $vuln = $vulnService->getVulnerability('XMLExternalEntity');
+
+            if ($vuln === true || $vuln['enabled']) {
+                $exception->setParameter('invalidFields', $data);
+            }
+
+            throw $exception;
         }
     }
 
@@ -460,6 +493,23 @@ class Controller extends \PHPixie\Controller
 
         $this->execute = true;
         $this->before();
+
+        if (!($this instanceof ErrorController)) {
+            // Check referrer vulnerabilities
+            $service = $this->pixie->getVulnService();
+            $config = $service->getConfig();
+            $isControllerLevel = $config->getLevel() <= 1;
+            $actionName = $this->request->param('action');
+
+            if ($isControllerLevel) {
+                if (!$config->has($actionName)) {
+                    $context = $config->getCurrentContext();
+                    $context->addContext(Context::createFromData($actionName, [], $context));
+                }
+                $service->goDown($actionName);
+            }
+        }
+
         if ($this->execute) {
             $result = call_user_func_array([$this, $action], $params);
             if (empty($this->response->body) && !is_numeric($this->response->body) && $result !== null) {
