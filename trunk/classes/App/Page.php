@@ -2,23 +2,20 @@
 
 namespace App;
 
+use App\Core\BaseController;
 use App\Exception\HttpException;
 use App\Model\Category as Category;
-use PHPixie\Controller;
 use PHPixie\Exception\PageNotFound;
 use PHPixie\ORM\Model;
 use PHPixie\View;
 use VulnModule\Config\Context;
 use VulnModule\Csrf\CsrfToken;
-use VulnModule\VulnInjection\Service as VulnService;
 
 /**
  * Base controller
- *
- * @property-read \App\Pixie $pixie Pixie dependency container
- * @property-read \App\Core\Request $request Pixie dependency container
+ * @inheritdoc
  */
-class Page extends Controller {
+class Page extends BaseController {
 
     const TOKEN_PREFIX = '_csrf_';
 
@@ -33,13 +30,11 @@ class Page extends Controller {
      */
     protected $model;
 
-    /**
-     * @var VulnService
-     */
-    protected $vulninjection;
     protected $errorMessage;
 
     public function before() {
+        parent::before();
+
         $this->view = $this->pixie->view('main');
         $config = $this->pixie->config->get('page');
         $this->view->common_path = $config['common_path'];
@@ -47,18 +42,6 @@ class Page extends Controller {
         $className = $this->get_real_class($this);
         $this->view->returnUrl = '';
         $this->view->controller = $this;
-
-        $controllerName = strtolower($className);
-
-        // Create vulnerability service.
-        $this->vulninjection = $this->pixie->vulninjection->service($controllerName);
-        $this->pixie->setVulnService($this->vulninjection);
-
-        // Check referrer for system-wide level
-        $this->vulninjection->checkReferrer();
-
-        // Switch vulnerability config to the controller level
-        $this->vulninjection->goDown($controllerName);
 
         if (!($className == 'Home' && $this->request->param('action') == 'install')) {
             $category = new Category($this->pixie);
@@ -80,21 +63,8 @@ class Page extends Controller {
 
     public function after() {
         $this->response->body = $this->view->render();
-        // Exit controller-level vulnerability context.
-        $this->vulninjection->goUp();
-    }
 
-    /**
-     * Obtains an object class name without namespaces
-     */
-    public function get_real_class($obj) {
-        $classname = get_class($obj);
-
-        if (preg_match('@\\\\(?<class_name>[\w]+)$@', $classname, $matches)) {
-            $classname = $matches['class_name'];
-        }
-
-        return $classname;
+        parent::after();
     }
 
     protected function getSearchCategory($className) {
@@ -129,23 +99,6 @@ class Page extends Controller {
     }
 
     /**
-     * Generates URL by given name and parameters.
-     *
-     * @param string $route Route name
-     * @param array $params controller, action, and so on
-     * @param bool $absolute Whether link is absolute or not
-     * @param string $protocol
-     * @return string
-     */
-    public function generateUrl($route = 'default', array $params = array(), $absolute = false, $protocol = 'http')
-    {
-        if (!isset($params['action'])) {
-            $params['action'] = false;
-        }
-        return $this->pixie->router->get($route)->url($params, $absolute, $protocol);
-    }
-
-    /**
      * Send response as JSON.
      * @param $responseData
      */
@@ -154,22 +107,6 @@ class Page extends Controller {
         $this->response->body = json_encode($responseData);
         $this->response->headers[] = 'Content-Type: application/json; charset=utf-8';
         $this->execute = false;
-    }
-
-    /**
-     * var_dump beautiful dump.
-     */
-    public function dumpx()
-    {
-        call_user_func_array([$this->pixie->debug, 'dumpx'], func_get_args());
-    }
-
-    /**
-     * Dump and exit script.
-     */
-    public function dump()
-    {
-        call_user_func_array([$this->pixie->debug, 'dump'], func_get_args());
     }
 
     /**

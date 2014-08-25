@@ -373,7 +373,9 @@ class Service {
 
         $isFilterable = $this->checkIsIn($method, $vuln['methods']) && $this->checkIsIn(strtolower($proto), $vuln['protocols']);
 
-        if ($isFilterable && ((!$path || !$this->referrerPathIsAllowed($path, $vuln['paths'])) || (!$host || !$this->checkIsIn($host, $vuln['hosts'])))
+        if ($isFilterable
+            && ((!$path || !$this->referrerPathIsAllowed($path, $vuln['paths']))
+                || (!$host || !$this->checkIsIn($host, $vuln['hosts'])))
         ) {
             throw new ForbiddenException();
         }
@@ -468,9 +470,7 @@ class Service {
         $dbKey = trim(preg_replace('/`/', '', $key));
 
         $fieldExistsInConfig = false;
-//        if (strpos($key, 'categoryID') !== false) {
-//            var_dump($key, $table, $dbKey, $fields, $dbFields); exit;
-//        }
+
         if (array_key_exists($key, $fields)) {
             $fieldExistsInConfig = true;
         } else if (array_key_exists($dbKey, $dbFields)) {
