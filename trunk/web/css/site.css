@@ -187,6 +187,10 @@ form.signin .error {
     overflow: hidden;
 }
 
+.home-top-section {
+    padding: 10px 0;
+}
+
 .home-top-product-section .thumbnail {
     padding: 4px;
 }
@@ -665,39 +669,9 @@ ul.nav li.grey a {
 .toggle {
     cursor: pointer;
 }
-.page-header small .label {
-    vertical-align: 0.4em;
-}
 
-.order-page dl.dl-horizontal dt {
-    width: 80px;
-    line-height: 2em;
-}
 
-.order-page dl.dl-horizontal dd {
-    margin-left: 100px;
-    line-height: 2em;
-}
-
-.order-page .product-image {
-    width: 60px;
-}
-
-.order-page .product-image img {
-    max-height: 30px;
-    max-width: 40px;
-}
-
-.profile-show .profile-table td{
-    border-top-color: transparent;
-}
-
-.profile-show .profile-table td:first-child {
-    font-weight: bold;
-    text-align: right;
-    width: 15%;
-}
-
-.account-page .latest-orders tbody th {
-    border-top-color: transparent;
+.navbar-header .navbar-brand {
+    padding-left: 0;
+    padding-right: 0;
 }

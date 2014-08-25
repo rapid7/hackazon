@@ -81,7 +81,7 @@
                     <?php include($common_path . "sidebar.php") ?>
                 </div>
                 <div class="col-xs-1 col-md-1">
-                    <span style="font-size: 16px; color: #d9534f; padding-left: 15px">Search</span>
+                    <span style="font-size: 16px; color: #d9534f; padding-left: 15px"></span>
                 </div>
                 <div class="col-xs-9 col-md-9" style="padding-right: 0px">
                   <?php include($common_path. "/../search/search.php") ?>
