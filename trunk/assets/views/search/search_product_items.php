@@ -14,6 +14,7 @@
 		}
         $("#filter-block input[data-filter=brands]").on("change", function(e) {
             queryParameters['brands'] = $(this).val();
+			console.log();
             location.search = $.param(queryParameters);
         });
 
@@ -153,7 +154,7 @@
       <!-- Render pager links -->
       <ul class="pagination pull-right">
         <?php for($i=1; $i<=$pager->num_pages; $i++): ?>
-        <li>
+	<li>
           <a href="<?php echo $pager->url($i);?>"><?php echo $i;?>
           </a>
         </li>

@@ -98,12 +98,17 @@ class Page extends Controller {
     }
 
     protected function getSearchCategory($className) {
-        switch ($className) {
-            case 'Category':
-                $category = new Category($this->pixie);
-                $search_category = $category->getPageTitle($this->request->param('id'));
-                $value = $this->request->param('id');
-                break;
+		switch ($className) {
+			case 'Category':
+				$category = new Category($this->pixie);
+				$search_category = $category->getPageTitle($this->request->param('id'));
+				$value = $this->request->param('id');
+				break;
+			case 'Search':
+				$value = $this->request->get("id");
+				$category = new Category($this->pixie);
+				$search_category = $category->getPageTitle($this->request->get('id'));
+				break;
             default:
                 $search_category = 'All';
                 $value = '';
