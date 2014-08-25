@@ -8,6 +8,6 @@ return array(
             'enabled' => true,
         ],
 
-        'XMLExternalEntity' => false
+        'XMLExternalEntity' => true
     ]
 );
