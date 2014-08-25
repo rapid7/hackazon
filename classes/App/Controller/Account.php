@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Exception\NotFoundException;
+use App\Model\Order;
+use PHPixie\Paginate\Pager\ORM as ORMPager;
+
 class Account extends \App\Page {
 
     /**
@@ -15,13 +19,36 @@ class Account extends \App\Page {
     }
 
     public function action_index() {
+        /** @var ORMPager $ordersPager */
+        $ordersPager = $this->pixie->orm->get('Order')->order_by('created_at', 'DESC')->getMyOrdersPager(1, 5);
+        $myOrders = $ordersPager->current_items()->as_array();
+        $this->view->myOrders = $myOrders;
         $this->view->subview = 'account/account';
     }
 
-    public function action_orders() {
-        $myOrders = $this->pixie->orm->get('Order')->getMyOrders();
-        $this->view->myOrders = $myOrders;
-        $this->view->subview = 'account/orders';
+    public function action_orders()
+    {
+        /** @var Order $orderModel */
+        $orderModel = $this->pixie->orm->get('Order');
+
+        if ($orderId = $this->request->param('id')) { // Show single order
+            $order = $orderModel->getByIncrement($orderId);
+            if (!$order->loaded()) {
+                throw new NotFoundException();
+            }
+            $this->view->id = $orderId;
+            $this->view->order = $order;
+            $this->view->subview = 'account/order';
+
+        } else { // List orders
+            $page = $this->request->get('page', 1);
+            /** @var ORMPager $ordersPager */
+            $ordersPager = $orderModel->getMyOrdersPager($page, 5);
+            $myOrders = $ordersPager->current_items()->as_array();
+            $this->view->pager = $ordersPager;
+            $this->view->myOrders = $myOrders;
+            $this->view->subview = 'account/orders';
+        }
     }
 
     public function action_documents() {

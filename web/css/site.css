@@ -665,3 +665,25 @@ ul.nav li.grey a {
 .toggle {
     cursor: pointer;
 }
+.page-header small .label {
+    vertical-align: 0.4em;
+}
+
+.order-page dl.dl-horizontal dt {
+    width: 80px;
+    line-height: 2em;
+}
+
+.order-page dl.dl-horizontal dd {
+    margin-left: 100px;
+    line-height: 2em;
+}
+
+.order-page .product-image {
+    width: 60px;
+}
+
+.order-page .product-image img {
+    max-height: 30px;
+    max-width: 40px;
+}

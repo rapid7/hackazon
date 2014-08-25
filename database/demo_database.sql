@@ -887,3 +887,46 @@ INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 
 INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 72, 4);
 INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 72, 5);
 INSERT INTO `tbl_product_options_values` (ID, ProductID, variantID) VALUES ('', 72, 10);
+
+
+INSERT INTO `tbl_orders` (`id`, `created_at`, `updated_at`, `customer_firstname`, `customer_lastname`, `customer_email`, `status`, `comment`, `customer_id`, `payment_method`, `shipping_method`) VALUES
+  (1,	'2014-08-12 09:57:52',	'2014-08-22 12:57:52',	'test_user',	NULL,	'test_user@example.com',	'complete',	NULL,	1,	'wire transfer',	'mail'),
+  (2,	'2014-08-14 09:57:59',	'2014-08-22 12:57:59',	'test_user',	NULL,	'test_user@example.com',	'complete',	NULL,	1,	'wire transfer',	'mail'),
+  (3,	'2014-08-14 15:00:42',	'2014-08-22 18:00:42',	'test_user',	NULL,	'test_user@example.com',	'complete',	NULL,	1,	'wire transfer',	'mail'),
+  (4,	'2014-08-17 15:00:43',	'2014-08-22 18:00:43',	'test_user',	NULL,	'test_user@example.com',	'complete',	NULL,	1,	'wire transfer',	'mail'),
+  (5,	'2014-08-22 15:02:57',	'2014-08-22 18:02:57',	'test_user',	NULL,	'test_user@example.com',	'complete',	NULL,	1,	'wire transfer',	'mail'),
+  (6,	'2014-08-22 15:03:07',	'2014-08-22 18:03:07',	'test_user',	NULL,	'test_user@example.com',	'complete',	NULL,	1,	'wire transfer',	'mail');
+
+INSERT INTO `tbl_order_address` (`id`, `full_name`, `address_line_1`, `address_line_2`, `city`, `region`, `zip`, `country_id`, `phone`, `customer_id`, `address_type`, `order_id`) VALUES
+  (1,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'shipping',	1),
+  (2,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'billing',	1),
+  (3,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'shipping',	2),
+  (4,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'billing',	2),
+  (5,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'shipping',	3),
+  (6,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'billing',	3),
+  (7,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'shipping',	4),
+  (8,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'billing',	4),
+  (9,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'shipping',	5),
+  (10,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'billing',	5),
+  (11,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'shipping',	6),
+  (12,	'asc',	'asdasd',	'asdasdasd',	'asdasd',	'asdasdasd',	'215325235',	'RU',	'1016186',	1,	'billing',	6);
+
+INSERT INTO `tbl_order_items` (`id`, `cart_id`, `created_at`, `updated_at`, `product_id`, `name`, `qty`, `price`, `order_id`) VALUES
+  (1,	1,	'2014-08-22 09:57:52',	'2014-08-22 12:57:52',	1,	'Toyota Land Cruiser 100',	1,	70000.0000,	1),
+  (2,	1,	'2014-08-22 09:57:59',	'2014-08-22 12:57:59',	1,	'Toyota Land Cruiser 100',	1,	70000.0000,	2),
+  (3,	3,	'2014-08-22 15:00:42',	'2014-08-22 18:00:42',	81,	'Monsters inc.',	3,	14.4900,	3),
+  (4,	3,	'2014-08-22 15:00:42',	'2014-08-22 18:00:42',	1,	'Toyota Land Cruiser 100',	1,	70000.0000,	3),
+  (5,	3,	'2014-08-22 15:00:42',	'2014-08-22 18:00:42',	72,	'South Park',	1,	12.0000,	3),
+  (6,	3,	'2014-08-22 15:00:42',	'2014-08-22 18:00:42',	110,	'Harry Potter book #1',	1,	5.0000,	3),
+  (7,	3,	'2014-08-22 15:00:42',	'2014-08-22 18:00:42',	101,	'IBM ThinkPad T30 2366-89G',	1,	3170.0000,	3),
+  (8,	3,	'2014-08-22 15:00:43',	'2014-08-22 18:00:43',	81,	'Monsters inc.',	3,	14.4900,	4),
+  (9,	3,	'2014-08-22 15:00:43',	'2014-08-22 18:00:43',	1,	'Toyota Land Cruiser 100',	1,	70000.0000,	4),
+  (10,	3,	'2014-08-22 15:00:43',	'2014-08-22 18:00:43',	72,	'South Park',	1,	12.0000,	4),
+  (11,	3,	'2014-08-22 15:00:43',	'2014-08-22 18:00:43',	110,	'Harry Potter book #1',	1,	5.0000,	4),
+  (12,	3,	'2014-08-22 15:00:43',	'2014-08-22 18:00:43',	101,	'IBM ThinkPad T30 2366-89G',	1,	3170.0000,	4),
+  (13,	4,	'2014-08-22 15:02:57',	'2014-08-22 18:02:57',	17,	'Nokia 9210',	2,	803.0000,	5),
+  (14,	4,	'2014-08-22 15:02:57',	'2014-08-22 18:02:57',	32,	'BURTON Cruzer',	1,	345.0000,	5),
+  (15,	4,	'2014-08-22 15:02:57',	'2014-08-22 18:02:57',	106,	'Samsung CD Yepp MCD-SM60',	5,	165.0000,	5),
+  (16,	4,	'2014-08-22 15:03:07',	'2014-08-22 18:03:07',	17,	'Nokia 9210',	2,	803.0000,	6),
+  (17,	4,	'2014-08-22 15:03:07',	'2014-08-22 18:03:07',	32,	'BURTON Cruzer',	1,	345.0000,	6),
+  (18,	4,	'2014-08-22 15:03:07',	'2014-08-22 18:03:07',	106,	'Samsung CD Yepp MCD-SM60',	5,	165.0000,	6);
