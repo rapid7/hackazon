@@ -398,6 +398,21 @@ $(document).ready(function () {
        $('#searchForm input[type="hidden"][name="id"]').val($(this).data('item-id'));
     });
 
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var href = $(e.target).attr('href');
+        if (href.substr(0, 1) == '#') {
+            location.hash = href;
+        }
+    });
+
+    // Check hash for tabs
+    (function () {
+        var hash = location.hash;
+        $('.nav').each(function () {
+            var nav = $(this);
+            nav.find('a[data-toggle="tab"]').filter('[href="' + hash + '"]').tab('show');
+        });
+    })();
 });
 
 

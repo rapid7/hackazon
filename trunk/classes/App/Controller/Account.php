@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Exception\NotFoundException;
 use App\Model\Order;
+use App\Model\User;
 use PHPixie\Paginate\Pager\ORM as ORMPager;
 
 class Account extends \App\Page {
@@ -22,6 +23,7 @@ class Account extends \App\Page {
         /** @var ORMPager $ordersPager */
         $ordersPager = $this->pixie->orm->get('Order')->order_by('created_at', 'DESC')->getMyOrdersPager(1, 5);
         $myOrders = $ordersPager->current_items()->as_array();
+        $this->view->user = $this->pixie->auth->user();
         $this->view->myOrders = $myOrders;
         $this->view->subview = 'account/account';
     }
@@ -93,4 +95,95 @@ class Account extends \App\Page {
         $this->view->subview = 'account/document';
     }
 
+    public function action_edit_profile()
+    {
+        $user = $this->getUser();
+        $fields = ['username', 'password', 'first_name', 'last_name', 'user_phone', 'email'];
+        $errors = [];
+        $this->view->success = false;
+
+        if ($this->request->method == 'POST') {
+            $this->checkCsrfToken('profile');
+
+
+            $data = [];
+            foreach ($this->request->post() as $key => $value) {
+                if (in_array($key, $fields)) {
+                    $data[$key] = $value;
+                }
+            }
+
+            if (!$data['username']) {
+                $errors[] = 'Please enter username.';
+
+            } else {
+                /** @var User $checkUser */
+                $checkUser = $this->pixie->orm->get('User')->where('username', $data['username'])->find_all()->current();
+                if ($checkUser->loaded() && $checkUser->id() != $user->id()) {
+                    $errors[] = 'Username you entered is already in use. Please enter another one.';
+                }
+            }
+
+            if (!$data['email']) {
+                $errors[] = 'Please enter email.';
+
+            } else {
+                /** @var User $checkUser */
+                $checkUser = $this->pixie->orm->get('User')->where('email', $data['email'])->find_all()->current();
+                if ($checkUser->loaded() && $checkUser->id() != $user->id()) {
+                    $errors[] = 'Email you entered is already in use. Please enter another one.';
+                }
+            }
+
+            if (!$data['password'] && !$data['password_confirmation']) {
+                unset($data['password']);
+
+            } else {
+                if ($data['password'] != $data['password_confirmation']) {
+                    $errors[] = 'Passwords must match.';
+
+                } else {
+                    $data['password'] = $this->pixie->auth->provider('password')->hash_password($data['password']);
+                }
+            }
+
+            if (!count($errors)) {
+                $user->values($data);
+                $user->save();
+
+                $this->pixie->session->flash('success', 'You have successfully updated your profile.');
+
+                if ($this->request->post('_submit') == 'Save and Exit') {
+                    $this->redirect('/account#profile');
+
+                } else {
+                    $this->redirect('/account/profile/edit');
+                }
+
+                return;
+            }
+            $this->view->password_confirmation = $this->request->post('password_confirmation');
+
+        } else {
+            $data = $user->getFields($fields);
+            $data['password'] = '';
+            $data['password_confirmation'] = '';
+        }
+
+        foreach ($data as $key => $value) {
+            $this->view->$key = $value;
+        }
+        $this->view->success = $this->pixie->session->flash('success') ?: '';
+        $this->view->errorMessage = implode('<br>', $errors);
+        $this->view->user = $user;
+        $this->view->subview = 'account/edit_profile';
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->pixie->auth->user();
+    }
 }

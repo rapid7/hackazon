@@ -42,6 +42,12 @@ return array(
         ),
         'GET'
     ),
+    'profile_edit' => ['/account/profile/edit',
+        array(
+            'controller' => 'account',
+            'action' => 'edit_profile'
+        )
+    ],
 	'default' => array('(/<controller>(/<action>(/<id>)))',
         array(
             'controller' => 'home',
