@@ -26,6 +26,9 @@ class Search extends Page {
 			$this->_products
 				->join('tbl_category_product',array('tbl_category_product.productID','tbl_products.productID'),'left')
 				->where("tbl_category_product.categoryID", $catId);
+			$cat = $this->pixie->orm->get('Category')->loadCategory($catId);
+			$this->view->search_category['label'] = $catId;
+			$this->view->search_category['value'] = $catId;
 		}
 		if (!empty($name)) {
 			$this->_products
@@ -55,17 +58,26 @@ class Search extends Page {
 		
 
 		$pager = $this->pixie->paginate->db($this->_products, $current_page, 12);
-		$pager->set_url_route('search');
- 
 		$pager->set_url_callback(function($page){
-			return "/page-$page";
+			$catId = $this->request->get("id");
+			$name = $this->request->get("searchString");
+			$brand = $this->request->get('brands');
+			$price = $this->request->get('price');
+			$quality = $this->request->get('quality');
+
+				return "/search/page-$page?id=$catId&searchString=$name&brands=$brands&price=$price&quality=$quality";
 		});
+		
+ 
+		
+		//$pager->set_url_pattern("/page-#page#");
+		
  		$this->view->pager = $pager;
 		
 		$label = $this->view->filterFabric->getFilter('nameFilter')->getValue();
 
-		
-
+		$this->view->searchString = $name;
+		$this->view->categoryId = $catId;
 		$this->view->price = $price;
 		$this->view->brand = $brand;
 		$this->view->quality = $quality;

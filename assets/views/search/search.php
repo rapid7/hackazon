@@ -4,8 +4,7 @@
         <div class="col-xs-11 col-md-11">
             <div class="input-group">
                 <div class="input-group-btn">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                            id="searchLabel"><?= $search_category['label'] ?> <span class="caret"></span></button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="searchLabel"><?= $search_category['label'] ?> <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu" id="searchValue">
                         <?php foreach ($search_subcategories as $key => $value): ?>
                             <li><a href="#" data-item-id="<?= $key ?>"><?= $value ?></a></li>
@@ -13,8 +12,7 @@
                     </ul>
                 </div>
                 <!-- /btn-group -->
-                <input type="text" class="form-control"  maxlength="100" name="searchString"
-                       value="">
+                <input type="text" class="form-control"  maxlength="100" name="searchString" value="<?= $searchString ?>">
             </div>
             <!-- /input-group -->
         </div>
