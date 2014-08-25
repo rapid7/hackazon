@@ -12,12 +12,12 @@
                     </ul>
                 </div>
                 <!-- /btn-group -->
-                <input type="text" class="form-control"  maxlength="100" name="searchString" value="<?= $searchString ?>">
+                <input type="text" class="form-control" placeholder="Search products..." maxlength="100" name="searchString" value="<?= $searchString ?>">
             </div>
             <!-- /input-group -->
         </div>
         <div class="col-lg-1">
-            <button type="submit" class="btn btn-default">Go</button>
+            <button type="submit" class="btn btn-default">Search</button>
         </div>
     </form>
 </div>

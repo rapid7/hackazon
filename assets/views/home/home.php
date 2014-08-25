@@ -7,11 +7,10 @@
 ?>
 
 
-    <div class="section">
+    <div class="section home-top-section">
         <!--<div class="section-colored text-center">-->
-        <div class="container">
-
-            <div class="row well">
+        <div class="container well">
+            <div class="row">
                 <div class="col-lg-12">
                     <div class="col-lg-4 col-md-4">
                         <h3><i class="fa fa-pencil"></i><a href="user/register"> Register on the site</a></h3>
