@@ -687,3 +687,17 @@ ul.nav li.grey a {
     max-height: 30px;
     max-width: 40px;
 }
+
+.profile-show .profile-table td{
+    border-top-color: transparent;
+}
+
+.profile-show .profile-table td:first-child {
+    font-weight: bold;
+    text-align: right;
+    width: 15%;
+}
+
+.account-page .latest-orders tbody th {
+    border-top-color: transparent;
+}

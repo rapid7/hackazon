@@ -1,6 +1,6 @@
     <!-- Page Content -->
 
-    <div class="container">
+    <div class="container account-page">
 
         <div class="row">
 
@@ -21,21 +21,19 @@
         <div class="row">
 
             <div class="col-lg-12">
-                <ul id="myTab" class="nav nav-tabs">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="#my-orders" data-toggle="tab">My Latest Orders</a></li>
                     <li><a href="#profile" data-toggle="tab">Profile</a></li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane fade in active" id="my-orders">
+                    <div class="tab-pane fade in active latest-orders" id="my-orders">
                         <?php include __DIR__.'/_order_list.php'; ?>
                         <p class="text-right">
                             <a href="/account/orders">Go to my orders &rarr;</a>
                         </p>
                     </div>
-                    <div class="tab-pane fade" id="profile">
-                        <i class="fa fa-gears pull-left fa-4x"></i>
-                        <p>Nam fringilla quis enim in eleifend. Suspendisse sed lectus mauris. Nam commodo, arcu et posuere placerat, tellus tortor dignissim eros, sit amet eleifend urna lorem sit amet nulla. Praesent sem nibh, vulputate nec congue eu, dapibus vitae augue. Suspendisse cursus urna sit amet metus porttitor, in pharetra quam feugiat. Etiam tempus euismod nulla eget pellentesque.</p>
-                        <p>Vestibulum laoreet molestie urna ac vehicula. Phasellus laoreet semper ipsum ac gravida. Sed in varius tortor. Nullam blandit in neque quis aliquet. Fusce volutpat pellentesque sem non convallis. Suspendisse sit amet magna pulvinar, gravida mauris eu, tincidunt massa. Nam lectus mi, viverra non quam nec, mollis malesuada dolor. Vivamus hendrerit nunc interdum turpis egestas, a lobortis odio consequat. Fusce posuere purus quis ligula faucibus lacinia. Curabitur sit amet congue dolor. Duis dapibus hendrerit nunc et gravida. Phasellus mollis, lectus quis ornare aliquam, arcu orci posuere lectus, vehicula bibendum sem ante quis lacus.</p>
+                    <div class="tab-pane fade profile-show" id="profile">
+                        <?php include __DIR__ . '/_profile_info.php'; ?>
                     </div>
                 </div>
             </div>

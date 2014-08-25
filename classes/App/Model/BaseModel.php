@@ -131,4 +131,20 @@ class BaseModel extends Model
 		$result = $this->filterBy($params, $options);
 		return $result[0];
 	}
+
+    public function getFields(array $fields)
+    {
+        if (!$this->loaded()) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($fields as $field) {
+            if (isset($this->$field)) {
+                $result[$field] = $this->$field;
+            }
+        }
+
+        return $result;
+    }
 } 
