@@ -15,10 +15,31 @@ class Cart extends \App\Page {
      * Add product to cart
      */
     public function action_add() {
-        $qty = $this->request->post('qty');
+        $ids = [];
+        if ($this->request->is_ajax()) {
+            $ids = $this->getProductsInCartIds();
+        }
+
+        $qty = $this->request->post('qty', 1);
         $productId = $this->request->post('product_id');
-        $this->pixie->orm->get('CartItems')->addItems($productId, $qty);
-        $this->redirect('/cart/view');
+        $result = $this->pixie->orm->get('CartItems')->addItems($productId, $qty);
+
+        if ($this->request->is_ajax()) {
+            $this->jsonResponse([
+                'success' => 1,
+                'productId' => $productId,
+                'newProduct' => !in_array($productId, $ids),
+                'product' => $result['product']->getFields([
+                    'productID', 'name', 'Price'
+                ]),
+                'item' => $result['item']->getFields([
+                    'id', 'qty', 'price'
+                ])
+            ]);
+
+        } else {
+            $this->redirect('/cart/view');
+        }
     }
 
     /**

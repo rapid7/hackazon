@@ -15,7 +15,8 @@
             <a href="/product/view/<?php echo $product->productID; ?>"><?php echo $product->name; ?></a>
 
             <p class="product-annotation"><span class="text-block"><?php echo $product->getAnnotation(30); ?></span>
-                    <span class="label label-info price pull-right">$<?php echo $product->Price; ?></span>
+                <span class="label label-info price pull-right">$<?php echo $product->Price; ?></span>
+                <?php $_addToCartLink($product->id(), $productsInCart); ?>
             </p>
         </div>
     </div>

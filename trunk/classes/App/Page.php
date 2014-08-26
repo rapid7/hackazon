@@ -4,7 +4,9 @@ namespace App;
 
 use App\Core\BaseController;
 use App\Exception\HttpException;
+use App\Model\Cart;
 use App\Model\Category as Category;
+use App\Model\Product;
 use PHPixie\Exception\PageNotFound;
 use PHPixie\ORM\Model;
 use PHPixie\View;
@@ -229,5 +231,31 @@ class Page extends BaseController {
         if ($isControllerLevel) {
             $service->goUp();
         }
+    }
+
+    /**
+     * @return Product
+     */
+    protected function getProductsInCart()
+    {
+        $cart = $this->getCart();
+        return $cart->products->find_all();
+    }
+
+    protected function getCart()
+    {
+        /** @var Cart $model */
+        $model = $this->pixie->orm->get('Cart');
+        return $model->getCart();
+    }
+
+    protected function getProductsInCartIds()
+    {
+        $items = $this->getProductsInCart()->as_array();
+        $ids = [];
+        foreach ($items as $item) {
+            $ids[] = $item->id();
+        }
+        return $ids;
     }
 }

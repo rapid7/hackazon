@@ -61,8 +61,8 @@
                     </li>
                     </li>
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-shopping-cart"></span></a>
-                        <ul class="dropdown-menu">
+                        <a class="dropdown-toggle js-cart-top-icon" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-shopping-cart"></span></a>
+                        <ul class="dropdown-menu js-cart-top-list">
                             <?php
                             $cart = $this->pixie->orm->get('Cart')->getCart();
                             $items = $this->pixie->orm->get('CartItems')->getAllItems();

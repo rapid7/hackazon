@@ -30,7 +30,8 @@ class Helper extends \PHPixie\View\Helper
         '_token' => 'token',
         '_dump' => 'dump',
         '_order_status' => 'order_status',
-        '_pager' => 'pager'
+        '_pager' => 'pager',
+        '_addToCartLink' => 'addToCartLink'
     );
 
     /**
@@ -132,6 +133,19 @@ class Helper extends \PHPixie\View\Helper
                 <li class="next <?php if ($pager->page == $pager->num_pages): ?>disabled<?php endif; ?>"><a
                         href="<?php echo $pager->url($pager->page < $pager->num_pages ? $pager->page + 1 : $pager->num_pages); ?>">&raquo;</a></li>
             </ul> <?php
+        }
+    }
+
+    public function addToCartLink($productId, $productsInCart)
+    {
+        if (!in_array($productId, $productsInCart)) { ?>
+            <a href="/cart/view" class="btn btn-primary pull-left ladda-button buy-link js-add-to-cart-shortcut"
+               data-product-id="<?php echo $productId; ?>"
+               data-style="contract" title="Add to Cart"><span class="ladda-label"><span
+                            class="glyphicon glyphicon-shopping-cart"></span></span></a><?php
+        } else {
+            ?><a href="/cart/view" class="btn btn-success btn-sm pull-left ladda-button buy-link added-to-cart" data-product-id="<?php echo $productId; ?>"
+                    data-style="contract" title="Go to Cart">Added to Cart</a> <?php
         }
     }
 } 

@@ -2,6 +2,11 @@
 
 namespace App\Model;
 
+/**
+ * Class Cart
+ * @package App\Model
+ * @property Product $products Products residing in cart.
+ */
 class Cart extends \PHPixie\ORM\Model {
 
     public $table = 'tbl_cart';
@@ -21,6 +26,15 @@ class Cart extends \PHPixie\ORM\Model {
             'model' => 'CustomerAddress',
             'key' => 'id',
             'foreignKey' => 'shipping_address_id'
+        )
+    );
+
+    protected $has_many = array(
+        'products' => array(
+            'model' => 'Product',
+            'through' => 'tbl_cart_items',
+            'foreign_key' => 'product_id',
+            'key' => 'cart_id'
         )
     );
 

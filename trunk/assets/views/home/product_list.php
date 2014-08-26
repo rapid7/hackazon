@@ -37,6 +37,7 @@ if ($perRow == 3) {
     <?php endif; ?>
                 <div class="col-xs-12 col-sm-6 <?php echo $colClasses; ?>">
                     <div class="thumbnail light product-item" data-id="<?php echo $product->id(); ?>">
+                        <?php $_addToCartLink($product->id(), $productsInCart); ?>
                         <div class="img-box">
                             <a href="/product/view/<?php echo $product->productID; ?>">
                                 <span class="label label-info price">$<?php echo $product->Price; ?></span>

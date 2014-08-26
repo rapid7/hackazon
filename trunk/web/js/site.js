@@ -413,6 +413,62 @@ $(document).ready(function () {
             nav.find('a[data-toggle="tab"]').filter('[href="' + hash + '"]').tab('show');
         });
     })();
+
+    (function () {
+        var counter = 0;
+
+        $(document).on('click', '.js-add-to-cart-shortcut', function (ev) {
+            ev.preventDefault();
+
+            var link = $(this),
+                l = link.ladda();
+
+            $.ajax('/cart/add/', {
+                data: {
+                    product_id: link.data('product-id'),
+                    shortcut: true
+                },
+                dataType: 'json',
+                timeout: 60000,
+                type: 'POST',
+                beforeSend: function () {
+                    link.attr('disabled', 'disabled');
+                    l.ladda('start');
+                },
+                complete: function () {
+                    link.removeAttr('disbled');
+                    l.ladda('stop');
+                }
+
+            }).success(function (res) {
+                link.removeClass('js-add-to-cart-shortcut btn-primary');
+                link.addClass('added-to-cart btn-success');
+                link.html('Added to Cart');
+                link.attr('title', 'Go to Cart');
+                link.blur();
+
+                if (!(res && res.newProduct && res.product)) {
+                    return;
+                }
+
+                var itemListId = 'cartTopListItem' + counter;
+                var html = '<li id="' + itemListId + '"><a href="/product/view/' + res.productId + '"><span class="pull-left"><small>'
+                    + res.item.qty + 'x</small> ' + res.product.name + '</span> &nbsp; <small class="pull-right label label-info">$'
+                    + res.product.Price + '</small></a></li>';
+
+                var list = $('.js-cart-top-list');
+                list.prepend(html);
+                var listItem = list.find('#' + itemListId);
+                $('.js-cart-top-icon').dropdown('toggle');
+                listItem.modernBlink({
+                    iterationCount: 3
+                });
+
+            });
+
+
+        });
+    })();
 });
 
 
