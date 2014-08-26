@@ -26,7 +26,11 @@ class Checkout extends \App\Page {
             $this->redirect('/checkout/order');
         }
         if ($actionStep > $lastStep) {
-            $this->redirect('/cart/view');
+            if ($this->request->is_ajax()) {
+                $this->jsonResponse(['success' => 1]);
+            } else {
+                $this->redirect('/cart/view');
+            }
         }
     }
 
@@ -127,8 +131,8 @@ class Checkout extends \App\Page {
      */
     public function action_placeOrder()
     {
-        $this->restrictActions(CartModel::STEP_ORDER);
         $this->checkCsrfToken('checkout_step4', null, false);
+        $this->restrictActions(CartModel::STEP_ORDER);
         $this->pixie->orm->get('Cart')->placeOrder();
         $this->execute = false;
     }
