@@ -86,7 +86,6 @@ class RestService
     protected function doHandleRequest($cookie = [])
     {
         $request = $this->request;
-        $request->adjustRequestContentType();
 
         $pixie = $this->pixie;
         $pixie->cookie->set_cookie_data($cookie);
@@ -111,15 +110,7 @@ class RestService
             }
         }
 
-        $data = [];
-        if ($request->method == 'POST') {
-            $data = $request->post();
-        } else if (in_array($request->method, ['PUT', 'PATCH'])) {
-            $data = $request->put();
-        }
-        $params = ['data' => $data];
-
-        $controller->run($action, $params);
+        $controller->run($action);
         $this->response = $controller->response;
     }
 

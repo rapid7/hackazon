@@ -138,8 +138,27 @@ class Request extends \PHPixie\Request
             }
 
         } else if ($contentType == 'application/xml') {
-            $xml = simplexml_load_string($this->rawRequestData());
-            if ($this->rawRequestData() && $xml === false) {
+            $requestBody = $this->rawRequestData();
+
+            // Inject XMLExternalEntity vulnerability
+            $vuln = $this->pixie->vulnService->getVulnerability('XMLExternalEntity');
+            $protected = $vuln !== true && !$vuln['enabled'];
+
+            if ($protected) {
+                libxml_disable_entity_loader(true);
+            }
+
+            try {
+                $xml = simplexml_load_string($requestBody);
+            } catch (\Exception $e) {
+                if ($protected) {
+                    throw new HttpException('Invalid XML Body.', 400, $e, 'Bad Request');
+                } else {
+                    throw $e;
+                }
+            }
+
+            if ($requestBody && $xml === false) {
                 throw new HttpException('Request data are malformed. Please check it.', 400, null, 'Bad Request');
             }
             $this->$fieldName = json_decode(json_encode($xml), true);

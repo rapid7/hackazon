@@ -31,18 +31,27 @@ class Order extends Controller
 
     public function action_post($data = null)
     {
+        if ($data === null) {
+            $data = $this->request->post();
+        }
         $data['customer_id'] = $this->user->id();
         return parent::action_post($data);
     }
 
     public function action_put($data = null)
     {
+        if ($data === null) {
+            $data = $this->request->post();
+        }
         $data['customer_id'] = $this->user->id();
         return parent::action_put($data);
     }
 
     public function action_patch($data = null)
     {
+        if ($data === null) {
+            $data = $this->request->post();
+        }
         $data['customer_id'] = $this->user->id();
         return parent::action_patch($data);
     }
