@@ -1,7 +1,7 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-md-9 col-sm-8">
+        <div class="col-md-12 col-sm-12">
             <h1 class="page-header">Shopping Cart</h1>
             <ol class="breadcrumb">
                 <li><a href="/">Home</a>

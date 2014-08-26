@@ -605,6 +605,7 @@ ul.nav li.grey a {
     -webkit-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     -moz-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow-x: hidden;
 }
 .thumbnail .category-list-product {
     height: 266px;

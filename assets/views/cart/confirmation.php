@@ -7,7 +7,11 @@
                 type:"POST",
                 dataType:"json",
                 success: function(data) {
-                    window.location.href = "/checkout/order";
+                    if (data.success) {
+                        window.location.href = "/checkout/order";
+                    } else {
+                        alert( "error" );
+                    }
                 },
                 fail: function() {
                     alert( "error" );

@@ -301,3 +301,6 @@ Without this vuln response body will be:
 {"message":"Remove excess fields: goodies","code":400}
 ```
 
+If the vulnerability is off, PHP just switches off the ability to load external dependencies in libxml, so the code 
+is fully protected from this vulnerability. 
+

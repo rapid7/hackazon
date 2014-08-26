@@ -54,6 +54,8 @@
                     $("#zip").val(data.zip);
                     $("#country_id").val(data.country_id);
                     $("#phone").val(data.phone);
+
+                    $('#billingForm').data('bootstrapValidator').resetForm();
                 },
                 fail: function() {
                     alert( "error" );
