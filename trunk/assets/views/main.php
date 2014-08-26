@@ -2,9 +2,9 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-		<title>Webscantest <?=(isset($pageTitle) ? " &mdash; " . $pageTitle : "") ?></title>
+	<title>Webscantest <?=(isset($pageTitle) ? " &mdash; " . $pageTitle : "") ?></title>
 		
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
 
@@ -73,11 +73,11 @@
                 <hr class="colorgraph">
 
                 <div class="form-group">
-                    <input type="text" maxlength="100" required name="username" id="username" class="form-control input-lg" placeholder="Username or Email" tabindex="1">
+                    <input type="text" maxlength="100" required name="username" id="username" autocomplete="off" class="form-control input-lg" placeholder="Username or Email" tabindex="1">
                 </div>
 
                 <div class="form-group">
-                    <input type="password" maxlength="100" required name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
+                    <input type="password" maxlength="100" required name="password" autocomplete="off" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
                 </div>
 
                 <hr class="colorgraph">
