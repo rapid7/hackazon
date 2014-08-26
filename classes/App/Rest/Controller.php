@@ -125,8 +125,6 @@ class Controller extends BaseController
         if ($this instanceof ErrorController) {
             return;
         }
-        $className = $this->get_real_class($this);
-        $controllerName = strtolower($className);
 
         // Create vulnerability service.
         $this->vulninjection = $this->pixie->vulninjection->service('rest');
@@ -136,12 +134,12 @@ class Controller extends BaseController
         // Switch vulnerability config to the controller level
         $this->vulninjection->goDown('rest');
 
+        $this->request->adjustRequestContentType();
+
         if ($this->modelName) {
             if (class_exists($this->pixie->app_namespace."Model\\".$this->modelName)) {
                 $this->model = $this->pixie->orm->get($this->modelName);
             }
-        }  else {
-            echo $controllerName; exit;
         }
 
         if ($this->model && $this->request->param('id')) {
@@ -453,8 +451,7 @@ class Controller extends BaseController
             $exception = new HttpException('Remove excess fields: '.implode(', ', $excessRequestFields), 400, null, 'Bad Request');
 
             // Inject XMLExternalEntity vulnerability
-            $vulnService = $this->pixie->vulnService;
-            $vuln = $vulnService->getVulnerability('XMLExternalEntity');
+            $vuln = $this->pixie->vulnService->getVulnerability('XMLExternalEntity');
 
             if ($vuln === true || $vuln['enabled']) {
                 $exception->setParameter('invalidFields', $data);
