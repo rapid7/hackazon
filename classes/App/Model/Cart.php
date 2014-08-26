@@ -13,6 +13,17 @@ class Cart extends \PHPixie\ORM\Model {
     const STEP_CONFIRM   = 4;
     const STEP_ORDER     = 5;
 
+    protected $has_one=array(
+
+        //Set the name of the relation, this defines the
+        //name of the property that you can access this relation with
+        'shippingAddress' => array(
+            'model' => 'CustomerAddress',
+            'key' => 'id',
+            'foreignKey' => 'shipping_address_id'
+        )
+    );
+
     /**
      * get current cart
      * @return Cart
@@ -110,6 +121,9 @@ class Cart extends \PHPixie\ORM\Model {
         }
     }
 
+    /**
+     * @return array|CustomerAddress
+     */
     public function getShippingAddress()
     {
         $row = $this->pixie->orm->get('CustomerAddress')->where('and', array('id', '=', $this->shipping_address_id), array('customer_id', '=', $this->pixie->auth->user()->id))->find();
@@ -119,6 +133,9 @@ class Cart extends \PHPixie\ORM\Model {
         return array();
     }
 
+    /**
+     * @return array|CustomerAddress
+     */
     public function getBillingAddress()
     {
         $row = $this->pixie->orm->get('CustomerAddress')->where('and', array('id', '=', $this->billing_address_id), array('customer_id', '=', $this->pixie->auth->user()->id))->find();

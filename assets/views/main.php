@@ -23,6 +23,7 @@
         <link href="/css/nivo-themes/light/light.css" rel="stylesheet">
         <link href="/css/bootstrapValidator.css" rel="stylesheet">
         <link href="/css/modern-business.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/ladda-themeless.min.css">
 
         <!-- Add custom CSS here -->
         <link href="/css/subcategory.css" rel="stylesheet">
@@ -30,20 +31,24 @@
         <link href="/css/sidebar.css" rel="stylesheet">
 
         <!-- JavaScript -->
+
         <script src="/js/jquery-1.10.2.js"></script>
         <script src="/js/jquery-migrate-1.2.1.js"></script>
         <script src="/js/bootstrap.js"></script>
         <script src="/js/modern-business.js"></script>
         <script src="/js/bootstrapValidator.min.js"></script>
+        <script src="/js/spin.min.js"></script>
+        <script src="/js/ladda.min.js"></script>
+        <script src="/js/ladda.jquery.min.js"></script>
         <script src="/js/jquery.inputmask.js"></script>
         <script src="/js/ekko-lightbox.js"></script>
         <script src="/js/jquery.nivo.slider.pack.js"></script>
         <script src="/js/respond.min.js"></script>
         <script src="/js/star-rating.min.js"></script>
-        <script src="/js/site.js"></script>
         <script src="/js/knockout-2.2.1.js"></script>
         <script src="/js/knockout.localStorage.js"></script>
-        <script src="/js/koExternalTemplateEngine_all.min.js"></script>         
+        <script src="/js/koExternalTemplateEngine_all.min.js"></script>
+        <script src="/js/site.js"></script>
     </head>
 
     <body>

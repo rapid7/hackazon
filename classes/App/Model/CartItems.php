@@ -8,6 +8,14 @@ class CartItems extends \PHPixie\ORM\Model {
     public $id_field = 'id';
     private $_cart;
 
+    protected $belongs_to=array(
+        'product' => array(
+            'model' => 'Product',
+            'key' => 'product_id',
+        )
+    );
+
+
     public function setCart()
     {
         $this->_cart = $this->pixie->orm->get('Cart')->getCart();
