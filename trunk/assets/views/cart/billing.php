@@ -22,6 +22,11 @@
                 }
             }
         }).on('success.form.bv', function(e) {
+            var el = $('#btn_billing'),
+                l = el.ladda();
+            el.attr('disabled', 'disabled');
+            l.ladda('start');
+
             $.ajax({
                 url:'/checkout/billing',
                 type:"POST",
@@ -31,6 +36,8 @@
                     window.location.href="/checkout/confirmation";
                 },
                 fail: function() {
+                    l.ladda('stop');
+                    el.removeAttr('disabled');
                     alert( "error" );
                 }
             });
@@ -40,6 +47,11 @@
             $("#billingForm").submit();
         });
         $(".edit-address").click(function(){
+            var el = $(this),
+                l = el.ladda();
+            el.attr('disabled', 'disabled');
+            l.ladda('start');
+
             $.ajax({
                 url:'/checkout/getAddress',
                 type:"POST",
@@ -59,26 +71,40 @@
                 },
                 fail: function() {
                     alert( "error" );
+                },
+                complete: function () {
+                    l.ladda('stop');
+                    el.removeAttr('disabled');
                 }
             });
         });
         $(".delete-address").click(function(){
-            var elem = this;
+            var el = $(this),
+                l = el.ladda();
+            el.attr('disabled', 'disabled');
+            l.ladda('start');
+
             $.ajax({
                 url:'/checkout/deleteAddress',
                 type:"POST",
                 dataType:"json",
                 data: {address_id: $(this).attr('data-id')},
                 success: function(){
-                    $(elem).parent('div').remove();
+                    $(el).parent('div').remove();
                 },
                 fail: function() {
                     alert( "error" );
+                    l.ladda('stop');
+                    el.removeAttr('disabled');
                 }
             });
         });
         $(".confirm-address").click(function(){
-            var elem = this;
+            var el = $(this),
+                l = el.ladda();
+            el.attr('disabled', 'disabled');
+            l.ladda('start');
+
             $.ajax({
                 url:'/checkout/billing',
                 type:"POST",
@@ -89,11 +115,19 @@
                 },
                 fail: function() {
                     alert( "error" );
+                },
+                complete: function () {
+                    l.ladda('stop');
+                    el.removeAttr('disabled');
                 }
             });
         });
-    });
 
+        $('#billingForm').on('change', 'input, select, textarea', function () {
+            var form = $(this).closest('form');
+            form.find('input[name="address_id"]').val('');
+        });
+    });
 </script>
 <?php include __DIR__ . '/cart_header.php'; ?>
 <div class="tab-pane active" id="step3">
@@ -106,10 +140,15 @@
             <?php echo $_($address->city, 'city')  . ' ' .  $_($address->region, 'region')  . ' ' .  $_($address->zip, 'zip') ?><br />
             <?php echo $_($address->country_id, 'country_id'); ?><br />
             <?php echo $_($address->phone, 'phone'); ?><br />
-            <button data-id="<?php echo $address->id?>" style="margin-bottom:5px;width:100%" class="btn btn-primary btn-sm confirm-address"
-                    data-token="<?php echo $this->getToken('checkout_step3'); ?>">Bill to this address</button>
-            <button data-id="<?php echo $address->id?>" style="width:48%" class="btn btn-default btn-xs edit-address">Edit</button>&nbsp;
-            <button data-id="<?php echo $address->id?>" style="width:47%" class="btn btn-default btn-xs delete-address">Delete</button>
+            <button data-id="<?php echo $address->id?>" style="margin-bottom:5px;width:100%" class="btn btn-primary btn-sm confirm-address ladda-button"
+                    data-token="<?php echo $this->getToken('checkout_step3'); ?>" data-style="expand-right"
+                    data-spinner-size="20"><span class="ladda-label">Bill to this address</span></button>
+            <button data-id="<?php echo $address->id?>" style="width:48%" class="btn btn-default btn-xs edit-address ladda-button small-button"
+                    data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"
+                    ><span class="ladda-label">Edit</span></button>&nbsp;
+            <button data-id="<?php echo $address->id?>" style="width:47%" class="btn btn-default btn-xs delete-address ladda-button small-button"
+                    data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"
+                    ><span class="ladda-label">Delete</span></button>
         </div>
     <?php endforeach;?>
     <div style="clear:both"></div>
@@ -121,66 +160,71 @@
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="fullName">Full name:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="fullName" name="fullName" required type="text">
+                            <input class="form-control" id="fullName" name="fullName" required type="text" value="<?php $_($billingAddress['full_name'], 'fullName'); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="addressLine1">Address line 1:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="addressLine1" name="addressLine1" type="text" placeholder="Street address, P.O. box, company name, c/o">
+                            <input class="form-control" required id="addressLine1" name="addressLine1" type="text" placeholder="Street address, P.O. box, company name, c/o"
+                                   value="<?php $_($billingAddress['address_line_1'], 'addressLine1'); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="addressLine2">Address line 2:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="addressLine2" name="addressLine2" type="text" placeholder="Apartment, suite, unit, building, floor, etc. ">
+                            <input class="form-control" id="addressLine2" name="addressLine2" type="text" placeholder="Apartment, suite, unit, building, floor, etc. "
+                                   value="<?php $_($billingAddress['address_line_2'], 'addressLine2'); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="city">City:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="city" name="city" type="text">
+                            <input class="form-control" required id="city" name="city" type="text" value="<?php $_($billingAddress['city'], 'city'); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="region">State/Province/Region:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="region" name="region" type="text">
+                            <input class="form-control" required id="region" name="region" type="text" value="<?php $_($billingAddress['region'], 'region'); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="zip">ZIP:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="zip" name="zip" type="text">
+                            <input class="form-control" required id="zip" name="zip" type="text" value="<?php $_($billingAddress['zip'], 'zip'); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 required control-label" for="country_id">Country:</label>
                         <div class="col-xs-8">
                             <select class="form-control" id="country_id" data-validation="required" name="country_id">
-                                <option value="RU">Russia</option>
-                                <option value="EN">United States</option>
+                                <option value="RU" <?php echo $billingAddress['country_id'] == 'RU' ? 'selected' : ''; ?>>Russia</option>
+                                <option value="EN" <?php echo $billingAddress['country_id'] == 'EN' ? 'selected' : ''; ?>>United States</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" data-validation="required" for="phone">Phone number:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="phone" name="phone" type="text">
+                            <input class="form-control" id="phone" name="phone" type="text" value="<?php $_($billingAddress['phone'], 'phone'); ?>">
                         </div>
                     </div>
                 </fieldset>
                 <?php $_token('checkout_step3', false); ?>
+                <input type="hidden" id="address_id" name="address_id" value="<?php $_($billingAddress['id'], 'address_id'); ?>"/>
             </form>
         </div>
     </div>
 
     <div class="row">
+
         <div class="col-xs-6">
             <button class="btn btn-default" onclick="window.location.href='/checkout/shipping'"><span class="glyphicon glyphicon-chevron-left"></span> Shipping step</button>
         </div>
         <div class="col-xs-6">
-            <button id="btn_billing" class="btn btn-primary pull-right" data-target="#step3" data-toggle="tab">Bill to this address <span class="glyphicon glyphicon-chevron-right icon-white"></span></button>
+            <button id="btn_billing" class="btn btn-primary pull-right ladda-button" data-target="#step3" data-toggle="tab"
+                    data-style="expand-left"><span class="ladda-label">Bill to this address <span class="glyphicon glyphicon-chevron-right icon-white"></span></span></button>
         </div>
     </div>
 </div>

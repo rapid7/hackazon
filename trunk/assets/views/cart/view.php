@@ -28,6 +28,11 @@
 
     $(function () {
         $("#empty_cart").click(function(){
+            var el = $(this),
+                l = el.ladda();
+            el.attr('disabled', 'disabled');
+            l.ladda('start');
+
             $.ajax({
                 url:'/cart/empty',
                 type:"POST",
@@ -37,10 +42,16 @@
                     $("#items_qty").html(0);
                     $("#total_price").html(0);
                     $("#checkout-alert-info").empty().append('<div class="alert alert-info"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Your cart has been deleted</strong></div>');
-                    setTimeout('$(".alert-info").alert("close");', 3000);
+                    l.ladda('stop');
+                    setTimeout(function () {
+                        $(".alert-info").alert("close");
+                        location.reload();
+                    }, 3000);
                 },
                 fail: function() {
                     alert( "error" );
+                    l.ladda('stop');
+                    el.removeAttr('disabled');
                 }
             });
         });
@@ -59,11 +70,17 @@
             update_qty($(this).attr('data-id'), qty);
         });
         $("#step1_next").click(function() {
+            var el = $(this),
+                l = el.ladda();
+            el.attr('disabled', 'disabled');
+            l.ladda('start');
+
             $.ajax({
                 url:'/cart/setMethods',
                 type:"POST",
                 data: $("#methods").serialize(),
                 dataType:"json",
+                timeout: 10000,
                 success: function(data) {
                     <?php if (is_null($this->pixie->auth->user())): ?>
                     window.location.href = "<?php echo '/user/login?return_url=' . rawurlencode('/checkout/shipping');?>"
@@ -73,6 +90,8 @@
                 },
                 fail: function() {
                     alert( "error" );
+                    l.ladda('stop');
+                    el.removeAttr('disabled');
                 }
             });
         })
@@ -97,7 +116,7 @@ if (count($items) == 0) :?>
         </div>
 
     </div>
-
+    </div>
 <?php return; endif;?>
 <?php include __DIR__ . '/cart_header.php'; ?>
     <div class="tab-pane active" id="step1">
@@ -206,10 +225,12 @@ if (count($items) == 0) :?>
                 <a href="/" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Continue shopping</a>
             </div>
             <div class="col-xs-4">
-                <button class="btn btn-default" id="empty_cart"><span class="glyphicon glyphicon-trash"></span> Empty cart</button>
+                <button class="btn btn-default ladda-button" id="empty_cart" data-style="expand-right" data-spinner-color="#999999"
+                    ><span class="ladda-label"><span class="glyphicon glyphicon-trash"></span> Empty cart</span></button>
             </div>
             <div class="col-xs-4">
-                <button class="btn btn-primary pull-right" data-target="#step2" data-toggle="tab" id="step1_next">Next <span class="glyphicon glyphicon-chevron-right"></span></button>
+                <button class="btn btn-primary pull-right ladda-button" data-target="#step2" data-toggle="tab" id="step1_next"
+                        data-style="expand-left"><span class="ladda-label">Next <span class="glyphicon glyphicon-chevron-right"></span></span></button>
             </div>
         </div>
     </div>

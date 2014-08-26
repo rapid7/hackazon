@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 use App\Model\Cart as CartModel;
+use App\Model\Cart;
 
 class Checkout extends \App\Page {
 
@@ -42,11 +43,14 @@ class Checkout extends \App\Page {
     public function action_shipping() {
         $this->restrictActions(CartModel::STEP_SHIPPING);
         $customerAddresses = $this->pixie->orm->get('CustomerAddress')->getAll();
+        /** @var Cart $cartModel */
         $cartModel = $this->pixie->orm->get('Cart');
         $cart = $cartModel->getCart();
+
         if (!$cart->customer_id) {
             $cartModel->setCustomer();
         }
+
         if ($this->request->is_ajax()) {
             $this->checkCsrfToken('checkout_step2', null, false);
 
@@ -61,6 +65,8 @@ class Checkout extends \App\Page {
             $this->view->subview = 'cart/shipping';
             $this->view->tab = 'shipping';//active tab
             $this->view->step = $this->pixie->orm->get('Cart')->getStepLabel();//last step
+            $currentAddress = $cart->getShippingAddress() ;
+            $this->view->shippingAddress = is_array($currentAddress) ? [] : $currentAddress->as_array();
             $this->view->customerAddresses = $customerAddresses;
         }
     }
@@ -85,9 +91,15 @@ class Checkout extends \App\Page {
             $this->execute = false;
 
         } else {
+            /** @var Cart $cartModel */
+            $cartModel = $this->pixie->orm->get('Cart');
+            $cart = $cartModel->getCart();
+
             $this->view->subview = 'cart/billing';
             $this->view->tab = 'billing';
             $this->view->step = $this->pixie->orm->get('Cart')->getStepLabel();//last step
+            $currentAddress = $cart->getBillingAddress();
+            $this->view->billingAddress = is_array($currentAddress) ? [] : $currentAddress->as_array();
             $this->view->customerAddresses = $customerAddresses;
         }
     }

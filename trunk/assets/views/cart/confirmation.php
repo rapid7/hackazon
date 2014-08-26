@@ -1,9 +1,14 @@
 <script>
     $(function () {
         $("#place_order").click(function(){
+            var el = $(this),
+                l = el.ladda();
+            el.attr('disabled', 'disabled');
+            l.ladda('start');
+
             $.ajax({
                 url:'/checkout/placeOrder',
-                data: { _csrf_checkout_step4: $(this).data('token') },
+                data: { _csrf_checkout_step4: el.data('token') },
                 type:"POST",
                 dataType:"json",
                 success: function(data) {
@@ -14,6 +19,8 @@
                     }
                 },
                 fail: function() {
+                    l.ladda('start');
+                    el.removeAttr('disabled');
                     alert( "error" );
                 }
             });
@@ -22,7 +29,7 @@
 </script>
 <?php include __DIR__ . '/cart_header.php'; ?>
 
-<div class="tab-pane active" id="step4">
+<div class="tab-pane active checkout-page" id="step4">
     <div class="row">
 
         <div class="col-xs-12 col-sm-5">
@@ -66,10 +73,10 @@
         </div>
 
         <div class="col-xs-12 col-sm-7">
-            <table class="table table-bordered">
+            <table class="table table-bordered cart-overview">
                 <thead>
                 <tr>
-                    <th>Overview</th>
+                    <th colspan="2">Overview</th>
                     <th width="50">count</th>
                     <th width="70">total</th>
                 </tr>
@@ -78,22 +85,25 @@
                 <?php
                 $items = $cart->getCartItemsModel()->getAllItems();
                 foreach ($items as $item) :?>
+                    <?php $item->product->find(); ?>
                 <tr>
+                    <td class="product-image"><a href="/product/view/<?php echo $item->product->id();?>"><img
+                                src="/products_pictures/<?php $_($item->product->picture); ?>" alt=""/></a></td>
                     <td><?php echo $item->name ?></td>
                     <td align="center"><?php echo $item->qty ?></td>
-                    <td align="right">$ <?php echo $item->price * $item->qty ?>,-</td>
+                    <td align="right">$<?php echo $item->price * $item->qty ?></td>
                 </tr>
                 <?php endforeach;?>
                 <tr>
-                    <td>Shipping: <?php echo $cart->shipping_method;?></td>
-                    <td align="right" colspan="2">$ 0,-</td>
+                    <td colspan="2">Shipping: <?php echo $cart->shipping_method;?></td>
+                    <td align="right" colspan="2">$0</td>
                 </tr>
                 <tr>
-                    <td>Payment: <?php echo $cart->payment_method;?></td>
-                    <td align="right" colspan="2">$ 0,-</td>
+                    <td colspan="2">Payment: <?php echo $cart->payment_method;?></td>
+                    <td align="right" colspan="2">$0</td>
                 </tr>
                 <tr>
-                    <td align="right" colspan="3"><strong>$ <?php echo $cart->getCartItemsModel()->getItemsTotal();?>,-</strong></td>
+                    <td align="right" colspan="4"><strong>$<?php echo $cart->getCartItemsModel()->getItemsTotal();?></strong></td>
                 </tr>
                 </tbody>
             </table>
@@ -106,8 +116,9 @@
             <button class="btn btn-default" data-target="#step2" data-toggle="tab" onclick="window.location.href='/checkout/billing'"><span class="glyphicon glyphicon-chevron-left"></span> billing step</button>
         </div>
         <div class="col-xs-6">
-            <button class="btn btn-primary pull-right" data-target="#step4" data-toggle="tab" id="place_order"
-                    data-token="<?php echo $this->getToken('checkout_step4'); ?>">Place Order <span class="glyphicon glyphicon-chevron-right"></span></button>
+            <button class="btn btn-primary pull-right ladda-button" data-target="#step4" data-toggle="tab" id="place_order"
+                    data-token="<?php echo $this->getToken('checkout_step4'); ?>" data-style="expand-left"
+                    >Place Order <span class="glyphicon glyphicon-chevron-right"></span></button>
         </div>
     </div>
 
