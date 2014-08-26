@@ -50,8 +50,9 @@ class Pixie extends \PHPixie\Pixie {
         'orm' => '\PHPixie\ORM',
         'auth' => '\PHPixie\Auth',
         'vulninjection' => '\VulnModule\VulnInjection',
-        'email' => '\PHPixie\Email',
-        'paginate' => '\PHPixie\Paginate',
+		'email' => '\PHPixie\Email',
+		'paginate' => '\PHPixie\Paginate',
+		'paginateDB' => '\App\Paginate\Paginate'
     );
 
     /**
