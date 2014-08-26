@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-class CartItems extends \PHPixie\ORM\Model {
+class CartItems extends BaseModel {
 
     public $table = 'tbl_cart_items';
     public $id_field = 'id';
@@ -33,6 +33,7 @@ class CartItems extends \PHPixie\ORM\Model {
      * Create cart item
      * @param int $productId
      * @param int $qty
+     * @return array
      */
     public function addItems($productId, $qty)
     {
@@ -43,6 +44,8 @@ class CartItems extends \PHPixie\ORM\Model {
                 array('product_id', '=', $productId),
                 array('cart_id', '=', $this->getCart()->id)
             ))->find();
+
+        $item = $itemExist;
         if ($itemExist->loaded()) {//update existed
             $itemExist->qty += $qty;
             $itemExist->save();
@@ -55,11 +58,16 @@ class CartItems extends \PHPixie\ORM\Model {
             $this->name= $product->name;
             $this->save();
             $this->getCart()->items_count += 1;
+            $item = $this;
         }
         $this->getCart()->total_price += $product->Price * $qty;
         $this->getCart()->items_qty += $qty;
         $this->getCart()->save();
         $this->pixie->session->flash('added_product_name', $product->name);
+        return [
+            'item' => $item,
+            'product' => $product
+        ];
     }
 
     public function getAllItems()

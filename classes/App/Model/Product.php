@@ -19,7 +19,7 @@ use PHPixie\ORM;
  * @property Pixie pixie
  * @package App\Model
  */
-class Product extends \PHPixie\ORM\Model {
+class Product extends BaseModel {
 
     public $table = 'tbl_products';
     public $id_field = 'productID';

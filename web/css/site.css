@@ -335,6 +335,8 @@ form.signin .error {
     list-style:none;
 }
 
+.product-list-inline-small .buy-link,
+.product-list .buy-link,
 .product-list-inline-small .price {
     font-size:125%;
     padding:5px 10px 5px 10px;
@@ -718,4 +720,26 @@ ul.nav li.grey a {
 
 .account-page .latest-orders tbody th {
     border-top-color: transparent;
+}
+
+.product-list-inline-large .buy-link,
+.product-list-inline-small .buy-link {
+    color: #fff;
+    cursor: pointer;
+    /*height: 32px;*/
+    /*width: 46px;*/
+    font-size: 12px;
+    padding: 5px 10px;
+    width: auto;
+}
+
+.product-list-inline-large .buy-link.ladda-button[data-style="contract"][data-loading],
+.product-list-inline-small .buy-link.ladda-button[data-style="contract"][data-loading] {
+    width: 32px;
+}
+
+.product-list-inline-large .buy-link {
+    bottom: 60px;
+    right: 20px;
+    position: absolute;
 }

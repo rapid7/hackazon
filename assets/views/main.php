@@ -38,6 +38,7 @@
         <script src="/js/modern-business.js"></script>
         <script src="/js/bootstrapValidator.min.js"></script>
         <script src="/js/spin.min.js"></script>
+        <script src="/js/jquery.modern-blink.js"></script>
         <script src="/js/ladda.min.js"></script>
         <script src="/js/ladda.jquery.min.js"></script>
         <script src="/js/jquery.inputmask.js"></script>

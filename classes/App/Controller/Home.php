@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\Cart;
 use App\Model\Product as Product;
 use \App\Model\Category as Category;
 use App\Model\Review;
@@ -60,7 +61,7 @@ class Home extends \App\Page {
         $this->view->special_offers = $special_offers->getRandomOffers($specialOffersCount);
         $this->view->selectedReviews = $review->getRandomReviews($this->reviewsCount);
         $this->view->otherCustomersProducts = $product->getRandomProducts($otherCustomerProductCount);
-
+        $this->view->productsInCart = $this->getProductsInCartIds();
 
         $this->view->productSections = array(
             'related_to_viewed' => array(
@@ -260,5 +261,4 @@ class Home extends \App\Page {
     public function setTopViewedCount($topViewedCount) {
         $this->topViewedCount = $topViewedCount;
     }
-
 }
