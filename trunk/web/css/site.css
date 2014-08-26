@@ -1,3 +1,34 @@
+/* STRUCTURE */
+/* HEADER */
+.hw-header {
+}
+.hw-navbar {
+    background-color: #eee;
+    border-bottom: 1px solid  #cccccc;
+}
+.hw-navbar-brand {
+    font-family: Ubuntu;
+}
+    .hw-navbar-brand span {
+        font-size: 42px;
+        color: #ca4541;
+        font-weight: 500;
+    }
+    .hw-navbar-brand em {
+        font-size: 22px;
+        color: #1688b0;
+        display: block;
+    }
+    .hw-navbar li.hw-login-item {
+        white-space: nowrap;
+        margin-left: 40px;
+    }
+    .hw-navbar a.hw-logout-link {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
+
+/*--------------------- NEED TO REVISE ----------------------*/
 .col-xs-5ths,
 .col-sm-5ths,
 .col-md-5ths,
@@ -39,7 +70,6 @@
     right: 10px;
     color:white;
 }
-
 #loginuser {
     float: right;
     height: 30px;
@@ -47,7 +77,6 @@
     color: #fff;
     cursor: pointer;
 }
-
 #loginusericon {
     /*float: right;*/
     margin-left: 10px;
@@ -115,18 +144,15 @@ form.signin .textbox label {
     display: block;
 
 }
-
 form.signin .textbox span {
     display: block;
 }
-
 form.signin p, form.signin span {
     color: #999;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 18px;
 }
-
 form.signin .textbox input {
     background: #666666;
     border-bottom: 1px solid #333;
@@ -141,7 +167,6 @@ form.signin .textbox input {
     padding: 6px 6px 4px;
     width: 200px;
 }
-
 
 
 .button {
@@ -194,7 +219,6 @@ form.signin .error {
 .home-top-product-section .thumbnail {
     padding: 4px;
 }
-
 .home-top-product-section .thumbnail .img-box {
     height: 220px;
     width: 100%;
@@ -203,7 +227,6 @@ form.signin .error {
     overflow: hidden;
     transition: all 0.2s ease-in-out 0s;
 }
-
 .home-top-product-section .thumbnail .img-box img {
     max-width: 100%;
     width: 100%;
@@ -334,7 +357,6 @@ form.signin .error {
 .product-list-inline-small li {
     list-style:none;
 }
-
 .product-list-inline-small .buy-link,
 .product-list .buy-link,
 .product-list-inline-small .price {

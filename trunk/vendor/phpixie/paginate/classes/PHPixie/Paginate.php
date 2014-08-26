@@ -59,19 +59,4 @@ class Paginate {
 	public function orm($model, $page, $page_size, $first_page_url = null) {
 		return new \PHPixie\Paginate\Pager\ORM($this->pixie, $model, $page, $page_size, $first_page_url);
 	}
-	/**
-	 * Creates a pager for an ORM model
-	 *
-	 * You can optionally manually define a URL to be used
-	 * for the first page instead of using a generated one.
-	 *
-	 * @param \PHPixie\ORM\Model $model ORM Model to paginate
-	 * @pager integer $page Current page
-	 * @pager integer $page_size Number of items per page
-	 * @pager string $first_page_url URL of the first page
-	 * @return \PHPixie\Paginate\Pager\ORM ORM Pager
-	 */
-	public function db($model, $page, $page_size, $first_page_url = null) {
-		return new \PHPixie\Paginate\Pager\DB($this->pixie, $model, $page, $page_size, $first_page_url);
-	}
 }

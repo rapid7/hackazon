@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Page;
 use App\SearchFilters\FilterFabric;
 use App\Model\Product as Product;
+use App\Paginate;
 
 class Search extends Page {
 	public function action_index() {
@@ -55,20 +56,16 @@ class Search extends Page {
 				->join('tbl_product_options_values',array('tbl_product_options_values.productID','tbl_products.productID'),'left')
 				->where("tbl_product_options_values.variantID", $quality);
 		}
-		
+		$pager = $this->pixie->paginateDB->db($this->_products, $current_page, 12);
 
-		$pager = $this->pixie->paginate->db($this->_products, $current_page, 12);
 		$pager->set_url_callback(function($page){
 			$catId = $this->request->get("id");
 			$name = $this->request->get("searchString");
 			$brand = $this->request->get('brands');
 			$price = $this->request->get('price');
 			$quality = $this->request->get('quality');
-
-				return "/search/page-$page?id=$catId&searchString=$name&brands=$brands&price=$price&quality=$quality";
+			return "/search/page-$page?id=$catId&searchString=$name&brands=$brands&price=$price&quality=$quality";
 		});
-		
- 
 		
 		//$pager->set_url_pattern("/page-#page#");
 		

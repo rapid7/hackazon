@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
 	<title>Webscantest <?=(isset($pageTitle) ? " &mdash; " . $pageTitle : "") ?></title>
-		
+
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
@@ -13,6 +13,7 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=McLaren">
+		<link href='//fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
         <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
         <!-- Libraries -->
@@ -31,7 +32,6 @@
         <link href="/css/sidebar.css" rel="stylesheet">
 
         <!-- JavaScript -->
-
         <script src="/js/jquery-1.10.2.js"></script>
         <script src="/js/jquery-migrate-1.2.1.js"></script>
         <script src="/js/bootstrap.js"></script>
@@ -84,12 +84,11 @@
                 <hr class="colorgraph">
 
                 <div class="row">
-                    <div class="col-xs-6 col-md-6"><button id="loginbtn"  type="submit" class="btn btn-success btn-block btn-lg">Sign In</button></div>
+                    <div class="col-xs-6 col-md-6"><button id="loginbtn" type="submit" class="btn btn-success btn-block btn-lg">Sign In</button></div>
                     <div class="col-xs-6 col-md-6">
                         <div>
                             <span class="login-social-span">Or login via</span>
                             <ul class="list-unstyled list-inline list-social-icons">
-
                                 <li class="tooltip-social facebook-link"><a href="/facebook" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-3x"></i></a></li>
                                 <li class="tooltip-social twitter-link"><a href="/twitter" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-3x"></i></a></li>
                             </ul>
