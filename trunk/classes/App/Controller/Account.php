@@ -45,7 +45,7 @@ class Account extends \App\Page {
         } else { // List orders
             $page = $this->request->get('page', 1);
             /** @var ORMPager $ordersPager */
-            $ordersPager = $orderModel->getMyOrdersPager($page, 5);
+            $ordersPager = $orderModel->order_by('created_at', 'DESC')->getMyOrdersPager($page, 5);
             $myOrders = $ordersPager->current_items()->as_array();
             $this->view->pager = $ordersPager;
             $this->view->myOrders = $myOrders;
