@@ -15,10 +15,4 @@ return array(
             'db_field' => 'contactMessages.message'
         ]
     ],
-
-    'vulnerabilities' => [
-        'sql' => [
-            'blind' => false
-        ],
-    ]
 );

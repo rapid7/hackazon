@@ -14,13 +14,9 @@ return array(
 //        ],
         'searchString' => ['xss']
     ],
-
     'vulnerabilities' => [
-        'sql' => [
+        'sql' => [ 
             'blind' => true
         ],
-        'xss' => [
-            'stored' => true
-        ]
     ]
 );
