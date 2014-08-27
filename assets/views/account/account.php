@@ -21,6 +21,10 @@
         <div class="row">
 
             <div class="col-lg-12">
+                <?php if ($success = $this->pixie->session->flash('success')): ?>
+                    <div class="alert alert-success" role="alert"><?php echo $success; ?></div>
+                <?php endif; ?>
+
                 <ul id="myTab" class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="#my-orders" data-toggle="tab">My Latest Orders</a></li>
                     <li><a href="#profile" data-toggle="tab">Profile</a></li>

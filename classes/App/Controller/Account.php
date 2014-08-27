@@ -98,7 +98,7 @@ class Account extends \App\Page {
     public function action_edit_profile()
     {
         $user = $this->getUser();
-        $fields = ['username', 'password', 'first_name', 'last_name', 'user_phone', 'email'];
+        $fields = ['first_name', 'last_name', 'user_phone']; //, 'email', 'username', 'password', ];
         $errors = [];
         $this->view->success = false;
 
@@ -113,39 +113,39 @@ class Account extends \App\Page {
                 }
             }
 
-            if (!$data['username']) {
-                $errors[] = 'Please enter username.';
-
-            } else {
-                /** @var User $checkUser */
-                $checkUser = $this->pixie->orm->get('User')->where('username', $data['username'])->find_all()->current();
-                if ($checkUser->loaded() && $checkUser->id() != $user->id()) {
-                    $errors[] = 'Username you entered is already in use. Please enter another one.';
-                }
-            }
-
-            if (!$data['email']) {
-                $errors[] = 'Please enter email.';
-
-            } else {
-                /** @var User $checkUser */
-                $checkUser = $this->pixie->orm->get('User')->where('email', $data['email'])->find_all()->current();
-                if ($checkUser->loaded() && $checkUser->id() != $user->id()) {
-                    $errors[] = 'Email you entered is already in use. Please enter another one.';
-                }
-            }
-
-            if (!$data['password'] && !$data['password_confirmation']) {
-                unset($data['password']);
-
-            } else {
-                if ($data['password'] != $data['password_confirmation']) {
-                    $errors[] = 'Passwords must match.';
-
-                } else {
-                    $data['password'] = $this->pixie->auth->provider('password')->hash_password($data['password']);
-                }
-            }
+//            if (!$data['username']) {
+//                $errors[] = 'Please enter username.';
+//
+//            } else {
+//                /** @var User $checkUser */
+//                $checkUser = $this->pixie->orm->get('User')->where('username', $data['username'])->find_all()->current();
+//                if ($checkUser->loaded() && $checkUser->id() != $user->id()) {
+//                    $errors[] = 'Username you entered is already in use. Please enter another one.';
+//                }
+//            }
+//
+//            if (!$data['email']) {
+//                $errors[] = 'Please enter email.';
+//
+//            } else {
+//                /** @var User $checkUser */
+//                $checkUser = $this->pixie->orm->get('User')->where('email', $data['email'])->find_all()->current();
+//                if ($checkUser->loaded() && $checkUser->id() != $user->id()) {
+//                    $errors[] = 'Email you entered is already in use. Please enter another one.';
+//                }
+//            }
+//
+//            if (!$data['password'] && !$data['password_confirmation']) {
+//                unset($data['password']);
+//
+//            } else {
+//                if ($data['password'] != $data['password_confirmation']) {
+//                    $errors[] = 'Passwords must match.';
+//
+//                } else {
+//                    $data['password'] = $this->pixie->auth->provider('password')->hash_password($data['password']);
+//                }
+//            }
 
             if (!count($errors)) {
                 $user->values($data);
@@ -166,8 +166,8 @@ class Account extends \App\Page {
 
         } else {
             $data = $user->getFields($fields);
-            $data['password'] = '';
-            $data['password_confirmation'] = '';
+//            $data['password'] = '';
+//            $data['password_confirmation'] = '';
         }
 
         foreach ($data as $key => $value) {
