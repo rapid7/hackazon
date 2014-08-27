@@ -28,6 +28,34 @@
         padding-bottom: 10px !important;
     }
 
+.well.well-small {
+	padding: 10px;
+}
+.well.well-small ul.nav-list {
+	background-color:#ffffff;
+	border-radius: 2px;
+	padding:14px;
+}
+.well.well-small .nav.nav-list > li > a {
+	padding:5px 10px !important;
+	margin:0 -10px;
+}
+.well.well-small .nav.nav-list .nav-header {
+	font-weight:bold;
+	padding:0 0 10px 0 !important;
+	margin-bottom:10px;
+	border-bottom:1px solid #e3e3e3;
+}
+.well.well-small .nav-list span.glyphicon {
+	margin-right:10px;
+	color:#fff;
+}
+
+.well.well-small .nav-list .active span.glyphicon {
+	margin-right:10px;
+	color:#428bca;
+}
+
 /*--------------------- NEED TO REVISE ----------------------*/
 .col-xs-5ths,
 .col-sm-5ths,

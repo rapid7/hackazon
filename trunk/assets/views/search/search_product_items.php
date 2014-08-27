@@ -12,19 +12,28 @@
 				}
 			}
 		}
-        $("#filter-block input[data-filter=brands]").on("change", function(e) {
-            queryParameters['brands'] = $(this).val();
-			console.log();
+        $("#filter-block [data-filter=brands]").on("click", function(e) {
+            queryParameters['brands'] = $(this).find("input[type=hidden]").val();
+			if($(this).parent().hasClass("active")) {
+				queryParameters['brands'] = "";
+			}
+            location.search = $.param(queryParameters);
+			e.preventDefault();
+        });
+
+        $("#filter-block [data-filter=price]").on("click", function(e) {
+            queryParameters['price'] = $(this).find("input[type=hidden]").val();
+			if($(this).parent().hasClass("active")) {
+				queryParameters['price'] = "";
+			}
             location.search = $.param(queryParameters);
         });
 
-        $("#filter-block input[data-filter=price]").on("change", function(e) {
-            queryParameters['price'] = $(this).val();
-            location.search = $.param(queryParameters);
-        });
-
-        $("#filter-block input[data-filter=quality]").on("change", function(e) {
-            queryParameters['quality'] = $(this).val();
+        $("#filter-block [data-filter=quality]").on("click", function(e) {
+            queryParameters['quality'] = $(this).find("input[type=hidden]").val();
+			if($(this).parent().hasClass("active")) {
+				queryParameters['quality'] = "";
+			}
             location.search = $.param(queryParameters);
         });
 		$("#filter-block input[type=reset]").on("click", function(e) {
@@ -44,58 +53,61 @@
             <div class="col-xs-12">
                 <div class="well well-small" id="filter-block">
                     <form action="/search" name="filter-block">
-                        <legend>Brands</legend>
-                        <?php
-                        foreach ($filterFabric->getFilter('Brand')->getVariants() as $id => $name) {
-                            //$isChecked = in_array($id, $filterFabric->getFilter('brandFilter')->getValue()) ? 'checked' : '';
-                        	$isChecked = $brand == $id ? 'checked' : '';
-                            ?>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" data-type="filter"
-                                           name="<?= $filterFabric->getFilter('Brand')->getFieldName() ?>[]"
-                                           value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param" data-filter="brands">
-                                           <?= $name ?>
-                                </label>
-                            </div>
-                            <?php
-                        }
-                        ?>
-                        <hr />
-                        <legend>Price</legend>
-                        <?php
-                        foreach ($filterFabric->getFilter('Price')->getVariants() as $id => $name) {
-                            //$isChecked = $filterFabric->getFilter('priceFilter')->getValue() == $id ? 'checked' : '';
-                        	$isChecked = $price == $id ? 'checked' : '';
-                            $elemId = 'price-' . $id;
-                            ?>
-                            <div class="radio">
-                                <label for="<?= $elemId ?>">
-                                    <input type="radio" name="<?= $filterFabric->getFilter('Price')->getFieldName() ?>" id="<?= $elemId ?>" value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param"  data-filter="price" />
-                                    <?= $filterFabric->getFilter('Price')->getLabel($id) ?>
-                                </label>
-                            </div>
-                            <?php
-                        }
-                        ?>
-                        <hr />
-                        <legend>Quality</legend>
-                        <?php
-                        foreach ($filterFabric->getFilter('Quality')->getVariants() as $id => $name) {
-                            //$isChecked = $filterFabric->getFilter('qualityFilter')->getValue() == $id ? 'checked' : '';
-                        	$isChecked = $quality == $id ? 'checked' : '';
-                            $elemId = 'quality-' . $id;
-                            ?>
-                            <div class="radio">
-                                <label for="<?= $elemId ?>">
-                                    <input type="radio" name="<?= $filterFabric->getFilter('Quality')->getFieldName() ?>" id="<?= $elemId ?>" value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param"  data-filter="quality" />
-                                    <?= $name ?>
-                                </label>
-                            </div>
-                            <?php
-                        }
-                        ?>
-						<input type="reset" value="Reset" />
+						<ul class="nav nav-list">
+							<li class="nav-header">Brands</li>
+							<?php
+							foreach ($filterFabric->getFilter('Brand')->getVariants() as $id => $name) {
+								//$isChecked = in_array($id, $filterFabric->getFilter('brandFilter')->getValue()) ? 'checked' : '';
+                        		$isChecked = $brand == $id ? 'active' : '';
+								?>
+								<li class="<?=$isChecked?>">
+									<a href="#" data-filter="brands">
+										<span class="glyphicon glyphicon-ok"></span>&nbsp;<?= $name ?>
+										<input type="hidden" data-type="filter" name="<?= $filterFabric->getFilter('Brand')->getFieldName() ?>[]" value="<?= $id ?>" data-type="filter-param">
+									</a>
+								</li>
+								<?php
+							}
+							?>
+							<hr>
+							<li class="nav-header">Price</li>
+							<?php
+							foreach ($filterFabric->getFilter('Price')->getVariants() as $id => $name) {
+								//$isChecked = $filterFabric->getFilter('priceFilter')->getValue() == $id ? 'checked' : '';
+                        		$isChecked = $price == $id ? 'active' : '';
+								$elemId = 'price-' . $id;
+								?>
+								<li class="<?=$isChecked?>">
+									<a href="#" data-filter="price">
+										<span class="glyphicon glyphicon-ok"></span>&nbsp;<?= $filterFabric->getFilter('Price')->getLabel($id) ?>
+										<input type="hidden" name="<?= $filterFabric->getFilter('Price')->getFieldName() ?>" id="<?= $elemId ?>" value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param"   />
+									</a>
+								</li>
+								<?php
+							}
+							?>
+							<hr>
+							<li class="nav-header">Quality</li>
+							<?php
+							foreach ($filterFabric->getFilter('Quality')->getVariants() as $id => $name) {
+								//$isChecked = $filterFabric->getFilter('qualityFilter')->getValue() == $id ? 'checked' : '';
+                        		$isChecked = $quality == $id ? 'active' : '';
+								$elemId = 'quality-' . $id;
+								?>
+								<li class="<?=$isChecked?>">
+									<a href="#" data-filter="quality">
+										<span class="glyphicon glyphicon-ok"></span>&nbsp;<?= $name ?>
+										<input type="hidden" name="<?= $filterFabric->getFilter('Quality')->getFieldName() ?>" id="<?= $elemId ?>" value="<?= $id ?>" <?= $isChecked ?> data-type="filter-param"  />
+									</a>
+								</li>
+								<?php
+							}
+							?>
+						</ul>
+						<br>
+						<div class="clearfix">
+						<input type="reset" value="Reset" class="btn btn-warning pull-right" />
+						</div>
                     </form>
                 </div>
             </div>
