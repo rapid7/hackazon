@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
-                        <input type="text" maxlength="100" required name="username" class="form-control input-lg" id="username" placeholder="Username or Email" value="<?= (isset($username) ? $username : null) ?>">
+                        <input type="text" maxlength="100" required name="username" class="form-control input-lg" id="username" placeholder="Username or Email" value="<?= (isset($username) ? $_($username, 'username') : null) ?>">
                     </div>
                 </div>
             </div>
