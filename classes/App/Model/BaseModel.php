@@ -147,4 +147,22 @@ class BaseModel extends Model
 
         return $result;
     }
+
+    public function setIsLoaded($isLoaded)
+    {
+        $this->_loaded = (bool) $isLoaded;
+    }
+
+    public function refresh()
+    {
+        if (!$this->loaded()) {
+            return $this;
+        }
+
+        $row = (array) $this->conn->query('select')
+            ->table($this->table)
+            ->where($this->id_field, $this->id())->execute()->current();
+        $this->values($row, true);
+        return $this;
+    }
 } 

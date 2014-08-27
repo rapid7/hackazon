@@ -117,15 +117,11 @@ class Home extends \App\Page {
                 . "WHERE tc.CONSTRAINT_SCHEMA=(SELECT DATABASE()) AND tc.CONSTRAINT_TYPE='FOREIGN KEY'";
 
         $foreignKeys = $this->pixie->db->get()->execute($sql);
-        $sqls = array();
+
         foreach ($foreignKeys as $fk) {
             if ($fk != "") {
-                $sqls[] = "ALTER TABLE `{$fk->table}` DROP FOREIGN KEY `{$fk->fk}`;";
+                $conn->exec("ALTER TABLE `{$fk->table}` DROP FOREIGN KEY `{$fk->fk}`;");
             }
-        }
-
-        if (count($sqls)) {
-            $conn->exec(implode("\n", $sqls));
         }
 
         //Remove tables
@@ -169,7 +165,11 @@ class Home extends \App\Page {
                 $filePath = $fileInfo->getRealPath();
 
                 if ($ext == 'sql') {
-                    $res = $conn->exec(file_get_contents($filePath));
+                    $sqlContent = file_get_contents($filePath);
+                    if (strpos($sqlContent, '# IGNORE') !== 0) {
+                        $res = $conn->exec($sqlContent);
+                    }
+
                 } else if ($ext == 'php') {
                     $runner = function () use ($filePath, $pixie, $db) {
                                 include $filePath;

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Model;
+use PHPixie\ORM\Extension\Nested;
 
 /**
  * Class Category
@@ -22,9 +23,10 @@ namespace App\Model;
  * @property int hidden
  * @property Category parentCategory
  * @property Category children
+ * @property Nested $nested
  * @package App\Model
  */
-class Category extends \PHPixie\ORM\Model {
+class Category extends BaseModel {
 
     public $table = 'tbl_categories';
     public $id_field = 'categoryID';
