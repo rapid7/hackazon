@@ -1,41 +1,43 @@
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('1', 'Automobiles', '0', '7', 'The world famous automobiles', 'C1_jaguar.jpg', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('2', 'Cellular', '0', '25', 'Callular phones and accessories', 'C2_cphone.jpg', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('3', 'Sport', '0', '5', '', 'C3_RBaccess.jpg', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('4', 'Audio / Video', '0', '25', 'We sell DVD, home theatres (currently out of stock) and mp3 players', 'C4_cplayer.jpg', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('5', 'Beverages', '0', '5', '', 'C5_svetly_lezak.gif', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('8', 'Mercedes', '1', '2', '', '', '2');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('9', 'Toyota', '1', '1', '', '', '1');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('12', 'In-line skates', '3', '2', '', '', '3');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('13', 'Snowboards', '3', '3', '', '', '3');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('14', 'Samsung', '2', '4', '', '', '4');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('15', 'Ericsson', '2', '4', '', '', '4');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('16', 'Accessories', '17', '1', '', '', '1');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('17', 'Nokia', '2', '12', '', '', '11');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('18', 'Siemens', '2', '5', '', '', '5');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('19', 'Accessories', '14', '0', '', '', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('20', 'DVD', '4', '21', 'DVD movies. High quality!', '', '22');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('21', 'mp3-players', '4', '4', '', '', '4');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('23', 'Books', '0', '7', '', 'C23_pic_gifts.gif', '1');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('24', 'Lexus', '1', '2', '\"Japanese Mercedes\"', '', '2');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('25', 'Clothes', '0', '3', '', 'C25_clothes.jpg', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('27', 'Computers', '0', '13', '', 'C27_comp.gif', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('38', 'Winter', '25', '1', '', '', '1');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('39', 'Summer', '25', '1', '', '', '1');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('40', 'Home', '25', '1', '', '', '1');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('46', 'Alcohol', '5', '3', '', '', '3');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('47', 'Alcohol free', '5', '2', '', '', '2');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('51', 'Notebooks', '27', '5', '', '', '5');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('57', 'PDA', '27', '6', '', '', '6');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('58', 'Personal', '27', '2', '', '', '2');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('63', 'Lotus', '1', '1', 'The fast and the furious', '', '1');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('64', 'Lamborghini', '1', '1', 'Famous autos from Italy!', '', '1');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('71', 'Harry Potter', '23', '3', 'the world known books about Harry Potter', '15794s.jpg', '3');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('72', 'Design', '23', '1', '', '', '1');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('73', 'Programming', '23', '2', '', '', '2');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('74', 'Classic', '25', '0', '', '', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('75', 'Multimedia', '27', '0', '', '', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('76', 'Home theatres', '4', '0', '', '', '0');
-INSERT INTO tbl_categories (categoryID, name, parent, products_count, description, picture, products_count_admin) VALUES ('77', 'Bycicles', '3', '0', '', '', '0');
+INSERT INTO `tbl_categories` (`categoryID`, `name`, `parent`, `products_count`, `description`, `picture`, `products_count_admin`, `about`, `enabled`, `meta_title`, `meta_keywords`, `meta_desc`, `hurl`, `canonical`, `h1`, `hidden`, `lpos`, `rpos`, `depth`) VALUES
+  (1,	'Automobiles',	78,	7,	'The world famous automobiles',	'C1_jaguar.jpg',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	66,	77,	1),
+  (2,	'Cellular',	78,	25,	'Callular phones and accessories',	'C2_cphone.jpg',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	52,	65,	1),
+  (3,	'Sport',	78,	5,	'',	'C3_RBaccess.jpg',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	44,	51,	1),
+  (4,	'Audio / Video',	78,	25,	'We sell DVD, home theatres (currently out of stock) and mp3 players',	'C4_cplayer.jpg',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	36,	43,	1),
+  (5,	'Beverages',	78,	5,	'',	'C5_svetly_lezak.gif',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	30,	35,	1),
+  (8,	'Mercedes',	1,	2,	'',	'',	2,	'',	0,	'',	'',	'',	'',	'',	'',	0,	75,	76,	2),
+  (9,	'Toyota',	1,	1,	'',	'',	1,	'',	0,	'',	'',	'',	'',	'',	'',	0,	73,	74,	2),
+  (12,	'In-line skates',	3,	2,	'',	'',	3,	'',	0,	'',	'',	'',	'',	'',	'',	0,	49,	50,	2),
+  (13,	'Snowboards',	3,	3,	'',	'',	3,	'',	0,	'',	'',	'',	'',	'',	'',	0,	47,	48,	2),
+  (14,	'Samsung',	2,	4,	'',	'',	4,	'',	0,	'',	'',	'',	'',	'',	'',	0,	61,	64,	2),
+  (15,	'Ericsson',	2,	4,	'',	'',	4,	'',	0,	'',	'',	'',	'',	'',	'',	0,	59,	60,	2),
+  (16,	'Accessories',	17,	1,	'',	'',	1,	'',	0,	'',	'',	'',	'',	'',	'',	0,	56,	57,	3),
+  (17,	'Nokia',	2,	12,	'',	'',	11,	'',	0,	'',	'',	'',	'',	'',	'',	0,	55,	58,	2),
+  (18,	'Siemens',	2,	5,	'',	'',	5,	'',	0,	'',	'',	'',	'',	'',	'',	0,	53,	54,	2),
+  (19,	'Accessories',	14,	0,	'',	'',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	62,	63,	3),
+  (20,	'DVD',	4,	21,	'DVD movies. High quality!',	'',	22,	'',	0,	'',	'',	'',	'',	'',	'',	0,	41,	42,	2),
+  (21,	'mp3-players',	4,	4,	'',	'',	4,	'',	0,	'',	'',	'',	'',	'',	'',	0,	39,	40,	2),
+  (23,	'Books',	78,	7,	'',	'C23_pic_gifts.gif',	1,	'',	0,	'',	'',	'',	'',	'',	'',	0,	22,	29,	1),
+  (24,	'Lexus',	1,	2,	'\"Japanese Mercedes\"',	'',	2,	'',	0,	'',	'',	'',	'',	'',	'',	0,	71,	72,	2),
+  (25,	'Clothes',	78,	3,	'',	'C25_clothes.jpg',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	12,	21,	1),
+  (27,	'Computers',	78,	13,	'',	'C27_comp.gif',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	2,	11,	1),
+  (38,	'Winter',	25,	1,	'',	'',	1,	'',	0,	'',	'',	'',	'',	'',	'',	0,	19,	20,	2),
+  (39,	'Summer',	25,	1,	'',	'',	1,	'',	0,	'',	'',	'',	'',	'',	'',	0,	17,	18,	2),
+  (40,	'Home',	25,	1,	'',	'',	1,	'',	0,	'',	'',	'',	'',	'',	'',	0,	15,	16,	2),
+  (46,	'Alcohol',	5,	3,	'',	'',	3,	'',	0,	'',	'',	'',	'',	'',	'',	0,	33,	34,	2),
+  (47,	'Alcohol free',	5,	2,	'',	'',	2,	'',	0,	'',	'',	'',	'',	'',	'',	0,	31,	32,	2),
+  (51,	'Notebooks',	27,	5,	'',	'',	5,	'',	0,	'',	'',	'',	'',	'',	'',	0,	9,	10,	2),
+  (57,	'PDA',	27,	6,	'',	'',	6,	'',	0,	'',	'',	'',	'',	'',	'',	0,	7,	8,	2),
+  (58,	'Personal',	27,	2,	'',	'',	2,	'',	0,	'',	'',	'',	'',	'',	'',	0,	5,	6,	2),
+  (63,	'Lotus',	1,	1,	'The fast and the furious',	'',	1,	'',	0,	'',	'',	'',	'',	'',	'',	0,	69,	70,	2),
+  (64,	'Lamborghini',	1,	1,	'Famous autos from Italy!',	'',	1,	'',	0,	'',	'',	'',	'',	'',	'',	0,	67,	68,	2),
+  (71,	'Harry Potter',	23,	3,	'the world known books about Harry Potter',	'15794s.jpg',	3,	'',	0,	'',	'',	'',	'',	'',	'',	0,	27,	28,	2),
+  (72,	'Design',	23,	1,	'',	'',	1,	'',	0,	'',	'',	'',	'',	'',	'',	0,	25,	26,	2),
+  (73,	'Programming',	23,	2,	'',	'',	2,	'',	0,	'',	'',	'',	'',	'',	'',	0,	23,	24,	2),
+  (74,	'Classic',	25,	0,	'',	'',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	13,	14,	2),
+  (75,	'Multimedia',	27,	0,	'',	'',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	3,	4,	2),
+  (76,	'Home theatres',	4,	0,	'',	'',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	37,	38,	2),
+  (77,	'Bycicles',	3,	0,	'',	'',	0,	'',	0,	'',	'',	'',	'',	'',	'',	0,	45,	46,	2),
+  (78,	'ROOT',	0,	0,	'',	'',	0,	'',	1,	'',	'',	'',	'',	'',	'',	0,	1,	78,	0);
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('1', '9', 'Toyota Land Cruiser 100', '', '4.16667', '70000', '1_L2.jpg', '5', '1_L1.jpg', '12', '13', '1_L0.jpg', '1', '', '0', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('4', '24', 'Lexus GS300', '', '4.05', '49000', '4_gs300072.jpg', '6', '4_gs300071.jpg', '12', '9', '4_gs30007.jpg', '1', '', '51000', '');
 INSERT INTO tbl_products (productID, categoryID, name, description, customers_rating, Price, picture, in_stock, thumbnail, customer_votes, items_sold, big_picture, enabled, brief_description, list_price, product_code) VALUES ('6', '13', 'BURTON Balance', '', '5', '640', '848_Bur_Bal_157,5_m.gif', '10', '491_Bur_Bal_157,5_m_small.jpg', '1', '0', '', '1', '', '0', '');

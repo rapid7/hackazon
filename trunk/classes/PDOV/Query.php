@@ -489,4 +489,22 @@ class Query extends DB\Query
             $this->_aliases[] = $alias;
         }
     }
+
+    public function where()
+    {
+        $params = func_get_args();
+        if (func_num_args() == 3) {
+            if (is_null($params[2])) {
+                if ($params[1] == '=') {
+                    $params[1] = 'IS';
+                    $params[2] = new DB\Expression('NULL');
+                } else if (in_array($params[1], ['<', '>', '<=', '>='])) {
+                    $params[2] = 0;
+                }
+            } else if ($params[2] === 0) {
+                $params[2] = '0';
+            }
+        }
+        return call_user_func_array('parent::where', $params);
+    }
 }
