@@ -17,7 +17,7 @@
         <input type="text" name="user_phone" id="user_phone" class="form-control input-lg" placeholder="Phone" tabindex="3" value="<?php $_($user_phone, 'user_phone'); ?>">
     </div>
 
-    <div class="form-group">
+    <?php /* <div class="form-group">
         <input type="text" name="username" id="username" required class="form-control input-lg" placeholder="Username" tabindex="3" value="<?php $_($username, 'username'); ?>">
     </div>
 
@@ -44,7 +44,7 @@
             </div>
         </div>
     </div>
-
+              */ ?>
     <hr class="colorgraph">
     <div class="row">
         <div class="col-xs-6 col-md-6">
