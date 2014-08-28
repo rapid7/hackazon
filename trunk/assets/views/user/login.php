@@ -1,31 +1,18 @@
-<!-- Page Content -->
-
 <div class="container">
-
-    <div class="row">
-
-        <div class="col-lg-12">
-            <ol class="breadcrumb">
-                <li><a href="index.html">Home</a>
-                </li>
-                <li class="active">Login</li>
-            </ol>
-        </div>
-
-    </div>
     <!-- /.row -->
-
     <?php if (isset($errorMessage) && !empty($errorMessage)): ?>
         <div class="alert alert-danger alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <strong><?= $errorMessage; ?></strong>
         </div>
     <?php endif; ?>
-
-
     <div class="row">
         <form role="form" class="signin" method="POST" action="/user/login<?php echo $returnUrl ? '?return_url=' . rawurlencode($returnUrl) : ''; ?> " id="loginPageForm">
-            <h2>Please login <small></small></h2>
+            <h1>Please login <small></small></h1>
+            <ol class="breadcrumb">
+				<li><a href="index.html">Home</a></li>
+				<li class="active">Login</li>
+			</ol>
             <hr class="colorgraph">
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
@@ -41,9 +28,6 @@
                     </div>
                 </div>
             </div>
-
-
-
             <hr class="colorgraph">
             <div class="row">
                 <div class="col-xs-6 col-md-6"><button id="loginbtn"  type="submit" class="btn btn-success btn-block btn-lg">Sign In</button></div>
@@ -67,7 +51,6 @@
     </div>
 </div>
 <!-- /.container -->
-
 <script>
     jQuery(function($) {
         $('#loginPageForm').bootstrapValidator({

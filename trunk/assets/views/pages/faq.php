@@ -1,22 +1,15 @@
-
 <div class="container">
-
     <div class="row">
-
         <div class="col-lg-12">
+			<h1>Frequently Asked Questions</h1>
             <ol class="breadcrumb">
                 <li><a href="/">Home</a>
                 </li>
                 <li class="active">Frequently Asked Questions</li>
             </ol>
         </div>
-
     </div>
-
-
-
     <div class="row">
-
         <div class="col-lg-12">
             <?php if (isset($entries) && !is_null($entries)): ?>
                 <div class="panel-group" id="accordion"  id="dataGrid">
@@ -39,8 +32,6 @@
                 <?php endforeach; ?>    
                 </div>
             <?php endif ?>     
-
-
             <div style="display: none" class="alert alert-success"></div>
             <div class="panel-group" id="accordion1" data-bind="foreach: data" style='display:none'>
                 <div class="panel panel-default">
@@ -56,13 +47,8 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
-
-
-
     <div class="section">
         <form role="form" method="post" action="/faq" id="faqForm">
             <div class="form-group">
@@ -80,13 +66,11 @@
 </div>
 
 <script>
-
     function AppViewModel() {
         var self = this;
         self.data = ko.observableArray([]);
     }
     var model = new AppViewModel();
-
 
     $(function() {
 
