@@ -8,14 +8,10 @@
 </script>
 <div class="section">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <?php include($common_path . "multiple_breadcrumbs.php") ?>
-            </div>
-        </div>
+
         <div class="row">
             <div class="col-xs-9">
-                <h2><?= $product->name; ?></h2>
+                <h1><?= $product->name; ?></h1>
             </div>
             <div class="col-xs-3">
                 <div class="social-icons pull-right">
@@ -29,12 +25,16 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php include($common_path . "multiple_breadcrumbs.php") ?>
+            </div>
+        </div>
         <div class="row product-detail" data-id="<?= $product->productID; ?>">
             <div class="col-xs-12 col-sm-5 col-md-4">
                 <a data-toggle="lightbox" data-title="<?php $_($product->name, 'name'); ?>"
                    href="/products_pictures/<?php $_($product->picture, 'picture'); ?>">
-                    <img class="img-responsive product-image" src="/products_pictures/<?php $_($product->picture, 'picture'); ?>"
-                         alt="">
+                    <img class="img-responsive product-image img-thumbnail" src="/products_pictures/<?php $_($product->picture, 'picture'); ?>" alt="">
                 </a>
             </div>
             <div class="hidden-xs col-sm-2 col-md-1">

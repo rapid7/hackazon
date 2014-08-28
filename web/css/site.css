@@ -7,6 +7,12 @@ h1, h2, h3, h4 {
 #container {
     margin-top: 60px;
 }
+.section, .section-colored {
+    padding: 10px 0;
+}
+.page-header {
+    margin: 20px 0 0px 0;
+}
 /* HEADER */
 .hw-header {
 }
