@@ -37,7 +37,27 @@
         <div class="products clearfix">
             <div class="clearfix product-list"></div>
         </div>
-
     </div>
-
+	<div class="row">
+		<div class="col-lg-3">
+			<h3>Get <br>Organized</h3>
+			<p>Create multiple lists for yourself and others</p> 
+			<img alt="" src="/images/wl_cat_lists_200px._V359103046_.jpg" height="143" width="200">
+		</div>
+		<div class="col-lg-3">
+			<h3>Save Ideas <br>and Products</h3>
+			<p>Add ideas and products from any website</p> 
+			<img alt="" src="/images/wl_cat_note_200px._V359103046_.jpg" height="143" width="200">
+		</div>
+		<div class="col-lg-3">
+			<h3>Give &amp; Get<br> Great Gifts</h3>
+			<p>Remember your friends' wish lists &amp; share yours</p> 
+			<img alt="" src="/images/wl_cat_gift_200px._V359103041_.jpg" height="143" width="200">
+		</div>
+		<div class="col-lg-3">
+			<h3>Never Forget a<br> Birthday</h3>
+			<p>Get shopping reminders for special occasions</p> 
+			<img alt="" src="/images/wl_cat_calendar_200px._V359103046_.jpg" height="143" width="200">
+		</div>
+	</div>
 </div>
