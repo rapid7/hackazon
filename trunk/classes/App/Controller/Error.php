@@ -31,6 +31,7 @@ class Error extends Page
 
         if ($isAdmin) {
             $this->view = $this->pixie->view('admin/error/view');
+            $this->view->adminRoot = '/admin';
         } else {
             $this->view->subview = 'error/view';
         }
