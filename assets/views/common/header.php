@@ -11,7 +11,7 @@
                 <a class="navbar-brand hw-navbar-brand" href="/"><span>Hackazon <em>Webscantest</em></span></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <div class="collapse hw-navbar-collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/faq">FAQ</a></li>
                     <li><a href="/contact">Contact Us</a></li>
@@ -62,10 +62,10 @@
                 </ul>
             </div>
             <div class="row">
-                <div class="col-xs-2 col-md-2 col-md-offset-2 col-xs-offset-2">
+                <div class="col-xs-3 col-md-2 col-lg-3">
                     <?php include($common_path . "sidebar.php") ?>
                 </div>
-                <div class="col-xs-6 col-md-6">
+                <div class="col-xs-7 col-md-8 col-lg-8 col-md-offset-2 col-xs-offset-2 col-lg-offset-1">
                   <?php include($common_path. "/../search/search.php") ?>
                 </div>
             </div>

@@ -10,7 +10,6 @@ ul.menu {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	display: none;
-	background-color: #3d3e40;
 	width: 190px;
 }
 
@@ -21,17 +20,17 @@ ul.menu li {
 
 ul.menu li a {
 	padding: 10px 12px 12px;
-	color: white;
 	font-size: 13px;
 	font-weight: bold;
 	font-family: Arial;
 	text-decoration: none;
 	display: block;
 	border-top: 1px solid #c4c4c4;
+    color: #333;
 }
 
 ul.menu li a:hover {
-	background-color: #b00000;
+	background-color: #F0F0F0;
 }
 
 ul.menu li:first-child a {
@@ -59,7 +58,8 @@ ul.menu li:hover ul {
 	position: absolute;
 	left: 190px;
 	top: 1px;
-	background-color: #28282a;
+	background-color: #FFFFFF;
+    border: 1px solid #cccccc;
 	width: 150px;
 	z-index: 1000;
 	border-radius: 0 5px 5px 0;
