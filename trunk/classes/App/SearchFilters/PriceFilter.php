@@ -47,7 +47,7 @@ class PriceFilter implements BaseFilter {
     }
 
     public function getLabel($id) {
-        return isset($this->_valueVariants[$id]) ? 'from $'.$this->_valueVariants[$id][0].' to $'.$this->_valueVariants[$id][1] : '--';
+		return isset($this->_valueVariants[$id]) ? '$'.$this->_valueVariants[$id][0].' &ndash; $'.$this->_valueVariants[$id][1] : '--';
     }
 
 }

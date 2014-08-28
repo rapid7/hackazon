@@ -1,4 +1,12 @@
+/* COMMON STYLES*/
+h1, h2, h3, h4 {
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 500;
+}
 /* STRUCTURE */
+#container {
+    margin-top: 60px;
+}
 /* HEADER */
 .hw-header {
 }
@@ -28,6 +36,17 @@
         padding-bottom: 10px !important;
     }
 
+.hw-navbar-collapse {
+    min-height: 70px;
+}
+
+.home-top-section {
+    
+}
+.home-top-section h3 {
+    margin-top: 10px;
+}
+
 .well.well-small {
 	padding: 10px;
 }
@@ -55,7 +74,26 @@
 	margin-right:10px;
 	color:#428bca;
 }
-
+@media (max-width: 768px) {
+    .hw-navbar-brand {
+        padding-top: 5px;
+    }
+        .hw-navbar-brand span {
+            font-size: 22px;
+        }
+        .hw-navbar-brand em {
+            font-size: 22px;
+        }
+        .navbar-toggle {
+            background-color: #ccc;
+        }
+        .navbar-toggle .icon-bar {
+            background-color: #eee;
+        }
+        .hw-navbar li.hw-login-item {
+            margin-left: 0;
+        }
+}
 /*--------------------- NEED TO REVISE ----------------------*/
 .col-xs-5ths,
 .col-sm-5ths,
@@ -476,7 +514,8 @@ form.signin .error {
 .article h2,
 .article h5,
 .article h4 {
-    font-family: 'McLaren',cursive;
+    font-family: 'Ubuntu',cursive;
+    font-weight: 500;
 }
 
 .article .review-icon-box {
@@ -639,7 +678,7 @@ form.signin .error {
     margin-left: 0
 }
 
-ul.nav li a {
+ul.nav>li>a {
     padding: 15px 10px !important;
 }
 #logincontrol ul.nav li a {
@@ -723,10 +762,6 @@ ul.nav li.grey a {
     cursor: pointer;
 }
 
-.navbar-header .navbar-brand {
-    padding-left: 0;
-    padding-right: 0;
-}
 
 .blockShadow .ladda-button.small-button .ladda-spinner {
     width: 16px;
