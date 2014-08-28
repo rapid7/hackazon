@@ -19,7 +19,7 @@
                         <h3><i class="fa fa-thumbs-up"></i> Get the Best Price</h3>
                     </div>
                     <div class="col-lg-4 col-md-4">
-                        <h3><i class="fa fa-shopping-cart"></i> By with pleasure</h3>
+                        <h3><i class="fa fa-shopping-cart"></i> Buy with pleasure</h3>
                     </div>
                 </div>
             </div>

@@ -31,7 +31,6 @@ class Page extends BaseController {
      * @var Model Corresponding model of the controller, i.e. Faq for Faq controller, etc.
      */
     protected $model;
-
     protected $errorMessage;
 
     public function before() {
@@ -70,23 +69,23 @@ class Page extends BaseController {
     }
 
     protected function getSearchCategory($className) {
-		switch ($className) {
-			case 'Category':
-				$category = new Category($this->pixie);
-				$search_category = $category->getPageTitle($this->request->param('id'));
-				$value = $this->request->param('id');
-				break;
-			case 'Search':
-				$value = $this->request->get("id");
-				$category = new Category($this->pixie);
-				$search_category = $category->getPageTitle($this->request->get('id'));
-				break;
+        switch ($className) {
+            case 'Category':
+                $category = new Category($this->pixie);
+                $search_category = $category->getPageTitle($this->request->param('id'));
+                $value = $this->request->param('id');
+                break;
+            case 'Search':
+                $value = $this->request->get("id");
+                $category = new Category($this->pixie);
+                $search_category = $category->getPageTitle($this->request->get('id'));
+                break;
             default:
                 $search_category = 'All';
                 $value = '';
                 break;
         }
-        return  ['value' => $value, 'label' => $search_category] ;
+        return ['value' => $value, 'label' => $search_category];
     }
 
     protected function getAllCategories($categories) {
@@ -104,8 +103,7 @@ class Page extends BaseController {
      * Send response as JSON.
      * @param $responseData
      */
-    public function jsonResponse($responseData)
-    {
+    public function jsonResponse($responseData) {
         $this->response->body = json_encode($responseData);
         $this->response->headers[] = 'Content-Type: application/json; charset=utf-8';
         $this->execute = false;
@@ -116,8 +114,7 @@ class Page extends BaseController {
      * @param null $field
      * @return mixed
      */
-    public function filterStoredXSS($value, $field = null)
-    {
+    public function filterStoredXSS($value, $field = null) {
         return $this->pixie->getVulnService()->filterStoredXSSIfNeeded($field, $value);
     }
 
@@ -126,8 +123,7 @@ class Page extends BaseController {
      * @param null $value
      * @return bool
      */
-    public function isTokenValid($tokenId, $value = null)
-    {
+    public function isTokenValid($tokenId, $value = null) {
         $service = $this->pixie->getVulnService();
         if (!$service) {
             return true;
@@ -136,8 +132,7 @@ class Page extends BaseController {
         $fullTokenId = self::TOKEN_PREFIX . $tokenId;
 
         if ($value === null) {
-            $value = $this->request->method == 'POST'
-                ? $this->request->post($fullTokenId) : $this->request->get($fullTokenId);
+            $value = $this->request->method == 'POST' ? $this->request->post($fullTokenId) : $this->request->get($fullTokenId);
         }
 
         // Check if we need to filter this injection
@@ -155,8 +150,7 @@ class Page extends BaseController {
     /**
      * @param $tokenId
      */
-    public function removeToken($tokenId)
-    {
+    public function removeToken($tokenId) {
         $service = $this->pixie->getVulnService();
         if (!$service) {
             return;
@@ -170,8 +164,7 @@ class Page extends BaseController {
      * @param $tokenId
      * @return string
      */
-    public function renderTokenField($tokenId)
-    {
+    public function renderTokenField($tokenId) {
         $service = $this->pixie->getVulnService();
         if (!$service) {
             return '';
@@ -186,8 +179,7 @@ class Page extends BaseController {
      * @param bool $removeToken
      * @throws Exception\HttpException
      */
-    public function checkCsrfToken($tokenId, $tokenValue = null, $removeToken = true)
-    {
+    public function checkCsrfToken($tokenId, $tokenValue = null, $removeToken = true) {
         if (!$this->isTokenValid($tokenId, $tokenValue)) {
             throw new HttpException('Invalid token!', 400, null, 'Bad Request');
         }
@@ -199,12 +191,11 @@ class Page extends BaseController {
     /**
      * @inheritdoc
      */
-    public function run($action)
-    {
-        $action = 'action_'.$action;
+    public function run($action) {
+        $action = 'action_' . $action;
 
         if (!method_exists($this, $action))
-            throw new PageNotFound("Method {$action} doesn't exist in ".get_class($this));
+            throw new PageNotFound("Method {$action} doesn't exist in " . get_class($this));
 
         $this->execute = true;
         $this->before();
@@ -236,21 +227,18 @@ class Page extends BaseController {
     /**
      * @return Product
      */
-    protected function getProductsInCart()
-    {
+    protected function getProductsInCart() {
         $cart = $this->getCart();
         return $cart->products->find_all();
     }
 
-    protected function getCart()
-    {
+    protected function getCart() {
         /** @var Cart $model */
         $model = $this->pixie->orm->get('Cart');
         return $model->getCart();
     }
 
-    protected function getProductsInCartIds()
-    {
+    protected function getProductsInCartIds() {
         $items = $this->getProductsInCart()->as_array();
         $ids = [];
         foreach ($items as $item) {
@@ -258,4 +246,5 @@ class Page extends BaseController {
         }
         return $ids;
     }
+
 }
