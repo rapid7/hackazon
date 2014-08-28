@@ -10,6 +10,7 @@
 namespace App\Controller;
 
 
+use App\Exception\HttpException;
 use App\Page;
 
 class Error extends Page
@@ -23,8 +24,17 @@ class Error extends Page
         header($this->request->server("SERVER_PROTOCOL").' '.$status);
         header("Status: {$status}");
 
+        $isAdmin = $exception instanceof HttpException
+            && $exception->getParameter('request')
+            && $exception->getParameter('request')->isAdminPath()
+            && $this->pixie->auth->has_role('admin');
+
+        if ($isAdmin) {
+            $this->view = $this->pixie->view('admin/error/view');
+        } else {
+            $this->view->subview = 'error/view';
+        }
         $this->view->exception = $exception;
         $this->view->pageTitle = 'Error: ' . $exception->getCode() . ' ' . $exception->getMessage();
-        $this->view->subview = 'error/view';
     }
 } 

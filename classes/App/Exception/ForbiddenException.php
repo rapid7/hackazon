@@ -13,6 +13,6 @@ namespace App\Exception;
 class ForbiddenException extends HttpException
 {
     protected $code = 403;
-    protected $message = "403 Forbidden. You must be authorized to access resource.";
+    protected $message = "You must be authorized to access this resource.";
     protected $statusMessage = "Forbidden";
 }

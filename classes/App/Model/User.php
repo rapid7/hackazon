@@ -15,7 +15,6 @@ use App\Pixie;
 class User extends BaseModel {
 
     public $table = 'tbl_users';
-    public $id_field = 'id';
 
 	private $defaultWishList = null;
 
@@ -27,6 +26,12 @@ class User extends BaseModel {
         'wishlistFollowers' => array(
             'model' => 'WishListFollowers',
             'key' => 'user_id'
+        ),
+        'roles' => array(
+            'model' => 'Role',
+            'through' => 'tbl_users_roles',
+            'key' => 'user_id',
+            'foreign_key' => 'role_id'
         )
 	);
 
@@ -60,7 +65,7 @@ class User extends BaseModel {
     public function RegisterUser($dataUser) {
         $dataUser['password'] = $this->pixie->auth->provider('password')->hash_password($dataUser['password']);
         $dataUser['created_on'] = $dataUser['last_login'] = date('Y-m-d H:i:s');
-        $allowed = ['first_name', 'last_name', 'email', 'password', 'username'];
+        $allowed = ['first_name', 'last_name', 'email', 'password', 'username', 'created_on', 'last_login'];
         $allowedData = [];
         foreach ($dataUser as $key => $field) {
             if (in_array($key, $allowed)) {
@@ -72,7 +77,7 @@ class User extends BaseModel {
     }
 
     public function checkLoginUser($login){
-        if (preg_match("/[a-z0-9_-]+(\.[a-z0-9_-]+)*@([0-9a-z][0-9a-z-]*[0-9a-z]\.)+([a-z]{2,4})/i", $login)){
+        if (preg_match("/[a-z0-9_-]+(\\.[a-z0-9_-]+)*@([0-9a-z][0-9a-z-]*[0-9a-z]\\.)+([a-z]{2,4})/i", $login)){
             $user=$this->pixie->orm->get('User')->where('email',$login)->find();
             if($user->loaded())
                 $login = $user->username;

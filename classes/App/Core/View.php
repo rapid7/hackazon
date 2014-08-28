@@ -14,10 +14,12 @@ use App\Pixie;
  * Class View
  * @property Pixie $pixie
  * @package App\Core
+ * @property string $common_path
+ * @property string $returnUrl
+ * @property BaseController $controller
  */
 class View extends \PHPixie\View implements \ArrayAccess
 {
-
     /**
      * @inheritdoc
      */

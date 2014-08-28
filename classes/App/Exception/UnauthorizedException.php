@@ -13,6 +13,6 @@ namespace App\Exception;
 class UnauthorizedException extends HttpException
 {
     protected $code = 401;
-    protected $message = "You must be authenticated to access resource.";
+    protected $message = "You must be authenticated to access this resource.";
     protected $statusMessage = "Unauthorized";
 } 
