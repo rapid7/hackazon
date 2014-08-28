@@ -12,6 +12,7 @@ namespace App\Events;
 use App\Core\Request;
 use App\Core\Response;
 use App\EventDispatcher\Event;
+use App\Exception\HttpException;
 
 /**
  * Class GetResponseEvent
@@ -29,11 +30,17 @@ class GetResponseEvent extends Event
      */
     protected $request;
 
+    /**
+     * @var \Exception
+     */
+    protected $exception;
+
     protected $cookie;
 
-    public function __construct(Request $request, $cookie = [])
+    public function __construct(Request $request = null, $cookie = [])
     {
         $this->request = $request;
+        $this->cookie = $cookie;
     }
 
     /**
@@ -68,5 +75,21 @@ class GetResponseEvent extends Event
     public function getCookie()
     {
         return $this->cookie;
+    }
+
+    /**
+     * @return \Exception
+     */
+    public function getException()
+    {
+        return $this->exception;
+    }
+
+    /**
+     * @param \Exception $exception
+     */
+    public function setException($exception)
+    {
+        $this->exception = $exception;
     }
 } 

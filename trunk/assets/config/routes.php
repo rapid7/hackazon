@@ -48,6 +48,14 @@ return array(
             'action' => 'edit_profile'
         )
     ],
+
+    'admin' => array('/admin(/<controller>(/<action>(/<id>)))',
+        array(
+            'namespace' => 'App\\Admin\\',
+            'controller' => 'home',
+            'action' => 'index'
+        )
+    ),
 	'default' => array('(/<controller>(/<action>(/<id>)))',
         array(
             'controller' => 'home',

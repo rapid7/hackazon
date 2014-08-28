@@ -166,4 +166,14 @@ class Request extends \PHPixie\Request
 
         $this->$fieldName = is_array($this->$fieldName) ? $this->$fieldName : [];
     }
+
+    public function getCookie()
+    {
+        return $this->_cookie;
+    }
+
+    public function isAdminPath()
+    {
+        return $this->param('namespace') == 'App\\Admin\\';
+    }
 }

@@ -853,7 +853,13 @@ INSERT INTO `tbl_review` (`reviewID`, `productID`, `username`, `email`, `review`
   (500,	36,	'Mirosmom',	'eml499_mirosmom@example.com',	'Just using for backup memory on tablet. Works great. The price was perfect because it was on sale.',	'2014-07-28 09:24:40',	0,	5);
 
 INSERT INTO `tbl_users` (`id`, `username`, `password`, `user_phone`, `email`, `oauth_provider`, `oauth_uid`, `created_on`, `last_login`, `active`, `recover_passw`) VALUES
-  (1,	'test_user',	'7d4a69db92c867d9b0060653c44733bf:108853d9fae39d4bb',	'+1(999) 123-1231',	'test_user@example.com',	'',	'',	'2014-07-31 12:14:27',	'2014-07-31 15:43:01',	1,	'415af5ab8dcd28c948963a83ac474756');
+  (1,	'test_user',	'7d4a69db92c867d9b0060653c44733bf:108853d9fae39d4bb',	'+1(999) 123-1231',	'test_user@example.com',	'',	'',	'2014-07-31 12:14:27',	'2014-07-31 15:43:01',	1,	'415af5ab8dcd28c948963a83ac474756'),
+  (2,	'admin',	'c49c778030a3efc0bb33e134068b2544:1265153ff111dab3f7',	'',	'admin@hackazon.com',	'',	'',	'2014-08-28 15:26:33',	'2014-08-28 15:26:33',	1,	'7b643a2225cc8261d0bda0c4d72a6e04');
+
+INSERT INTO `tbl_users_roles` (`id`, `user_id`, `role_id`) VALUES
+  (1,	1,	1),
+  (2,	2,	1),
+  (3,	2,	2);
 
 INSERT INTO `tbl_product_options` (optionID, name) VALUES ('1', 'Color');
 INSERT INTO `tbl_product_options` (optionID, name) VALUES ('2', 'Brand');

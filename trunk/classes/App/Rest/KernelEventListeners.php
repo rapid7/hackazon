@@ -10,16 +10,16 @@
 namespace App\Rest;
 
 
-use App\EventDispatcher\EventDispatcher;
 use App\Events\GetResponseEvent;
-use App\Exception\HttpException;
-
 
 class KernelEventListeners
 {
-    public static function restRouteHandler(GetResponseEvent $event , $eventName, EventDispatcher $dispatcher)
+    public static function restRouteHandler(GetResponseEvent $event /*, $eventName, EventDispatcher $dispatcher*/)
     {
         $request = $event->getRequest();
+        if (!$request) {
+            return;
+        }
         $route = $request->route;
         if ($route->name != 'rest') {
             return;

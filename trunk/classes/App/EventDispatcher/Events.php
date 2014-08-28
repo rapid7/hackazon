@@ -13,4 +13,5 @@ namespace App\EventDispatcher;
 class Events 
 {
     const KERNEL_PRE_EXECUTE = 'kernel.pre_execute';
-} 
+    const KERNEL_PRE_HANDLE_EXCEPTION = 'kernel.pre_handle_exception';
+}

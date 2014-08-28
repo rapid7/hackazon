@@ -8,6 +8,7 @@ use App\Core\Response;
 use App\Core\View;
 use App\EventDispatcher\EventDispatcher;
 use App\EventDispatcher\Events;
+use App\Events\GetResponseEvent;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
 use App\Rest\RestService;
@@ -69,18 +70,54 @@ class Pixie extends \PHPixie\Pixie {
         $this->instance_classes['restService'] = '\\App\\Rest\\RestService';
     }
 
+    /**
+     * Add named instances by hand.
+     * @param $name
+     * @param $class
+     */
     public function addInstanceClass($name, $class)
     {
         $this->instance_classes[$name] = $class;
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function after_bootstrap(){
 		//Whatever code you want to run after bootstrap is done.
         $displayErrors = $this->getParameter('parameters.display_errors');
         $this->debug->display_errors = is_bool($displayErrors) ? $displayErrors : true;
 
         $this->dispatcher->addListener(Events::KERNEL_PRE_EXECUTE, '\\App\\Rest\\KernelEventListeners::restRouteHandler');
+        $this->dispatcher->addListener(Events::KERNEL_PRE_EXECUTE, '\\App\\Admin\\EventListeners::hasAccessListener');
+
+        $this->dispatcher->addListener(Events::KERNEL_PRE_HANDLE_EXCEPTION, '\\App\\Admin\\EventListeners::redirectUnauthorized');
 	}
+
+    /**
+     * @inheritdoc
+     */
+    public function handle_http_request()
+    {
+        $request = null;
+        try {
+            $request =  $this->http_request();
+            $response = $request->execute();
+            $response->send_headers()->send_body();
+
+        } catch (PageNotFound $e) {
+            $e = new NotFoundException('Not Found', 404, $e);
+            $e->setParameter('request', $request);
+            $this->handle_exception($e);
+
+        } catch (HttpException $e) {
+            $e->setParameter('request', $request);
+            $this->handle_exception($e);
+
+        } catch (\Exception $e) {
+            $this->handle_exception($e);
+        }
+    }
 
     /**
      * @param \Exception $exception
@@ -101,15 +138,32 @@ class Pixie extends \PHPixie\Pixie {
     /**
      * Shows caught exception in a nice view.
      * @param \App\Exception\HttpException|\Exception $exception
+     * @return null
      */
     public function handle_error_request(\Exception $exception) {
         try {
-            $route_data = $this->router->match('/error/' . $exception->getCode());
-            $route_data['params'] = array_merge($route_data['params'], [
-                'exception' => $exception
-            ]);
-            $request = $this->request($route_data['route'], $_SERVER['REQUEST_METHOD'], $_POST, $_GET, $route_data['params'], $_SERVER, $_COOKIE);
-            $response = $request->execute();
+            $response = null;
+            $request = null;
+            if ($exception instanceof HttpException) {
+                $request = $exception->getParameter('request');
+            }
+
+            $event = new GetResponseEvent($request, $request ? $request->getCookie() : []);
+            $event->setException($exception);
+            $this->dispatcher->dispatch(Events::KERNEL_PRE_HANDLE_EXCEPTION, $event);
+
+            if ($event->getResponse()) {
+                $response = $event->getResponse();
+            }
+
+            if (!$response) {
+                $route_data = $this->router->match('/error/' . $exception->getCode());
+                $route_data['params'] = array_merge($route_data['params'], [
+                    'exception' => $exception
+                ]);
+                $request = $this->request($route_data['route'], $_SERVER['REQUEST_METHOD'], $_POST, $_GET, $route_data['params'], $_SERVER, $_COOKIE);
+                $response = $request->execute();
+            }
             $response->send_headers()->send_body();
 
         } catch (\Exception $e) {
