@@ -41,6 +41,10 @@ h1, h2, h3, h4 {
         padding-top: 10px !important;
         padding-bottom: 10px !important;
     }
+    .hw-navbar a.hw-account-link {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
 
 .hw-navbar-collapse {
     min-height: 70px;
@@ -813,15 +817,4 @@ ul.nav li.grey a {
     bottom: 60px;
     right: 20px;
     position: absolute;
-}
-
-.btn-lg + .file-input-name {
-    font-size: 18px;
-    line-height: 1.33;
-    vertical-align: middle;
-}
-
-.profile-picture {
-    max-height: 300px;
-    max-width: 400px;
 }
