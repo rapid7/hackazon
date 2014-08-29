@@ -56,45 +56,83 @@ class Account extends \App\Page {
     }
 
     public function action_documents() {
-        $this->view->pageTitle = 'Documents';
+        if ($this->request->get('page')) {
+            $page = $this->request->get('page');
+            $path = realpath($this->common_path . "../content_pages/documents/") . DIRECTORY_SEPARATOR . $page;
+            $service = $this->pixie->getVulnService();
+            $vuln = $service->getVulnerability('os_command');
+
+            if (!$vuln['enabled']) {
+                $path = escapeshellarg($path);
+            }
+
+            // Determine OS and execute the ping command.
+            if (stristr(php_uname('s'), 'Windows NT')) {
+                exec('type ' . $path, $content);
+            } else {
+                exec('cat ' . $path, $content);
+            }
+
+            $this->view->pageTitle = ucwords(preg_replace('/\.html$/i', '', $page));
+            $this->view->pageContent = implode("\n", $content);
+            $this->view->subview = 'account/document';
+
+        } else {
+            $this->view->pageTitle = 'Documents';
+            $files = [];
+            $basePath = $this->common_path . "../content_pages/documents";
+            $dirIterator = new \DirectoryIterator($basePath);
+            /** @var \SplFileInfo $fileInfo */
+            foreach ($dirIterator as $fileInfo) {
+                if ($fileInfo->isFile() && preg_match('/html/i', $fileInfo->getExtension()) && $fileInfo->isReadable()) {
+                    $pathinfo = pathinfo($fileInfo->getRealPath());
+                    $files[$pathinfo['filename']] = $pathinfo['basename'];
+                }
+            }
+
+            $this->view->files = $files;
+            $this->view->subview = 'account/documents';
+        }
+    }
+
+    public function action_help_articles() {
+        if ($this->request->get('page')) {
+            $page = $this->request->get('page');
+
+            $service = $this->pixie->getVulnService();
+            $vulnField = $service->getField('page');
+
+            if (!is_array($vulnField) || !in_array('RemoteFileInclude', $vulnField)) {
+                $files = $this->getHelpArticlesFiles();
+                if (!in_array($page, $files)) {
+                    throw new NotFoundException();
+                }
+            }
+
+            $this->view->pageTitle = ucwords(str_replace('_', ' ', $page));
+            $this->view->page = $page;
+            $this->view->subview = 'account/help_article';
+
+        } else {
+            $this->view->pageTitle = 'Help Articles';
+            $this->view->files = $this->getHelpArticlesFiles();
+            $this->view->subview = 'account/help_articles';
+        }
+    }
+
+    protected function getHelpArticlesFiles()
+    {
         $files = [];
-        $basePath = $this->common_path . "../content_pages";
+        $basePath = $this->common_path . "../content_pages/help_articles";
         $dirIterator = new \DirectoryIterator($basePath);
         /** @var \SplFileInfo $fileInfo */
         foreach ($dirIterator as $fileInfo) {
-            if ($fileInfo->isFile() && preg_match('/html/i', $fileInfo->getExtension()) && $fileInfo->isReadable()) {
+            if ($fileInfo->isFile() && preg_match('/php/i', $fileInfo->getExtension()) && $fileInfo->isReadable()) {
                 $pathinfo = pathinfo($fileInfo->getRealPath());
-                $files[$pathinfo['filename']] = $pathinfo['basename'];
+                $files[str_replace('_', ' ', $pathinfo['filename'])] = $pathinfo['filename'];
             }
         }
-
-        $this->view->files = $files;
-        $this->view->subview = 'account/documents';
-    }
-
-    /**
-     * Show single document.
-     */
-    public function action_show() {
-        $page = $this->request->get('page');
-        $path = realpath($this->common_path . "../content_pages/") . DIRECTORY_SEPARATOR . $page;
-        $service = $this->pixie->getVulnService();
-        $vuln = $service->getVulnerability('os_command');
-
-        if (!$vuln['enabled']) {
-            $path = escapeshellarg($path);
-        }
-
-        // Determine OS and execute the ping command.
-        if (stristr(php_uname('s'), 'Windows NT')) {
-            exec('type ' . $path, $content);
-        } else {
-            exec('cat ' . $path, $content);
-        }
-
-        $this->view->pageTitle = ucwords(preg_replace('/\.html$/i', '', $page));
-        $this->view->pageContent = implode("\n", $content);
-        $this->view->subview = 'account/document';
+        return $files;
     }
 
     public function action_edit_profile()
