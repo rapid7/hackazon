@@ -11,6 +11,7 @@ use App\Page;
 class Faq extends Page
 {
     public function action_index() {
+        $this->view->pageTitle = "Frequently Asked Questions";
         if ($this->request->is_ajax()) {
             $this->checkCsrfToken('faq');
 
