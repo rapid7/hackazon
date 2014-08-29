@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Core\UploadedFile;
 use App\Exception\NotFoundException;
 use App\Helpers\FSHelper;
 use App\Model\Order;
