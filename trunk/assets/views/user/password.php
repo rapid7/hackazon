@@ -1,15 +1,13 @@
-
     <div class="container">
-
         <div class="row">
             <div class="col-lg-12">
+				<h1>Forgot password</h1>
                 <ol class="breadcrumb">
                     <li><a href="/">Home</a>
                     </li>
                     <li class="active">Restore password</li>
                 </ol>
             </div>
-
         </div>
 
         <?php if(isset($successMessage) && !empty($successMessage)):?>
@@ -24,16 +22,18 @@
                 </div>
             <?php endif; ?>
 
-            <div class="row">
+			<div class="row">
+			<div class="col-lg-12">
                 <form role="form" method="post" action="/user/password" id="passwordForm">
-                    <div class="form-group">
-                        <input type="email" class="form-control input-lg" name="email" id="email" placeholder="Enter email">
+                    <div class="input-group">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
+						<span class="input-group-btn">
+							<button id="loginbtn" type="submit" class="btn btn-success">Restore</button>
+						</span>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-6 col-md-6"><button id="loginbtn"  type="submit" class="btn btn-success btn-block btn-lg">Restore</button></div>
-                    </div>
-                </form>
-            </div>
+					</form>
+				</div>
+			</div>
 
         <?php endif; ?>
     </div>
