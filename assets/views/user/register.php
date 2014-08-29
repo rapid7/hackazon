@@ -4,11 +4,6 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <ol class="breadcrumb">
-                <li><a href="index.html">Home</a>
-                </li>
-                <li class="active">Registration</li>
-            </ol>
         </div>
     </div>
     <!-- /.row -->
@@ -26,7 +21,12 @@
 
         <form role="form" method="post" class="signin" action="/user/register" id="registerForm">
             <h2>Please Sign Up <small>It's free and always will be.</small></h2>
-            <hr class="colorgraph">
+
+            <ol class="breadcrumb">
+                <li><a href="index.html">Home</a>
+                </li>
+                <li class="active">Registration</li>
+            </ol>
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
