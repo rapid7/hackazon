@@ -21,7 +21,11 @@ return [
         ],
         'password_confirmation' => [],
         'return_url' => [],
-        'page' => []
+        'page' => [],
+        'photo' => [
+            'ArbitraryFileUpload',
+            'db_field' => 'user.photo',
+        ]
     ],
 
     'vulnerabilities' => [

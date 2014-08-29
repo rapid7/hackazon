@@ -253,6 +253,16 @@ class Service {
     }
 
     /**
+     * @param $field
+     * @return mixed
+     */
+    public function getField($field)
+    {
+        $fields = $this->getFields();
+        return $fields[$field];
+    }
+
+    /**
      * Removes script tags and tag attributes JS from string.
      * @param $value String to filter
      * @return mixed

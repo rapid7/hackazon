@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Core\UploadedFile;
 use App\Exception\NotFoundException;
+use App\Helpers\FSHelper;
 use App\Model\Order;
 use App\Model\User;
 use PHPixie\Paginate\Pager\ORM as ORMPager;
@@ -98,57 +100,51 @@ class Account extends \App\Page {
     public function action_edit_profile()
     {
         $user = $this->getUser();
-        $fields = ['first_name', 'last_name', 'user_phone']; //, 'email', 'username', 'password', ];
+        $fields = ['first_name', 'last_name', 'user_phone'];
         $errors = [];
         $this->view->success = false;
 
         if ($this->request->method == 'POST') {
-            $this->checkCsrfToken('profile');
+            // $this->checkCsrfToken('profile');
 
+            $photo = $this->request->uploadedFile('photo', [
+                'extensions' => ['jpeg', 'jpg', 'gif', 'png'],
+                'types' => ['image']
+            ]);
 
-            $data = [];
-            foreach ($this->request->post() as $key => $value) {
-                if (in_array($key, $fields)) {
-                    $data[$key] = $value;
-                }
+            if ($photo->isLoaded() && !$photo->isValid()) {
+                $errors[] = 'Incorrect avatar file';
             }
 
-//            if (!$data['username']) {
-//                $errors[] = 'Please enter username.';
-//
-//            } else {
-//                /** @var User $checkUser */
-//                $checkUser = $this->pixie->orm->get('User')->where('username', $data['username'])->find_all()->current();
-//                if ($checkUser->loaded() && $checkUser->id() != $user->id()) {
-//                    $errors[] = 'Username you entered is already in use. Please enter another one.';
-//                }
-//            }
-//
-//            if (!$data['email']) {
-//                $errors[] = 'Please enter email.';
-//
-//            } else {
-//                /** @var User $checkUser */
-//                $checkUser = $this->pixie->orm->get('User')->where('email', $data['email'])->find_all()->current();
-//                if ($checkUser->loaded() && $checkUser->id() != $user->id()) {
-//                    $errors[] = 'Email you entered is already in use. Please enter another one.';
-//                }
-//            }
-//
-//            if (!$data['password'] && !$data['password_confirmation']) {
-//                unset($data['password']);
-//
-//            } else {
-//                if ($data['password'] != $data['password_confirmation']) {
-//                    $errors[] = 'Passwords must match.';
-//
-//                } else {
-//                    $data['password'] = $this->pixie->auth->provider('password')->hash_password($data['password']);
-//                }
-//            }
+            $data = $user->filterValues($this->request->post(), $fields);
 
             if (!count($errors)) {
+
+                $photoPath = preg_replace('#/+$#i', '', $this->pixie->root_dir) . $this->pixie->config->get('page.user_pictures_path');
+
+                if ($this->request->post('remove_photo')
+                    && $user->photo
+                    && file_exists($photoPath . $user->photo)
+                ) {
+                    unlink($photoPath.$user->photo);
+                    $user->photo = '';
+                }
+
                 $user->values($data);
+
+                if ($photo->isLoaded()) {
+                    if ($user->photo && file_exists($photoPath . $user->photo)) {
+                        unlink($photoPath . $user->photo);
+                    }
+
+                    $ext = FSHelper::cleanFileName($photo->getExtension());
+                    $photoName = $user->id() . '_' . substr(sha1(time() . $photo->getName()), 0, 6) . '_'
+                        . FSHelper::cleanFileName($photo->getBaseName(), 32) . ($ext ? '.' . $ext : '');
+
+                    $photo->move($photoPath . $photoName);
+                    $user->photo = $photoName;
+                }
+
                 $user->save();
 
                 $this->pixie->session->flash('success', 'You have successfully updated your profile.');
@@ -161,13 +157,13 @@ class Account extends \App\Page {
                 }
 
                 return;
+
+            } else {
+                $data['photo'] = $user->photo;
             }
-            $this->view->password_confirmation = $this->request->post('password_confirmation');
 
         } else {
-            $data = $user->getFields($fields);
-//            $data['password'] = '';
-//            $data['password_confirmation'] = '';
+            $data = $user->getFields(array_merge($fields, ['photo']));
         }
 
         foreach ($data as $key => $value) {

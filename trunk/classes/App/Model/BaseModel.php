@@ -22,6 +22,11 @@ use PHPixie\ORM\Model;
  */
 class BaseModel extends Model
 {
+    /**
+     * @var array Cached field names of the model.
+     */
+    protected static $fieldNames = [];
+
 	/**
 	 * Checks if the collection contains strictly given instance of model.
 	 *
@@ -164,5 +169,35 @@ class BaseModel extends Model
             ->where($this->id_field, $this->id())->execute()->current();
         $this->values($row, true);
         return $this;
+    }
+
+    public function filterValues($values, $fields = [])
+    {
+        $result = [];
+        $columns = $this->getFieldNames();
+        $fieldCount = count($fields);
+
+        foreach ($values as $key => $value) {
+            if ((!$fieldCount || $fieldCount && in_array($key, $fields))
+                && in_array($key, $columns)
+            ) {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+    }
+
+    public function getFieldNames()
+    {
+        $className = get_class($this);
+
+        if (!self::$fieldNames[$className] && self::$fieldNames[$className] !== false) {
+            self::$fieldNames[$className] = $this->columns();
+            if (!self::$fieldNames[$className]) {
+                self::$fieldNames[$className] = false;
+            }
+        }
+
+        return self::$fieldNames[$className] === false ? [] : self::$fieldNames[$className];
     }
 } 

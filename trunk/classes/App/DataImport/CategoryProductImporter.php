@@ -10,6 +10,7 @@
 namespace App\DataImport;
 
 
+use App\Helpers\FSHelper;
 use App\Model\Category;
 use App\Pixie;
 
@@ -236,9 +237,7 @@ class CategoryProductImporter
 
     public function generateFilename($fileName, $length = 64)
     {
-        $name = preg_replace('/[^\w\d_]/', '_', $fileName);
-        $name = preg_replace('/_+/', '_', $name);
-        return substr(iconv("UTF-8", "ISO-8859-9//TRANSLIT", $name), 0, $length);
+        return FSHelper::cleanFileName($fileName, $length);
     }
 
     public function copyFile($from, $to)

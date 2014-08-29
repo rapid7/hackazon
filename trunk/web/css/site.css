@@ -814,3 +814,14 @@ ul.nav li.grey a {
     right: 20px;
     position: absolute;
 }
+
+.btn-lg + .file-input-name {
+    font-size: 18px;
+    line-height: 1.33;
+    vertical-align: middle;
+}
+
+.profile-edit .profile-picture {
+    max-height: 300px;
+    max-width: 400px;
+}

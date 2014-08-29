@@ -9,6 +9,12 @@ $_REQUEST
 */
 return [
     'fields' => [   // Separate request params, either from GET or POST
+//        'field_name' => [
+//            'sql',
+//            'xss',
+//            'ArbitraryFileUpload'
+//            'RemoteFileInclude'
+//        ]
     ],
 
     'forms' => [    // Forms with fields
@@ -35,6 +41,10 @@ return [
             'protocols' => ['http', 'https'],
             'methods' => ['POST'],
             'paths' => ['/']
+        ],
+
+        'os_command' => [
+            'enabled' => false
         ]
     ]
 ];
