@@ -23,5 +23,11 @@
         <td>Phone:</td>
         <td><?php $_($user->user_phone); ?></td>
     </tr>
+    <?php if (isset($user->photo) && $user->photo): ?>
+    <tr>
+        <td>Photo:</td>
+        <td><img src="/user_pictures/<?php $_($user->photo); ?>" alt="" class="profile-picture" /></td>
+    </tr>
+    <?php endif; ?>
 </table>
 
