@@ -1,4 +1,4 @@
-<form role="form" method="post" class="profile-edit-form" action="/account/profile/edit" id="editProfileForm">
+<form role="form" method="post" class="profile-edit-form" action="/account/profile/edit" id="editProfileForm" enctype="multipart/form-data">
     <?php $_token('profile'); ?>
     <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-6">
@@ -17,34 +17,17 @@
         <input type="text" name="user_phone" id="user_phone" class="form-control input-lg" placeholder="Phone" tabindex="3" value="<?php $_($user_phone, 'user_phone'); ?>">
     </div>
 
-    <?php /* <div class="form-group">
-        <input type="text" name="username" id="username" required class="form-control input-lg" placeholder="Username" tabindex="3" value="<?php $_($username, 'username'); ?>">
-    </div>
+    <?php if (isset($photo) && $photo): ?>
+        <div class="form-group">
+            <img src="/user_pictures/<?php $_($photo); ?>" alt="" class="profile-picture" /> <br>
+            <label><input type="checkbox" name="remove_photo" /> Remove photo</label>
+        </div>
+    <?php endif; ?>
 
     <div class="form-group">
-        <input type="email" maxlength="100" required name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4" value="<?php $_($email, 'email'); ?>">
+        <input type="file" name="photo" id="photo" class="file-input btn btn-default btn-primary btn-lg" title="Select avatar image" tabindex="4" value="<?php $_($photo, 'photo'); ?>">
     </div>
 
-    <hr class="colorgraph">
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <p>Update password:</p>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
-            <div class="form-group">
-                <input type="password" maxlength="100" name="password" id="password"
-                       class="form-control input-lg" placeholder="Password" tabindex="5" value="<?php $_($password, 'password'); ?>">
-            </div>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
-            <div class="form-group">
-                <input type="password" maxlength="100" name="password_confirmation"
-                       id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password"
-                       tabindex="6" value="<?php $_($password_confirmation, 'password_confirmation'); ?>">
-            </div>
-        </div>
-    </div>
-              */ ?>
     <hr class="colorgraph">
     <div class="row">
         <div class="col-xs-6 col-md-6">

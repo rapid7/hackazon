@@ -46,6 +46,7 @@
         <script src="/js/jquery.nivo.slider.pack.js"></script>
         <script src="/js/respond.min.js"></script>
         <script src="/js/star-rating.min.js"></script>
+        <script src="/js/bootstrap.file-input.js"></script>
         <script src="/js/knockout-2.2.1.js"></script>
         <script src="/js/knockout.localStorage.js"></script>
         <script src="/js/koExternalTemplateEngine_all.min.js"></script>

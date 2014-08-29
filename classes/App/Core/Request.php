@@ -176,4 +176,14 @@ class Request extends \PHPixie\Request
     {
         return $this->param('namespace') == 'App\\Admin\\';
     }
+
+    /**
+     * @param $name
+     * @param array $params
+     * @return UploadedFile
+     */
+    public function uploadedFile($name, array $params = [])
+    {
+        return new UploadedFile($this->pixie, $name, $params);
+    }
 }

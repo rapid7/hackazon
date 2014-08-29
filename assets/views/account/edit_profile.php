@@ -15,6 +15,9 @@
             <?php if ($success): ?>
                 <div class="alert alert-success" role="alert"><?php echo $success; ?></div>
             <?php endif; ?>
+            <?php if ($errorMessage): ?>
+                <div class="alert alert-danger" role="alert"><?php echo $errorMessage; ?></div>
+            <?php endif; ?>
             <?php include __DIR__ . '/_profile_form.php'; ?>
         </div>
     </div>
