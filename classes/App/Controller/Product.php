@@ -12,11 +12,12 @@ use \App\Model\Category;
  */
 class Product extends \App\Page
 {
-
+    /*
     public function action_index()
     {
         $this->view->subview = 'product/index';
     }
+     */
 
     public function action_view()
     {
