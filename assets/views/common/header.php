@@ -57,12 +57,6 @@
                     </li>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
-            <div id="logincontrol">
-                <ul class="nav navbar-nav navbar-right">
-
-                </ul>
-            </div>
             <div class="row">
                 <div class="col-xs-3 col-md-2 col-lg-3">
                     <?php include($common_path . "sidebar.php") ?>

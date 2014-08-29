@@ -1,9 +1,9 @@
 <script>
-    $(function() {
-        var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
-        while (m = re.exec(queryString)) {
-            queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-        }
+  $(function() {
+    var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
+    while (m = re.exec(queryString)) {
+        queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
 		function remove(arr, item) {
 			for(var i = arr.length; i--;) {
 				if(arr[i] == item) {
@@ -12,38 +12,50 @@
 				}
 			}
 		}
-        $("#filter-block [data-filter=brands]").on("click", function(e) {
-            queryParameters['brands'] = $(this).find("input[type=hidden]").val();
-			if($(this).parent().hasClass("active")) {
-				queryParameters['brands'] = "";
-			}
-            location.search = $.param(queryParameters);
-			e.preventDefault();
-        });
-
-        $("#filter-block [data-filter=price]").on("click", function(e) {
-            queryParameters['price'] = $(this).find("input[type=hidden]").val();
-			if($(this).parent().hasClass("active")) {
-				queryParameters['price'] = "";
-			}
-            location.search = $.param(queryParameters);
-        });
-
-        $("#filter-block [data-filter=quality]").on("click", function(e) {
-            queryParameters['quality'] = $(this).find("input[type=hidden]").val();
-			if($(this).parent().hasClass("active")) {
-				queryParameters['quality'] = "";
-			}
-            location.search = $.param(queryParameters);
-        });
-		$("#filter-block input[type=reset]").on("click", function(e) {
-			queryParameters['quality'] = "";
-            queryParameters['price'] = "";
-            queryParameters['brands'] = "";
-			location.search = $.param(queryParameters);
-        });
-		
+    function search(link) {
+      $.ajax({
+        url: location.origin + location.pathname + "?" + link,
+        data:{},
+        dataType: 'html'
+      }).done(function( data ) {
+        $("#container").html(data);
+        $('.nivoslider').nivoSlider();
+        $('#slider2').carousel();
+      });
+    }
+    $("#filter-block [data-filter=brands]").on("click", function(e) {
+        queryParameters['brands'] = $(this).find("input[type=hidden]").val();
+			  if($(this).parent().hasClass("active")) {
+				  queryParameters['brands'] = "";
+			  }
+        search($.param(queryParameters));
+			  e.preventDefault();
     });
+
+    $("#filter-block [data-filter=price]").on("click", function(e) {
+        queryParameters['price'] = $(this).find("input[type=hidden]").val();
+			  if($(this).parent().hasClass("active")) {
+				  queryParameters['price'] = "";
+			  }
+        search($.param(queryParameters));
+        e.preventDefault();
+    });
+
+    $("#filter-block [data-filter=quality]").on("click", function(e) {
+        queryParameters['quality'] = $(this).find("input[type=hidden]").val();
+			  if($(this).parent().hasClass("active")) {
+				  queryParameters['quality'] = "";
+			  }
+        search($.param(queryParameters));
+        e.preventDefault();
+    });
+		$("#filter-block input[type=reset]").on("click", function(e) {
+			  queryParameters['quality'] = "";
+        queryParameters['price'] = "";
+        queryParameters['brands'] = "";
+			  location.search = $.param(queryParameters);
+    });
+  });
 </script>
 <div class="row">
     <div class="col-xs-12 col-sm-3">
