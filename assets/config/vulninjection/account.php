@@ -28,6 +28,16 @@ return [
         ]
     ],
 
+    'actions' => [
+        'help_articles' => [
+            'fields' => [
+                'page' => [
+                    'RemoteFileInclude'
+                ]
+            ]
+        ]
+    ],
+
     'vulnerabilities' => [
         'os_command' => [
             'enabled' => true
