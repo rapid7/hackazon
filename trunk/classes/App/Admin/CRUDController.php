@@ -9,10 +9,21 @@
 
 namespace App\Admin;
 
-
+/**
+ * Controller which provides basic CRUD features for Model instances.
+ * For detailed tuning of features, just derive fom it and override methods.
+ * @package App\Admin
+ */
 class CRUDController extends Controller
 {
+    /**
+     * @var string Plural name of the model to be shown in UI.
+     */
     public $modelNamePlural = '';
+
+    /**
+     * @var string Singular name of the model
+     */
     public $modelName = '';
 
     public function before()
@@ -31,8 +42,35 @@ class CRUDController extends Controller
         $this->view->pageHeader = $this->modelNamePlural;
     }
 
+    /**
+     * List items.
+     */
     public function action_index()
     {
         $this->view->subview = 'crud/index';
+    }
+
+    /**
+     * Shows single item
+     */
+    public function action_show()
+    {
+        $this->view->subview = 'crud/show';
+    }
+
+    /**
+     * Edit existing item
+     */
+    public function action_edit()
+    {
+
+    }
+
+    /**
+     * Create new item
+     */
+    public function action_new()
+    {
+
     }
 } 
