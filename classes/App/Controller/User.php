@@ -13,6 +13,7 @@ use PHPixie\View;
 class User extends Page {
 
     public function action_login() {
+        $this->view->pageTitle = "Login";
         if (!is_null($this->pixie->auth->user())) {
             $this->redirect('/account');
         }
@@ -65,6 +66,7 @@ class User extends Page {
     }
 
     public function action_password() {
+        $this->view->pageTitle = "Restore password";
         if ($this->request->method == 'POST') {
             $email = $this->request->post('email');
 
@@ -84,6 +86,7 @@ class User extends Page {
 
 
     public function action_register() {
+        $this->view->pageTitle = "Registration";
         if (!is_null($this->pixie->auth->user())) {
             $this->redirect('/account');
         }
