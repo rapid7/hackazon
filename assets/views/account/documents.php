@@ -1,7 +1,5 @@
 <div class="container">
-
     <div class="row">
-
         <div class="col-lg-12">
             <h1 class="page-header">Documents</h1>
             <ol class="breadcrumb">
@@ -9,7 +7,6 @@
                 <li class="active">Documents</li>
             </ol>
         </div>
-
         <div class="col-lg-12">
             <ul>
             <?php foreach ($files as $file => $fileName): ?>

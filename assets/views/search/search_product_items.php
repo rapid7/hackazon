@@ -18,6 +18,7 @@
         data:{},
         dataType: 'html'
       }).done(function( data ) {
+        history.pushState(null, null, location.origin + location.pathname + "?" + link)
         $("#container").html(data);
         $('.nivoslider').nivoSlider();
         $('#slider2').carousel();
@@ -53,7 +54,8 @@
 			  queryParameters['quality'] = "";
         queryParameters['price'] = "";
         queryParameters['brands'] = "";
-			  location.search = $.param(queryParameters);
+        search($.param(queryParameters));
+        e.preventDefault();
     });
   });
 </script>
