@@ -1,19 +1,21 @@
 <div class="container">
     <!-- /.row -->
-    <?php if (isset($errorMessage) && !empty($errorMessage)): ?>
-        <div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <strong><?= $errorMessage; ?></strong>
-        </div>
-    <?php endif; ?>
     <div class="row">
         <form role="form" class="signin" method="POST" action="/user/login<?php echo $returnUrl ? '?return_url=' . rawurlencode($returnUrl) : ''; ?> " id="loginPageForm">
             <h1>Please login <small></small></h1>
             <ol class="breadcrumb">
-				<li><a href="index.html">Home</a></li>
-				<li class="active">Login</li>
-			</ol>
-            <hr class="colorgraph">
+				      <li><a href="/">Home</a></li>
+				      <li class="active">Login</li>
+			      </ol>
+            <hr class="colorgraph" />
+            <?php if (isset($errorMessage) && !empty($errorMessage)): ?>
+            <div class="alert alert-danger alert-dismissable">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+              <strong>
+                <?= $errorMessage; ?>
+              </strong>
+            </div>
+            <?php endif; ?>
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">

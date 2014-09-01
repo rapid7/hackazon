@@ -1,54 +1,39 @@
     <!-- Page Content -->
-
     <div class="container">
-
         <div class="row">
-
             <div class="col-lg-12">
                 <h1 class="page-header">Services
                     <small>What We Do</small>
                 </h1>
                 <ol class="breadcrumb">
-                    <li><a href="index.html">Home</a>
+                    <li><a href="/">Home</a>
                     </li>
                     <li class="active">Services</li>
                 </ol>
             </div>
-
         </div>
         <!-- /.row -->
-
         <div class="row">
-
             <div class="col-lg-12">
-                <img class="img-responsive" src="http://placehold.it/1200x300">
+                <img class="img-responsive" src="http://placehold.it/1200x300" />
             </div>
-
         </div>
         <!-- /.row -->
-
         <!-- Service Paragraphs -->
-
         <div class="row">
-
             <div class="col-md-8">
                 <h2 class="page-header">Our Premium Services</h2>
                 <p>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
             </div>
-
             <div class="col-md-4">
                 <h2 class="page-header">Something More</h2>
                 <p>Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets.</p>
                 <a class="btn btn-primary" href="#">Click Me!</a>
             </div>
-
         </div>
         <!-- /.row -->
-
         <!-- Service Tabs -->
-
         <div class="row">
-
             <div class="col-lg-12">
                 <h2 class="page-header">Tabbed Services</h2>
                 <ul id="myTab" class="nav nav-tabs">
@@ -91,41 +76,32 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <!-- /.row -->
-
         <!-- Service Images -->
-
         <div class="row">
-
             <div class="col-lg-12">
                 <h2 class="page-header">Service Images</h2>
             </div>
-
             <div class="col-sm-4">
-                <img class="img-responsive" src="http://placehold.it/750x450">
+                <img class="img-responsive" src="http://placehold.it/750x450" />
                 <h3>Service One</h3>
                 <p>Service one description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc placerat diam quis nisl vestibulum dignissim. In hac habitasse platea dictumst.</p>
                 <a class="btn btn-link btn-sm pull-right">More <i class="fa fa-angle-right"></i></a>
             </div>
-
             <div class="col-sm-4">
-                <img class="img-responsive" src="http://placehold.it/750x450">
+                <img class="img-responsive" src="http://placehold.it/750x450" />
                 <h3>Service Two</h3>
                 <p>Service two description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc placerat diam quis nisl vestibulum dignissim. In hac habitasse platea dictumst.</p>
                 <a class="btn btn-link btn-sm pull-right">More <i class="fa fa-angle-right"></i></a>
             </div>
-
             <div class="col-sm-4">
-                <img class="img-responsive" src="http://placehold.it/750x450">
+                <img class="img-responsive" src="http://placehold.it/750x450" />
                 <h3>Service Three</h3>
                 <p>Service three description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc placerat diam quis nisl vestibulum dignissim. In hac habitasse platea dictumst.</p>
                 <a class="btn btn-link btn-sm pull-right">More <i class="fa fa-angle-right"></i></a>
             </div>
-
         </div>
         <!-- /.row -->
-
     </div>
     <!-- /.container -->
