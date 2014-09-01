@@ -14,7 +14,7 @@
 		}
     function search(link) {
       $.ajax({
-        url: location.origin + location.pathname + "?" + link,
+        url: location.origin + link,
         data:{},
         dataType: 'html'
       }).done(function( data ) {
@@ -29,7 +29,7 @@
 			  if($(this).parent().hasClass("active")) {
 				  queryParameters['brands'] = "";
 			  }
-        search($.param(queryParameters));
+        search(location.pathname + "?" +$.param(queryParameters));
 			  e.preventDefault();
     });
 
@@ -38,7 +38,7 @@
 			  if($(this).parent().hasClass("active")) {
 				  queryParameters['price'] = "";
 			  }
-        search($.param(queryParameters));
+        search(location.pathname + "?" +$.param(queryParameters));
         e.preventDefault();
     });
 
@@ -47,15 +47,19 @@
 			  if($(this).parent().hasClass("active")) {
 				  queryParameters['quality'] = "";
 			  }
-        search($.param(queryParameters));
+        search(location.pathname + "?" +$.param(queryParameters));
         e.preventDefault();
     });
 		$("#filter-block input[type=reset]").on("click", function(e) {
 			  queryParameters['quality'] = "";
         queryParameters['price'] = "";
         queryParameters['brands'] = "";
-        search($.param(queryParameters));
+        search(location.pathname + "?" +$.param(queryParameters));
         e.preventDefault();
+    });
+    $(".pagination a").on("click", function(e) {
+      search($(this).attr("href"));
+      e.preventDefault();
     });
   });
 </script>

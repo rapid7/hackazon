@@ -1,25 +1,19 @@
 <!-- Page Content -->
 
 <div class="container">
-
     <div class="row">
-
         <div class="col-lg-12">
             <h1 class="page-header">Registration
                 <small>Join us</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="index.html">Home</a>
+                <li><a href="/">Home</a>
                 </li>
                 <li class="active">Registration</li>
             </ol>
         </div>
-
     </div>
     <!-- /.row -->
-
-
-
     <!-- Service Paragraphs -->
 
     <div class="row" style="width: 400px; padding-left: 30px;">
