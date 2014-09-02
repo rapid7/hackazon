@@ -37,6 +37,7 @@
         <script src="/js/bootstrap.js"></script>
         <script src="/js/modern-business.js"></script>
         <script src="/js/bootstrapValidator.min.js"></script>
+		<script src="/js/jquery.validate.min.js"></script>
         <script src="/js/spin.min.js"></script>
         <script src="/js/jquery.modern-blink.js"></script>
         <script src="/js/ladda.min.js"></script>
@@ -50,6 +51,7 @@
         <script src="/js/knockout-2.2.1.js"></script>
         <script src="/js/knockout.localStorage.js"></script>
         <script src="/js/koExternalTemplateEngine_all.min.js"></script>
+		
         <script src="/js/site.js"></script>
     </head>
     <body>
