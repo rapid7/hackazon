@@ -25,11 +25,14 @@
 			<div class="row">
 			<div class="col-lg-12">
                 <form role="form" method="post" action="/user/password" id="passwordForm">
-                    <div class="input-group">
-                        <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
-						<span class="input-group-btn">
-							<button id="loginbtn" type="submit" class="btn btn-success">Restore</button>
-						</span>
+                    <div class="form-group">
+                        <input type="email" required="required" class="form-control" name="email" id="email" placeholder="Enter email" />
+						            <span class="input-group-btn">
+							            
+						            </span>
+                    </div>
+                    <div class="form-group">
+                      <button id="loginbtn" type="submit" class="btn btn-success">Restore</button>
                     </div>
 					</form>
 				</div>
@@ -38,29 +41,12 @@
         <?php endif; ?>
     </div>
   <script>
-
-  // When the browser is ready...
-  $(function() {
-
-    // Setup form validation on the #register-form element
-    $("#passwordForm").validate({
-        // Specify the validation rules
-        rules: {
-            email: {
-                required: true,
-                email: true
-            }
+    $('#passwordForm').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
         },
-        // Specify the validation error messages
-        messages: {
-            email: "Please enter a valid email address"
-        },
-
-        submitHandler: function(form) {
-            form.submit();
-        }
+        container: 'tooltip'
     });
-
-  });
-
   </script>
