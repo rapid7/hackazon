@@ -49,7 +49,7 @@ class CartItems extends BaseModel {
         if ($itemExist->loaded()) {//update existed
             $itemExist->qty += $qty;
             $itemExist->save();
-        } else {//create new item
+        } else if($product->loaded())  {//create new item
             $this->cart_id = $this->getCart()->id;
             $this->created_at = date('Y-m-d H:i:s');
             $this->product_id = $productId;
@@ -60,10 +60,13 @@ class CartItems extends BaseModel {
             $this->getCart()->items_count += 1;
             $item = $this;
         }
-        $this->getCart()->total_price += $product->Price * $qty;
-        $this->getCart()->items_qty += $qty;
+        if($product->loaded()){
+            $this->getCart()->total_price += $product->Price * $qty;
+            $this->getCart()->items_qty += $qty;
+            $this->pixie->session->flash('added_product_name', $product->name);
+        }
         $this->getCart()->save();
-        $this->pixie->session->flash('added_product_name', $product->name);
+        
         return [
             'item' => $item,
             'product' => $product
