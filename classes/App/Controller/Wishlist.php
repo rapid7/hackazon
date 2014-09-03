@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nikolay Chervyakov 
@@ -7,7 +8,6 @@
  */
 
 namespace App\Controller;
-
 
 use App\Exception\ForbiddenException;
 use App\Exception\HttpException;
@@ -21,43 +21,40 @@ use PHPixie\Exception\PageNotFound;
  * Class Wishlist.
  * @package App\Controller
  */
+class Wishlist extends Page {
 
-class Wishlist extends Page
-{
-	/**
-	 * @var User Current logged in user.
-	 */
-	private $user;
+    /**
+     * @var User Current logged in user.
+     */
+    private $user;
 
     /**
      * Either shows empty page if user has no lists, or shows the default list.
      */
-    public function action_index()
-	{
-		$this->prepare();
+    public function action_index() {
+        $this->prepare();
 
-		// Offer to create a new wishlist.
+        // Offer to create a new wishlist.
 
-		if ($this->user == null) {
-			$this->view->subview = 'wishlist/no_list';
-			return;
-		}
+        if ($this->user == null) {
+            $this->view->subview = 'wishlist/no_list';
+            return;
+        }
 
         $wishList = $this->user->getDefaultWishList();
 
-		if ($wishList) {
+        if ($wishList) {
             $this->showDefaultWishList();
-		} else {
+        } else {
             $this->view->subview = 'wishlist/no_list';
-		}
-	}
+        }
+    }
 
     /**
      * View wish list.
      * @throws \PHPixie\Exception\PageNotFound
      */
-    public function action_view()
-    {
+    public function action_view() {
         $this->prepare();
 
         $id = $this->request->param('id');
@@ -76,8 +73,7 @@ class Wishlist extends Page
      * Create new wish list.
      * @throws \App\Exception\ForbiddenException
      */
-    public function action_new()
-    {
+    public function action_new() {
         $this->prepare();
 
         if (!$this->user) {
@@ -114,15 +110,14 @@ class Wishlist extends Page
         }
 
         $this->redirect($this->generateUrl('default', array(
-            'controller' => 'wishlist'
+                    'controller' => 'wishlist'
         )));
     }
 
     /**
      * @throws \App\Exception\ForbiddenException
      */
-    public function action_edit()
-    {
+    public function action_edit() {
         $this->prepare();
 
         if (!$this->user) {
@@ -152,7 +147,7 @@ class Wishlist extends Page
             }
         }
 
-        $wishList->name = $name ?: $wishList->name;
+        $wishList->name = $name ? : $wishList->name;
         $wishList->type = $type;
         $wishList->save();
 
@@ -162,7 +157,7 @@ class Wishlist extends Page
         }
 
         $this->redirect($this->generateUrl('default', array(
-            'controller' => 'wishlist'
+                    'controller' => 'wishlist'
         )));
     }
 
@@ -171,8 +166,7 @@ class Wishlist extends Page
      * @throws \App\Exception\ForbiddenException
      * @throws \Exception
      */
-    public function action_set_default()
-    {
+    public function action_set_default() {
         $this->prepare();
         if ($this->request->method != 'POST') {
             throw new \Exception();
@@ -201,9 +195,9 @@ class Wishlist extends Page
         }
 
         $this->redirect($this->generateUrl('default', array(
-            'controller' => 'wishlist',
-            'action' => 'view',
-            'id' => $wishList->id()
+                    'controller' => 'wishlist',
+                    'action' => 'view',
+                    'id' => $wishList->id()
         )));
     }
 
@@ -212,8 +206,7 @@ class Wishlist extends Page
      * @throws \App\Exception\ForbiddenException
      * @throws \Exception
      */
-    public function action_add_product()
-    {
+    public function action_add_product() {
         $this->prepare();
         if ($this->request->method != 'POST') {
             throw new \Exception();
@@ -271,8 +264,7 @@ class Wishlist extends Page
      * @throws \App\Exception\ForbiddenException
      * @throws \Exception
      */
-    public function action_delete_product()
-    {
+    public function action_delete_product() {
         $this->prepare();
         if ($this->request->method != 'POST') {
             throw new \Exception();
@@ -302,8 +294,7 @@ class Wishlist extends Page
      * @throws \App\Exception\ForbiddenException
      * @throws \Exception
      */
-    public function action_delete()
-    {
+    public function action_delete() {
         $this->prepare();
         if ($this->request->method != 'POST') {
             throw new \Exception();
@@ -334,15 +325,14 @@ class Wishlist extends Page
         }
 
         $this->redirect($this->generateUrl('default', array(
-            'controller' => 'wishlist'
+                    'controller' => 'wishlist'
         )));
     }
 
     /**
      * Set up important variables for most of actions.
      */
-    protected function prepare()
-    {
+    protected function prepare() {
         $this->user = $this->pixie->auth->user();
         if ($this->user) {
             $this->view->user = $this->user;
@@ -350,26 +340,24 @@ class Wishlist extends Page
         $this->view->pageTitle = "Wish List";
     }
 
-    protected function showDefaultWishList()
-	{
+    protected function showDefaultWishList() {
         $wishList = $this->user->getDefaultWishList();
         $this->view->wishList = $wishList;
 
-		if (!$wishList) {
+        if (!$wishList) {
             $this->view->showDefaultPage = true;
-			$this->view->subview = 'wishlist/no_list';
+            $this->view->subview = 'wishlist/no_list';
             return;
-		}
+        }
 
         $this->showWishList($wishList);
-	}
+    }
 
     /**
      * @param $id
      * @return mixed|\App\Model\WishList
      */
-    public function getWishList($id)
-    {
+    public function getWishList($id) {
         $model = new \App\Model\WishList($this->pixie);
         return $model->where('id', '=', $id)->find_all()->current();
     }
@@ -378,8 +366,7 @@ class Wishlist extends Page
      * Shows single wish list.
      * @param \App\Model\WishList $wishList
      */
-    private function showWishList(\App\Model\WishList $wishList)
-    {
+    private function showWishList(\App\Model\WishList $wishList) {
         $page = $this->request->get('page', 1);
         $perPage = 9;
         $this->view->page = $page;
@@ -393,15 +380,13 @@ class Wishlist extends Page
     /**
      * Search users and wishLists by username or email
      */
-    public function action_search()
-    {
+    public function action_search() {
         $searchQuery = $this->request->post('search');
         $result = $this->pixie->orm->get('Wishlist')->searchWishLists($searchQuery);
         $this->jsonResponse($result);
     }
 
-    public function action_remember()
-    {
+    public function action_remember() {
         $userId = $this->request->post('user_id');
         $result = $this->pixie->orm->get('Wishlist')->remember($userId);
         if ($result) {
@@ -409,13 +394,11 @@ class Wishlist extends Page
         }
     }
 
-    public function action_remove_follower()
-    {
+    public function action_remove_follower() {
         $item = $this->pixie->orm->get('WishListFollowers')
-            ->where(
-                array('user_id', '=', $this->pixie->auth->user()->id),
-                array('and', array('follower_id', '=', $this->request->post('follower_id'))))
-            ->find();
+                ->where(
+                        array('user_id', '=', $this->pixie->auth->user()->id), array('and', array('follower_id', '=', $this->request->post('follower_id'))))
+                ->find();
         if ($item->loaded()) {
             $item->delete();
             $this->jsonResponse(['success' => 1]);
@@ -423,4 +406,6 @@ class Wishlist extends Page
             $this->jsonResponse(['success' => 0]);
         }
     }
-} 
+
+}
+

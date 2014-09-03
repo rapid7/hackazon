@@ -222,6 +222,8 @@ class CategoryProductImporter
         $this->pixie->db->query('delete')->table('tbl_orders')->execute();
         $this->pixie->db->query('delete')->table('tbl_products')->execute();
         $this->pixie->db->query('delete')->table('tbl_categories')->execute();
+        $this->pixie->db->get()->execute("alter table tbl_products AUTO_INCREMENT = 1;");
+        $this->pixie->db->get()->execute("alter table tbl_categories AUTO_INCREMENT = 1;");
     }
 
     protected function stringContains($haystack, array $needles)
