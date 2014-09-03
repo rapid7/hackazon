@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Model;
+
 use App\Pixie;
 
 /**
@@ -15,11 +16,9 @@ use App\Pixie;
 class User extends BaseModel {
 
     public $table = 'tbl_users';
-
-	private $defaultWishList = null;
-
-	protected $has_many = array(
-		'wishlists' => array(
+    private $defaultWishList = null;
+    protected $has_many = array(
+        'wishlists' => array(
             'model' => 'wishList',
             'key' => 'user_id'
         ),
@@ -33,33 +32,29 @@ class User extends BaseModel {
             'key' => 'user_id',
             'foreign_key' => 'role_id'
         )
-	);
+    );
 
-
-	public function checkExistingUser($dataUser){
-        if(
-            strlen($dataUser['username']) && iterator_count($this->getUserByUsername($dataUser['username'])) > 0
-            || strlen($dataUser['email']) && iterator_count($this->getUserByEmail($dataUser['email'])) > 0
-        ) {
+    public function checkExistingUser($dataUser) {
+        if (strlen($dataUser['username']) && iterator_count($this->getUserByUsername($dataUser['username'])) > 0 ||
+                strlen($dataUser['email']) && iterator_count($this->getUserByEmail($dataUser['email'])) > 0) {
             return true;
         } else {
             return false;
         }
     }
 
-
-    protected  function getUserByUsername($username) {
+    protected function getUserByUsername($username) {
         return $this->pixie->db->query('select')
-                                ->table($this->table)
-                                ->where('username', $username)
-                                ->execute();  
+                        ->table($this->table)
+                        ->where('username', $username)
+                        ->execute();
     }
 
-    protected function getUserByEmail($email){
+    protected function getUserByEmail($email) {
         return $this->pixie->db->query('select')
-            ->table($this->table)
-            ->where('email', $email)
-            ->execute();
+                        ->table($this->table)
+                        ->where('email', $email)
+                        ->execute();
     }
 
     public function RegisterUser($dataUser) {
@@ -76,35 +71,35 @@ class User extends BaseModel {
         $this->pixie->orm->get('User')->values($allowedData)->save();
     }
 
-    public function checkLoginUser($login){
-        if (preg_match("/[a-z0-9_-]+(\\.[a-z0-9_-]+)*@([0-9a-z][0-9a-z-]*[0-9a-z]\\.)+([a-z]{2,4})/i", $login)){
-            $user=$this->pixie->orm->get('User')->where('email',$login)->find();
-            if($user->loaded())
+    public function checkLoginUser($login) {
+        if (preg_match("/[a-z0-9_-]+(\\.[a-z0-9_-]+)*@([0-9a-z][0-9a-z-]*[0-9a-z]\\.)+([a-z]{2,4})/i", $login)) {
+            $user = $this->pixie->orm->get('User')->where('email', $login)->find();
+            if ($user->loaded())
                 $login = $user->username;
         }
         return $login;
     }
 
-    public function loadUserModel($login){
-        $user = $this->pixie->orm->get('User')->where('username',$login)->find();
-        if($user->loaded())
+    public function loadUserModel($login) {
+        $user = $this->pixie->orm->get('User')->where('username', $login)->find();
+        if ($user->loaded())
             return $user;
         return null;
     }
 
-    public function saveOAuthUser($username,$oauth_uid, $oauth_provider){
+    public function saveOAuthUser($username, $oauth_uid, $oauth_provider) {
         $user = $this->pixie->orm->get('User');
         $user->username = $username;
         $user->oauth_provider = $oauth_provider;
         $user->oauth_uid = $oauth_uid;
-        $user->created_on =  date('Y-m-d H:i:s');
+        $user->created_on = date('Y-m-d H:i:s');
         return $user->save();
     }
 
-    public function getEmailData($email){
-        $user = $this->pixie->orm->get('User')->where('email',$email)->find();
+    public function getEmailData($email) {
+        $user = $this->pixie->orm->get('User')->where('email', $email)->find();
 
-        if($user->loaded()){
+        if ($user->loaded()) {
             $host = $this->pixie->config->get('parameters.host');
             $host = $host ? $host : 'http://hackazon.com';
 
@@ -112,15 +107,15 @@ class User extends BaseModel {
                 'to' => $email,
                 'from' => 'RobotHackazon@hackazon.com',
                 'subject' => 'recovering password',
-                'text' => 'Hello, '.$user->username.'.
+                'text' => 'Hello, ' . $user->username . '.
 Recovering link is here
-' . $host . '/user/recover?username='.$user->username.'&recover='.$this->getTempPassword($user),
+' . $host . '/user/recover?username=' . $user->username . '&recover=' . $this->getTempPassword($user),
             );
         }
         return null;
     }
 
-    private function getTempPassword($user){
+    private function getTempPassword($user) {
         $arr = array(
             'a', 'b', 'c', 'd', 'e', 'f',
             'g', 'h', 'i', 'j', 'k', 'l',
@@ -139,160 +134,154 @@ Recovering link is here
             $password .= $arr[rand(0, count($arr) - 1)];
         $user->recover_passw = md5($password);
         $user->save();
-        if($user->loaded())
+        if ($user->loaded())
             return $password;
 
         return null;
     }
 
-    public function checkRecoverPass($username, $recover_passw){
+    public function checkRecoverPass($username, $recover_passw) {
         $user = $this->loadUserModel($username);
-            if($user && md5($recover_passw) === $user->recover_passw)
-                return true;
-            else
-                return false;
+        if ($user && md5($recover_passw) === $user->recover_passw)
+            return true;
+        else
+            return false;
     }
 
-    public function changeUserPassword($username, $new_passw){
+    public function changeUserPassword($username, $new_passw) {
         $user = $this->loadUserModel($username);
         if ($user) {
             $user->password = $this->pixie->auth->provider('password')->hash_password($new_passw);
             $user->recover_passw = null;
             $user->save();
-            if($user->loaded())
+            if ($user->loaded())
                 return true;
         }
         return false;
     }
 
-	/**
-	 * @param WishList $list
-	 * @return $this
-	 */
-	public function addWishList(WishList $list)
-	{
-		if ($this->wishlists->containsById($list)) {
-			return $this;
-		}
+    /**
+     * @param WishList $list
+     * @return $this
+     */
+    public function addWishList(WishList $list) {
+        if ($this->wishlists->containsById($list)) {
+            return $this;
+        }
 
-		$this->add('wishlists', $list);
+        $this->add('wishlists', $list);
         $list->save();
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param WishList $list
-	 * @return $this
-	 */
-	public function removeWishList(WishList $list)
-	{
-		// If collection doesn't contain wish list, just stop
-		if (!$this->wishlists->containsById($list)) {
-			return $this;
-		}
+    /**
+     * @param WishList $list
+     * @return $this
+     */
+    public function removeWishList(WishList $list) {
+        // If collection doesn't contain wish list, just stop
+        if (!$this->wishlists->containsById($list)) {
+            return $this;
+        }
 
-		// Else search for
-		$itemInList = $this->wishlists->filterOneBy(array('id' => $list->id));
-		if ($itemInList) {
-			$this->remove('wishlists', $itemInList);
-		}
+        // Else search for
+        $itemInList = $this->wishlists->filterOneBy(array('id' => $list->id));
+        if ($itemInList) {
+            $this->remove('wishlists', $itemInList);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Returns default wish list.
-	 * If there is no default wish list, method marks first list as default
-	 * and returns it.
-	 * @return null|WishList
-	 */
-	public function getDefaultWishList()
-	{
-		if (!$this->loaded()) {
-			return null;
-		}
+    /**
+     * Returns default wish list.
+     * If there is no default wish list, method marks first list as default
+     * and returns it.
+     * @return null|WishList
+     */
+    public function getDefaultWishList() {
+        if (!$this->loaded()) {
+            return null;
+        }
 
-		if ($this->defaultWishList instanceof WishList) {
-			return $this->defaultWishList;
-		}
+        if ($this->defaultWishList instanceof WishList) {
+            return $this->defaultWishList;
+        }
 
         if (!$this->wishlists->count_all()) {
             return null;
         }
 
 
-		$first = null;
+        $first = null;
         /** @var WishList $list */
-		foreach ($this->lists as $list) {
-			if (!$first) {
-				$first = $list;
-			}
-			if ($list->isDefault()) {
-				$this->setDefaultWishList($list);
-				return $this->defaultWishList;
-			}
-		}
+        foreach ($this->lists as $list) {
+            if (!$first) {
+                $first = $list;
+            }
+            if ($list->isDefault()) {
+                $this->setDefaultWishList($list);
+                return $this->defaultWishList;
+            }
+        }
 
-		if ($first instanceof WishList) {
-			$this->setDefaultWishList($first);
-		}
+        if ($first instanceof WishList) {
+            $this->setDefaultWishList($first);
+        }
 
-		return $this->defaultWishList;
-	}
+        return $this->defaultWishList;
+    }
 
-	/**
-	 * Sets one of users wishlists as a default.
-	 * @param WishList $wishList
-	 * @return $this User himself for chaining
-	 * @throws \InvalidArgumentException If wishlist isn't a users one.
-	 */
-	public function setDefaultWishList(WishList $wishList)
-	{
-		if (!$wishList->loaded()) {
-			throw new \InvalidArgumentException("Can't set empty (not loaded) Wish List as default for user.");
-		}
+    /**
+     * Sets one of users wishlists as a default.
+     * @param WishList $wishList
+     * @return $this User himself for chaining
+     * @throws \InvalidArgumentException If wishlist isn't a users one.
+     */
+    public function setDefaultWishList(WishList $wishList) {
+        if (!$wishList->loaded()) {
+            throw new \InvalidArgumentException("Can't set empty (not loaded) Wish List as default for user.");
+        }
 
-		$newDefault = null;
+        $newDefault = null;
 
         /** @var WishList $list */
-		foreach ($this->lists as $list) {
-			if ($wishList->id == $list->id) {
-				if (!$list->isDefault()) {
-					$list->setDefault();
-					$list->save();
+        foreach ($this->lists as $list) {
+            if ($wishList->id == $list->id) {
+                if (!$list->isDefault()) {
+                    $list->setDefault();
+                    $list->save();
                     $wishList->setDefault();
-				}
+                }
                 $this->defaultWishList = $list;
-				$newDefault = $list;  // Check that given wishlist really exists in users wishlists.
+                $newDefault = $list;  // Check that given wishlist really exists in users wishlists.
+            } else {
+                if ($list->isDefault()) {
+                    $list->setDefault(false);
+                    $list->save();
+                }
+            }
+        }
 
-			} else {
-				if ($list->isDefault()) {
-					$list->setDefault(false);
-					$list->save();
-				}
-			}
-		}
+        // If given wishlist is foreign to user, notify user about illegal argument
+        // User can set as a default only his own wishlists
+        if ($newDefault === null) {
+            throw new \InvalidArgumentException("Can't set empty (not loaded) Wish List as default for user.");
+        }
 
-		// If given wishlist is foreign to user, notify user about illegal argument
-		// User can set as a default only his own wishlists
-		if ($newDefault === null) {
-			throw new \InvalidArgumentException("Can't set empty (not loaded) Wish List as default for user.");
-		}
+        return $this;
+    }
 
-		return $this;
-	}
-
-    public function get($propertyName)
-    {
+    public function get($propertyName) {
         if ($propertyName == 'lists') {
             return $this->wishlists->find_all()->as_array();
         }
         if ($propertyName == 'wishlistFollowers') {
             $followers = $this->pixie->db->query('select')->table($this->pixie->orm->get('User')->table, 'u')
-                ->join(array('tbl_wishlist_followers', 'wf'), array('wf.follower_id', 'u.id'))
-                ->fields('u.id')
-                ->where('wf.user_id', $this->id)
-                ->execute();
+                    ->join(array('tbl_wishlist_followers', 'wf'), array('wf.follower_id', 'u.id'))
+                    ->fields('u.id')
+                    ->where('wf.user_id', $this->id)
+                    ->execute();
             $followerIds = array();
             foreach ($followers->as_array() as $u) {
                 $followerIds[] = $u->id;
@@ -300,16 +289,15 @@ Recovering link is here
             if (empty($followerIds)) {
                 return array();
             }
-            $followerIds = implode(',',$followerIds);
+            $followerIds = implode(',', $followerIds);
             $followers = $this->pixie->orm->get('User')
-                ->where('id', 'IN', $this->pixie->db->expr('(' . $followerIds . ')'))->find_all()->as_array();
+                            ->where('id', 'IN', $this->pixie->db->expr('(' . $followerIds . ')'))->find_all()->as_array();
             return $followers;
         }
         return null;
     }
 
-    public function createNewWishList($name = 'New Wish List', $type = WishList::TYPE_PRIVATE)
-    {
+    public function createNewWishList($name = 'New Wish List', $type = WishList::TYPE_PRIVATE) {
         $wishList = new WishList($this->pixie);
 
         if (!$wishList->isValidType($type)) {
@@ -325,17 +313,17 @@ Recovering link is here
         return $wishList;
     }
 
-    public function removeProductFromWishLists($productId)
-    {
+    public function removeProductFromWishLists($productId) {
         if (!$this->loaded()) {
             return;
         }
 
         $this->pixie->db->query('delete')->table($this->pixie->orm->get('wishListItem')->table, 'wli')
-            ->join(array('tbl_products', 'p'), array('wli.product_id', 'p.productID'))
-            ->join(array('tbl_wish_list', 'wl'), array('wl.id', 'wli.wish_list_id'))
-            ->where('wl.user_id', '=', $this->id())
-            ->where('p.productID', '=', $productId)
-            ->execute();
+                ->join(array('tbl_products', 'p'), array('wli.product_id', 'p.productID'))
+                ->join(array('tbl_wish_list', 'wl'), array('wl.id', 'wli.wish_list_id'))
+                ->where('wl.user_id', '=', $this->id())
+                ->where('p.productID', '=', $productId)
+                ->execute();
     }
+
 }
