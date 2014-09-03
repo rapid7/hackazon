@@ -13,7 +13,7 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=McLaren">
-		<link href='//fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
         <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
         <!-- Libraries -->
@@ -37,7 +37,7 @@
         <script src="/js/bootstrap.js"></script>
         <script src="/js/modern-business.js"></script>
         <script src="/js/bootstrapValidator.min.js"></script>
-		<script src="/js/jquery.validate.min.js"></script>
+	<script src="/js/jquery.validate.min.js"></script>
         <script src="/js/spin.min.js"></script>
         <script src="/js/jquery.modern-blink.js"></script>
         <script src="/js/ladda.min.js"></script>
@@ -65,7 +65,7 @@
         <div class="container" >
             <?php include($common_path . "footer.php") ?>
         </div>
-
+        <?php if (is_null($this->pixie->auth->user())): ?>
         <div id="login-box" class="login-popup">
             <a href="#" class="close" data-toggle="tooltip" data-placement="top" title="Close"><i class="glyphicon glyphicon-remove"></i></a>
             <form role="form" method="post" class="signin" action="/user/login" id="loginForm">
@@ -116,5 +116,6 @@
                 });
             });
         </script>
+        <?php endif ?>
     </body>
 </html>
