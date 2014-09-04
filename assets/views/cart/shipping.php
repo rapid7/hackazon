@@ -136,28 +136,9 @@
 <?php include __DIR__ . '/cart_header.php'; ?>
 <div class="tab-pane active" id="step2">
 
-    <?php foreach ($this->customerAddresses as $address) :?>
-        <div class="col-sm-2 blockShadow">
-        <b><?php echo $_($address->full_name, 'full_name') ?></b><br />
-        <?php echo $_($address->address_line_1, 'address_line_1') ?><br />
-        <?php echo $_($address->address_line_2, 'address_line_2') ?><br />
-        <?php echo $_($address->city, 'city')  . ' ' .  $_($address->region, 'region')  . ' ' .  $_($address->zip, 'zip'); ?><br />
-        <?php echo $_($address->country_id, 'country_id') ?><br />
-        <?php echo $_($address->phone, 'phone') ?><br />
-        <button data-id="<?php echo $address->id?>" style="margin-bottom:5px;width:100%" class="btn btn-primary btn-sm confirm-address ladda-button"
-                data-token="<?php echo $this->getToken('checkout_step2'); ?>" data-style="expand-right"
-                data-spinner-size="20"><span class="ladda-label">Ship to this address</span></button>
-        <button data-id="<?php echo $address->id?>" style="width:48%" class="btn btn-default btn-xs edit-address ladda-button small-button"
-                data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"
-                ><span class="ladda-label">Edit</span></button>&nbsp;
-        <button data-id="<?php echo $address->id?>" style="width:47%" class="btn btn-default btn-xs delete-address ladda-button small-button"
-                data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"
-                ><span class="ladda-label">Delete</span></button>
-        </div>
-    <?php endforeach;?>
     <div style="clear:both"></div>
     <div class="row">
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-8 col-sm-8">
             <form id="shippingForm" class="form-horizontal well">
                 <fieldset>
                     <legend>Add a new address</legend>
@@ -217,6 +198,33 @@
                 <input type="hidden" id="address_id" name="address_id" value="<?php $_($shippingAddress['id'], 'address_id'); ?>"/>
             </form>
         </div>
+		<div class="col-xs-4">
+			<?php foreach ($this->customerAddresses as $address) :?>
+			<div class="blockShadow">
+				<b><?php echo $_($address->full_name, 'full_name') ?></b><br />
+				<?php echo $_($address->address_line_1, 'address_line_1') ?><br />
+				<?php echo $_($address->address_line_2, 'address_line_2') ?><br />
+				<?php echo $_($address->city, 'city')  . ' ' .  $_($address->region, 'region')  . ' ' .  $_($address->zip, 'zip'); ?><br />
+				<?php echo $_($address->country_id, 'country_id') ?><br />
+				<?php echo $_($address->phone, 'phone') ?><br />
+				<div class="row">
+					<div class="col-xs-12" style="margin-bottom: 10px;">
+						<button data-id="<?php echo $address->id?>" class="btn btn-primary btn-block confirm-address ladda-button"
+						data-token="<?php echo $this->getToken('checkout_step2'); ?>" data-style="expand-right"
+						data-spinner-size="20"><span class="ladda-label">Ship to this address</span></button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<button data-id="<?php echo $address->id?>" class="btn btn-success btn-block edit-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Edit</span></button>
+					</div>
+					<div class="col-xs-6">
+						<button data-id="<?php echo $address->id?>" style="" class="btn btn-danger btn-block delete-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Delete</span></button>
+					</div>
+				</div>
+			</div>
+			<?php endforeach;?>
+		</div>
     </div>
 
     <div class="row">

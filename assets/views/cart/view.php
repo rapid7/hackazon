@@ -78,15 +78,15 @@
             $.ajax({
                 url:'/cart/setMethods',
                 type:"POST",
-                data: $("#methods").serialize(),
+                data: $("#methods, #methods2").serialize(),
                 dataType:"json",
                 timeout: 10000,
                 success: function(data) {
                     <?php if (is_null($this->pixie->auth->user())): ?>
                     window.location.href = "<?php echo '/user/login?return_url=' . rawurlencode('/checkout/shipping');?>"
                     <?php else : ?>
-                    window.location.href = "/checkout/shipping";
-                    <?endif;?>
+window.location.href = "/checkout/shipping";
+                    <?php endif;?>
                 },
                 fail: function() {
                     alert( "error" );
@@ -107,8 +107,7 @@ if (count($items) == 0) :?>
         <div class="col-md-12 col-sm-12">
             <h1 class="page-header">Shopping Cart</h1>
             <ol class="breadcrumb">
-                <li><a href="/">Home</a>
-                </li>
+                <li><a href="/">Home</a></li>
                 <li class="active">My Cart</li>
             </ol>
             <div id="checkout-alert-info"></div>
@@ -122,15 +121,15 @@ if (count($items) == 0) :?>
     <div class="tab-pane active" id="step1">
         <div class="row">
             <div class="col-xs-12">
-                <table class="table table-bordered table-order">
+                <table class="table table-order">
                     <thead>
-                    <tr>
-                        <th class="hidden-xs">&nbsp;</th>
-                        <th></th>
-                        <th>count</th>
-                        <th>each (incl. tax)</th>
-                        <th>total</th>
-                    </tr>
+						<tr>
+							<th class="hidden-xs">&nbsp;</th>
+							<th class="th-title"></th>
+							<th class="th-count">count</th>
+							<th class="th-each">each (incl. tax)</th>
+							<th class="th-total">total</th>
+						</tr>
                     </thead>
                     <tbody>
                     <?php
@@ -139,93 +138,96 @@ if (count($items) == 0) :?>
                     $product = $item->getProduct();
                     ?>
                     <tr class="tr_items" id="tr_item_<?php echo $item->id?>">
-                        <td class="hidden-xs"><img class="img-responsive img-home-portfolio" style="width:100px" src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>"></td>
+<td class="hidden-xs"><img class="img-responsive img-home-portfolio" src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>"></td>
                         <td>
                             <h4><a href="/product/view/<?=$product['productID']?>"><?=$product['name']?></a></h4>
                         </td>
                         <td>
 
-                            <div class="input-group">
-														<span class="input-group-btn">
-															<button data-id="<?php echo $item->id?>" class="btn btn-default minus_btn" type="button">
-																<span class="glyphicon glyphicon-minus">
-															</span></button>
-														</span>
-                                <input type="text" id="input_<?php echo $item->id?>" onchange="update_qty(<?php echo $item->id?>, this.value)" class="form-control" value="<?php echo $item->qty?>">
-														<span class="input-group-btn">
-															<button data-id="<?php echo $item->id?>" class="btn btn-default plus_btn" type="button">
-																<span class="glyphicon glyphicon-plus">
-															</span></button>
-														</span>
+                            <div class="input-group hw-count-control">
+								<span class="input-group-btn">
+									<button data-id="<?php echo $item->id?>" class="btn btn-default minus_btn" type="button">
+									<span class="glyphicon glyphicon-minus">
+									</span></button>
+									</span>
+									<input type="text" id="input_<?php echo $item->id?>" onchange="update_qty(<?php echo $item->id?>, this.value)" class=" form-control" value="<?php echo $item->qty?>">
+								<span class="input-group-btn">
+									<button data-id="<?php echo $item->id?>" class="btn btn-default plus_btn" type="button">
+										<span class="glyphicon glyphicon-plus">
+									</span></button>
+								</span>
                             </div>
 
                         </td>
                         <td align="right">
-                            <span>$ <span id="row_span_item_<?php echo $item->id?>"><?php echo $item->price?></span>,- </span>
+                            <span class="hw-total">$ <span id="row_span_item_<?php echo $item->id?>"><?php echo $item->price?></span>,- </span>
                         </td>
                         <td align="right">
-                            <span>$ <span id="row_span_total_<?php echo $item->id?>"><?php echo $item->price*$item->qty?></span>,- </span>
+                            <span class="hw-total">$ <span id="row_span_total_<?php echo $item->id?>"><?php echo $item->price*$item->qty?></span>,- </span>
                         </td>
                     </tr>
                     <?php endforeach;?>
+					</tbody>
+					<tfoot>
                     <tr>
-                        <td align="right" colspan="3">
-                            <form class="form-horizontal" id="methods">
+                        <td class="text-right" colspan="3">
+                            <form class="form-horizontal" id="methods" class="methods">
                                 <?php $_token('checkout_step_1'); ?>
                                 <fieldset>
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label">shipping: </label>
-                                        <div class="col-xs-8">
+                                        <label class="col-xs-4 col-xs-offset-4 control-label">Shipping: </label>
+                                        <div class="col-xs-4">
                                             <select class="form-control" name="shipping_method">
-                                                <option value="mail">mail</option>
-                                                <option value="collect">collect</option>
-                                                <option value="express">express</option>
+                                                <option value="mail">Mail</option>
+                                                <option value="collect">Collect</option>
+                                                <option value="express">Express</option>
                                             </select>
                                         </div>
                                     </div>
                                 </fieldset>
+							</form>
                         </td>
-                        <td align="right" colspan="2">
-                            <span class="label label-success">free</span>
+                        <td class="text-center" colspan="2">
+                            <span class="label label-success">FREE</span>
                         </td>
                     </tr>
                     <tr>
-                        <td align="right" colspan="3">
+                        <td class="text-right" colspan="3">
+							<form class="form-horizontal" id="methods2" class="methods">
                                 <fieldset>
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label">payment: </label>
-                                        <div class="col-xs-8">
+                                        <label class="col-xs-4 col-xs-offset-4 control-label">Payment: </label>
+                                        <div class="col-xs-4">
                                             <select class="form-control" name="payment_method">
-                                                <option value="wire transfer">wire transfer</option>
-                                                <option value="paypal">paypal</option>
-                                                <option value="creditcard">creditcard</option>
+                                                <option value="wire transfer">Wire Transfer</option>
+                                                <option value="paypal">Paypal</option>
+                                                <option value="creditcard">Credit Card</option>
                                             </select>
                                         </div>
                                     </div>
                                 </fieldset>
                             </form>
                         </td>
-                        <td align="right" colspan="2">
-                            <span class="label label-success">free</span>
+                        <td class="text-center" colspan="2">
+                            <span class="label label-success">FREE</span>
                         </td>
                     </tr>
                     <tr>
-                        <td align="right" colspan="3">Quantity items:<br>total: </td>
-                        <td align="right" colspan="2">
+                        <th class="text-right" colspan="3">Quantity items:<br>Total: </th>
+                        <th class="text-left" colspan="2">
                             $ <span id="items_qty"><?=$itemQty?></span>,-<br>
                             $ <span id="total_price"><?=$totalPrice?>,-<br>
-                        </td>
+                        </th>
                     </tr>
-                    </tbody>
+                    </tfoot>
                 </table>
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-4">
+            <div class="col-xs-8">
                 <a href="/" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Continue shopping</a>
-            </div>
-            <div class="col-xs-4">
-                <button class="btn btn-default ladda-button" id="empty_cart" data-style="expand-right" data-spinner-color="#999999"
+                
+				<button class="btn btn-danger ladda-button" id="empty_cart" data-style="expand-right" data-spinner-color="#999999"
                     ><span class="ladda-label"><span class="glyphicon glyphicon-trash"></span> Empty cart</span></button>
             </div>
             <div class="col-xs-4">
