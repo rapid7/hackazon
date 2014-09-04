@@ -42,7 +42,7 @@ class Home extends \App\Page {
         $otherCustomerProductCount = 4;
 
         // Amount of products in the bottom of the page
-        $randomProductsCount = 8;
+        $randomProductsCount = 4;
 
         // Count of reviews after each product section.
         $productSectionReviewCount = 3;
@@ -74,10 +74,12 @@ class Home extends \App\Page {
                 'products' => $this->view->bestChoiceProducts,
                 'reviews' => count($this->view->bestChoiceProducts) ? $review->getRandomReviews($productSectionReviewCount) : array()
             ),
+
             'random' => array(
                 'title' => "",
                 'products' => $this->view->randomProducts
             )
+
         );
 
         $this->view->topProductBlocks = array(
