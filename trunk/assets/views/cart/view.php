@@ -111,9 +111,8 @@ if (count($items) == 0) :?>
                 <li class="active">My Cart</li>
             </ol>
             <div id="checkout-alert-info"></div>
-            <h1>Your cart is empty</h1>
+            <div class="text-center"><h1 class="">Your cart is empty</h1></div>
         </div>
-
     </div>
     </div>
 <?php return; endif;?>
@@ -138,7 +137,10 @@ if (count($items) == 0) :?>
                     $product = $item->getProduct();
                     ?>
                     <tr class="tr_items" id="tr_item_<?php echo $item->id?>">
-						<td class="hidden-xs"><img class="img-responsive img-home-portfolio" src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>"></td>
+						<td class="hidden-xs text-center">
+							<div class="img-thumbnail-wrapper">
+								<img class="img-responsive img-home-portfolio " src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>"></td>
+							</div>
                         <td>
                             <h4><a href="/product/view/<?=$product['productID']?>"><?=$product['name']?></a></h4>
                         </td>
@@ -159,7 +161,7 @@ if (count($items) == 0) :?>
                             </div>
 
                         </td>
-                        <td align="right">
+                        <td class="text-left">
                             <span class="hw-total">$ <span id="row_span_item_<?php echo $item->id?>"><?php echo $item->price?></span>,- </span>
                         </td>
                         <td align="right">

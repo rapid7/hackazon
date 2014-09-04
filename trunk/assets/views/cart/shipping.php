@@ -227,7 +227,7 @@
 
     <div class="row">
         <div class="col-xs-6">
-            <button class="btn btn-default" onclick="window.location.href='/cart/view'"><span class="glyphicon glyphicon-chevron-left"></span> Overview Ster</button>
+            <button class="btn btn-default" onclick="window.location.href='/cart/view'"><span class="glyphicon glyphicon-chevron-left"></span> Overview Step</button>
         </div>
         <div class="col-xs-6">
             <button id="btn_shipping" class="btn btn-primary pull-right ladda-button" data-target="#step3" data-toggle="tab"
