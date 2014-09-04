@@ -160,10 +160,10 @@ class CategoryProductImporter
         }
 
         $data = [];
-        $blocks = array_chunk(preg_split('/\\{([\\w\\d]+)\\}/', $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), 3);
-        foreach ($blocks as $block) {
-            $data[strtolower(trim($block[0]))] = trim($block[1]);
-        }
+        $blocks = preg_split('/((\{(.+)\})+)/', $text, -1, PREG_SPLIT_NO_EMPTY);
+        $data['name'] = $blocks[0];
+        $data['description'] = $blocks[1];
+        $data['price'] = $blocks[2];
 
         $product = $this->pixie->orm->get('Product');
         $product->values([

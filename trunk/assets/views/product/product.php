@@ -33,7 +33,7 @@
         <div class="row product-detail" data-id="<?= $product->productID; ?>">
             <div class="col-xs-12 col-sm-5 col-md-4">
                 <a data-toggle="lightbox" data-title="<?php $_($product->name, 'name'); ?>"
-                   href="/products_pictures/<?php $_($product->picture, 'picture'); ?>">
+                   href="/products_pictures/<?php $_($product->big_picture, 'picture'); ?>">
                     <img class="img-responsive product-image img-thumbnail" src="/products_pictures/<?php $_($product->picture, 'picture'); ?>" alt="">
                 </a>
             </div>
