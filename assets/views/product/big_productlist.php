@@ -4,7 +4,7 @@
         <li class="col-xs-3">
             <div class="thumbnail">
                 <div class="special-offer-big-img">
-                    <a href="/product/view/<?= $offer->productID ?>"><img src="/products_pictures/<?= $offer->picture ?>" alt=""></a>
+                    <a class="img-wrap" href="/product/view/<?= $offer->productID ?>"><img class="img-responsive" src="/products_pictures/<?= $offer->picture ?>" alt=""></a>
                 </div>
                 <div class="caption">
                     <a href="/product/view/<?= $offer->productID ?>"><?= $offer->name ?></a>
