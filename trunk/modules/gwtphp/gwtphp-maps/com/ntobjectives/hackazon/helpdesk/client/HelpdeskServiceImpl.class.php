@@ -20,7 +20,8 @@ class HelpdeskServiceImpl extends HelpdeskService {
             return;
         }
 
-        $this->user = $this->servlet->getRepository()->transform($this->pixie->auth->user());
+        $user = $this->pixie->auth->user();
+        $this->user = $user ? $this->servlet->getRepository()->transform($user) : $user;
         $this->initialized = true;
     }
 
