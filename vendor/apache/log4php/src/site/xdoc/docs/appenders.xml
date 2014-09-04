@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>Appenders</title>
+	</properties>
+
+	<body>
+		<section name="Appenders">
+		
+			<p>Logging requests can be sent to multiple destinations, such as files, databases, syslog and others. 
+			Such destinations are called appenders. Appenders are attached to <a href="loggers.html">loggers</a>
+			and each logger can have multiple attached appenders.</p>
+			
+			<subsection name="Appender reference" id="Appender_reference">
+				
+				<p>The following appender classes are available:</p>
+			
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Destination</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="appenders/console.html">LoggerAppenderConsole</a></td>
+							<td>Console, directly to the stdout or stderr stream.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/echo.html">LoggerAppenderEcho</a></td>
+							<td>Console, using the PHP <code>echo</code> command.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/file.html">LoggerAppenderFile</a></td>
+							<td>A file.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/daily-file.html">LoggerAppenderDailyFile</a></td>
+							<td>A file (new file each day).</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/rolling-file.html">LoggerAppenderRollingFile</a></td>
+							<td>A file (new file when a specified size has been reached). </td>
+						</tr>
+						<tr>
+							<td><a href="appenders/mail.html">LoggerAppenderMail</a></td>
+							<td>Sends the log via email. The entire log is sent in one email.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/mail-event.html">LoggerAppenderMailEvent</a></td>
+							<td>Sends the log via email. Each log entry is sent in individual emails.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/mongodb.html">LoggerAppenderMongoDB</a></td>
+							<td>MongoDB.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/null.html">LoggerAppenderNull</a></td>
+							<td>Ignores all log events.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/pdo.html">LoggerAppenderPDO</a></td>
+							<td>Database.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/php.html">LoggerAppenderPhp</a></td>
+							<td>Creates a PHP user-level message using the PHP <code>trigger_error()</code> function.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/socket.html">LoggerAppenderSocket</a></td>
+							<td>A network socket.</td>
+						</tr>
+						<tr>
+							<td><a href="appenders/syslog.html">LoggerAppenderSyslog</a></td>
+							<td>Syslog.</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			
+			</subsection>
+
+			
+			<subsection name="Configuring appenders" id="Configuring_appenders">
+			
+				<p>The following configuration shows how to configure an appender which logs to a file:</p>
+			
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderFile">
+        <layout class="LoggerLayoutSimple" />
+        <param name="file" value="/var/log/my.log" />
+        <param name="append" value="true" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+
+				<p>From the configuration you can see that an appender has the following properties:</p>
+	
+				<ul>
+					<li>A <strong>name</strong> which uniquely identifies it, in this case <em>default</em>.</li>
+					<li>A <strong>class</strong> which specifies which appender class will be used to handle the 
+					requests. Since we wish to log to a file, <code>LoggerAppenderFile</code> is used in this case.</li>
+					<li>A <strong>layout</strong> which transforms the logging events to string which can be logged.
+					A layout is required by most appenders, but some do not require it, such as the database appender. 
+					If a layout is not defined, the appenders will use a default layout.</li>
+					<li>Zero or more <strong>parameters</strong> which configure the appender 
+					behaviour. In this example, the <em>file</em> parameter governs the path to the file which will be
+					used for logging, and <em>append</em> defines that log messages should be appended to the file,
+					instead of truncating it.</li>
+				</ul>			
+				
+			</subsection>
+			
+			<subsection name="Linking appenders to loggers">
+				
+				<p>A logger can be linked to one or more appenders. Also, multiple loggers can share the same 
+				appender.</p>
+				
+				<p>Consider the following configuration:</p>
+			
+<pre class="prettyprint linenums"><![CDATA[
+<log4php:configuration xmlns:log4php="http://logging.apache.org/log4php/">
+    <appender name="primus" class="LoggerAppenderConsole" />
+    <appender name="secundus" class="LoggerAppenderFile">
+        <param name="file" value="/var/log/my.log" />
+    </appender>
+    <logger name="main">
+        <appender_ref ref="primus" />
+        <appender_ref ref="secundus" />
+    </logger>
+    <logger name="alternative">
+        <appender_ref ref="primus" />
+    </logger>
+</log4php:configuration>
+]]></pre>
+			
+				<p>This configures two appenders, called <em>primus</em> and <em>secundus</em>, and two loggers named
+				<em>main</em> and <em>alternative</em>. The logger <em>main</em> is linked to <em>primus</em> and 
+				<em>secundus</em> and will therefore forward logging events to both of them. In other words,
+				it will log both to console and to a file. Logger <em>alternative</em> is only linked to appender
+				<em>primus</em> and will therefore only log to the console.</p>  
+			
+			</subsection>
+			
+			
+			<subsection name="Appender threshold">
+			
+				<p>An appender can be assigned a threshold level. All logging requests with level lower than this threshold
+				will be ignored.</p>
+				
+				<p>For example, if you set <code>WARN</code> as a threshold, then <code>INFO</code>, <code>DEBUG</code>
+				and <code>TRACE</code> level events recieved by the appender will not be logged, but <code>WARN</code>,
+				<code>ERROR</code> and <code>FATAL</code> will.</p>
+				
+				<p>An example of setting an appender threshold:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderEcho" threshold="WARN" />
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+			</subsection>
+		</section>
+	</body>
+</document>

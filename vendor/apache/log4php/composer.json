@@ -1,0 +1,19 @@
+{
+    "name": "apache/log4php",
+    "description": "A versatile logging framework for PHP",
+    "keywords": ["log", "logging", "php"],
+    "homepage": "http://logging.apache.org/log4php/",
+    "type": "library",
+    "license": "Apache-2.0",
+    "support": {
+        "issues": "https://issues.apache.org/jira/browse/LOG4PHP",
+        "source": "https://svn.apache.org/repos/asf/logging/log4php",
+        "email": "log4php-user@logging.apache.org"
+    },
+    "autoload": {
+        "classmap": ["src/main/php/"]
+    },
+    "require": {
+        "php": ">=5.2.7"
+    }
+}

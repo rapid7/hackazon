@@ -822,3 +822,111 @@ ul.nav li.grey a {
     right: 20px;
     position: absolute;
 }
+
+.helpdesk-layout > tbody > tr:first-child > td {
+    border-top: 0;
+}
+
+.helpdesk-layout > tbody > tr > td {
+    padding: 0;
+}
+
+.enquiry-table .table-header {
+    font-weight: bold;
+}
+
+.enquiry-table .id-column {
+    width: 5%;
+}
+
+.enquiry-table .status-column {
+    width: 20%;
+}
+
+.helpdesk .label-new {
+    background-color: green;
+    color: #fff;
+}
+
+.helpdesk .label-rejected {
+    background-color: red;
+    color: #fff;
+}
+
+.helpdesk .label-resolved,
+.helpdesk .label-closed {
+    background-color: gray;
+    color: #fff;
+}
+
+.helpdesk .buttons-panel {
+    text-align: right;
+    width: 100%;
+}
+
+.helpdesk .add-enquiry-form {
+    width: 100%;
+}
+
+.helpdesk .main-panel {
+    width: 100%;
+}
+
+.helpdesk .enquiry-page {
+    width: 100%;
+}
+
+.helpdesk h3 .label {
+    font-weight: normal;
+}
+
+.helpdesk .add-message-form {
+    width: 100%;
+}
+
+.helpdesk .buttons-panel td {
+    padding-top: 10px;
+}
+
+.helpdesk .messages-panel {
+    margin-bottom: 30px;
+}
+
+.helpdesk .breadcrumbs .gwt-HTML,
+.helpdesk .breadcrumb .gwt-HTML {
+    display: inline;
+}
+
+.chat {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.chat li {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #999;
+}
+
+.chat li.left .chat-body {
+    margin-left: 60px;
+}
+
+.chat li.right .chat-body {
+    margin-right: 60px;
+}
+
+.chat li .chat-body p {
+    margin: 0;
+}
+
+.panel .slidedown .glyphicon,
+.chat .glyphicon {
+    margin-right: 5px;
+}
+
+.chat-panel .panel-body {
+    height: 350px;
+    overflow-y: scroll;
+}

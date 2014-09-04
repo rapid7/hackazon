@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>Quick start</title>
+	</properties>
+
+	<body>
+		<section name="Quick start">
+		
+	  		<p>First, <a href="install.html">install Apache log4php</a>.</p>
+  
+  			<p>You may also like to read the <a href="docs/introduction.html">introduction chapter</a> to familiarise
+  			yoursef with the basic concepts used throughout the documentation and examples.</p>
+		
+			<subsection name="A trivial example">
+				<p>Just want logging to stdout?</p>
+				
+<pre class="prettyprint linenums">
+include('Logger.php');
+$logger = Logger::getLogger("main");
+$logger->info("This is an informational message.");
+$logger->warn("I'm not feeling so good...");
+</pre>
+			
+				<p>This produces the following output:</p>
+				
+<pre>
+INFO - This is an informational message.
+WARN - I'm not feeling so good...
+</pre>
+
+			</subsection>
+			
+			<subsection name="A simple example">
+				<p>This example shows how to configure log4php using an XML configuration file. The framework will be 
+				configured to log messages to a file, but only those with level greater or equal to <code>WARN</code>.
+				</p>
+				
+				<p>First, create a configuration file named <code>config.xml</code> containing:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="myAppender" class="LoggerAppenderFile">
+        <param name="file" value="myLog.log" />
+    </appender>
+    <root>
+        <level value="WARN" />
+        <appender_ref ref="myAppender" />
+    </root>
+</configuration>
+]]></pre>
+
+				<p>This configuration file does the following:</p>
+				
+				<ul>
+				    <li><em>line 2</em>: Creates an appender named <code>myAppender</code> using appender class <code>
+					<a href="docs/appenders/file.html">LoggerAppenderFile</a></code> which is used for 
+					logging to a file.</li>
+					
+					<li><em>line 3</em>: Sets the <code>file</code> parameter, which tells the appender to which file to 
+					write.</li>
+					
+					<li><em>line 6</em>: Sets the root logger level to <code>WARN</code>. This means that logging requests 
+					with the level lower than <code>WARN</code> will not be logged by the root logger.</li>
+					
+					<li><em>line 7</em>: Links <code>myAppender</code> to the root logger so that all events recieved by the root 
+					logger will be forwarded to <code>myAppender</code> and written into the log file.</li>
+				</ul>
+
+				<p>To try it out, run the following code:</p>
+
+<pre class="prettyprint linenums"><![CDATA[
+// Insert the path where you unpacked log4php
+include('log4php/Logger.php');
+
+// Tell log4php to use our configuration file.
+Logger::configure('config.xml');
+
+// Fetch a logger, it will inherit settings from the root logger
+$log = Logger::getLogger('myLogger');
+
+// Start logging
+$log->trace("My first message.");   // Not logged because TRACE < WARN
+$log->debug("My second message.");  // Not logged because DEBUG < WARN
+$log->info("My third message.");    // Not logged because INFO < WARN
+$log->warn("My fourth message.");   // Logged because WARN >= WARN
+$log->error("My fifth message.");   // Logged because ERROR >= WARN
+$log->fatal("My sixth message.");   // Logged because FATAL >= WARN
+]]></pre>
+
+				<p>This will create a file named <code>myLog.log</code> containing the following output:</p>
+				
+<pre><![CDATA[
+WARN - My fourth message.
+ERROR - My fifth message.
+FATAL - My sixth message.
+]]></pre>	
+			    
+			</subsection>
+			
+			<subsection name="An advanced example">
+			
+				<p>This example covers named loggers, layouts and best practices in object-oriented programming.</p>
+			
+				<p>Create a configuration file named <code>config.xml</code> with the following content:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+
+    <appender name="myConsoleAppender" class="LoggerAppenderConsole" />
+    
+    <appender name="myFileAppender" class="LoggerAppenderFile">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date [%logger] %message%newline" />
+        </layout>
+        <param name="file" value="myLog.log" />
+    </appender>
+
+    <logger name="Foo">
+        <appender_ref ref="myFileAppender" />
+    </logger>
+    
+    <root>
+        <level value="DEBUG" />
+        <appender_ref ref="myConsoleAppender" />
+    </root>
+</configuration>
+]]></pre>
+
+				<p>The configuration defines two appenders: one writes to the console, and the other to a file.</p>
+				
+				<p>The 
+				console appender doesn't have a layout defined, so it will revert to default layout
+				(<code><a href="docs/layouts/simple.html">LoggerLayoutSimple</a></code>). The 
+				file appender uses a different layout 
+				(<code><a href="docs/layouts/pattern.html">LoggerLayoutPattern</a></code>)
+				which will result in different formatting of the logging 
+				events.</p>
+				
+				<p>The console appender is linked to the root logger. The file appender is linked to the logger named 
+				<code>Foo</code>, however <code>Foo</code> also inherits appenders from the root logger (in this case
+				the console appender). This means that logging events sent to the <code>Foo</code> logger will be 
+				logged both to the console and the file.</p>
+				
+				<p>Consider the following code snippet:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+// Include and configure log4php
+include('log4php/Logger.php');
+Logger::configure('config.xml');
+
+/**
+ * This is a classic usage pattern: one logger object per class.
+ */
+class Foo
+{
+    /** Holds the Logger. */
+    private $log;
+
+    /** Logger is instantiated in the constructor. */
+    public function __construct()
+    {
+        // The __CLASS__ constant holds the class name, in our case "Foo".
+        // Therefore this creates a logger named "Foo" (which we configured in the config file)
+        $this->log = Logger::getLogger(__CLASS__);
+    }
+
+    /** Logger can be used from any member method. */
+    public function go()
+    {
+        $this->log->info("We have liftoff.");
+    }
+}
+
+$foo = new Foo();
+$foo->go();
+]]></pre>
+
+  					<p>This produces the following output in the console:</p>
+					<pre>INFO - We have liftoff.</pre>
+
+					<p>And the following in the log file:</p>
+					<pre>01/06/11 18:43:39,545 [5428] INFO Foo - We have liftoff.</pre>
+
+					<p>Note the different layout, this is because LoggerLayoutTTCC was used as layout for the file appender.</p>
+			</subsection>
+			
+		</section>
+	</body>
+</document>

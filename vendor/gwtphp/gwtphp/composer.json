@@ -1,0 +1,30 @@
+{
+    "name": "gwtphp/gwtphp",
+    "type": "library",
+    "description": "The Google Web Toolkit RPC protocol server-side application, implemented in PHP. Strives to be a drop-in replacement.",
+    "keywords": ["gwt", "php", "rpc", "gwtphp"],
+    "homepage": "https://github.com/tengyifei/gwtphp-packagist",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Rafal Malinowski",
+            "email": "rafal.malinowski@gmail.com"
+        }, 
+		{
+            "name": "Yifei Teng",
+            "email": "teng.yifei.88@gmail.com",
+            "homepage": "http://www.thinkingandcomputing.com"
+        }
+    ],
+    "require": {
+        "apache/log4php": "2.3.0"
+    },
+	"autoload": {
+        "files": [
+			"src/RemoteServiceServlet.class.php",
+			"src/lang/SimpleClassLoader.class.php",
+			"src/lang/ArrayMappedClassLoader.class.php",
+			"src/lang/TypeSignatures.class.php"
+		]
+    }
+}

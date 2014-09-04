@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>LoggerAppenderPDO</title>
+	</properties>
+
+	<body>
+		<section name="LoggerAppenderPDO">
+		
+			<p><code>LoggerAppenderPDO</code> appender logs to a database using the PHP's 
+			<a href="http://php.net/manual/en/book.pdo.php" class="external">PDO extension</a>.</p>
+		
+			<subsection name="Layout">
+				<p>This appender does not require a layout.</p>
+			</subsection>
+		
+			<subsection name="Parameters">
+				<p>The following parameters are available:</p>
+		
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>dsn</td>
+							<td>string</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>The Data Source Name (DSN) used to connect to the database.</td>
+						</tr>
+						<tr>
+							<td>user</td>
+							<td>string</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>Username used to connect to the database.</td>
+						</tr>
+						<tr>
+							<td>password</td>
+							<td>string</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>Password used to connect to the database.</td>
+						</tr>
+						<tr>
+							<td>table</td>
+							<td>string</td>
+							<td>No</td>
+							<td>-</td>
+							<td>Name of the table to which log entries are be inserted.</td>
+						</tr>
+						<tr>
+							<td>insertSql</td>
+							<td>string</td>
+							<td>No</td>
+							<td><em><a href="#Advanced_configuration">see below</a></em></td>
+							<td>SQL query used to insert a log event.</td>
+						</tr>
+						<tr>
+							<td>insertPattern</td>
+							<td>string</td>
+							<td>No</td>
+							<td><em><a href="#Advanced_configuration">see below</a></em></td>
+							<td>A comma separated list of format strings used in conjunction with <code>insertSql</code> parameter.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<p>Parameters <code>dsn</code>, <code>user</code> and <code>password</code> are used by PDO to connect to 
+				the database which will be used for logging.</p>
+			</subsection>
+			
+			<subsection name="Data Source Name">
+				<p>The Data Source Name or DSN is a database-specific string which contains the information required
+				to connect to the database.</p>
+			
+				<p>Some common examples of DSNs:</p>
+				
+				<table class="table table-compact table-bordered table-not-wide">
+					<tbody>
+						<tr>
+							<th>MySQL</th>
+							<td><code>mysql:host=localhost;dbname=logdb</code></td>
+							<td><a href="http://php.net/manual/en/ref.pdo-mysql.connection.php" class="external">full reference</a> </td>
+						</tr>
+						<tr>
+							<th>SQLite</th>
+							<td><code>sqlite:/path/to/log.db</code></td>
+							<td><a href="http://php.net/manual/en/ref.pdo-sqlite.connection.php" class="external">full reference</a> </td>
+						</tr>
+						<tr>
+							<th>PostgreSQL </th>
+							<td><code>pgsql:host=localhost;port=5432</code></td>
+							<td><a href="http://php.net/manual/en/ref.pdo-pgsql.connection.php" class="external">full reference</a> </td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<p>For other available database drivers and corresponding DSN format, please see the 
+				<a href="http://www.php.net/manual/en/pdo.drivers.php" class="external">PDO driver documentation</a>.
+				</p>
+			</subsection>
+			
+			<subsection name="Database table">
+			
+				<p>Since version 2.3.0, the appender will <strong>not</strong> create a database table by itself. You 
+				have to create a database table yourself. The reason for this is that various databases use various 
+				create statements and column types. Some common databases are covered in this chapter.</p>
+				
+				<p>By default the table should contain the following columns: </p>
+
+				<ul>
+					<li>timestamp DATETIME</li>
+					<li>logger VARCHAR</li>
+					<li>level VARCHAR</li>
+					<li>message VARCHAR</li>
+					<li>thread VARCHAR</li>
+					<li>file VARCHAR</li>
+					<li>line VARCHAR</li>
+				</ul>
+				
+				<p>If you wish to use an alternative table structure, see the next chapter.</p>
+
+				<p>The following examples show CREATE TABLE statements for some popular databases.</p>
+				
+				<h4>MySQL</h4>
+				
+<pre class="prettyprint">
+CREATE TABLE log4php_log (
+    timestamp DATETIME,
+    logger VARCHAR(256),
+    level VARCHAR(32),
+    message VARCHAR(4000),
+    thread INTEGER,
+    file VARCHAR(255),
+    line VARCHAR(10)
+);
+</pre>
+
+				<h4>SQLite</h4>
+				
+				<p>SQLite does not have a datetime type, so varchar is used instead.</p>
+
+<pre class="prettyprint">
+CREATE TABLE log4php_log (
+    timestamp VARCHAR(50),
+    logger VARCHAR(256),
+    level VARCHAR(32),
+    message VARCHAR(4000),
+    thread INTEGER,
+    file VARCHAR(255),
+    line VARCHAR(10)
+);
+</pre>
+
+				<h4>PostgreSQL</h4>
+
+<pre class="prettyprint">
+CREATE TABLE log4php_log (
+    timestamp TIMESTAMP,
+    logger VARCHAR(256),
+    level VARCHAR(32),
+    message VARCHAR(4000),
+    thread INTEGER,
+    file VARCHAR(255),
+    line VARCHAR(10)
+);
+</pre>
+			</subsection>
+			
+			<subsection name="Advanced configuration" id="Advanced_configuration">
+				<p>Parameters <code>insertSql</code> and <code>insertPattern</code> can be used to change how events are 
+				inserted into the database. By manipulating them, it is possible to use a custom table structure to 
+				suit your needs.</p>
+			
+				<p class="alert alert-warning"><strong>WARNING:</strong> Change these settings only if you are sure you
+				know what you are doing.</p>
+			
+				<p>The default values of these parameters are:</p>
+				
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Default value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>insertSql</td>
+							<td>INSERT INTO __TABLE__ (timestamp, logger, level, message, thread, file, line) VALUES (?, ?, ?, ?, ?, ?, ?)</td>
+						</tr>
+						<tr>
+							<td>insertPattern</td>
+							<td>%date{Y-m-d H:i:s},%logger,%level,%message,%pid,%file,%line</td>
+						</tr>
+					</tbody>
+				</table>
+			
+				<p>The string <em>__TABLE__</em> in <code>insertSql</code> will be replaced with the table name 
+				defined in <code>table</code>. Question marks in <code>insertSql</code> will be replaced by evaluated 
+				<code><a href="../layouts/pattern.html">LoggerPatternLayout</a></code> format strings defined in 
+				<code>insertPattern</code>. See <code><a href="../layouts/pattern.html">LoggerPatternLayout</a></code>
+				documentation for format string description.</p>
+			
+			</subsection>
+			
+				
+			<subsection name="Examples">
+			
+				<h4>Example 1</h4>
+			
+				<p>The simplest example is connecting to an SQLite database which does not require any 
+				authentication.</p> 
+				
+				<p>SQLite databases are contained in simple files and don't reuquire a server to run. This example will
+				log to the database contained in <code>/var/log/log.sqlite</code>.</p>
+				
+				<p>First, create a database and a table for logging. In this example, let's create the database at 
+				<code>/tmp/log.db</code>.</p>
+				
+<pre><![CDATA[
+$ sqlite3 /tmp/log.db
+SQLite version 3.7.9 2011-11-01 00:52:41
+Enter ".help" for instructions
+Enter SQL statements terminated with a ";"
+sqlite> CREATE TABLE log4php_log (
+   ...> timestamp VARCHAR(256),
+   ...> logger VARCHAR(256),
+   ...> level VARCHAR(32),
+   ...> message VARCHAR(4000),
+   ...> thread INTEGER,
+   ...> file VARCHAR(255),
+   ...> line VARCHAR(10)
+   ...> );
+]]></pre>
+
+				<p>When the database is set up, use the following configuration to set up log4php.</p>
+				
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+ 
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderPDO">
+        <param name="dsn" value="sqlite:/tmp/log.db" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderPDO',
+            'params' => array(
+                'dsn' => 'sqlite:/tmp/log.db',
+            ),
+        ),
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default'),
+    ),
+);
+]]></pre>
+						</div>
+					</div>
+				</div>
+				
+				<p>Now the database is ready to accept some logging data.</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+require 'log4php/Logger.php';
+Logger::configure('config.xml');
+
+$log = Logger::getLogger('foo');
+$log->info("foo");
+$log->info("bar");
+$log->info("baz");
+]]></pre>
+				
+				<p>And you can .</p>
+
+<pre><![CDATA[
+$ sqlite3 /tmp/log.db
+SQLite version 3.7.9 2011-11-01 00:52:41
+Enter ".help" for instructions
+Enter SQL statements terminated with a ";"
+sqlite> select * from log4php_log;
+2012-08-18 17:14:11|foo|INFO|foo|23531|/home/ihabunek/apache/sqlite.php|5
+2012-08-18 17:14:11|foo|INFO|bar|23531|/home/ihabunek/apache/sqlite.php|6
+2012-08-18 17:14:11|foo|INFO|baz|23531|/home/ihabunek/apache/sqlite.php|7
+]]></pre>
+				
+				<h4>Example 2</h4>
+
+				<p>A slightly more complex example is connecting to a MySQL database which requires user credentials
+				to be provided. Additionally, a user-specified table name is used.</p>
+				
+				<p>First, a log table has to be created. For this example a database named <code>logdb</code> will be 
+				created, and within it a table named <code>log</code>.</p>
+				
+<pre><![CDATA[
+$ mysql -u root -p
+Enter password: *******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 47
+Server version: 5.5.24-0ubuntu0.12.04.1 (Ubuntu)
+
+mysql> CREATE DATABASE logdb;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE logdb;
+Database changed
+
+mysql> CREATE TABLE log (
+    -> timestamp DATETIME,
+    -> logger VARCHAR(256),
+    -> level VARCHAR(32),
+    -> message VARCHAR(4000),
+    -> thread INTEGER,
+    -> file VARCHAR(255),
+    -> line VARCHAR(10)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+]]></pre>
+				
+				<p>The following configuration allows log4php to write to the newly created table.</p>
+				
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+ 
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderPDO">
+        <param name="dsn" value="mysql:host=localhost;dbname=logdb" />
+        <param name="user" value="root" />
+        <param name="password" value="secret" />
+        <param name="table" value="log" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderPDO',
+            'params' => array(
+                'dsn' => 'mysql:host=localhost;dbname=logdb',
+                'user' => 'root',
+                'password' => 'secret',
+                'table' => 'log',
+            ),
+        ),
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default'),
+    ),
+);
+]]></pre>
+						</div>
+					</div>
+				</div>
+					
+				<p>Now the database is ready to accept some logging data.</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+require 'log4php/Logger.php';
+Logger::configure('config.xml');
+
+$log = Logger::getLogger('main');
+$log->info("foo");
+$log->info("bar");
+$log->info("baz");
+]]></pre>
+
+				<p>Finally, to see the newly logged data.</p>
+				
+<pre><![CDATA[
+$ mysql -u root -p
+Enter password: *******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 47
+Server version: 5.5.24-0ubuntu0.12.04.1 (Ubuntu)
+
+mysql> select * from log;
++---------------------+--------+-------+---------+--------+---------------------------------+------+
+| timestamp           | logger | level | message | thread | file                            | line |
++---------------------+--------+-------+---------+--------+---------------------------------+------+
+| 2012-08-18 17:30:05 | main   | INFO  | foo     |  23638 | /home/ihabunek/apache/mysql.php | 5    |
+| 2012-08-18 17:30:05 | main   | INFO  | bar     |  23638 | /home/ihabunek/apache/mysql.php | 6    |
+| 2012-08-18 17:30:05 | main   | INFO  | baz     |  23638 | /home/ihabunek/apache/mysql.php | 7    |
++---------------------+--------+-------+---------+--------+---------------------------------+------+
+3 rows in set (0.00 sec)
+]]></pre>
+				
+			</subsection>
+		</section>
+	</body>
+</document>

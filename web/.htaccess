@@ -1,9 +1,17 @@
 RewriteEngine On
 RewriteBase /
+RewriteCond %{REQUEST_URI} ^/helpdesk$
+RewriteRule .* / [PT,L,QSA]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule .* index.php?$0 [PT,L,QSA]
 
-
-
-
+<IfModule mod_setenvif.c>
+    <IfModule mod_headers.c>
+        <FilesMatch "\.(cur|gif|ico|jpe?g|png|svgz?|webp|woff)$">
+            SetEnvIf Origin ":" IS_CORS
+            Header set Access-Control-Allow-Origin "*" env=IS_CORS
+        </FilesMatch>
+    </IfModule>
+</IfModule>
 

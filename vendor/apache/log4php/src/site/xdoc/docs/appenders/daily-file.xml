@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>LoggerAppenderDailyFile</title>
+	</properties>
+
+	<body>
+		<section name="LoggerAppenderDailyFile">
+		
+			<p><code>LoggerAppenderDailyFile</code> writes logging events to a file which is rolled over depending on 
+			the date/time of the logging event. By default, the file is rolled over daily, hence the appender name. 
+			However, the appender can just as easily be configured to roll over once a month, or even every minute 
+			if desired.</p>
+			
+			<p>Unlike <code>LoggerAppenderFile</code>, the target file is not static, and can change during script 
+			execution as the time passes. Destination file is determined by two parameters: <code>file</code> and
+			<code>datePattern</code>.</p>
+			
+			<p>The path specified in the <code>file</code> parameter should contain the string <code>%s</code>. 
+			Each time an event is logged, this string will be substituted with 
+			the event's date/time formatted according to <code>datePattern</code> and the event will be logged to 
+			the resulting file path.</p>
+			
+			<p>The date/time is formatted according to format string specified in the <code>datePattern</code> 
+			parameter. The format uses the same rules as the PHP <code><a class="external" 
+			href="http://php.net/manual/en/function.date.php">date()</a></code> function. Any format string supported
+			by <code>date()</code> function may be used as a date pattern.</p>
+			
+			<subsection name="Layout">
+				<p>This appender requires a layout. If no layout is specified in configuration, 
+				<code><a href="../layouts/simple.html">LoggerLayoutSimple</a></code> will be used by default.</p>
+			</subsection>
+			
+			<subsection name="Parameters">
+				<p>The following parameters are available:</p>
+		
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>file</td>
+							<td>string</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>Path to the target file. Should contain a <code>%s</code> which gets substituted by the 
+							date.</td>
+						</tr>
+						<tr>
+							<td>append</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>true</td>
+							<td>If set to true, the appender will append to the file, otherwise the file contents will be 
+							overwritten.</td>
+						</tr>
+						<tr>
+							<td>datePattern</td>
+							<td>string</td>
+							<td>No</td>
+							<td>Ymd</td>
+							<td>Format for the date in the file path, follows formatting rules used by the PHP
+							<code><a href="http://php.net/manual/en/function.date.php">date()</a></code> function.</td>
+						</tr>
+					</tbody>
+				</table>
+			</subsection>
+				
+			<subsection name="Examples">
+				
+				<p>Consider the following configuration:</p>
+			
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+				 
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderDailyFile">
+        <layout class="LoggerLayoutSimple" />
+        <param name="file" value="file-%s.log" />
+        <param name="datePattern" value="Y-m-d" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderDailyFile',
+            'layout' => array(
+                'class' => 'LoggerLayoutSimple',
+            ),
+            'params' => array(
+                'datePattern' => 'Y-m-d',
+                'file' => 'file-%s.log',
+            ),
+        ),
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default'),
+    ),
+);
+]]></pre>
+						</div>
+					</div>
+				</div>
+				
+				<p>In this example, the date pattern is set to <code>Y-m-d</code> (year, month, day) and the target 
+				file to <code>daily.%s.log</code>.</p>
+				
+				<p>Each time this appender receives a logging event, it will:</p>
+				
+				<ol>
+					<li>Format the event date/time according to the configured date pattern. Let's say this sample 
+					is run during 10th of July 2012, then the formatted date is <code>2012-07-10</code></li>
+					<li>Replace the <code>%s</code> in the filename with the formated date to get the target file. 
+					In this case, the target file will be <code>daily.2012-07-10.log</code>.</li>
+					<li>Write to the target file.</li>
+				</ol>
+				
+				<p>If you continue logging using the given configuration, the appender will continue to log to 
+				<code>daily.2012-07-10.log</code>, until the date changes. At that point it will start logging to 
+				<code>daily.2012-07-11.log</code>.</p>
+				
+				<p>Similarly, date pattern <code>Y-m</code> will result in filenames like <code>file-2012-07.log</code>,
+				 which will result in monthly rollover.</p>
+				
+				<p>Hours, minutes and seconds can also be used. Pattern <code>Y-m-d.H.i.s</code> will result 
+				in filenames similar to <code>file-2012-07-03.10.37.15.log</code>. In this case, a new file will be 
+				created each second.</p>
+			</subsection>
+		</section>
+	</body>
+</document>

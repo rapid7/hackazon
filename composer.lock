@@ -4,8 +4,82 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "517b24d93a09c908cbdfb1d24fa97bff",
+    "hash": "2020ac5c04c14d014bfe48c6ecba9c4a",
     "packages": [
+        {
+            "name": "apache/log4php",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git-wip-us.apache.org/repos/asf/logging-log4php.git",
+                "reference": "8c6df2481cd68d0d211d38f700406c5f0a9de0c2"
+            },
+            "require": {
+                "php": ">=5.2.7"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/main/php/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "A versatile logging framework for PHP",
+            "homepage": "http://logging.apache.org/log4php/",
+            "keywords": [
+                "log",
+                "logging",
+                "php"
+            ],
+            "time": "2012-10-26 09:13:25"
+        },
+        {
+            "name": "gwtphp/gwtphp",
+            "version": "dev-fix-array-list",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:nchervyakov/gwtphp-packagist.git",
+                "reference": "9d9d63615f2d440cf3638274effb988df22767dc"
+            },
+            "require": {
+                "apache/log4php": "2.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/RemoteServiceServlet.class.php",
+                    "src/lang/SimpleClassLoader.class.php",
+                    "src/lang/ArrayMappedClassLoader.class.php",
+                    "src/lang/TypeSignatures.class.php"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Rafal Malinowski",
+                    "email": "rafal.malinowski@gmail.com"
+                },
+                {
+                    "name": "Yifei Teng",
+                    "email": "teng.yifei.88@gmail.com",
+                    "homepage": "http://www.thinkingandcomputing.com"
+                }
+            ],
+            "description": "The Google Web Toolkit RPC protocol server-side application, implemented in PHP. Strives to be a drop-in replacement.",
+            "homepage": "https://github.com/tengyifei/gwtphp-packagist",
+            "keywords": [
+                "gwt",
+                "gwtphp",
+                "php",
+                "rpc"
+            ],
+            "time": "2014-09-04 10:05:45"
+        },
         {
             "name": "phpixie/auth",
             "version": "dev-master",
@@ -342,8 +416,12 @@
             "time": "2013-04-11 10:22:09"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "phpixie/core": 20,
@@ -351,8 +429,14 @@
         "phpixie/orm": 20,
         "phpixie/auth": 20,
         "phpixie/email": 20,
-        "phpixie/paginate": 20
+        "phpixie/paginate": 20,
+        "gwtphp/gwtphp": 20
     },
-    "platform": [],
-    "platform-dev": []
+    "prefer-stable": false,
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
 }

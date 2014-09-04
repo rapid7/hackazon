@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>Releases</title>
+	</properties>
+
+	<body>
+		<section name="Releases">
+		
+			<macro name="toc">
+				<param name="fromDepth" value="2"/>
+			</macro>
+
+			<subsection name="Apache log4php v2.3.0" id="Apache_log4php_v2.3.0">
+				<p>Release date: TBA</p>
+				<p><a href="changes-report.html#a2.3.0">JIRA change log</a></p>
+				<p>This release introduces various new features and improvements</p>
+				
+				<p><strong>New features:</strong></p>
+				<ul>
+					<li>Ability to <a href="docs/renderers.html#Overriding_the_default_renderer">override the default 
+						renderer</a>.</li>
+					<li>New appender: <a href="docs/appenders/firephp.html">FirePHP</a> (thanks to Bruce Ingalls). 
+						Still in experimental phase.</li>
+				</ul>
+				
+				<p><strong>Improvements:</strong></p>
+				<ul>
+					<li><a href="docs/layouts/pattern.html">LoggerLayoutPatern</a> has been greatly improved:
+						<ul>
+							<li>supports longer conversion words such as <code>%date</code> instead of <code>%d</code>, 
+								<code>%message</code> instead of <code>%m</code>, etc.</li>
+							<li>added many new conversion words; check out the docs for the full list</li>
+							<li>changed the default conversion pattern to be more verbose</li>
+						</ul>
+					</li>
+					<li><a href="docs/appenders/pdo.html">LoggerAppenderPDO</a> will attempt to reconnect a couple of 
+						times if logging fails. This solves the problem with the connection expiring in long running 
+						scripts.</li>
+					<li><a href="docs/appenders/daily-file.html">LoggerAppenderDailyFile</a> will rollover even in 
+						long running scripts.</li>
+					<li><a href="docs/appenders/mongodb.html">LoggerAppenderMongoDB</a> has improved error reporting
+						</li>
+				</ul>
+				
+		        <p><strong>Bugfixes:</strong></p>
+		        <ul>
+		            <li>Fixed a bug where upstream loggers would log events regardless of their level.</li>
+		            <li>Re-enabled usage of PHP constants in config parameters.</li>
+		        </ul>
+				
+				<p><strong>Breaking changes:</strong></p>
+				<ul>
+					<li><a href="docs/layouts/ttcc.html">LoggerLayoutTTCC</a> has been made deprecated. Please switch 
+						to <a href="docs/layouts/pattern.html">LoggerLayoutPatern</a>.</li>
+					<li>Several changes to <a href="docs/appenders/pdo.html">LoggerAppenderPDO</a>:
+						<ul>
+							<li>a database table for logging will no longer be created by the appender; the user must 
+								create this table manually.</li>
+							<li>the default date pattern does not include milliseconds (this is faster)</li>
+						</ul>
+					</li>
+					<li>In <a href="docs/layouts/pattern.html">LoggerLayoutPattern</a>, it is no longer possible to 
+						access $_SERVER and $_ENV values using <code>%X{server.*}</code> and <code>%X{env.*}</code>
+						conversion words; use the new words <code>%server{*}</code> and <code>%env{*}</code> instead.
+						</li>
+					<li>Custom renderer classes should implement the <code>LoggerRenderer</code> interface instead of  
+					<code>LoggerRendererObject</code>.</li>
+				</ul>
+				
+				<p>Please review the documentation and make any necessary changes to your configuration.</p>
+				
+			</subsection>
+
+		    <subsection name="Apache log4php v2.2.1" id="Apache_log4php_v2.2.1">
+		        <p>Release date: 18.02.2012.</p>
+		        <p><a href="changes-report.html#a2.2.1">JIRA change log</a></p>
+		        
+		        <p>A bugfix release fixing several critical bugs found since the 2.2.0 release.</p>
+		        
+		        <p><strong>Bugfixes:</strong></p>
+		        <ul>
+		            <li>Fixed a bug which prevented configuration by passing a LoggerConfigurator instance.</li>
+		            <li>Fixed a bug which prevented parsing of INI configuration files when using PHP 5.2.x.</li>
+		        </ul>
+		        
+		        <p><strong>New features:</strong></p>
+		        <ul>
+		            <li>Added connection timeout parameter to the <a href="docs/appenders/mongodb.html">MongoDB appender</a>.</li>
+		        </ul>
+		    </subsection>
+
+			<subsection name="Apache log4php v2.2.0" id="Apache_log4php_v2.2.0">
+				
+				<p>Release date: 20.12.2011.</p>
+				<p><a href="changes-report.html#a2.2.0">JIRA change log</a></p>
+				
+				<p><strong>New features:</strong></p>
+				<ul>
+					<li>A new layout: <a href="docs/layouts/serialized.html">serialized</a></li>
+				</ul>
+				
+				<p><strong>Improvements:</strong></p>
+				<ul>
+					<li>Full rewrite of the <a href="docs/configuration.html">configuration logic</a>. Makes inline 
+						PHP configuration possible.</li>
+					<li>Improved error reporting. Warnings will be triggered if problems are detected. This makes 
+						locating errors in configuration easier.</li>
+					<li>Appenders will use a default layout if no layout is specified in configuration.</li>
+					<li>The <a href="docs/layouts/xml.html">XML layout</a> has been extended to include MDC data.</li>
+					<li>Improved documentation to include more XML and PHP configuration examples.</li>
+					<li>New web site appearance (powered by the <a class="external" 
+						href="http://twitter.github.com/bootstrap/">Bootstrap toolkit</a>).</li>
+				</ul>
+				
+				<p><strong>Breaking changes:</strong></p>
+				<ul>
+					<li>The <a href="docs/appenders/socket.html">socket appender</a> has been rewritten to use a layout. 
+						By default it will use the <a href="docs/layouts/serialized.html">serialized layout</a>.</li>
+					<li>The <a href="docs/appenders/syslog.html">syslog appender</a> has been rewritten and the 
+						interpretation of parameters has changed.</li>
+				</ul>
+				<p>Please review the documentation and make any necessary changes to your configuration.</p>
+			</subsection>
+
+			<subsection name="Apache log4php v2.1.0" id="Apache_log4php_v2.1.0">
+				
+				<p>Release date: 13.07.2011.</p>
+				<p><a href="changes-report.html#a2.1.0">JIRA change log</a></p>
+				
+				<p><strong>New features:</strong></p>
+				<ul>
+					<li>New logging level: TRACE</li>
+					<li>New appender: MongoDB (thanks to Vladimir Gorej)</li>
+				</ul>
+				
+				<p><strong>Improvements:</strong></p>
+				<ul>
+					<li>A lot of bugfixes</li>
+					<li>Most of the documentation has been rewritten</li>
+				</ul>
+			</subsection>
+		
+			<subsection name="Apache log4php v2.0.0" id="Apache_log4php_v2.0.0">
+				
+				<p>Release date: 12.12.2009.</p>
+				<p><a href="changes-report.html#a2.0.0">JIRA change log</a></p>
+				
+				<p>Apache log4php 2.0 is not compatible with the previous versions. Please have the following in mind 
+				when upgrading to log4php 2.0 in your project:</p>
+				
+				<ul>
+					<li>PHP 5.2+ is required</li>
+					<li>LoggerManager class has been removed. Use Logger instead.</li>
+					<li>LoggerHierarchy is not a singleton anymore by default.</li>
+					<li>logs to STDOUT by default</li>
+					<li>LOG4PHP_CONFIGURATION constant is no longer used. Please use Logger::configure() to configure 
+						log4php.</li>
+				</ul>
+			</subsection>
+		
+		</section>
+	</body>
+</document>

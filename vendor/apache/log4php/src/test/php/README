@@ -1,0 +1,19 @@
+All tests can be run from the root of the package by running:
+$ phpunit
+
+Tests classes are divided into groups which can be run individually:
+$ phpunit --group main
+$ phpunit --group appenders
+$ phpunit --group configurators
+$ phpunit --group filters
+$ phpunit --group helpers
+$ phpunit --group layouts
+$ phpunit --group renderers
+
+Individual test classes can be run using e.g.:
+$ phpunit src/test/php/appenders/LoggerAppenderSocketTest.php
+
+Do not use relative file paths in the tests. Absoulte paths may be constructed
+using snippets like:
+* dirname(__FILE__) . '/../path/to/file' 
+* PHPUNIT_TEMP_DIR . '/../path/to/file'

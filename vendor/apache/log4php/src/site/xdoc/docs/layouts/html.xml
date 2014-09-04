@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>LoggerLayoutHTML</title>
+	</properties>
+
+	<body>
+		<section name="LoggerLayoutHTML" id="LoggerLayoutHTML">
+		
+			<p>LoggerLayoutHTML formats the log as an HTML document.</p>
+		
+			<subsection name="Parameters">
+				<p>The following parameters are available:</p>
+		
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>locationInfo</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>false</td>
+							<td>If set to true, adds the file name and line number at which the log statement originated.</td>
+						</tr>
+						<tr>
+							<td>title</td>
+							<td>string</td>
+							<td>No</td>
+							<td>Log4php Log Messages</td>
+							<td>Sets the <![CDATA[<title>]]> of the generated HTML document.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</subsection>
+				
+			<subsection name="Examples">
+					
+				<p>Configuration:</p>
+				
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+ 
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderEcho">
+        <layout class="LoggerLayoutHtml">
+            <param name="locationInfo" value="true" />
+        </layout>
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderEcho',
+            'layout' => array(
+                'class' => 'LoggerLayoutHtml',
+            )
+        )
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default')
+    ),
+)
+]]></pre>
+						</div>
+					</div>
+				</div>
+
+				<p>Running the following code:</p>
+
+<pre class="prettyprint linenums">
+Logger::configure("layout_xml.xml");
+$log = Logger::getRootLogger();
+$log->debug("Hello World!");
+$log->info("Hello World!");
+</pre>
+
+				<p>Produces the output as a HTML table:</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Time</th>
+							<th>Thread</th>
+							<th>Level</th>
+							<th>Category</th>
+							<th>File:Line</th>
+							<th>Message</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>0</td>
+							<td title="5868 thread">5868</td>
+							<td title="Level"><font color="#339933">DEBUG</font></td>
+							<td title="root category">root</td>
+							<td>D:\Projects\apache\log4php-config-adapters\src\examples\php\layout_html.php:23</td>
+							<td title="Message">Hello World!</td>
+						</tr>
+						
+						<tr>
+							<td>2</td>
+							<td title="5868 thread">5868</td>
+							<td title="Level">INFO</td>
+							<td title="root category">root</td>
+							<td>D:\Projects\apache\log4php-config-adapters\src\examples\php\layout_html.php:24</td>
+							<td title="Message">Hello World!</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p>Source of the output:</p>
+
+<pre class="prettyprint"><![CDATA[
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Log4php Log Messages</title>
+    <style type="text/css">
+    <!--
+    body, table {font-family: arial,sans-serif; font-size: x-small;}
+    th {background: #336699; color: #FFFFFF; text-align: left;}
+    -->
+    </style>
+</head>
+<body bgcolor="#FFFFFF" topmargin="6" leftmargin="6">
+<hr size="1" noshade>
+Log session start time 09/22/11 13:19:23<br>
+<br>
+<table cellspacing="0" cellpadding="4" border="1" bordercolor="#224466" width="100%">
+    <tr>
+        <th>Time</th>
+        <th>Thread</th>
+        <th>Level</th>
+        <th>Category</th>
+        <th>File:Line</th>
+        <th>Message</th>
+    </tr>
+    <tr>
+        <td>0</td>
+        <td title="5868 thread">5868</td>
+        <td title="Level"><font color="#339933">DEBUG</font></td>
+        <td title="root category">root</td>
+        <td>D:\Projects\apache\log4php-config-adapters\src\examples\php\layout_html.php:23</td>
+        <td title="Message">Hello World!</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td title="5868 thread">5868</td>
+        <td title="Level">INFO</td>
+        <td title="root category">root</td>
+        <td>D:\Projects\apache\log4php-config-adapters\src\examples\php\layout_html.php:24</td>
+        <td title="Message">Hello World!</td>
+    </tr>
+</table>
+<br>
+</body>
+</html>]]></pre>
+
+			</subsection>
+		</section>
+	</body>
+</document>

@@ -53,6 +53,7 @@
         <script src="/js/koExternalTemplateEngine_all.min.js"></script>
 		
         <script src="/js/site.js"></script>
+        <?php if (isset($headScripts)) { echo $headScripts; } ?>
     </head>
     <body>
 

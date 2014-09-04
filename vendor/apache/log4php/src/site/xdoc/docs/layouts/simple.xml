@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>LoggerLayoutSimple</title>
+	</properties>
+
+	<body>
+		<section name="LoggerLayoutSimple">
+		
+			<p><code>LoggerLayoutSimple</code> is a basic layout which outputs only the level followed by the message.</p>
+			
+			<p>It is interesting to note that the output of <code>LoggerLayoutSimple</code> is identical to that of 
+			<code><a href="pattern.html">LoggerLayoutPattern</a></code> with the <em>conversion pattern</em> set to 
+			<code>%p - %m%n</code>.</p>
+			
+	
+			<subsection name="Parameters">
+				<p>This layout does not have any configurable parameters.</p>
+			</subsection>
+				
+			<subsection name="Examples">
+					
+				<p>Configuration:</p>
+					
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderEcho">
+        <layout class="LoggerLayoutSimple" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderEcho',
+            'layout' => array(
+                'class' => 'LoggerLayoutSimple',
+            )
+        )
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default')
+    ),
+)
+]]></pre>
+						</div>
+					</div>
+				</div>
+				
+
+				<p>Running the following code:</p>
+
+<pre class="prettyprint linenums">
+Logger::configure("layout_xml.xml");
+$log = Logger::getRootLogger();
+$log->info("My first message.");
+$log->debug("My second message.");
+$log->warn("My third message.");
+</pre>
+
+				<p>Produces the following output:</p>
+
+<pre>
+INFO - My first message.
+DEBUG - My second message.
+WARN - My third message.
+</pre>
+
+			</subsection>
+		</section>
+	</body>
+</document>

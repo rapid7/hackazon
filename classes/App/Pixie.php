@@ -11,7 +11,9 @@ use App\EventDispatcher\Events;
 use App\Events\GetResponseEvent;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
+use App\GWTPHP\RemoteServiceServlet;
 use App\Rest\RestService;
+use GWTModule\GWTModule;
 use PHPixie\Controller;
 use PHPixie\Cookie;
 use PHPixie\Exception\PageNotFound;
@@ -37,6 +39,7 @@ use VulnModule\VulnInjection;
  * @property-read Cookie $cookie
  * @property-read RestService $restService
  * @property-read \PHPixie\Paginate $paginate
+ * @property-read GWTModule $gwt
  * @method Controller|Rest\Controller controller
  */
 class Pixie extends \PHPixie\Pixie {
@@ -53,7 +56,8 @@ class Pixie extends \PHPixie\Pixie {
         'vulninjection' => '\VulnModule\VulnInjection',
 		'email' => '\PHPixie\Email',
 		'paginate' => '\PHPixie\Paginate',
-		'paginateDB' => '\App\Paginate\Paginate'
+		'paginateDB' => '\App\Paginate\Paginate',
+		'gwt' => 'GWTModule\GWTModule',
     );
 
     /**

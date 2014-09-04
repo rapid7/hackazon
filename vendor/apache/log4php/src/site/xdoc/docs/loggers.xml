@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>Loggers</title>
+	</properties>
+
+	<body>
+		<section name="Loggers">
+		
+			<p>A logger is a component which will take your logging request and log it. Each class in a project can 
+			have an individual logger, or they can all use a common logger. Loggers are named entities; it is 
+			common to name them after the class which will use it for logging.</p>
+			
+			<p>Creating a logger is done by calling the static <code>getLogger()</code> method on the Logger object 
+			and providing the name of the logger. For example, to create a logger named <code>foo</code>:</p>
+			
+			<pre class="prettyprint">$logger = Logger::getLogger('foo');</pre>
+			
+			<p>Logging requests are made by invoking one of the printing methods of a Logger instance. These logging 
+			methods are: trace, debug, info, warn, error and fatal. The printing method determines the level of a 
+			logging request. For example, calling the method <code>info()</code> creates a logging request of level 
+			<code>INFO</code>. For example:</p>
+			
+			<pre class="prettyprint">$logger->info("This is the message to be logged.");</pre>
+
+			<p>Loggers by themselves do not define where these messages will be logged. For that you need to assign 
+			one or more <a href="./appenders.html">appenders</a> to the logger.</p>
+			
+			<subsection name="Logger threshold" id="Logger_threshold">
+				<p>A logger can be assigned a threshold level. All logging requests with level lower than this threshold
+				will be ignored.</p>
+				  
+				<p>For example, setting logger threshold to <code>INFO</code> means that logging requests with levels 
+				<code>TRACE</code> and <code>DEBUG</code> will not be logged by this logger.</p>
+				
+				<p>An example of setting the root logger threshold to <code>INFO</code>:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderConsole" />
+    <root>
+        <level value="info" />
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>		
+				
+			    <p>If not explicitly configured, loggers will have their threshold level set to <code>DEBUG</code> by 
+			    default.</p>
+			</subsection>
+			
+			<subsection name="Configuring loggers" id="Configuring_loggers">
+				<p>Loggers can be individually configured in the configuration file. </p>
+				
+				<p>The simplest example is to configure the root logger, since all other loggers will inherit its 
+				settings, as explained in the <a href="#Logger_hierarchy">next section</a>.</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderConsole" />
+    <root>
+        <level value="info" />
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>		
+				<p>This configuration adds the <code>default</code> appender to the root logger, and sets it's 
+				<a href="#Logger_threshold">threshold level</a> to <code>INFO</code>.</p>
+				
+				<p>It is also possible to configure individual named loggers. For example, let's configure the 
+				<code>foo</code> logger, used in the example above, and set it's threshold to WARN:</p>	
+					
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderConsole" />
+    <logger name="foo">
+        <level value="warn" />
+        <appender_ref ref="default" />
+    </logger>
+</configuration>
+]]></pre>
+			</subsection>
+			
+			<subsection name="Logger hierarchy" id="Logger_hierarchy">
+				<p>Loggers follow a parent-child relationship pattern which is implemented by using a naming pattern.
+				A logger is said to be an <em>ancestor</em> of another logger if its name followed by a dot is a 
+				prefix of the <em>descendant</em> logger name. A logger is said to be a <em>parent</em> of a 
+				<em>child</em> logger if there are no ancestors between itself and the descendant logger.</p>
+			
+				<p>For example, the logger named <code>foo</code> is a parent of the logger named <code>foo.bar</code>.
+				Similarly, <code>org</code> is a parent of <code>org.apache</code> and an ancestor of 
+				<code>org.apache.logging</code>. This naming scheme should be familiar to most developers.</p>
+				
+				<p>The root logger resides at the top of the logger hierarchy. It is exceptional in two ways:</p>
+				<ul>
+					<li>it always exists,</li>
+					<li>it cannot be retrieved by name.</li>
+				</ul>
+				
+				<p>Invoking the class static <code>Logger::getRootLogger()</code> method retrieves the root logger. 
+				All other loggers are instantiated and retrieved with the <code>Logger::getLogger($name)</code>
+				method. This method takes the name of the desired logger as a parameter. If the logger does not exist
+				at the time of the call, it will be created.</p>
+			</subsection>
+			
+			<subsection name="Logger inheritance" id="Logger_inheritance">
+				<p>The threshold level and appenders are inherited from the parent to the child loggers.</p>
+				
+				<p>For example examine the following configuration:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderConsole" />
+    <root>
+        <level value="debug" />
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+
+				<p>The threshold level of the root logger is set to debug. Also, the root logger is linked to a console
+				appender. Any named logger that is created will inherit these root settings.</p>
+			
+<pre class="prettyprint linenums"><![CDATA[
+$main = Logger::getLogger('main');
+$main->trace('This will not be logged.');
+$main->info('This will be logged.');
+]]></pre>
+				<p>A logger named <code>main</code> is created. Since there is no logger-specific configuration, it 
+				will inherit all of it's settings from the root logger: a console appender, and threshold set to DEBUG.
+				Therefore, this code will produce the following output:</p>
+				
+				<pre>INFO - This will be logged.</pre>
+			</subsection>
+			
+			<subsection name="Appender additivity" id="Appender_additivity">
+				<p>Appender additivity is a property of loggers to inherit their parent's appenders. By default all 
+				loggers have appender additivity enabled.</p>
+				
+				<p>Let's take the following example:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="A1" class="LoggerAppenderConsole" />
+    <appender name="A2" class="LoggerAppenderConsole" />
+    <root>
+        <appender_ref ref="A1" />
+    </root>
+    <logger name="foo"> 
+        <appender_ref ref="A2" />
+    </logger>
+</configuration>
+]]></pre>
+				<p>Since additivity is enabled by default, the logger <code>foo</code> will have two linked appenders: 
+				A1 which it will inherit from the root logger, and A2 which is defined for it specifically.</p>
+				
+				<p>Therefore, by executing the following code:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+$main = Logger::getLogger('foo');
+$main->info('This will be logged twice.');
+]]></pre>
+				<p>The message will be logged twice - once by A1 and once by A2, producing:</p>
+				
+<pre>
+INFO - This will be logged twice.
+INFO - This will be logged twice.
+</pre>
+			
+				<h4>Disabling appender additivity</h4>
+				
+				<p>Logger's appender additivity can also be disabled if needed.</p>
+				
+				<p>If the <code>foo</code> logger in the previous example was configured like this:</p>
+
+<pre class="prettyprint linenums"><![CDATA[
+<logger name="foo" additivity="false"> 
+    <appender_ref ref="A2" />
+</logger>
+]]></pre>
+				<p>Then the logger would not have inherited the A1 appender from the root logger, and the message 
+				would have been logged only once.</p>
+			
+				<h4>A more complex example</h4>
+			
+				<p>In this example we will look at multiple loggers making a hierarchy.</p>
+				
+				<p>Not to make the example too complex, all appenders will log to the console. Of course, this doesn't
+				always have to be the case.</p>
+				
+				<p>Let's take the following configuration file:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="A1" class="LoggerAppenderConsole" />
+    <appender name="A2" class="LoggerAppenderConsole" />
+    <appender name="A3" class="LoggerAppenderConsole" />
+    <appender name="A4" class="LoggerAppenderConsole" />
+
+    <root>
+        <appender_ref ref="A1" />
+    </root>
+    <logger name="foo">
+        <appender_ref ref="A2" />
+        <appender_ref ref="A3" />
+    </logger>
+    <logger name="foo.bar" />
+    <logger name="foo.bar.baz" additivity="false">
+        <appender_ref ref="A4" />
+    </logger>
+</configuration>
+]]></pre>
+				<p>The table below shows how the configuration is interpreted, and which appenders are inherited:</p>
+				
+				<table>
+					<thead>
+						<tr>
+							<th>Logger name</th>
+							<th>Linked appenders</th>
+							<th>Additivity flag</th>
+							<th>Output targets</th>
+							<th>Comment</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>root</td>
+							<td>A1</td>
+							<td>N/A</td>
+							<td>A1</td>
+							<td>One appender, named A1, is added to root logger. Any logging requests to root logger 
+							will be forwarded only to that one appender.</td>
+						</tr>
+						<tr>
+							<td>foo</td>
+							<td>A2, A3</td>
+							<td>true</td>
+							<td>A1, A2, A3</td>
+							<td>A logger named <code>foo</code> is created and two appenders, named A2 and A3, are 
+							added to it. Additionally, because of logger additivity, <code>foo</code> inherits the 
+							appender A1 from the root logger which is it's parent in the logger hierarchy. Therefore 
+							logging requests to this logger will be forwarded to appenders A1, A2 and A3.</td>
+						</tr>
+						<tr>
+							<td>foo.bar</td>
+							<td>none</td>
+							<td>true</td>
+							<td>A1, A2, A3</td>
+							<td>A logger named <code>foo.bar</code> is created. Because it's name starts with 
+							<code>foo</code>, it will be created as a child of the <code>foo</code> logger. 
+							No appenders are added to <code>foo.bar</code> but it will inherit it's ancestor's 
+							appenders: appenders A2 and A3 from <code>foo</code> and A1 from <code>root</code>.
+							Logging requests to this logger will be forwarded to appenders A1, A2 and A3.</td>
+						</tr>
+						<tr>
+							<td>foo.bar.baz</td>
+							<td>A4</td>
+							<td>false</td>
+							<td>A4</td>
+							<td>Finally, logger <code>foo.bar.baz</code> is created, and because of it's name it is 
+							created as child to <code>foo.bar</code>. One appender, A4 is added to it. However, since
+							it's additivity flag is set to <em>false</em>, it will not inherit any appenders from it's
+							ancestors. Logging requests to this logger will be forwarded only to appender A4.</td>
+						</tr>
+					</tbody>
+				
+				</table>
+			</subsection>
+		</section>
+	</body>
+</document>
