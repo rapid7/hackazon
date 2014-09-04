@@ -52,7 +52,23 @@ h1, h2, h3, h4 {
     .bs-callout-info h4 {
         color: #5bc0de;
     }
-
+.thumbnail img {
+    width: auto;
+}
+.img-wrap {
+    max-height: 200px;
+    overflow: hidden;
+}
+.img-wrap img {
+    min-height: 200px;    
+}
+.img-small-wrap {
+    max-height: 100px;
+    overflow: hidden;
+}
+.img-small-wrap img {
+    min-height: 100px;    
+}
 /* STRUCTURE */
 #container {
     margin-top: 60px;
@@ -479,7 +495,6 @@ form.signin .error {
 }
 .home-top-product-section .thumbnail .img-box {
     height: 220px;
-    width: 100%;
     padding: 0;
     text-align: center;
     overflow: hidden;
@@ -487,7 +502,6 @@ form.signin .error {
 }
 .home-top-product-section .thumbnail .img-box img {
     max-width: 100%;
-    width: 100%;
     margin-bottom: 0;
 }
 
@@ -766,7 +780,6 @@ form.signin .error {
 
 .home-top-product-section .thumbnail .img-box img {
     max-width: 100%;
-    width: 100%;
     margin-bottom: 0;
 }
 
@@ -777,13 +790,11 @@ form.signin .error {
 
 .thumbnail .special-offer-img  img{
     height: 155px;
-    width: 100%;
     padding: 0;
     text-align: center;
     overflow: hidden;
     transition: all 0.2s ease-in-out 0s;
 }
-
 .product-detail .product-image {
     margin: auto;
 }
