@@ -88,6 +88,51 @@ h1, h2, h3, h4 {
 	margin-right:10px;
 	color:#428bca;
 }
+
+.table-order {
+
+}
+.table-order thead th {
+    white-space: nowrap;
+    text-transform: capitalize;+
+}
+.table-order .hw-count-control {
+    max-width: 126px;
+}
+.table-order .hw-count-control input {
+    width: 40px;
+}
+.table-order tbody tr td {
+    border-top: none;
+}
+.table-order tbody tr td .img-home-portfolio {
+    width: auto;
+    max-width: 100%;
+    max-height: 60px;
+    margin: 0 auto;
+}
+.table-order tfoot .form-group {
+    margin-bottom: 0;
+}
+.table-order tfoot .form-control {
+}
+.table-order .hw-total {
+    white-space: nowrap;
+}
+.table-order tfoot .label {
+    font-size: 14px;
+    line-height: 34px;
+}
+
+.table-order tfoot tr:first-child td {
+    border-top: 1px solid #ccc;
+}
+.table-order tfoot tr td {
+    border-top: none;
+}
+.table-order tfoot th {
+    white-space: nowrap;
+ }
 @media (max-width: 768px) {
     .hw-navbar-brand {
         padding-top: 5px;
