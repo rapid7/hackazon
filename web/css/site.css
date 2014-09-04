@@ -1,8 +1,58 @@
-/* COMMON STYLES*/
+/* COMMON STYLES AND CLASSES*/
 h1, h2, h3, h4 {
     font-family: 'Ubuntu', sans-serif;
     font-weight: 500;
 }
+
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+
+    .bs-callout h4 {
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+
+    .bs-callout p:last-child {
+        margin-bottom: 0;
+    }
+
+    .bs-callout code {
+        border-radius: 3px;
+    }
+
+    .bs-callout + .bs-callout {
+        margin-top: -5px;
+    }
+
+.bs-callout-danger {
+    border-left-color: #d9534f;
+}
+
+    .bs-callout-danger h4 {
+        color: #d9534f;
+    }
+
+.bs-callout-warning {
+    border-left-color: #f0ad4e;
+}
+
+    .bs-callout-warning h4 {
+        color: #f0ad4e;
+    }
+
+.bs-callout-info {
+    border-left-color: #5bc0de;
+}
+
+    .bs-callout-info h4 {
+        color: #5bc0de;
+    }
+
 /* STRUCTURE */
 #container {
     margin-top: 60px;
@@ -89,6 +139,7 @@ h1, h2, h3, h4 {
 	color:#428bca;
 }
 
+/* CART */
 .hw-steps-nav {
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
@@ -151,12 +202,28 @@ h1, h2, h3, h4 {
 .badge-inverse:hover {
   background-color: #1a1a1a;
 }
+
 .table-order {
 
 }
 .table-order thead th {
     white-space: nowrap;
     text-transform: capitalize;+
+}
+.table-order tbody td .img-thumbnail-wrapper {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    padding: 3px;
+}
+.table-order tbody td .img-thumbnail-wrapper img {
+    border-radius: 5px;
+}
+.table-order tbody tr td .img-home-portfolio {
+    width: auto;
+    max-width: 100%;
+    max-height: 50px;
+    margin: 0 auto;
 }
 .table-order .hw-count-control {
     max-width: 126px;
@@ -166,12 +233,6 @@ h1, h2, h3, h4 {
 }
 .table-order tbody tr td {
     border-top: none;
-}
-.table-order tbody tr td .img-home-portfolio {
-    width: auto;
-    max-width: 100%;
-    max-height: 60px;
-    margin: 0 auto;
 }
 .table-order tfoot .form-group {
     margin-bottom: 0;
@@ -185,7 +246,6 @@ h1, h2, h3, h4 {
     font-size: 14px;
     line-height: 34px;
 }
-
 .table-order tfoot tr:first-child td {
     border-top: 1px solid #ccc;
 }
