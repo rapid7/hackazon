@@ -1,1 +1,0 @@
-ALTER TABLE `tbl_order_items` ADD `order_id` INT (11) NOT NULL;
