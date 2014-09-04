@@ -197,7 +197,7 @@
         </div>
 		<div class="col-xs-4">
 		<?php foreach ($this->customerAddresses as $address) :?>
-			<div class="blockShadow">
+			<div class="blockShadow bg-info">
 				<b><?php echo $_($address->full_name, 'full_name'); ?></b><br />
 				<?php echo $_($address->address_line_1, 'address_line_1'); ?><br />
 				<?php echo $_($address->address_line_2, 'address_line_2'); ?><br />
@@ -206,15 +206,15 @@
 				<?php echo $_($address->phone, 'phone'); ?><br />
 				<div class="row">
 					<div class="col-xs-12" style="margin-bottom: 10px;">
-						<button data-id="<?php echo $address->id?>" style="margin-bottom:10px" class="btn btn-primary btn-block confirm-address ladda-button" data-token="<?php echo $this->getToken('checkout_step3'); ?>" data-style="expand-right" data-spinner-size="20"><span class="ladda-label">Bill to this address</span></button>
+						<button data-id="<?php echo $address->id?>" class="btn btn-primary btn-block confirm-address ladda-button" data-token="<?php echo $this->getToken('checkout_step3'); ?>" data-style="expand-right" data-spinner-size="20"><span class="ladda-label">Bill to this address</span></button>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-6">
-						<button data-id="<?php echo $address->id?>" class="btn btn-default btn-block edit-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Edit</span></button>
-					</div>
-					<div class="col-xs-6">
-						<button data-id="<?php echo $address->id?>" class="btn btn-default btn-block delete-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Delete</span></button>
+						<button data-id="<?php echo $address->id?>" class="btn btn-success btn-block edit-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Edit</span></button>
+						</div>
+						<div class="col-xs-6">
+						<button data-id="<?php echo $address->id?>" class="btn btn-danger btn-block delete-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Delete</span></button>
 					</div>
 				</div>
             </div>
@@ -225,11 +225,10 @@
     <div class="row">
 
         <div class="col-xs-6">
-            <button class="btn btn-default" onclick="window.location.href='/checkout/shipping'"><span class="glyphicon glyphicon-chevron-left"></span> Shipping step</button>
+            <button class="btn btn-default" onclick="window.location.href='/checkout/shipping'"><span class="glyphicon glyphicon-chevron-left"></span> Shipping Step</button>
         </div>
         <div class="col-xs-6">
-            <button id="btn_billing" class="btn btn-primary pull-right ladda-button" data-target="#step3" data-toggle="tab"
-                    data-style="expand-left"><span class="ladda-label">Bill to this address <span class="glyphicon glyphicon-chevron-right icon-white"></span></span></button>
+            <button id="btn_billing" class="btn btn-primary pull-right ladda-button" data-target="#step3" data-toggle="tab" data-style="expand-left"><span class="ladda-label">Confirmation Step <span class="glyphicon glyphicon-chevron-right icon-white"></span></span></button>
         </div>
     </div>
 </div>

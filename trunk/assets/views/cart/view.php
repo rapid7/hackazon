@@ -138,7 +138,7 @@ if (count($items) == 0) :?>
                     $product = $item->getProduct();
                     ?>
                     <tr class="tr_items" id="tr_item_<?php echo $item->id?>">
-<td class="hidden-xs"><img class="img-responsive img-home-portfolio" src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>"></td>
+						<td class="hidden-xs"><img class="img-responsive img-home-portfolio" src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>"></td>
                         <td>
                             <h4><a href="/product/view/<?=$product['productID']?>"><?=$product['name']?></a></h4>
                         </td>
@@ -169,7 +169,7 @@ if (count($items) == 0) :?>
                     <?php endforeach;?>
 					</tbody>
 					<tfoot>
-                    <tr>
+                    <tr class="info">
                         <td class="text-right" colspan="3">
                             <form class="form-horizontal" id="methods" class="methods">
                                 <?php $_token('checkout_step_1'); ?>
@@ -191,7 +191,7 @@ if (count($items) == 0) :?>
                             <span class="label label-success">FREE</span>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="info">
                         <td class="text-right" colspan="3">
 							<form class="form-horizontal" id="methods2" class="methods">
                                 <fieldset>
@@ -212,7 +212,7 @@ if (count($items) == 0) :?>
                             <span class="label label-success">FREE</span>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="danger">
                         <th class="text-right" colspan="3">Quantity items:<br>Total: </th>
                         <th class="text-left" colspan="2">
                             $ <span id="items_qty"><?=$itemQty?></span>,-<br>
@@ -225,7 +225,7 @@ if (count($items) == 0) :?>
         </div>
         <div class="row">
             <div class="col-xs-8">
-                <a href="/" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Continue shopping</a>
+                <a href="/" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Continue Shopping</a>
                 
 				<button class="btn btn-danger ladda-button" id="empty_cart" data-style="expand-right" data-spinner-color="#999999"
                     ><span class="ladda-label"><span class="glyphicon glyphicon-trash"></span> Empty cart</span></button>
