@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>LoggerLayoutTTCC</title>
+	</properties>
+
+	<body>
+		<section name="LoggerLayoutTTCC">
+		
+		    <div class="alert alert-error">
+		        <span class="alert-heading">Deprecated!</span>
+		        <p>LoggerLayoutTTCC is deprecated and will be removed in a future release. Please use 
+		        <a href="pattern.html">LoggerLayoutPattern</a> instead.</p>
+            </div>
+		    
+			<p>The TTCC layout format was taken from Apache log4j, and originally consisted of Time, Thread, Category 
+			and nested diagnostic Context information, hence the name.</p>
+		    
+			<p><code>LoggerLayoutTTCC</code> contains equivalent information:</p>
+			<ul>
+				<li>Time</li>
+				<li>Process ID</li>
+				<li>Logger name</li>
+				<li>Nested diagnostic context</li>
+			</ul>
+		
+			<p>Output of <code>LoggerLayoutTTCC</code> is identical to that of 
+			<code><a href="pattern.html">LoggerLayoutPattern</a></code> with the <em>conversion pattern</em> set to 
+			<code>%d{m/d/y H:i:s,u} [%t] %p %c %x - %m%n</code>.</p>
+	
+			<subsection name="Parameters">
+			
+				<p>The following parameters are available:</p>
+		
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>threadPrinting</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>true</td>
+							<td>If set to true, the process ID will be included in output.</td>
+						</tr>
+						<tr>
+							<td>categoryPrefixing</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>true</td>
+							<td>If set to true, the logger name will be included in output.</td>
+						</tr>
+						<tr>
+							<td>contextPrinting</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>true</td>
+							<td>If set to true, the nested diagnostic context will be included in output.</td>
+						</tr>
+						<tr>
+							<td>microSecondsPrinting</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>true</td>
+							<td>If set to true, the microseconds will be included in output.</td>
+						</tr>
+					</tbody>
+				</table>
+			</subsection>
+			
+			<subsection name="Examples">
+					
+				<p>Configuration:</p>
+				
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+					
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderEcho">
+        <layout class="LoggerLayoutTTCC" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderEcho',
+            'layout' => array(
+                'class' => 'LoggerLayoutTTCC',
+            )
+        )
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default')
+    ),
+)
+]]></pre>
+						</div>
+					</div>
+				</div>
+					
+
+				<p>For this example, some Nested Diagnostic Context is added also. Running the following code:</p>
+
+<pre class="prettyprint linenums">
+Logger::configure("config.xml");
+LoggerNDC::push("Some Context");
+
+$logger = Logger::getLogger('myLogger');
+$logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+$logger->debug("Donec a diam lectus.");
+$logger->warn("Sed sit amet ipsum mauris.");
+</pre>
+
+				<p>Produces the following output:</p>
+
+<pre>
+02/20/12 23:36:39,772 [9820] INFO myLogger Some Context - Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+02/20/12 23:36:39,773 [9820] DEBUG myLogger Some Context - Donec a diam lectus.
+02/20/12 23:36:39,773 [9820] WARN myLogger Some Context - Sed sit amet ipsum mauris.
+</pre>
+			</subsection>
+		</section>
+	</body>
+</document>

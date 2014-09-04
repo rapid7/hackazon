@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>LoggerAppenderRollingFile</title>
+	</properties>
+
+	<body>
+		<section name="LoggerAppenderRollingFile">
+		
+			<p><code>LoggerAppenderRollingFile</code> writes logging events to a specified file. The file is rolled over 
+			after a specified size has been reached.</p>
+			
+			<p>For example, if logging to a file named <code>file.log</code>, when the file size reaches the specified 
+			size limit, the contents are archived in a file named <code>file.log.1</code> and <code>file.log</code>
+			is truncated. When the size limit is reached the second time, <code>file.log.1</code> is renamed to 
+			<code>file.log.2</code>; contents from <code>file.log</code> are archived to <code>file.log.1</code> and 
+			<code>file.log</code> is truncated</p>
+			
+			<p>This continues until the maximum backup index is reached, after which the oldest log file is deleted
+			on each rollover.</p>
+			
+			<subsection name="Layout">
+				<p>This appender requires a layout. If no layout is specified in configuration, 
+				<code><a href="../layouts/simple.html">LoggerLayoutSimple</a></code> will be used by default.</p>
+			</subsection>
+			
+			<subsection name="Parameters">
+				<p>The following parameters are available:</p>
+		
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>file</td>
+							<td>string</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>Path to the target file. Should contain a <code>%s</code> which gets substituted by the 
+							date.</td>
+						</tr>
+						<tr>
+							<td>append</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>true</td>
+							<td>If set to true, the appender will append to the file, otherwise the file contents will be 
+							overwritten.</td>
+						</tr>
+						<tr>
+							<td>maxFileSize</td>
+							<td>string</td>
+							<td>No</td>
+							<td>10M</td>
+							<td>Maximum allowed file size (in bytes) before rolling over. Suffixes "KB", "MB" and "GB" are allowed. 10KB = 10240 bytes, etc.</td>
+						</tr>
+						<tr>
+							<td>maxBackupIndex</td>
+							<td>integer</td>
+							<td>No</td>
+							<td>1</td>
+							<td>Maximum number of backup files to keep.</td>
+						</tr>
+						<tr>
+							<td>compress</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>false</td>
+							<td>If set to true, the rollover files are compressed and saved with the .gz extension.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</subsection>
+				
+			<subsection name="Examples">
+				
+				<p>This example shows how to configure <code>LoggerAppenderRollingFile</code> to rollover after reaching
+				the size of 1MB and for keeping the last 5 backup files.</p>
+
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+ 
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderRollingFile">
+        <layout class="LoggerLayoutSimple" />
+        <param name="file" value="file.log" />
+        <param name="maxFileSize" value="1MB" />
+        <param name="maxBackupIndex" value="5" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderRollingFile',
+            'layout' => array(
+                'class' => 'LoggerLayoutSimple',
+            ),
+            'params' => array(
+                'file' => 'file.log',
+                'maxFileSize' => '1MB',
+                'maxBackupIndex' => 5,
+            ),
+        ),
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default'),
+    ),
+);
+]]></pre>
+						</div>
+					</div>
+				</div>
+			</subsection>
+		</section>
+	</body>
+</document>

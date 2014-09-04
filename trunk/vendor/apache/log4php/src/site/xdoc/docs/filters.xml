@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>Filters</title>
+	</properties>
+
+	<body>
+		<section name="Filters">
+		
+			<p>Filtering is a mechanism which allows the user to configure more precisely which logging events will be
+			logged by an appender, and which will be ignored.</p>
+
+			<p>Multiple filters can be defined on any appender; they will form a filter chain. When a logging event is
+			passed onto an appender, the event will first pass through the filter chain. Each filter in the chain will
+			examine the logging event and make a decision to either:</p>
+			
+			<ol type="a">
+				<li><strong>ACCEPT</strong> the logging event - The event will be logged without consulting the 
+				remaining filters in the chain.</li>
+				<li><strong>DENY</strong> the logging event - The event will be not logged without consulting the 
+				remaining filters in the chain.</li>
+				<li>Remain <strong>NEUTRAL</strong> - No decision is made, therefore the next filter in the chain is 
+				consulted. If there are no remaining filters in the chain, the event is logged.</li>
+			</ol>
+			
+			<subsection name="Configuring filters" id="Configuring_filters">
+			
+				<p>Filters are configurable in the XML and PHP configuration format. They cannot be configured using
+				the properties configuration format.</p>
+				
+				<p>Like appenders and layouts, depending on the class used, filters may have configurable parameters 
+				which determine their behaviour.</p>
+			
+				<p>Here is a configuration example:</p>
+				
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+ 
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="defualt" class="LoggerAppenderEcho">
+        <layout class="LoggerLayoutSimple"/>
+        <filter class="LoggerFilterStringMatch">
+            <param name="stringToMatch" value="interesting" />
+            <param name="acceptOnMatch" value="true" />
+        </filter>
+        <filter class="LoggerFilterLevelRange">
+            <param name="levelMin" value="debug" />
+            <param name="levelMax" value="error" />
+        </filter>
+    </appender>
+    <root>
+        <level value="TRACE" />
+        <appender_ref ref="defualt" />
+    </root>
+</configuration>
+]]></pre>
+
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderEcho'
+            'layout' => array(
+                'class' => 'LoggerLayoutSimple'
+            ),
+            'filters' => array(
+                array(
+                    'class' => 'LoggerFilterStringMatch',
+                    'params' => array(
+                        'stringToMatch' => 'interesting',
+                        'acceptOnMatch' => true,
+                    )
+                ),
+                array(
+                    'class' => 'LoggerFilterLevelRange',
+                    'params' => array(
+                        'levelMin' => 'debug',
+                        'levelMax' => 'error',
+                    )
+                )
+            )
+        )
+    ),
+    'rootLogger' => array(
+    	'appenders' => array('default'),
+    )
+)
+]]></pre>	
+						</div>
+					</div>
+				</div>
+				
+				<p>In this example, there are two filters defined for the <em>default</em> appender.</p>
+				
+				<p>The first filter <code>LoggerFilterStringMatch</code> searches for the string "interesting" in the 
+				logging event's message. If the string is found, the filter will ACCEPT the logging event, and the 
+				event will be logged. If the string is not found, the filter will remain NEUTRAL, and the event will be
+				passed on to the next filter.</p>
+				
+				<p>The second filter <code>LoggerFilterLevelRange</code> ACCEPTS all events which have a level between 
+				DEBUG and ERROR (in other words, levels DEBUG, INFO, WARN and ERROR). It DENIES all other events.</p>
+				
+				<p>Therefore, this filter configuration will log events which which have a level between DEBUG and 
+				ERROR, except of theose which have the string "interesting" in the message. Those will be logged 
+				regardless of their level.</p>
+			
+			</subsection>
+			
+			<subsection name="Filter reference">
+			
+				<p>The following filters are available in log4php:</p>
+				
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Destination</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="#LoggerFilterDenyAll">LoggerFilterDenyAll</a></td>
+							<td>Denies all logging events.</td>
+						</tr>
+						<tr>
+							<td><a href="#LoggerFilterLevelMatch">LoggerFilterLevelMatch</a></td>
+							<td>Filters based on logging event level.</td>
+						</tr>
+						<tr>
+							<td><a href="#LoggerFilterLevelRange">LoggerFilterLevelRange</a></td>
+							<td>Filters based on logging event level range.</td>
+						</tr>
+						<tr>
+							<td><a href="#LoggerFilterStringMatch">LoggerFilterStringMatch</a></td>
+							<td>Filters by searching for a string in the logging event message.</td>
+						</tr>
+					</tbody>
+				</table>
+			</subsection>
+			
+			
+			<subsection name="LoggerFilterDenyAll" id="LoggerFilterDenyAll">
+				<p>This filters simply denies all logging events. It has no configurable parameters.</p>
+			</subsection>
+			
+			<subsection name="LoggerFilterLevelMatch" id="LoggerFilterLevelMatch">
+				<p>This filter either accepts the specified logger level or denies it.</p>
+				
+				<h4>Configurable parameters</h4>
+				
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>levelToMatch</td>
+							<td>LoggerLevel</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>The level to match</td>
+						</tr>
+						<tr>
+							<td>acceptOnMatch</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>true</td>
+							<td>If true, the matching log level is accepted, denied otherwise.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<h4>Example</h4>
+				
+				<p>The following filter configuration will deny all logging events with level DEBUG. It will remain 
+				neutral for others.</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<filter class="LoggerFilterLevelMatch">
+    <param name="levelToMatch" value="debug" />
+    <param name="acceptOnMatch" value="false" />
+</filter>
+]]></pre>
+				
+			</subsection>
+			
+			<subsection name="LoggerFilterLevelRange" id="LoggerFilterLevelRange">
+				<p>This filter accepts or denies logging events if their log level is within the specified range.</p>
+				
+				<h4>Configurable parameters</h4>
+				
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>levelMin</td>
+							<td>LoggerLevel</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>The minimum level to log. If set, levels lower than this will be denied.</td>
+						</tr>
+						<tr>
+							<td>levelMax</td>
+							<td>LoggerLevel</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>The maximum level to log. If set, levels higher than this will be denied.</td>
+						</tr>
+						<tr>
+							<td>acceptOnMatch</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>true</td>
+							<td>If true, the matching log level is accepted, denied otherwise.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<h4>Example</h4>
+				
+				<p>The following filter configuration denies levels greater than WARN.</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<filter class="LoggerFilterLevelRange">
+    <param name="levelMax" value="warn" />
+    <param name="acceptOnMatch" value="false" />
+</filter>
+]]></pre>
+				
+			</subsection>
+			
+			<subsection name="LoggerFilterStringMatch" id="LoggerFilterStringMatch">
+				<p>This filter allows or denies logging events if their message contains a given string.</p>
+				
+				<h4>Configurable parameters</h4>
+				
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>stringToMatch</td>
+							<td>LoggerLevel</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>The level to match</td>
+						</tr>
+						<tr>
+							<td>levelMax</td>
+							<td>LoggerLevel</td>
+							<td><strong>Yes</strong></td>
+							<td>-</td>
+							<td>The level to match</td>
+						</tr>
+						<tr>
+							<td>acceptOnMatch</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>true</td>
+							<td>If true, the matching log level is accepted, denied otherwise.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<h4>Example</h4>
+				
+				<p>The following filter configuration denies events which contain the string "not-interesting" in 
+				their message.</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+<filter class="LoggerFilterStringMatch">
+    <param name="StringToMatch" value="not-interesting" />
+    <param name="AcceptOnMatch" value="false" />
+</filter>
+]]></pre>
+				
+			</subsection>
+		</section>
+	</body>
+</document>

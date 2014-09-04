@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>Renderers</title>
+	</properties>
+
+	<body>
+		<section name="Renderers">
+			<p>Apache log4php can log more than just string messages. If you try to log an object it will be converted
+			to a string and logged. The component which converts Objects to strings in log4php is called a 
+			<em>renderer</em>.</p>
+			
+			<subsection name="Default renderer">
+			
+				<p>For example, let's say that an application uses a Person object, like this one:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+class Person {
+    public $firstName;
+    public $lastName;
+    public $age;
+}
+]]></pre>
+
+				<p>If you try logging it:</p>
+								
+<pre class="prettyprint linenums"><![CDATA[
+$person = new Person();
+$person->firstName = 'John';
+$person->lastName = 'Doe';
+$person->age = 37;
+
+$logger = Logger::getLogger('main');
+$logger->info("Here comes the person:");
+$logger->info($person);
+]]></pre>
+				<p>Log4php will render it using the default renderer and you will end the output will look something 
+				like:</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+INFO - Here comes the person:
+INFO - Person Object
+(
+    [firstName] => John
+    [lastName] => Doe
+    [age] => 37
+)
+]]></pre>
+				
+			</subsection>
+			
+			<subsection name="Creating a custom renderer">
+				<p>In order to make log4php log the Person object in a more readable format, a custom renderer 
+				class can be defined which will convert Person objects to a string suitable for logging.</p>
+				
+				<p>Let's call this renderer class PersonRenderer.</p>
+				
+<pre class="prettyprint linenums"><![CDATA[
+/** All renderers must implement the LoggerRenderer interface. */
+class PersonRenderer implements LoggerRenderer {
+    public function render($person) {
+        return "{$person->firstName} {$person->lastName} ({$person->age})";
+    }
+}
+]]></pre>
+
+				<p>Now log4php has to be configured to use PersonRenderer for rendering Person objects. This is done 
+				in the configuration file.</p>
+
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+					
+					<div class="tab-content">
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <renderer renderedClass="Person" renderingClass="PersonRenderer" />
+    <appender name="defualt" class="LoggerAppenderEcho" />
+    <root>
+        <appender_ref ref="defualt" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+array(
+    'renderers' => array(
+        array(
+            'renderedClass' => 'Person',
+            'renderingClass' => 'PersonRenderer'
+        )
+    ),
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderEcho',
+        ),
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default'),
+    ),
+)
+]]></pre>
+						</div>
+					</div>
+				</div>
+				
+			
+				<p>If the same code is run as above, the following output is produced:</p>
+			
+<pre class="prettyprint linenums"><![CDATA[
+INFO - Here comes the person:
+INFO - John Doe (37)
+]]></pre>
+				<p>Which is much more readable than the default rendering.</p>
+			</subsection>
+			
+			<subsection name="Overriding the default renderer">
+				<p>It is possible to set your own custom renderer as the default renderer.</p>
+				
+				<p>For example, if you're not happy with the way in which the default renderer converts objects, 
+				you can create your own renderer:</p>
+				   
+<pre class="prettyprint linenums"><![CDATA[
+class MyRenderer implements LoggerRenderer {
+    public function render($input) {
+        return var_dump($input);
+    }
+}
+]]></pre>
+
+				<p>And set it as the default renderer in the configuration:</p>
+				
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+					
+					<div class="tab-content">
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <defaultRenderer renderingClass="MyRenderer" />
+    <appender name="defualt" class="LoggerAppenderEcho" />
+    <root>
+        <appender_ref ref="defualt" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+array(
+    'defaultRenderer' => 'MyRenderer',
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderEcho',
+        ),
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default'),
+    ),
+)
+]]></pre>
+						</div>
+					</div>
+				</div>
+				
+				<p>Logging a Person object using this configuration will make log4php fall back to the newly 
+				defined default renderer, which uses <code>var_dump</code> instead of <code>print_r</code>, and 
+				the result will look like:</p>
+						
+<pre class="prettyprint linenums"><![CDATA[
+INFO - Here comes the person:
+class Person#5 (3) {
+  public $firstName =>
+  string(4) "John"
+  public $lastName =>
+  string(3) "Doe"
+  public $age =>
+  int(37)
+}
+]]></pre>
+			</subsection>
+			
+			<subsection name="Class hierarchy">
+				<p>Object rendering follows the class hierarchy. </p>
+
+				<p>For example, if there is a class named Fruit, and classes Orange, Lemon and Apple all extend Fruit. 
+				When FruitRenderer is registered as renderer for the Fruit class, all subclasses of Fruit will also 
+				be rendered by FruitRenderer. Of course, it is possible to override this by registering OrangeRenderer 
+				as renderer for the Orange class.</p>
+			</subsection>
+		</section>
+	</body>
+</document>

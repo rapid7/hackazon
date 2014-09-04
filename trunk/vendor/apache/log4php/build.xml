@@ -1,0 +1,189 @@
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<project name="logging-site" default="usage" basedir=".">
+	
+	<property name="svnrepo.url" value="https://svn.apache.org/repos/asf" />
+	<property name="svnsite.url" value="${svnrepo.url}/logging/site/trunk/docs/log4php" />
+	<available property="svn-available" file="target/site-deploy/.svn" />
+
+	<target name="usage">
+		<echo>This file provides services to the Maven build and is not intended for independent use.</echo>
+	</target>
+
+	<target name="checkout-site" unless="svn-available">
+		<exec executable="svn">
+			<arg value="co" />
+			<arg value="${svnsite.url}" />
+			<arg value="target/site-deploy" />
+		</exec>
+	</target>
+
+	<target name="update-site" if="svn-available">
+		<exec executable="svn" dir="target/site-deploy" failonerror="true">
+			<arg value="update" />
+		</exec>
+	</target>
+
+	<target name="post-site" depends="checkout-site, update-site" />
+
+	<target name="mime=html">
+		<exec executable="svn">
+			<arg value="propset" />
+			<arg value="svn:mime-type" />
+			<arg value="text/html" />
+			<arg value="${src.html}" />
+		</exec>
+	</target>
+
+	<target name="mime=css">
+		<exec executable="svn">
+			<arg value="propset" />
+			<arg value="svn:mime-type" />
+			<arg value="text/css" />
+			<arg value="${src.css}" />
+		</exec>
+	</target>
+
+	<target name="mime=jnlp">
+		<exec executable="svn">
+			<arg value="propset" />
+			<arg value="svn:mime-type" />
+			<arg value="application/x-java-jnlp-file" />
+			<arg value="${src.jnlp}" />
+		</exec>
+	</target>
+
+	<!-- Add any new files (and generate innocuous warnings for the existing content)  -->
+	<target name="site-deploy">
+		<delete file="target/site-deploy/svn-commit.tmp~" />
+		<exec executable="bash" dir="target/site-deploy" failonerror="true">
+			<arg line='-c "svn add --force *"' />
+		</exec>
+		<taskdef name="foreach" classname="net.sf.antcontrib.logic.ForEach" />
+		<foreach target="mime=html" param="src.html">
+			<path>
+				<fileset dir="target/site-deploy" includes="**/*.html" />
+			</path>
+		</foreach>
+		<foreach target="mime=css" param="src.css">
+			<path>
+				<fileset dir="target/site-deploy" includes="**/*.css" />
+			</path>
+		</foreach>
+		<foreach target="mime=jnlp" param="src.jnlp">
+			<path>
+				<fileset dir="target/site-deploy" includes="**/*.jnlp" />
+			</path>
+		</foreach>
+		<fixcrlf srcDir="target/site-deploy" includes="**/*.html" />
+		<fixcrlf srcDir="target/site-deploy" includes="**/*.css" />
+		<fixcrlf srcDir="target/site-deploy" includes="**/*.js" />
+
+		<!--  requires that SVN_EDITOR, VISUAL or EDITOR being set to edit commit description -->
+		<!--
+		<echo>Note: $export SVN_EDITOR=xemacs or similar must be set so that user is prompted for commit message.</echo>
+		<exec executable="svn" dir="target/site-deploy" failonerror="true">
+		    <arg value="commit"/>
+			<arg value="-m"/>
+		    <arg value="detailled log message see source svn"/>
+		</exec>
+		-->
+	</target>
+
+	<!-- Performs a syntax check on all PHP files (phplint). -->
+	<target name="syntax-check">
+		<apply executable="php">
+			<arg value="-n" />
+			<arg value="-l" />
+			<fileset dir="." includes="src/**/*.php" />
+		</apply>
+	</target>
+	
+	<!-- Determine the platform-specific executables -->
+	<condition property="phpunit.exec" value="phpunit.bat" else="phpunit">
+		<os family="windows" />
+	</condition>
+	<condition property="apigen.exec" value="apigen.bat" else="apigen">
+		<os family="windows" />
+	</condition>
+	<condition property="pear.exec" value="pear.bat" else="pear">
+		<os family="windows" />
+	</condition>
+
+	<!-- Builds a pear package -->
+	<target name="pear-package">
+		<delete dir="target/pear" />
+		<mkdir dir="target/pear/log4php" />
+		<copy file="package.php" todir="target/pear" />
+		<copy file="package-config.php" todir="target/pear" />
+		<copy file="src/changes/changes.xml" todir="target/pear" />
+		<copy file="CHANGELOG" todir="target/pear" />
+		<copy file="LICENSE" todir="target/pear" />
+		<copy file="README" todir="target/pear" />
+		<copy file="NOTICE" todir="target/pear" />
+		<copy todir="target/pear">
+			<fileset dir="src">
+				<include name="examples/**/*" />
+			</fileset>
+		</copy>
+		<copy todir="target/pear/log4php">
+			<fileset dir="src/main/php">
+				<include name="**/*.php" />
+				<include name="**/*.dtd" />
+			</fileset>
+		</copy>
+		<exec executable="php" dir="target/pear">
+			<arg line="-d error_reporting=6143" /> <!-- E_ALL & ~E_STRICT -->
+			<arg line="../../package.php" />
+		</exec>
+		<exec executable="${pear.exec}" dir="target/pear">
+			<arg line="package" />
+		</exec>
+		<move tofile="target/Apache_log4php-${project.version}.tgz">
+			<fileset dir="target/pear/">
+				<include name="Apache_log4php-*.tgz" />
+			</fileset>
+		</move>
+	</target>
+	
+	<!-- Generates API documentation (requires apigen). -->
+	<target name="api-docs">
+		<mkdir dir="target/site/apidocs" />
+		<exec executable="${apigen.exec}" failonerror="true" />
+	</target>
+	
+	<!-- Copies google custom engine definition to site folder. -->
+	<target name="google-search">
+		<mkdir dir="target/site" />
+		<copy file="src/site/cse.xml" todir="target/site" />
+	</target>
+	
+	<!-- Performs unit testing (requires phpunit). -->
+	<target name="unit-testing">
+		<mkdir dir="${surefire.report}" />
+		<mkdir dir="${coverage.report}" />
+		<exec executable="${phpunit.exec}" dir=".">
+			<arg line=" --log-junit ${surefire.report}/phpunit-testresults.xml" />
+			<arg line=" --coverage-html ${coverage.report}" />
+		</exec>
+		<xslt in="${surefire.report}/phpunit-testresults.xml" out="${surefire.report}/xslt.info"
+			style="src/test/config/phpunit_to_surefire.xslt" processor="trax">
+			<param name="outputDir" expression="${surefire.report}" />
+		</xslt>
+	</target>
+	
+</project>

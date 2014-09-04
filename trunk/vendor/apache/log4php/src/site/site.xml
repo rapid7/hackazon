@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+	  http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+-->
+<project name="Apache log4php" 
+	xmlns="http://maven.apache.org/DECORATION/1.1.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd">
+	
+	<googleAnalyticsAccountId>UA-26177991-1</googleAnalyticsAccountId>
+	
+	<body>
+		<links>
+			<item name="About" href="/index.html" />
+			<item name="Download" href="/download.html" />
+			<item name="Install" href="/install.html" />
+			<item name="Quick start" href="/quickstart.html" />
+		</links>
+
+		<menu name="Apache log4php™" img="icon-home">
+			<item name="About" href="/index.html" />
+			<item name="Download" href="/download.html" />
+			<item name="Install" href="/install.html" />
+			<item name="Changelog" href="/changelog.html" />
+		</menu>
+
+		<menu name="Documentation" img="icon-book">
+			<item name="Quick start" href="/quickstart.html" />
+			<item name="Introduction" href="/docs/introduction.html" />
+			<item name="Configuration" href="/docs/configuration.html" />
+			<item name="Loggers" href="/docs/loggers.html" />
+			<item name="Appenders" href="/docs/appenders.html" collapse="true">
+				<item name="LoggerAppenderConsole" href="/docs/appenders/console.html" />
+				<item name="LoggerAppenderDailyFile" href="/docs/appenders/daily-file.html" />
+				<item name="LoggerAppenderEcho" href="/docs/appenders/echo.html" />
+				<item name="LoggerAppenderFile" href="/docs/appenders/file.html" />
+				<item name="LoggerAppenderFirePHP" href="/docs/appenders/firephp.html" />
+				<item name="LoggerAppenderMail" href="/docs/appenders/mail.html" />
+				<item name="LoggerAppenderMailEvent" href="/docs/appenders/mail-event.html" />
+				<item name="LoggerAppenderMongoDB" href="/docs/appenders/mongodb.html" />
+				<item name="LoggerAppenderNull" href="/docs/appenders/null.html" />
+				<item name="LoggerAppenderPDO" href="/docs/appenders/pdo.html" />					
+				<item name="LoggerAppenderPHP" href="/docs/appenders/php.html" />
+				<item name="LoggerAppenderRollingFile" href="/docs/appenders/rolling-file.html" />
+				<item name="LoggerAppenderSocket" href="/docs/appenders/socket.html" />
+				<item name="LoggerAppenderSyslog" href="/docs/appenders/syslog.html" />
+			</item>
+			<item name="Layouts" href="/docs/layouts.html" collapse="true">
+				<item name="LoggerLayoutHtml" href="/docs/layouts/html.html" />
+				<item name="LoggerLayoutPattern" href="/docs/layouts/pattern.html" />
+				<item name="LoggerLayoutSerialized" href="/docs/layouts/serialized.html" />
+				<item name="LoggerLayoutSimple" href="/docs/layouts/simple.html" />
+				<item name="LoggerLayoutTTCC" href="/docs/layouts/ttcc.html" />
+				<item name="LoggerLayoutXml" href="/docs/layouts/xml.html" />
+			</item>
+			<item name="Filters" href="/docs/filters.html" />
+			<item name="Renderers" href="/docs/renderers.html" />
+			<item name="API documentation" href="/apidocs/index.html" />
+		</menu>
+
+		<menu name="Community" img="icon-user">
+			<item name="Volunteering" href="/volunteering.html" />
+			<item name="Contributing Patches" href="/contributingpatches.html" />
+			<item name="Wiki" href="http://wiki.apache.org/logging-log4php" />
+			<item name="Blog" href="http://blogs.apache.org/logging/" />
+		</menu>
+		
+		<menu name="Project Information" img="icon-info-sign">
+			<item name="Continuous Integration" href="/integration.html" />
+			<item name="Source Repository" href="/source-repository.html" />
+			<item name="Dependencies" href="/dependencies.html" />
+			<item name="Project License" href="/license.html" />
+			<item name="Project Team" href="/team-list.html" />
+			<item name="Issue Tracking" href="/issue-tracking.html" />
+			<item name="Mailing Lists" href="/mail-lists.html" />
+		</menu>
+
+		<menu name="Project Reports" img="icon-cog">
+			<item name="Changes Report" href="/changes-report.html" />
+			<item name="Surefire Report" href="/surefire-report.html" />
+			<item name="RAT Report" href="/rat-report.html" />
+			<item name="Code Coverage" href="/coverage-report/index.html" />
+		</menu>
+
+		<menu name="Apache" img="icon-heart">
+			<item name="Home" href="http://www.apache.org" />
+			<item name="Sponsorship" href="http://www.apache.org/foundation/sponsorship.html" />
+			<item name="License" href="http://www.apache.org/licenses/" />
+			<item name="Thanks" href="http://www.apache.org/foundation/thanks.html" />
+			<item name="Conferences" href="http://www.apachecon.com" />
+			<item name="Security" href="http://www.apache.org/security/" />
+		</menu>
+	</body>
+</project>

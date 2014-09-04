@@ -1,0 +1,356 @@
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+	  http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.apache.log4php</groupId>
+	<artifactId>apache-log4php</artifactId>
+	<packaging>pom</packaging>
+	<version>2.3.0</version>
+	<name>Apache log4php</name>
+	<description>A versatile logging framework for PHP</description>
+	<url>http://logging.apache.org/log4php</url>
+	
+	<issueManagement>
+		<system>JIRA</system>
+		<url>http://issues.apache.org/jira/browse/LOG4PHP</url>
+	</issueManagement>
+	
+	<ciManagement>
+		<system>buildbot</system>
+		<url>http://ci.apache.org/builders/log4php-trunk</url>
+	</ciManagement>
+	
+	<mailingLists>
+		<mailingList>
+			<name>log4php-user</name>
+			<subscribe>log4php-user-subscribe@logging.apache.org</subscribe>
+			<unsubscribe>log4php-user-unsubscribe@logging.apache.org</unsubscribe>
+			<post>log4php-user@logging.apache.org</post>
+			<archive>http://mail-archives.apache.org/mod_mbox/logging-log4php-user/</archive>
+			<otherArchives>
+				<otherArchive>http://markmail.org/search/list:org.apache.logging.log4php-user</otherArchive>
+			</otherArchives>
+		</mailingList>
+		<mailingList>
+			<name>log4php-dev</name>
+			<subscribe>log4php-dev-subscribe@logging.apache.org</subscribe>
+			<unsubscribe>log4php-dev-unsubscribe@logging.apache.org</unsubscribe>
+			<post>log4php-dev@logging.apache.org</post>
+			<archive>http://mail-archives.apache.org/mod_mbox/logging-log4php-dev/</archive>
+			<otherArchives>
+				<otherArchive>http://markmail.org/search/list:org.apache.logging.log4php-dev</otherArchive>
+			</otherArchives>
+		</mailingList>
+	</mailingLists>
+	
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<scm>
+		<connection>scm:svn:https://svn.apache.org/repos/asf/logging/log4php/tags/apache-log4php-2.3.0</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/logging/log4php/tags/apache-log4php-2.3.0</developerConnection>
+		<url>http://svn.apache.org/viewcvs.cgi/logging/log4php/tags/apache-log4php-2.3.0</url>
+	</scm>
+	
+	<organization>
+		<name>Apache Software Foundation</name>
+		<url>http://www.apache.org</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<name>Alvero Carrasco</name>
+			<email>alvero at apache.org</email>
+		</developer>
+		<developer>
+			<name>Christian Grobmeier</name>
+			<email>grobmeier at apache.org</email>
+		</developer>
+		<developer>
+			<name>Ivan Habunek</name>
+			<email>ihabunek at apache.org</email>
+		</developer>
+		<developer>
+			<name>Christian Hammers</name>
+			<email>chammers at apache.org</email>
+		</developer>
+		<developer>
+			<name>Gavin McDonald </name>
+			<email>gmcdonald at apache.org</email>
+		</developer>
+		<developer>
+			<name>Florian Semm </name>
+			<email>floriansemm at apache.org</email>
+		</developer>
+		<developer>
+			<name>Knut Urdalen</name>
+			<email>kurdalen at apache.org</email>
+		</developer>
+	</developers>
+	
+	<contributors>
+		<contributor>
+			<name>Abel Gonzalez</name>
+		</contributor>
+		<contributor>
+			<name>Vladimir Gorej</name>
+		</contributor>
+		<contributor>
+			<name>Ilker Kiris</name>
+		</contributor>
+		<contributor>
+			<name>Domenico Lordi</name>
+		</contributor>
+		<contributor>
+			<name>Tommy Montgomery</name>
+		</contributor>
+		<contributor>
+			<name>Florian Platzer</name>
+		</contributor>
+		<contributor>
+			<name>Moritz Schmidt</name>
+		</contributor>
+		<contributor>
+			<name>Sergio Strampelli</name>
+		</contributor>
+		<contributor>
+			<name>Marco Vassura</name>
+		</contributor>
+		<contributor>
+			<name>Blake Watters</name>
+		</contributor>
+		<contributor>
+			<name>Simon Wiest</name>
+		</contributor>
+	</contributors>
+
+	<properties>
+		<surefire.report>target/surefire-reports</surefire.report>
+		<coverage.report>target/site/coverage-report</coverage.report>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				
+				<dependencies>
+					<!-- Replace Xalan XSLT engine with Saxon. Required for phpunit_to_surefire.xslt to work. -->
+					<dependency>
+						<groupId>net.sf.saxon</groupId>
+						<artifactId>saxon</artifactId>
+						<version>8.7</version>
+					</dependency>
+				</dependencies>
+				
+				<executions>
+					<execution>
+						<id>pear-package</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<ant target="pear-package" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>pre-site</id>
+						<phase>pre-site</phase>
+						<configuration>
+							<target>
+								<ant target="google-search" />
+								<ant target="api-docs" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					
+					<execution>
+						<id>unit-testing</id>
+						<phase>test</phase>
+						<configuration>
+							<target>
+								<ant target="unit-testing" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					
+					<execution>
+						<id>post-site</id>
+						<phase>post-site</phase>
+						<configuration>
+							<target>
+								<ant target="post-site" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					
+					<execution>
+						<id>site-deploy</id>
+						<phase>site-deploy</phase>
+						<configuration>
+							<target>
+								<ant target="site-deploy" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12.4</version>
+				<configuration>
+					<workingDirectory>target</workingDirectory>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assembly/src.xml</descriptor>
+					</descriptors>
+					<appendAssemblyId>true</appendAssemblyId>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<goals>site assembly:assembly</goals>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+
+					<!-- Override default site template for achieveing a custom look. -->
+					<templateFile>${basedir}/src/site/site.vm</templateFile>
+
+					<!-- Configure additional reports on the site -->
+					<reportPlugins>
+
+						<!-- Project info report -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>2.5.1</version>
+							<reportSets>
+								<reportSet>
+									<reports>
+										<report>cim</report>	
+										<report>scm</report>
+										<report>dependencies</report>
+										<report>license</report>
+										<report>project-team</report>
+										<report>issue-tracking</report>
+										<report>mailing-list</report>
+									</reports>
+								</reportSet>
+							</reportSets>
+						</plugin>
+						
+						<!-- Changes report -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-changes-plugin</artifactId>
+							<version>2.8</version>
+							<reportSets>
+								<reportSet>
+									<reports>
+										<report>changes-report</report>
+										<report>jira-report</report>
+									</reports>
+								</reportSet>
+							</reportSets>
+							<configuration>
+								<statusIds>Resolved, Closed</statusIds>
+								<columnNames>Type,Key,Summary,Assignee,Status,Resolution,Fix Version</columnNames>
+								<useJql>true</useJql>
+							</configuration>
+						</plugin>
+						
+						<!-- Surefire report -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-surefire-report-plugin</artifactId>
+							<version>2.12.2</version>
+						</plugin>
+			
+						<!-- RAT report -->
+						<plugin>
+							<groupId>org.apache.rat</groupId>
+							<artifactId>apache-rat-plugin</artifactId>
+							<version>0.8</version>
+						</plugin>
+					</reportPlugins>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<dependencies>
+	</dependencies>
+	
+	<distributionManagement>
+		<site>
+			<id>logging.site</id>
+			<url>file:///${user.dir}/target/site-deploy</url>
+		</site>
+	</distributionManagement>
+</project>

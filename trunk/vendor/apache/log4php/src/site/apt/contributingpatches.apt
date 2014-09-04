@@ -1,0 +1,112 @@
+~~ Licensed to the Apache Software Foundation (ASF) under one or more
+~~ contributor license agreements.  See the NOTICE file distributed with
+~~ this work for additional information regarding copyright ownership.
+~~ The ASF licenses this file to You under the Apache License, Version 2.0
+~~ (the "License"); you may not use this file except in compliance with
+~~ the License.  You may obtain a copy of the License at
+~~
+~~      http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+ ------
+ Contributing Patches
+ ------
+ ------
+ ------
+
+Contributing patches
+
+  Before you read this document, make sure you have read the general information on the 
+  {{{./volunteering.html}Volunteering}} page. Credits to the Apache Commons project on which documents
+  this one is based on.
+  
+  For guidelines on how to set up a development environment for Apache log4php, there is a 
+  {{{http://wiki.apache.org/logging-log4php/SettingUpALinuxEnvironment} detailed guide}} on the 
+  wiki pages.
+
+* Respect the original style
+
+  Please respect the style of the orginal file. Make sure that your additions fit in with that style.
+  The framework has coding conventions and every contribution is supposed to adhere to them. 
+  You might find it a little difficult to discover the conventions used by a particular class 
+  but if you stick to the style of the original then that'll be fine. If in doubt, ask on the developers
+  mailinglist.
+
+  If a patch is submitted which doesn't satisfy the component's coding conventions, 
+  then either a committer will need to rewrite the submission or it will be rejected. 
+  Getting it right in this first place will save you having to rewrite it.
+
+  Most important codestyles:
+
+    * don't use vertical alignement
+    
+    * keep brackets on the same line as the method signature
+    
+    * keep brackets on the same line as control statements
+    
+    * always use brackets for control statements
+    
+    * use lowerCamelCase for naming methods and variables
+    
+    * don't use underscores (_)
+    
+    []
+
+* Tabs not spaces
+
+  PLEASE NO SPACES!
+
+  Some IDEs include automatic source (re)formatting. If you use an IDE, please check that
+  this feature is either disabled or set to use tabs.
+
+  If a patch is submitted which uses tabs rather than spaces, then either a committer
+  will have to reformat it before it's applied or the patch will be rejected. Again, 
+  it's easier to get it right in the first place rather than have to reformat and resubmit your patch.
+
+* Test cases
+
+  Classes needs to be tested with {{{https://github.com/sebastianbergmann/phpunit/}PHPUnit}}. If 
+  you are not familiar with the principles of regression testing, then the 
+  {{{http://www.phpunit.de/manual/3.6/en/}PHPUnit manual}} is a good place to start.
+
+  Before you submit your patch, please do a clean build of the full distribution and 
+  run the unit tests (this can be done with <<<maven test>>>. This ensures that 
+  your patch doesn't break any existing functionality.
+
+  We strongly recommend that you create and submit test cases together with the rest 
+  of your contribution. Test cases ensure that bugs stay fixed and features don't get broken. 
+  Test cases will probably be needed anyway so submitting them saves time.
+
+* Creating a patch
+
+  The Apache log4php {{{./source-repository.html}source code repository}} holds the current source.
+
+  Please create your patch against the latest revision of the files in the source code 
+  repository since this makes the job of applying the patch much easier. 
+  If you don't have a version checked out, then check one out. If you have, then please 
+  do a fresh update before you make your changes.
+
+  The patch should be in unified format. You can create a patch in this format  by using:
+
++--
+  svn diff File >> patchfile
++--
+
+  Eclipse has some diff features too. Please make sure you have your project as a patch root.
+  Try to give your patch files meaningful names. This makes it easier for 
+  developers who need to apply a number of different patches.
+
+* Submitting a patch
+
+  The preffered way of submitting a patch is by attaching it to a bug report in the project's
+  {{{http://logging.apache.org/log4php/issue-tracking.html} issue tracker}}. Create a new bug
+  report if necessary.
+    
+  Please make sure to mark "Grant license to ASF for inclusion in ASF works" when attaching
+  the patch. This means you agree with providing us with the code contained in the patch
+  under the {{{http://www.apache.org/licenses/LICENSE-2.0}Apache licence}}.    
+

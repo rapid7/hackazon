@@ -29,6 +29,7 @@
                             <li><a href="/account/orders">My orders</a></li>
                             <li><a href="/account/documents">My documents</a></li>
                             <li><a href="/account/help_articles">Help Articles</a></li>
+                            <li><a href="/helpdesk">Helpdesk</a></li>
                         </ul>
                     </li>
                     <?php else: ?>

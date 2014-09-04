@@ -5,16 +5,37 @@
     "license": "BSD",
     "autoload": {
         "psr-0": {
-            "": ["classes/", "modules/vulninjection/classes/", "classes/PDOV"]
-        }
+            "": [
+                "classes/",
+                "modules/vulninjection/classes/",
+                "modules/gwtphp/classes/",
+                "classes/PDOV"
+            ]
+        },
+        "classmap": [
+            "classes/",
+            "modules/vulninjection/classes/",
+            "modules/gwtphp/classes/",
+            "classes/PDOV",
+            "modules/gwtphp/gwtphp-maps/com/ntobjectives/hackazon/helpdesk/client/entity",
+            "modules/gwtphp/gwtphp-maps/com/ntobjectives/hackazon/helpdesk/client",
+            "vendor/gwtphp/gwtphp/src/maps/java/util"
+        ]
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:nchervyakov/gwtphp-packagist.git"
+        }
+    ],
     "require": {
         "phpixie/core": "2.*@dev",
         "phpixie/db": "2.*@dev",
         "phpixie/orm": "2.*@dev",
         "phpixie/auth": "2.*@dev",
         "phpixie/email": "2.*@dev",
-        "phpixie/paginate":"2.*@dev"
+        "phpixie/paginate":"2.*@dev",
+        "gwtphp/gwtphp": "dev-fix-array-list#9d9d63615f2d440cf3638274effb988df22767dc"
     },
     "extra": {
         "branch-alias": {

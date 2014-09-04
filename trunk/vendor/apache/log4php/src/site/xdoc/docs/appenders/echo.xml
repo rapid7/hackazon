@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>LoggerAppenderEcho</title>
+	</properties>
+
+	<body>
+		<section name="LoggerAppenderEcho">
+		
+			<p><code>LoggerAppenderEcho</code> writes logging events using PHP's 
+			<code><a class="external" href="http://php.net/manual/en/function.echo.php">echo()</a></code> function. 
+			Echo outputs may be buffered.</p>
+		
+			<subsection name="Layout">
+				<p>This appender requires a layout. If no layout is specified in configuration, 
+				<code><a href="../layouts/simple.html">LoggerLayoutSimple</a></code> will be used by default.</p>
+			</subsection>
+		
+			<subsection name="Parameters">
+				<p>The following parameters are available:</p>
+		
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>htmlLineBreaks</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>false</td>
+							<td>If set to true, a <![CDATA[<br />]]> element will be inserted before each line break in 
+							the logged message.</td>
+						</tr>
+					</tbody>
+				</table>
+			</subsection>
+				
+			<subsection name="Examples">
+				<p>This example shows how to configure <code>LoggerAppenderEcho</code> using the 
+				<a href="../layouts/ttcc.html">TTCC layout</a> with	<code>htmlLineBreaks</code> turned on.</p>
+				
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+				
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderEcho">
+        <layout class="LoggerLayoutSimple" />
+        <param name="htmlLineBreaks" value="true" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderEcho',
+            'layout' => array(
+                'class' => 'LoggerLayoutSimple',
+            ),
+            'params' => array(
+                'htmlLineBreaks' => 'true',
+            ),
+        ),
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default'),
+    ),
+);
+]]></pre>
+						</div>
+					</div>
+				</div>
+			</subsection>
+		</section>
+	</body>
+</document>

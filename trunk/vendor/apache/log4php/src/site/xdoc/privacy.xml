@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>Privacy policy</title>
+	</properties>
+
+	<body>
+		<section name="Privacy policy">
+			<p>Information about your use of this web site is collected using server access logs and a tracking cookie.
+			The collected information consists of the following:</p>
+			
+			<ul>
+				<li>The IP address from which you access the web site;</li>
+				<li>The type of browser and operating system you use to access our site;</li>
+				<li>The date and time you access our site;</li>
+				<li>The pages you visit; and</li>
+				<li>The addresses of pages from where you followed a link to our site.</li>
+			</ul>
+
+			<p>Part of this information is gathered using a tracking cookie set by the 
+			<a href="http://www.google.com/analytics" class="external">Google Analytics</a> service and handled by 
+			Google as described in their 
+			<a href="http://www.google.com/privacy.html" class="external">privacy policy</a>. 
+			See your browser documentation for instructions on how to disable the cookie if you prefer not to share 
+			this data with Google.</p>
+
+			<p>We use the gathered information to help us make our site more useful to visitors and to better understand how 
+			and when our site is used. We do not track or collect personally identifiable information or associate gathered 
+			data with any personally identifying information from other sources.</p>
+		
+			<p>By using this web site, you consent to the collection of this data in the manner and for the purpose described 
+			above.</p>
+		</section>
+	</body>
+</document>

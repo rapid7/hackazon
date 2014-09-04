@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>LoggerAppenderSyslog</title>
+	</properties>
+
+	<body>
+		<section name="LoggerAppenderSyslog">
+		
+			<p><code>LoggerAppenderSyslog</code> logs events to the syslog.</p>
+			
+			<subsection name="Layout">
+				<p>This appender requires a layout. If no layout is specified in configuration, 
+				<code><a href="../layouts/simple.html">LoggerLayoutSimple</a></code> will be used by default.</p>
+			</subsection>	
+			
+			<subsection name="Parameters">
+				<p>The following parameters are available:</p>
+		
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>ident</td>
+							<td>string</td>
+							<td>no</td>
+							<td>Apache log4php</td>
+							<td>A string which will identify your appender.</td>
+						</tr>
+						<tr>
+							<td>overridePriority</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>false</td>
+							<td>If set to true, all messages will be sent to the syslog using the priority specified 
+							in the <code>priority</code> parameter. Otherwise, the pririty will depend on the level 
+							of the event being logged. See below.</td>
+						</tr>
+						<tr>
+							<td>priority</td>
+							<td>string</td>
+							<td>Yes/No</td>
+							<td>-</td>
+							<td>The syslog priority to use when overriding priority. This setting is required if 
+							<code>overridePriority</code> is set to true. <a href="#Priorities">See below</a> for 
+							available priorities.</td>
+						</tr>
+						<tr>
+							<td>facility</td>
+							<td>string</td>
+							<td>No</td>
+							<td><code>USER</code></td>
+							<td>The syslog facility. Identifies the part of the system from which the event originated.
+							<a href="#Facilities">See below</a> for available facilities.</td>
+						</tr>
+						<tr>
+							<td>option</td>
+							<td>string</td>
+							<td>No</td>
+							<td><code>PID|CONS</code></td>
+							<td>Syslog options. <a href="#Options">See below</a> for available options.</td>
+						</tr>
+					</tbody>
+				</table>
+			</subsection>
+			
+			<subsection name="Priorities" id="Priorities">
+			
+				<p>The <em>priority</em> is the syslog equivalent of the log4php level. Here's a list of priorities 
+				available in syslog and the equivalent log4php levels.</p>
+				
+				<table>
+					<thead>
+						<tr>
+							<th>Priority</th>
+							<th>Description</th>
+							<th>Equivalent level</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>EMERG</td>
+							<td>System is unusable.</td>
+							<td>-</td>
+						</tr>
+						<tr>
+							<td>ALERT</td>
+							<td>Action must be taken immediately.</td>
+							<td>FATAL</td>
+						</tr>
+						<tr>
+							<td>CRIT</td>
+							<td>Critical conditions.</td>
+							<td>-</td>
+						</tr>
+						<tr>
+							<td>ERR</td>
+							<td>Error conditions.</td>
+							<td>ERROR</td>
+						</tr>
+						<tr>
+							<td>WARNING</td>
+							<td>Warning conditions</td>
+							<td>WARN</td>
+						</tr>
+						<tr>
+							<td>NOTICE</td>
+							<td>Normal, but significant, condition</td>
+							<td>-</td>
+						</tr>
+						<tr>
+							<td>INFO</td>
+							<td>Informational message</td>
+							<td>INFO</td>
+						</tr>
+						<tr>
+							<td>DEBUG</td>
+							<td>Debug-level message</td>
+							<td>DEBUG, TRACE</td>
+						</tr>					
+					</tbody>
+				</table>
+				
+				<p>Messages with level <code>FATAL</code> will be logged using the syslog's <code>ALERT</code> priority;
+				<code>ERROR</code> level message will use <code>ERR</code> priority, etc.</p>
+				
+				<p>Note that there is no priority below <code>DEBUG</code>, therefore both <code>TRACE</code> and 
+				<code>DEBUG</code> level mesages will be logged using the <code>DEBUG</code> syslog priority.</p>
+			
+			</subsection>
+			
+			<subsection name="Facilities" id="Facilities">
+			
+				<p>The <em>facility</em> parameter is used to specify what type of program is logging the message. This 
+				allows you to specify (in your machine's syslog configuration) how messages coming from different
+				facilities will be handled.</p>
+				
+				<p>The following facilities are available:</p>
+				
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>KERN</td>
+							<td>Kernel messages</td>
+						</tr>
+						<tr>
+							<td>USER</td>
+							<td>Generic user-level messages</td>
+						</tr>
+						<tr>
+							<td>MAIL</td>
+							<td>Mail system</td>
+						</tr>
+						<tr>
+							<td>DAEMON</td>
+							<td>System daemons</td>
+						</tr>
+						<tr>
+							<td>AUTH</td>
+							<td>Security/authorization messages</td>
+						</tr>
+						<tr>
+							<td>SYSLOG</td>
+							<td>Messages generated internally by syslogd</td>
+						</tr>
+						<tr>
+							<td>LPR</td>
+							<td>Line printer subsystem</td>
+						</tr>
+						<tr>
+							<td>NEWS</td>
+							<td>Network news subsystem</td>
+						</tr>
+						<tr>
+							<td>UUCP</td>
+							<td>UUCP subsystem</td>
+						</tr>
+						<tr>
+							<td>CRON</td>
+							<td>Clock daemon</td>
+						</tr>
+						<tr>
+							<td>AUTHPRIV</td>
+							<td>Security/authorization messages (private)</td>
+						</tr>
+						<tr>
+							<td>LOCAL0</td>
+							<td>Reserved for local use</td>
+						</tr>
+						<tr>
+							<td>LOCAL1</td>
+							<td>Reserved for local use</td>
+						</tr>
+						<tr>
+							<td>LOCAL2</td>
+							<td>Reserved for local use</td>
+						</tr>
+						<tr>
+							<td>LOCAL3</td>
+							<td>Reserved for local use</td>
+						</tr>
+						<tr>
+							<td>LOCAL4</td>
+							<td>Reserved for local use</td>
+						</tr>
+						<tr>
+							<td>LOCAL5</td>
+							<td>Reserved for local use</td>
+						</tr>
+						<tr>
+							<td>LOCAL6</td>
+							<td>Reserved for local use</td>
+						</tr>
+						<tr>
+							<td>LOCAL7</td>
+							<td>Reserved for local use</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<p class="alert alert-warning">Warning: <code>USER</code> is the only facility available on 
+				Windows operating systems.</p>
+			
+			</subsection>
+			
+			<subsection name="Options" id="Options">
+			
+				<p>The following additional syslog options may be defined via the <em>option</em> parameter:</p>
+				
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>CONS</td>
+							<td>If there is an error while sending data to the system logger, write directly to the 
+							system console</td>
+						</tr>
+						<tr>
+							<td>NDELAY</td>
+							<td>Open the connection to the logger immediately.</td>
+						</tr>
+						<tr>
+							<td>ODELAY</td>
+							<td>Delay opening the connection until the first message is logged (default).</td>
+						</tr>
+						<tr>
+							<td>PERROR</td>
+							<td>Print log messages also to standard error.</td>
+						</tr>
+						<tr>
+							<td>PID</td>
+							<td>Include the PID with each message.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<p>Multiple options may be set by separating them with a pipe character. For example 
+				<code>CONS|PID|NODELAY</code>.</p>
+				
+				<p class="alert-message warning">Warning: When setting multiple options in an INI configuration file, 
+				be sure to put the options string in quotes. Otherwise they will not be parsed correctly.</p>
+
+			</subsection>
+				
+			<subsection name="Examples">
+			
+				<p>Here is a sample configuration:</p>
+				
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+ 
+					<div class="tab-content">
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderSyslog">
+        <layout class="LoggerLayoutSimple" />
+        <param name="ident" value="log4php-test" />
+        <param name="facility" value="LOCAL0" />
+        <param name="option" value="NDELAY|PID" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderSyslog',
+            'layout' => array(
+            	'class' => 'LoggerLayoutSimple',
+            ),
+            'params' => array(
+                'ident' => 'log4php-test',
+                'facility' => 'LOCAL0',
+                'option' => 'NDELAY|PID'
+            ),
+        ),
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default'),
+    ),
+);
+]]></pre>
+						</div>
+					</div>
+				</div>
+			</subsection>
+		</section>
+	</body>
+</document>

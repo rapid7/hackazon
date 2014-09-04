@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements. See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>LoggerLayoutSerialized</title>
+	</properties>
+
+	<body>
+		<section name="LoggerLayoutSerialized">
+		
+			<p><code>LoggerLayoutSerialized</code> formats the logging event using the PHP's 
+			<code><a href="http://php.net/manual/en/function.serialize.php">serialize()</a></code> function.</p>
+			
+			<subsection name="Parameters" id="Parameters">
+				<p>The following parameters are available:</p>
+		
+				<table>
+					<thead>
+						<tr>
+							<th>Parameter</th>
+							<th>Type</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>locationInfo</td>
+							<td>boolean</td>
+							<td>No</td>
+							<td>false</td>
+							<td>If set to true, event's location information will be initialized before serialization. 
+							Enabling this parameter makes logging slower and should be used only if required.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</subsection>
+				
+			<subsection name="Examples">
+				
+				<p>Sample configuration file:</p>
+				
+				<div class="auto-tabs">
+					<ul>
+						<li>XML</li>
+						<li>PHP</li>
+					</ul>
+
+					<div class="tab-content" >
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderEcho">
+        <layout class="LoggerLayoutSerialized" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
+]]></pre>
+						</div>
+						<div class="tab-pane">
+<pre class="prettyprint linenums"><![CDATA[
+array(
+    'appenders' => array(
+        'default' => array(
+            'class' => 'LoggerAppenderEcho',
+            'layout' => array(
+                'class' => 'LoggerLayoutSerialized',
+            )
+        )
+    ),
+    'rootLogger' => array(
+        'appenders' => array('default')
+    ),
+)
+]]></pre>
+						</div>
+					</div>
+				</div>
+
+				<p>Running the following code:</p>
+
+<pre class="prettyprint linenums">
+Logger::configure("config.xml");
+$logger = Logger::getLogger('myLogger');
+$logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+$logger->debug("Donec a diam lectus.");
+$logger->warn("Sed sit amet ipsum mauris.");
+</pre>
+
+				<p>Produces the following output:</p>
+
+<pre class="prettyprint linenums"><![CDATA[
+O:18:"LoggerLoggingEvent":10:{s:24:" LoggerLoggingEvent fqcn";s:6:"Logger";s:32:" LoggerLoggingEvent categoryName";s:8:"myLogger";s:8:" * level";O:11:"LoggerLevel":3:{s:18:" LoggerLevel level";i:20000;s:21:" LoggerLevel levelStr";s:4:"INFO";s:29:" LoggerLevel syslogEquivalent";i:6;}s:23:" LoggerLoggingEvent ndc";N;s:37:" LoggerLoggingEvent ndcLookupRequired";b:1;s:27:" LoggerLoggingEvent message";s:56:"Lorem ipsum dolor sit amet, consectetur adipiscing elit.";s:35:" LoggerLoggingEvent renderedMessage";N;s:30:" LoggerLoggingEvent threadName";N;s:9:"timeStamp";d:1319380554.782227;s:32:" LoggerLoggingEvent locationInfo";N;}
+O:18:"LoggerLoggingEvent":10:{s:24:" LoggerLoggingEvent fqcn";s:6:"Logger";s:32:" LoggerLoggingEvent categoryName";s:8:"myLogger";s:8:" * level";O:11:"LoggerLevel":3:{s:18:" LoggerLevel level";i:10000;s:21:" LoggerLevel levelStr";s:5:"DEBUG";s:29:" LoggerLevel syslogEquivalent";i:7;}s:23:" LoggerLoggingEvent ndc";N;s:37:" LoggerLoggingEvent ndcLookupRequired";b:1;s:27:" LoggerLoggingEvent message";s:20:"Donec a diam lectus.";s:35:" LoggerLoggingEvent renderedMessage";N;s:30:" LoggerLoggingEvent threadName";N;s:9:"timeStamp";d:1319380554.78247;s:32:" LoggerLoggingEvent locationInfo";N;}
+O:18:"LoggerLoggingEvent":10:{s:24:" LoggerLoggingEvent fqcn";s:6:"Logger";s:32:" LoggerLoggingEvent categoryName";s:8:"myLogger";s:8:" * level";O:11:"LoggerLevel":3:{s:18:" LoggerLevel level";i:30000;s:21:" LoggerLevel levelStr";s:4:"WARN";s:29:" LoggerLevel syslogEquivalent";i:4;}s:23:" LoggerLoggingEvent ndc";N;s:37:" LoggerLoggingEvent ndcLookupRequired";b:1;s:27:" LoggerLoggingEvent message";s:26:"Sed sit amet ipsum mauris.";s:35:" LoggerLoggingEvent renderedMessage";N;s:30:" LoggerLoggingEvent threadName";N;s:9:"timeStamp";d:1319380554.78268;s:32:" LoggerLoggingEvent locationInfo";N;}
+]]></pre>
+			</subsection>
+
+		</section>
+	</body>
+</document>
