@@ -200,7 +200,7 @@
         </div>
 		<div class="col-xs-4">
 			<?php foreach ($this->customerAddresses as $address) :?>
-			<div class="blockShadow">
+			<div class="blockShadow bg-info">
 				<b><?php echo $_($address->full_name, 'full_name') ?></b><br />
 				<?php echo $_($address->address_line_1, 'address_line_1') ?><br />
 				<?php echo $_($address->address_line_2, 'address_line_2') ?><br />
@@ -209,9 +209,7 @@
 				<?php echo $_($address->phone, 'phone') ?><br />
 				<div class="row">
 					<div class="col-xs-12" style="margin-bottom: 10px;">
-						<button data-id="<?php echo $address->id?>" class="btn btn-primary btn-block confirm-address ladda-button"
-						data-token="<?php echo $this->getToken('checkout_step2'); ?>" data-style="expand-right"
-						data-spinner-size="20"><span class="ladda-label">Ship to this address</span></button>
+						<button data-id="<?php echo $address->id?>" class="btn btn-primary btn-block confirm-address ladda-button" data-token="<?php echo $this->getToken('checkout_step2'); ?>" data-style="expand-right" data-spinner-size="20"><span class="ladda-label">Ship to this address</span></button>
 					</div>
 				</div>
 				<div class="row">
@@ -229,11 +227,11 @@
 
     <div class="row">
         <div class="col-xs-6">
-            <button class="btn btn-default" onclick="window.location.href='/cart/view'"><span class="glyphicon glyphicon-chevron-left"></span> Overview</button>
+            <button class="btn btn-default" onclick="window.location.href='/cart/view'"><span class="glyphicon glyphicon-chevron-left"></span> Overview Ster</button>
         </div>
         <div class="col-xs-6">
             <button id="btn_shipping" class="btn btn-primary pull-right ladda-button" data-target="#step3" data-toggle="tab"
-                    data-style="expand-left"><span class="ladda-label">Ship to this address <span class="glyphicon glyphicon-chevron-right icon-white"></span></span></button>
+                    data-style="expand-left"><span class="ladda-label">Billing Step <span class="glyphicon glyphicon-chevron-right icon-white"></span></span></button>
         </div>
     </div>
 </div>

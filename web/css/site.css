@@ -89,6 +89,68 @@ h1, h2, h3, h4 {
 	color:#428bca;
 }
 
+.hw-steps-nav {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+.hw-steps-nav .badge {
+    font-size: 24px;
+    vertical-align: middle;
+    min-width: 30px;
+    border-radius: 50%;
+
+}
+@media (max-width: 480px) {
+    .hw-steps-nav li a {
+        text-align: left;
+    }
+}
+@media (min-width: 768px) and (max-width: 979px) { 
+    .hw-steps-nav .badge {
+        font-size: 18px;
+        min-width: 22px;
+    }
+}
+@media (max-width: 768px) {
+    .hw-steps-nav .badge {
+        font-size: 16px;
+        min-width: 20px;
+    }
+}
+.hw-steps-nav em {
+    font-style: normal;
+}
+.badge-error {
+  background-color: #b94a48;
+}
+.badge-error:hover {
+  background-color: #953b39;
+}
+.badge-warning {
+  background-color: #f89406;
+}
+.badge-warning:hover {
+  background-color: #c67605;
+}
+.badge-success {
+  background-color: #468847;
+}
+.badge-success:hover {
+  background-color: #356635;
+}
+.badge-info {
+  background-color: #3a87ad;
+}
+.badge-info:hover {
+  background-color: #2d6987;
+}
+.badge-inverse {
+  background-color: #333333;
+}
+.badge-inverse:hover {
+  background-color: #1a1a1a;
+}
 .table-order {
 
 }
@@ -130,9 +192,20 @@ h1, h2, h3, h4 {
 .table-order tfoot tr td {
     border-top: none;
 }
-.table-order tfoot th {
+.table-order tfoot tr th {
     white-space: nowrap;
+    border-color: #CCC;
  }
+
+.cart-overview tbody tr td {
+    border: none;
+}
+.cart-overview tfoot tr td {
+    border:none;
+}
+.cart-overview .product-image {
+    text-align: center;
+}
 @media (max-width: 768px) {
     .hw-navbar-brand {
         padding-top: 5px;
