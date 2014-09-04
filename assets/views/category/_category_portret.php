@@ -2,7 +2,7 @@
     <div class="thumbnail <?=$itemClass?>">
         <a href="/product/view/<?=$product->productID?>">
             <div class="label label-info price">$ <?=$product->Price?></div>
-            <img class="category-list-product" data-hover="/products_pictures/<?=$product->thumbnail?>" src="/products_pictures/<?=$product->thumbnail?>" alt="">
+            <img class="category-list-product" data-hover="/products_pictures/<?=$product->picture?>" src="/products_pictures/<?=$product->picture?>" alt="">
         </a>
         <div class="caption">
             <a href="/product/view/<?=$product->productID?>"><?=$product->name?></a>
