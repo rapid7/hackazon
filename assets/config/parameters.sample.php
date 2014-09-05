@@ -7,5 +7,6 @@
  */
 return array(
     'host' => 'http://hackazon.com',     // Used in various scripts, where $_SERVER is inaccessible, or where there is a risk thereof.
-    'display_errors' => false
+    'display_errors' => false,
+    'user_pictures_path' => '/web/user_pictures/'
 );
