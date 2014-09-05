@@ -7,12 +7,13 @@
                 <li class="active">Documents</li>
             </ol>
         </div>
-        <div class="col-lg-12">
-            <ul>
-            <?php foreach ($files as $file => $fileName): ?>
-                <li><a href="/account/documents?page=<?php echo $_($fileName); ?>"><?php echo $_(ucwords($file)); ?></a></li>
-            <?php endforeach; ?>
-            </ul>
+        <div class="col-lg-6 ">
+			<h3>Documents List</h3>
+			<div class="list-group">
+				<?php foreach ($files as $file => $fileName): ?>
+                <a class="list-group-item " href="/account/documents?page=<?php echo $_($fileName); ?>"><span class="glyphicon glyphicon-file"></span> <?php echo $_(ucwords($file)); ?></a>
+	            <?php endforeach; ?>
+			</div>
         </div>
     </div>
 </div>
