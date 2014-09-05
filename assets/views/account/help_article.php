@@ -4,6 +4,7 @@
         <h1 class="page-header">Help</h1>
         <ol class="breadcrumb">
             <li><a href="/">Home</a></li>
+            <li><a href="/account">Account</a></li>
             <li><a href="/account/help_articles">Help Articles</a></li>
             <li class="active"><?php $_($pageTitle); ?></li>
         </ol>
