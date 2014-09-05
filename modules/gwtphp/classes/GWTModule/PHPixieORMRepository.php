@@ -10,7 +10,6 @@ namespace GWTModule;
 
 use App\Model\BaseModel;
 use App\Model\Enquiry;
-use App\Model\User;
 use App\Pixie;
 use PHPixie\ORM\Model;
 

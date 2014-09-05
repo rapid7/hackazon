@@ -11,15 +11,17 @@ namespace App\Controller;
 
 use App\Exception\ForbiddenException;
 use App\Exception\HttpException;
+use App\Exception\NotFoundException;
 use App\Model\Product;
 use App\Model\User;
-use App\Model\WishListItem;
+use App\Model\WishListFollowers;
 use App\Page;
-use PHPixie\Exception\PageNotFound;
+
 
 /**
  * Class Wishlist.
  * @package App\Controller
+ * @property \App\Model\WishList $model
  */
 class Wishlist extends Page {
 
@@ -41,7 +43,7 @@ class Wishlist extends Page {
             return;
         }
 
-        $wishList = $this->user->getDefaultWishList();
+        $wishList = $this->model->getUserDefaultWishList($this->user);
 
         if ($wishList) {
             $this->showDefaultWishList();
@@ -63,7 +65,11 @@ class Wishlist extends Page {
         $wishList = $this->pixie->orm->get('wishlist', $id);
 
         if (!$wishList || !$wishList->loaded()) {
-            throw new PageNotFound();
+            throw new NotFoundException();
+        }
+
+        if (!$wishList->isVisibleToUser($this->user)) {
+            throw new NotFoundException();
         }
 
         $this->showWishList($wishList);
@@ -83,35 +89,30 @@ class Wishlist extends Page {
         $name = $this->request->post('name', 'New Wish List');
         $type = $this->request->post('type', \App\Model\WishList::TYPE_PRIVATE);
 
-        if ($this->user->wishlists->count_all()) {
-            if ($this->request->method != 'POST') {
-                $this->redirect('/wishlist');
+        if (!$name || !$type) {
+            if ($this->request->is_ajax()) {
+                $this->jsonResponse(['error' => 1]);
                 return;
+            } else {
+                throw new HttpException('Invalid request', 400, 'Bad Request');
             }
+        }
 
-            if (!$name || !$type) {
-                if ($this->request->is_ajax()) {
-                    $this->jsonResponse(['error' => 1]);
-                    return;
-                } else {
-                    throw new HttpException('Invalid request', 400, 'Bad Request');
-                }
-            }
-
-
+        // Check CSRF token only if new wishlist is not the only one.
+        if ($this->user->wishlists->count_all()) {
             $this->checkCsrfToken('wishlist_add', null, !$this->request->is_ajax());
         }
 
-        $wishList = $this->user->createNewWishList($name, $type);
+        $wishList = $this->model->createNewWishListForUser($this->user, $name, $type);
 
         if ($this->request->is_ajax()) {
             $this->jsonResponse(['success' => 1, 'id' => $wishList->id()]);
-            return;
-        }
 
-        $this->redirect($this->generateUrl('default', array(
-                    'controller' => 'wishlist'
-        )));
+        } else {
+            $this->redirect($this->generateUrl('default', array(
+                'controller' => 'wishlist'
+            )));
+        }
     }
 
     /**
@@ -135,7 +136,7 @@ class Wishlist extends Page {
         $wishList = $this->getWishList($id);
 
         if (!$wishList || !$wishList->loaded()) {
-            throw new PageNotFound();
+            throw new NotFoundException();
         }
 
         if (!$wishList->isValidType($type)) {
@@ -157,7 +158,7 @@ class Wishlist extends Page {
         }
 
         $this->redirect($this->generateUrl('default', array(
-                    'controller' => 'wishlist'
+            'controller' => 'wishlist'
         )));
     }
 
@@ -187,7 +188,7 @@ class Wishlist extends Page {
             throw new ForbiddenException();
         }
 
-        $this->user->setDefaultWishList($wishList);
+        $wishList->setAsUserDefaultWishList($this->user);
 
         if ($this->request->is_ajax()) {
             $this->jsonResponse(['success' => 1]);
@@ -195,9 +196,9 @@ class Wishlist extends Page {
         }
 
         $this->redirect($this->generateUrl('default', array(
-                    'controller' => 'wishlist',
-                    'action' => 'view',
-                    'id' => $wishList->id()
+            'controller' => 'wishlist',
+            'action' => 'view',
+            'id' => $wishList->id()
         )));
     }
 
@@ -227,6 +228,9 @@ class Wishlist extends Page {
             return;
         }
 
+        /** @var \App\Model\WishList $wishListModel */
+        $wishListModel = $this->pixie->orm->get('wishList');
+
         if ($product->isInUserWishList($this->user)) {
             $this->jsonResponse(['success' => 1, 'Product with id=' . $productId . ' is in your wish list already.']);
             return;
@@ -234,10 +238,11 @@ class Wishlist extends Page {
 
         if ($wishlistId) {
             $wishList = $this->pixie->orm->get('wishList', $wishlistId);
+
         } else {
-            $wishList = $this->user->getDefaultWishList();
+            $wishList = $wishListModel->getUserDefaultWishList($this->user);
             if (!$wishList || !$wishList->loaded()) {
-                $wishList = $this->user->createNewWishList();
+                $wishList = $wishListModel->createNewWishListForUser($this->user);
             }
         }
 
@@ -246,11 +251,7 @@ class Wishlist extends Page {
             return;
         }
 
-        $item = new WishListItem($this->pixie);
-        $item->product_id = $product->id();
-        $item->created = date('Y-m-d H:i:s');
-        $wishList->add('items', $item);
-        $item->save();
+        $item = $wishList->addProductItem($product->id());
 
         $this->jsonResponse([
             'success' => 1,
@@ -284,7 +285,7 @@ class Wishlist extends Page {
             return;
         }
 
-        $this->user->removeProductFromWishLists($productId);
+        $this->model->removeProductFromUserWishLists($this->user, $productId);
         $this->jsonResponse(['success' => 1]);
         return;
     }
@@ -325,7 +326,7 @@ class Wishlist extends Page {
         }
 
         $this->redirect($this->generateUrl('default', array(
-                    'controller' => 'wishlist'
+            'controller' => 'wishlist'
         )));
     }
 
@@ -341,7 +342,7 @@ class Wishlist extends Page {
     }
 
     protected function showDefaultWishList() {
-        $wishList = $this->user->getDefaultWishList();
+        $wishList = $this->model->getUserDefaultWishList($this->user);
         $this->view->wishList = $wishList;
 
         if (!$wishList) {
@@ -382,19 +383,20 @@ class Wishlist extends Page {
      */
     public function action_search() {
         $searchQuery = $this->request->post('search');
-        $result = $this->pixie->orm->get('Wishlist')->searchWishLists($searchQuery);
+        $result = $this->model->searchWishLists($searchQuery);
         $this->jsonResponse($result);
     }
 
     public function action_remember() {
         $userId = $this->request->post('user_id');
-        $result = $this->pixie->orm->get('Wishlist')->remember($userId);
+        $result = $this->model->remember($userId);
         if ($result) {
             $this->jsonResponse(['success' => 1]);
         }
     }
 
     public function action_remove_follower() {
+        /** @var WishListFollowers $item */
         $item = $this->pixie->orm->get('WishListFollowers')
                 ->where(
                         array('user_id', '=', $this->pixie->auth->user()->id), array('and', array('follower_id', '=', $this->request->post('follower_id'))))
@@ -406,6 +408,5 @@ class Wishlist extends Page {
             $this->jsonResponse(['success' => 0]);
         }
     }
-
 }
 

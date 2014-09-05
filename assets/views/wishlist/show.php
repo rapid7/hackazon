@@ -1,4 +1,6 @@
 <?php
+use App\Model\WishList;
+
 $isWishListOwner = isset($user) && $user->id() == $wishList->user_id;
 ?>
 <div class="container">
@@ -47,6 +49,7 @@ $isWishListOwner = isset($user) && $user->id() == $wishList->user_id;
                     <div class="block-content js-block-content" style="<?php if ($wishList->user_id != $wishlistFollower->id) echo 'display: none';?>">
                         <ul class="list-group">
                             <?php foreach ($wishlistFollower->lists as $list): ?>
+                                <?php if (WishList::TYPE_PUBLIC != $list->type) { continue; } ?>
                                 <li class="list-group-item <?php if ($wishList->id() == $list->id()): ?> list-group-item active<?php endif; ?>">
                                     <span class="badge"><?php echo $list->items->count_all(); ?></span>
                                     <a href="<?php echo $controller->generateUrl('default', array(
