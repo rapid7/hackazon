@@ -54,6 +54,9 @@ class Category extends BaseModel {
     );
 
     public  function getPageTitle($categoryID){
+        if (!$categoryID) {
+            return '';
+        }
         $category = $this->loadCategory($categoryID);
         if($category)
             return $category->name;
