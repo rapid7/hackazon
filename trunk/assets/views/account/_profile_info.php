@@ -1,7 +1,3 @@
-<h1><td><?php $_($user->first_name); ?></td> <td><?php $_($user->last_name); ?></td></h1>
-<p class="text-right">
-    <a href="/account/profile/edit">Edit Profile</a>
-</p>
 <div class="row">
 	<div class="col-xs-8">
 		<table class="table profile-table table-striped">
@@ -41,3 +37,19 @@
 		<?php endif; ?>
 	</div>
 </div>
+
+<p class="text-right">
+    <button id="form-submit" type="submit" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Edit Profile</span></button>
+</p>
+<script>
+    $(function() {
+        Ladda.bind( 'input[type=submit]' );
+        
+        $('#form-submit').on('click', function(e) {
+            var l = Ladda.create(document.querySelector( '#form-submit' ));
+            l.start();
+            window.location.href = "/account/profile/edit";
+            return false; // Will stop the submission of the form
+        });
+    });
+</script>

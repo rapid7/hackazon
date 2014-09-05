@@ -1,7 +1,7 @@
 <!--<div class="col-md-3">-->
 <div class="dropdown sidebar-menu-inside">
     <button class="btn btn-default" data-toggle="dropdown" id="sidebar-link">Shop By Department <b class="caret"></b></button>
-    <ul class="dropdown-menu menu">
+    <ul class="dropdown-menu menu" role="menu" aria-labelledby="sidebar-link">
         <?php foreach ($sidebar as $value): ?>
             <li><a href="/category/view/<?= $value->categoryID; ?>"><?= $value->name; ?></a>
                 <?php if (count($value->childs) > 0): ?>
