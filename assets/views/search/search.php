@@ -1,14 +1,25 @@
 <div class="row">
-    <form role="search" action="/search" method="get" id="searchForm">
+    <form role="search" action="/search" method="get" id="searchForm" >
         <input type="hidden" name="id" value="<?= $search_category['value'] ?>" />
         <div class="col-xs-12 col-md-12">
-            <div class="input-group">
+            <div class="input-group" style="margin-bottom: 10px;">
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="searchLabel"><?= $search_category['label'] ?> <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu" id="searchValue">
-                        <?php foreach ($search_subcategories as $key => $value): ?>
+                        <?php /*foreach ($search_subcategories as $key => $value): ?>
                             <li><a href="#" data-item-id="<?= $key ?>"><?= $value ?></a></li>
-                        <?php endforeach ?>
+                        <?php endforeach;*/ ?>
+						<?php foreach ($sidebar as $value): ?>
+							<li class="dropdown dropdown-submenu"><a href="/category/view/<?= $value->categoryID; ?>" data-item-id="<?= $value->categoryID; ?>"><?= $value->name; ?></a>
+								<?php if (count($value->childs) > 0): ?>
+									<ul class="dropdown-menu">
+										<?php foreach ($value->childs as $subcategory): ?>
+											<li><a href="/category/view/<?= $subcategory->categoryID; ?>" data-item-id="<?= $subcategory->categoryID; ?>"><?= $subcategory->name; ?></a>
+										<?php endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</li>
+						<?php endforeach; ?>
                     </ul>
                 </div>
                 <!-- /btn-group -->
