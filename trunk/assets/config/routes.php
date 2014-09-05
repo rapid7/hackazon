@@ -30,7 +30,7 @@ return array(
 
     'wishlist_new' => array('/wishlist/new',
         array(
-            'controller' => 'WishList',
+            'controller' => 'Wishlist',
             'action' => 'new'
         ),
         'POST'
