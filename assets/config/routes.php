@@ -15,14 +15,14 @@ return array(
     ),
     'wishlist_add_product' => array('/wishlist/add-product/<id>',
         array(
-            'controller' => 'WishList',
+            'controller' => 'Wishlist',
             'action' => 'add_product'
         ),
         'POST'
     ),
     'wishlist_delete_product' => array('/wishlist/remove-product/<id>',
         array(
-            'controller' => 'WishList',
+            'controller' => 'Wishlist',
             'action' => 'delete_product'
         ),
         'POST'
