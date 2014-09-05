@@ -11,7 +11,6 @@ use App\EventDispatcher\Events;
 use App\Events\GetResponseEvent;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
-use App\GWTPHP\RemoteServiceServlet;
 use App\Rest\RestService;
 use GWTModule\GWTModule;
 use PHPixie\Controller;

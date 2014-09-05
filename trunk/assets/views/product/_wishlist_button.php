@@ -1,10 +1,11 @@
 <?php
 $userObj = $this->pixie->auth->user();
 $userWishLists = $userObj ? $userObj->wishlists->find_all()->as_array() : array();
+$wishlistModel = $this->pixie->orm->get('wishlist');
 ?>
 <div class="wish-list-button-block js-wish-list-button-block">
     <?php if ($userObj): ?>
-        <?php $userDefaultWishList = $userObj->getDefaultWishList(); ?>
+        <?php $userDefaultWishList = $wishlistModel->getUserDefaultWishList($userObj); ?>
         <?php if (!$product->isInUserWishList($userObj)): ?>
             <?php if (count($userWishLists) >= 2): ?>
                 <div class="dropdown pull-right add-to-wish-list-dropdown">
