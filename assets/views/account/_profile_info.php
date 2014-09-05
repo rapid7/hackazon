@@ -39,14 +39,14 @@
 </div>
 
 <p class="text-right">
-    <button id="form-submit" type="submit" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Edit Profile</span></button>
+    <a href="/account/profile/edit" id="profile_link" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Edit Profile</span></a>
 </p>
 <script>
     $(function() {
-        Ladda.bind( 'input[type=submit]' );
+        Ladda.bind( '#profile_link' );
         
-        $('#form-submit').on('click', function(e) {
-            var l = Ladda.create(document.querySelector( '#form-submit' ));
+        $('#profile_link').on('click', function(e) {
+            var l = Ladda.create(document.querySelector( '#profile_link' ));
             l.start();
             window.location.href = "/account/profile/edit";
             return false; // Will stop the submission of the form

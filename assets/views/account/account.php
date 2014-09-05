@@ -25,7 +25,7 @@
                     <div class="tab-pane fade in active latest-orders" id="my-orders">
                         <?php include __DIR__.'/_order_list.php'; ?>
                         <p class="text-right">
-                            <button id="form-submit" type="submit" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Go to my orders</span></button>
+                            <a href="/account/orders" id="order_link" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Go to my orders</span></a>
                         </p>
                     </div>
                     <div class="tab-pane fade profile-show" id="profile">
@@ -40,10 +40,10 @@
     
 <script>
     $(function() {
-        Ladda.bind( 'input[type=submit]' );
+        Ladda.bind( '#order_link' );
         
-        $('#form-submit').on('click', function(e) {
-            var l = Ladda.create(document.querySelector( '#form-submit' ));
+        $('#order_link').on('click', function(e) {
+            var l = Ladda.create(document.querySelector( '#order_link' ));
             l.start();
             window.location.href = "/account/orders";
             return false; // Will stop the submission of the form
