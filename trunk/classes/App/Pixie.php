@@ -3,6 +3,7 @@
 namespace App;
 
 
+use App\Core\Config;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
@@ -39,6 +40,7 @@ use VulnModule\VulnInjection;
  * @property-read RestService $restService
  * @property-read \PHPixie\Paginate $paginate
  * @property-read GWTModule $gwt
+ * @property-read Config $config
  * @method Controller|Rest\Controller controller
  */
 class Pixie extends \PHPixie\Pixie {
@@ -49,6 +51,7 @@ class Pixie extends \PHPixie\Pixie {
     protected $vulnService;
 
     protected $modules = array(
+        'config'  => '\App\Core\Config',
         'db' => '\PHPixie\DB',
         'orm' => '\PHPixie\ORM',
         'auth' => '\PHPixie\Auth',
@@ -86,7 +89,7 @@ class Pixie extends \PHPixie\Pixie {
     /**
      * @inheritdoc
      */
-    protected function after_bootstrap(){
+    protected function after_bootstrap() {
 		//Whatever code you want to run after bootstrap is done.
         $displayErrors = $this->getParameter('parameters.display_errors');
         $this->debug->display_errors = is_bool($displayErrors) ? $displayErrors : true;

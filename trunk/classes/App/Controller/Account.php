@@ -157,7 +157,9 @@ class Account extends \App\Page {
 
             if (!count($errors)) {
 
-                $photoPath = preg_replace('#/+$#i', '', $this->pixie->root_dir) . $this->pixie->config->get('page.user_pictures_path');
+                $relativePath = $this->pixie->getParameter('parameters.user_pictures_path');
+                $pathDelimeter = preg_match('|^[/\\\\]|', $relativePath) ? '' : DIRECTORY_SEPARATOR;
+                $photoPath = preg_replace('#/+$#i', '', $this->pixie->root_dir) . $pathDelimeter . $relativePath;
 
                 if ($this->request->post('remove_photo')
                     && $user->photo

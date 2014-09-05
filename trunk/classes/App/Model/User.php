@@ -11,6 +11,7 @@ use App\Pixie;
  * @property Pixie $pixie
  * @property string $username
  * @property string $password
+ * @property string $photo
  * @package App\Model
  */
 class User extends BaseModel {
