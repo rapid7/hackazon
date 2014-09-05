@@ -10,7 +10,8 @@ if (count($myOrders) == 0) {
 <div class="row">
         <div class="col-xs-12">
             <?php if (count($myOrders) > 0): ?>
-            <table class="table">
+            <table class="table table-striped">
+				<thead>
                 <tr>
                     <th>Order №</th>
                     <th>Date</th>
@@ -18,6 +19,8 @@ if (count($myOrders) == 0) {
                     <th>Shipping Method</th>
                     <th>Status</th>
                 </tr>
+				</thead>
+				<tbody>
                 <?php foreach($myOrders as $order) : ?>
                 <tr>
                     <td><a href="/account/orders/<?php $_($order->increment_id);?>"><?php $_($order->increment_id);?></a></td>
@@ -27,6 +30,7 @@ if (count($myOrders) == 0) {
                     <td><?php echo $_order_status($order->status);?></td>
                 </tr>
                 <?php endforeach; ?>
+				</tbody>
             </table>
             <?php endif; ?>
 
@@ -71,11 +75,11 @@ foreach($myOrders as $order) : ?>
 
             <table class="table table-bordered">
                 <thead>
-                <tr>
-                    <th>Overview</th>
-                    <th width="50">count</th>
-                    <th width="70">total</th>
-                </tr>
+					<tr>
+						<th>Overview</th>
+						<th width="50">count</th>
+						<th width="70">total</th>
+					</tr>
                 </thead>
                 <tbody>
                 <?php

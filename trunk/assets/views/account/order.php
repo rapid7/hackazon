@@ -16,8 +16,10 @@ $items = $order->orderItems->find_all()->as_array();
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <h4>Overview:</h4>
-            <div class="panel panel-default">
+            <div class="panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">Overview</h3>
+				</div>
                 <div class="panel-body">
                 <dl class="dl-horizontal">
                     <dt>Date</dt>
@@ -27,7 +29,7 @@ $items = $order->orderItems->find_all()->as_array();
                     <dd><?php echo $_order_status($order->status); ?></dd>
 
                     <dt>Total</dt>
-                    <dd><strong>$<?php echo $order->orderItems->getItemsTotal();?></strong></dd>
+                    <dd><span class="label label-danger">$<?php echo $order->orderItems->getItemsTotal();?></span></dd>
                 </dl>
                 </div>
             </div>
@@ -45,9 +47,12 @@ $items = $order->orderItems->find_all()->as_array();
                 if ($items) : ?>
                     <?php foreach ($items as $item) :?>
                         <?php $item->product->find(); ?>
-                        <tr>
-                            <td class="product-image"><a href="/product/view/<?php echo $item->product->id();?>"><img
-                                        src="/products_pictures/<?php $_($item->product->picture); ?>" alt=""/></a></td>
+						<tr>
+                            <td class="product-image">
+								<div class="img-thumbnail-wrapper">
+									<a href="/product/view/<?php echo $item->product->id();?>"><img src="/products_pictures/<?php $_($item->product->picture); ?>" alt=""/></a>
+								</div>
+							</td>
                             <td><a href="/product/view/<?php echo $item->product_id;?>"><?php echo $item->name ?></a></td>
                             <td align="center"><?php echo $item->qty ?></td>
                             <td align="right">$<?php echo $item->price * $item->qty ?></td>
@@ -57,15 +62,15 @@ $items = $order->orderItems->find_all()->as_array();
                 <tr>
                     <th colspan="4">Services</th>
                 </tr>
-                <tr>
+                <tr class="info">
                     <td colspan="2">Shipping: <?php echo $order->shipping_method;?></td>
                     <td align="right" colspan="2">$0</td>
                 </tr>
-                <tr>
+                <tr class="info">
                     <td colspan="2">Payment: <?php echo $order->payment_method;?></td>
                     <td align="right" colspan="2">$0</td>
                 </tr>
-                <tr>
+                <tr class="danger">
                     <td align="right" colspan="4"><strong>$<?php echo $order->orderItems->getItemsTotal();?></strong></td>
                 </tr>
                 </tbody>
