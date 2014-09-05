@@ -10,6 +10,8 @@
 namespace App\Core;
 
 
+use App\Helpers\ArraysHelper;
+
 class Config extends \PHPixie\Config
 {
     protected $inheritedGroups = [
@@ -26,7 +28,7 @@ class Config extends \PHPixie\Config
         $file = $this->pixie->find_file('config', $name);
         $this->load_group($name, $file);
 
-        $this->groups[$name] = array_merge_recursive($this->groups[$sampleName], $this->groups[$name]);
+        $this->groups[$name] = ArraysHelper::arrayMergeRecursiveDistinct($this->groups[$sampleName], $this->groups[$name]);
     }
 
     public function get_group($name)
