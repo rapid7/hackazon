@@ -33,7 +33,7 @@ class Order extends BaseModel
         return $rows;
     }
 
-    public function getMyOrdersPager($page = 1, $perPage = 2)
+    public function getMyOrdersPager($page = 1, $perPage = 10)
     {
         $query = $this->where('customer_id', $this->pixie->auth->user()->id);
         $pager = $this->pixie->paginate->orm($query, $page, $perPage);

@@ -2,19 +2,41 @@
 
 namespace App\SearchFilters;
 
+
+use App\Core\Request;
+use App\Pixie;
+use PHPixie\ORM\Model;
+
 class FilterFabric {
 
+    /**
+     * @var array|BaseFilter[]
+     */
     protected $_filters = [];
+
+    /**
+     * @var \PHPixie\ORM\Model
+     */
     protected $_model;
+
+    /**
+     * @var Pixie
+     */
     protected $_pixie;
+
+    /**
+     * @var Request
+     */
     protected $_request;
 
-    private $_filterConfig = ['Price' => 'App\SearchFilters\PriceFilter',
+    private $_filterConfig = [
+        'Price' => 'App\SearchFilters\PriceFilter',
         'Quality' => 'App\SearchFilters\QualityFilter',
-        'Brand' => 'App\SearchFilters\BrandFilter'];
+        'Brand' => 'App\SearchFilters\BrandFilter'
+    ];
 
 
-    public function __construct($pixie, $request, \PHPixie\ORM\Model $model) {
+    public function __construct($pixie, $request, Model $model) {
         $this->_request = $request;
         $this->_model = $model;
         $this->_pixie = $pixie;
@@ -43,12 +65,24 @@ class FilterFabric {
 
 
     public function getResults() {
-        foreach ($this->_filters as $name => $filter) {
-            if ($filter->hasValue()) {
-               $filter->getSql($this->_model);
-            }
-        }
+        $this->prepareResultsQuery();
         return $this->_model->find_all()->as_array();
     }
 
+    public function getResultsPager($page = 1, $perPage = 12)
+    {
+        $this->prepareResultsQuery();
+        $pager = $this->_pixie->paginate->orm($this->_model, $page, $perPage);
+        return $pager;
+    }
+
+    public function prepareResultsQuery()
+    {
+        foreach ($this->_filters as /*$name =>*/ $filter) {
+            if ($filter->hasValue()) {
+                $filter->getSql($this->_model);
+            }
+        }
+        return $this;
+    }
 }

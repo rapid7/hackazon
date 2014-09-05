@@ -629,6 +629,7 @@ form.signin .error {
 .product-list-inline-small li {
     list-style:none;
 }
+.category-products .buy-link,
 .product-list-inline-small .buy-link,
 .product-list .buy-link,
 .product-list-inline-small .price {
@@ -1118,4 +1119,12 @@ ul.nav li.grey a {
 .chat-panel .panel-body {
     height: 350px;
     overflow-y: scroll;
+}
+
+.category-products .buy-link {
+    bottom: 48px;
+}
+
+.category-products .product-list-inline-large {
+    padding-top: 20px;
 }
