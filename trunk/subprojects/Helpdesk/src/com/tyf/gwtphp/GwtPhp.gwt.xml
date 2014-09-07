@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+
+	<generate-with class="com.tyf.gwtphp.rebind.PHPRemoteServiceGenerator">
+		<when-type-assignable class="com.google.gwt.user.client.rpc.RemoteService" />
+	</generate-with>
+	
+	<inherits name="com.tyf.gwtphp.linker.RPCLinker" />
+</module>

@@ -1,0 +1,7 @@
+<module>
+    
+	<define-linker name="phprpc"
+		class="com.tyf.gwtphp.linker.PHPRPCLinker" />
+	
+	<add-linker name="phprpc" />
+</module>
