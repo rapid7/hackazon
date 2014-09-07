@@ -18,7 +18,7 @@ class Page extends BaseController
         parent::before();
 
         $this->view = $this->pixie->view('main');
-        $config = $this->pixie->config->get('page');
+        $config = $this->pixie->config->get('parameters');
         $this->view->common_path = $config['common_path'];
         $this->common_path = $config['common_path'];
         $className = $this->get_real_class($this);

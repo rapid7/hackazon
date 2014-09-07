@@ -32,7 +32,7 @@ class Controller extends BaseController
         $this->user = $user;
 
         $this->view = $this->view('main');
-        $config = $this->pixie->config->get('page');
+        $config = $this->pixie->config->get('parameters');
         $this->common_path = $config['common_path'];
         $this->view->common_path = $config['common_path'];
         $this->view->returnUrl = '';
