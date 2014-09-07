@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Webscantest  &mdash; Helpdesk</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Bootstrap core CSS -->
+    <link href="http://hackazon.dev/css/bootstrap.css" rel="stylesheet" charset="utf-8">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=McLaren">
+    <link href='//fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+    <link href="http://hackazon.dev/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Libraries -->
+    <link href="http://hackazon.dev/css/ekko-lightbox.css" rel="stylesheet">
+    <link href="http://hackazon.dev/css/star-rating.min.css" rel="stylesheet">
+    <link href="http://hackazon.dev/css/nivo-slider.css" rel="stylesheet">
+    <link href="http://hackazon.dev/css/nivo-themes/bar/bar.css" rel="stylesheet">
+    <link href="http://hackazon.dev/css/nivo-themes/light/light.css" rel="stylesheet">
+    <link href="http://hackazon.dev/css/bootstrapValidator.css" rel="stylesheet">
+    <link href="http://hackazon.dev/css/modern-business.css" rel="stylesheet">
+    <link href="http://hackazon.dev/css/ladda-themeless.min.css">
+
+    <!-- Add custom CSS here -->
+    <link href="http://hackazon.dev/css/subcategory.css" rel="stylesheet">
+    <link href="http://hackazon.dev/css/site.css" rel="stylesheet">
+    <link href="http://hackazon.dev/css/sidebar.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="Helpdesk.css">
+
+    <!--                                            -->
+    <!-- This script is required bootstrap stuff.   -->
+    <!--                                            -->
+    <script src="http://hackazon.dev/js/jquery-1.10.2.js"></script>
+    <script src="http://hackazon.dev/js/jquery-migrate-1.2.1.js"></script>
+    <script src="http://hackazon.dev/js/bootstrap.js"></script>
+    <script src="http://hackazon.dev/js/modern-business.js"></script>
+    <script src="http://hackazon.dev/js/bootstrapValidator.min.js"></script>
+    <script src="http://hackazon.dev/js/spin.min.js"></script>
+    <script src="http://hackazon.dev/js/jquery.modern-blink.js"></script>
+    <script src="http://hackazon.dev/js/ladda.min.js"></script>
+    <script src="http://hackazon.dev/js/ladda.jquery.min.js"></script>
+    <script src="http://hackazon.dev/js/jquery.inputmask.js"></script>
+    <script src="http://hackazon.dev/js/ekko-lightbox.js"></script>
+    <script src="http://hackazon.dev/js/jquery.nivo.slider.pack.js"></script>
+    <script src="http://hackazon.dev/js/respond.min.js"></script>
+    <script src="http://hackazon.dev/js/star-rating.min.js"></script>
+    <script src="http://hackazon.dev/js/bootstrap.file-input.js"></script>
+    <script src="http://hackazon.dev/js/knockout-2.2.1.js"></script>
+    <script src="http://hackazon.dev/js/knockout.localStorage.js"></script>
+    <script src="http://hackazon.dev/js/koExternalTemplateEngine_all.min.js"></script>
+    <script src="http://hackazon.dev/js/site.js"></script>
+
+    <script type="text/javascript" language="javascript" src="Helpdesk/Helpdesk.nocache.js"></script>
+</head>
+
+<!--                                           -->
+<!-- The body can have arbitrary html, or      -->
+<!-- you can leave the body empty if you want  -->
+<!-- to create a completely dynamic ui         -->
+<!--                                           -->
+<body>
+
+<header class="hw-header">
+    <nav class="navbar hw-navbar navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation </span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand hw-navbar-brand" href="/"><span>Hackazon <em>Webscantest</em></span></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse hw-navbar-collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/wishlist/">Wish List</a>
+                    <li class="dropdown hw-login-item">
+                        <a href="#login-box" class="login-window">Sign In / Sign Up</a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle js-cart-top-icon" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-shopping-cart"></span></a>
+                        <ul class="dropdown-menu js-cart-top-list">
+                            <li class="divider"></li>
+                            <li><a href="/cart/view">Show all items in shopping cart <i class="glyphicon glyphicon-chevron-right"></i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-xs-3 col-md-2 col-lg-3">
+                    <!--<div class="col-md-3">-->
+                    <div class="dropdown sidebar-menu-inside">
+                        <button class="btn btn-default" data-toggle="dropdown" id="sidebar-link">Shop By Department <b class="caret"></b></button>
+                        <ul class="dropdown-menu menu">
+                            <li><a href="/category/view/27">Computers</a>
+                                <ul>
+                                    <li><a href="/category/view/75">Multimedia</a></li>
+                                    <li><a href="/category/view/58">Personal</a></li>
+                                    <li><a href="/category/view/57">PDA</a></li>
+                                    <li><a href="/category/view/51">Notebooks</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/category/view/25">Clothes</a>
+                                <ul>
+                                    <li><a href="/category/view/74">Classic</a></li>
+                                    <li><a href="/category/view/40">Home</a></li>
+                                    <li><a href="/category/view/39">Summer</a></li>
+                                    <li><a href="/category/view/38">Winter</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/category/view/23">Books</a>
+                                <ul>
+                                    <li><a href="/category/view/73">Programming</a></li>
+                                    <li><a href="/category/view/72">Design</a></li>
+                                    <li><a href="/category/view/71">Harry Potter</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/category/view/5">Beverages</a>
+                                <ul>
+                                    <li><a href="/category/view/47">Alcohol free</a></li>
+                                    <li><a href="/category/view/46">Alcohol</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/category/view/4">Audio / Video</a>
+                                <ul>
+                                    <li><a href="/category/view/76">Home theatres</a></li>
+                                    <li><a href="/category/view/21">mp3-players</a></li>
+                                    <li><a href="/category/view/20">DVD</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/category/view/3">Sport</a>
+                                <ul>
+                                    <li><a href="/category/view/77">Bycicles</a></li>
+                                    <li><a href="/category/view/13">Snowboards</a></li>
+                                    <li><a href="/category/view/12">In-line skates</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/category/view/2">Cellular</a>
+                                <ul>
+                                    <li><a href="/category/view/18">Siemens</a></li>
+                                    <li><a href="/category/view/17">Nokia</a></li>
+                                    <li><a href="/category/view/15">Ericsson</a></li>
+                                    <li><a href="/category/view/14">Samsung</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/category/view/1">Automobiles</a>
+                                <ul>
+                                    <li><a href="/category/view/64">Lamborghini</a></li>
+                                    <li><a href="/category/view/63">Lotus</a></li>
+                                    <li><a href="/category/view/24">Lexus</a></li>
+                                    <li><a href="/category/view/9">Toyota</a></li>
+                                    <li><a href="/category/view/8">Mercedes</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--</div>-->
+
+
+                </div>
+                <div class="col-xs-7 col-md-8 col-lg-8 col-md-offset-2 col-xs-offset-2 col-lg-offset-1">
+                    <div class="row">
+                        <form role="search" action="/search" method="get" id="searchForm">
+                            <input type="hidden" name="id" value="" />
+                            <div class="col-xs-12 col-md-12">
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="searchLabel">All <span class="caret"></span></button>
+                                        <ul class="dropdown-menu" role="menu" id="searchValue">
+                                            <li><a href="#" data-item-id="27">Computers</a></li>
+                                            <li><a href="#" data-item-id="75">Multimedia</a></li>
+                                            <li><a href="#" data-item-id="58">Personal</a></li>
+                                            <li><a href="#" data-item-id="57">PDA</a></li>
+                                            <li><a href="#" data-item-id="51">Notebooks</a></li>
+                                            <li><a href="#" data-item-id="25">Clothes</a></li>
+                                            <li><a href="#" data-item-id="74">Classic</a></li>
+                                            <li><a href="#" data-item-id="40">Home</a></li>
+                                            <li><a href="#" data-item-id="39">Summer</a></li>
+                                            <li><a href="#" data-item-id="38">Winter</a></li>
+                                            <li><a href="#" data-item-id="23">Books</a></li>
+                                            <li><a href="#" data-item-id="73">Programming</a></li>
+                                            <li><a href="#" data-item-id="72">Design</a></li>
+                                            <li><a href="#" data-item-id="71">Harry Potter</a></li>
+                                            <li><a href="#" data-item-id="5">Beverages</a></li>
+                                            <li><a href="#" data-item-id="47">Alcohol free</a></li>
+                                            <li><a href="#" data-item-id="46">Alcohol</a></li>
+                                            <li><a href="#" data-item-id="4">Audio / Video</a></li>
+                                            <li><a href="#" data-item-id="76">Home theatres</a></li>
+                                            <li><a href="#" data-item-id="21">mp3-players</a></li>
+                                            <li><a href="#" data-item-id="20">DVD</a></li>
+                                            <li><a href="#" data-item-id="3">Sport</a></li>
+                                            <li><a href="#" data-item-id="77">Bycicles</a></li>
+                                            <li><a href="#" data-item-id="13">Snowboards</a></li>
+                                            <li><a href="#" data-item-id="12">In-line skates</a></li>
+                                            <li><a href="#" data-item-id="2">Cellular</a></li>
+                                            <li><a href="#" data-item-id="18">Siemens</a></li>
+                                            <li><a href="#" data-item-id="17">Nokia</a></li>
+                                            <li><a href="#" data-item-id="15">Ericsson</a></li>
+                                            <li><a href="#" data-item-id="14">Samsung</a></li>
+                                            <li><a href="#" data-item-id="1">Automobiles</a></li>
+                                            <li><a href="#" data-item-id="64">Lamborghini</a></li>
+                                            <li><a href="#" data-item-id="63">Lotus</a></li>
+                                            <li><a href="#" data-item-id="24">Lexus</a></li>
+                                            <li><a href="#" data-item-id="9">Toyota</a></li>
+                                            <li><a href="#" data-item-id="8">Mercedes</a></li>
+                                        </ul>
+                                    </div>
+                                    <!-- /btn-group -->
+                                    <input type="text" class="form-control" placeholder="Search products..." maxlength="100" name="searchString" value="">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="submit">Search!</button>
+				</span>
+                                </div>
+                                <!-- /input-group -->
+                            </div>
+                        </form>
+                    </div>                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </nav>
+</header>
+
+<div id="container">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Helpdesk</h1>
+                <ol class="breadcrumb" id="breadcrumbs">
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Helpdesk</li>
+                </ol>
+            </div>
+        </div>
+        <div class="section" id="helpdesk">
+
+        </div>
+    </div>
+
+    <script>
+        function AppViewModel() {
+            var self = this;
+            self.data = ko.observableArray([]);
+        }
+        var model = new AppViewModel();
+
+        $(function() {
+
+            $('#faqForm').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                container: 'tooltip'
+            }).on('success.form.bv', function(e) {
+                var l = Ladda.create(document.querySelector( '#form-submit' ));
+                l.start();
+                $.ajax({
+                    url: '/faq',
+                    type: "POST",
+                    dataType: "json",
+                    data: $("#faqForm").serialize(),
+                    success: function(data) {
+                        $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
+                        if (data.length) {
+                            ko.applyBindings(model);
+                            model.data(data);
+                            $('#accordion1').css('display', 'block');
+                        }
+                        else {
+                            $(".alert").empty().append('There is some error happened during processing your request.').show();
+                        }
+                    },
+                    fail: function() {
+                        $(".alert").empty().append('There is some error happened during processing your request.').show();
+                    }
+                }).always(function() { l.stop(); });
+                return false;
+            });
+        });
+    </script>
+</div>
+
+<div class="container" >
+    <hr>
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; NTObjectives 2014</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/x-template" id="tplAlertContent">
+        <div class="text-center">
+            <a href="#" class="btn btn-primary js-yes">Yes</a>
+            <a href="#" class="btn btn-danger js-no">No</a>
+        </div>
+    </script>
+</div>
+
+<div id="login-box" class="login-popup">
+    <a href="#" class="close" data-toggle="tooltip" data-placement="top" title="Close"><i class="glyphicon glyphicon-remove"></i></a>
+    <form role="form" method="post" class="signin" action="/user/login" id="loginForm">
+        <h2>Please login <small></small></h2>
+        <hr class="colorgraph">
+        <div class="form-group">
+            <input type="text" maxlength="100" required name="username" id="username" autocomplete="off" class="form-control input-lg" placeholder="Username or Email" tabindex="1">
+        </div>
+        <div class="form-group">
+            <input type="password" maxlength="100" required name="password" autocomplete="off" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
+        </div>
+        <hr class="colorgraph">
+        <div class="row">
+            <div class="col-xs-6 col-md-6"><button id="loginbtn" type="submit" class="btn btn-success btn-block btn-lg">Sign In</button></div>
+            <div class="col-xs-6 col-md-6">
+                <div>
+                    <span class="login-social-span">Or login via</span>
+                    <ul class="list-unstyled list-inline list-social-icons">
+                        <li class="tooltip-social facebook-link"><a href="/facebook" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-3x"></i></a></li>
+                        <li class="tooltip-social twitter-link"><a href="/twitter" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter-square fa-3x"></i></a></li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-md-6"><a href="/user/password" class="btn btn-info btn-lg" style="width:100%">Forgot your password?</a></div>
+            <div class="col-xs-6 col-md-6"><a href="/user/register" class="btn btn-info btn-lg" style="width:100%">New user?</a></div>
+        </div>
+    </form>
+</div>
+
+<script>
+    //A very basic way to open a popup
+
+    function popup(link, windowname) {
+        window.open(link.href, windowname, 'width=400,height=200,scrollbars=yes');
+        return false;
+    }
+    jQuery(function ($) {
+        $('#loginForm').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            container: 'tooltip'
+        });
+    });
+</script>
+
+<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+
+</body>
+</html>

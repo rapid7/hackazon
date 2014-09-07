@@ -1,0 +1,17 @@
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0//EN"
+        "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
+<module rename-to="Helpdesk">
+
+    <!-- Inherit the core Web Toolkit stuff.                  -->
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.tyf.gwtphp.GwtPhp" />
+    <!--inherits name='com.google.gwt.user.theme.chrome.Chrome'/-->
+
+    <!-- Specify the app entry point class.                   -->
+    <entry-point class='com.ntobjectives.hackazon.helpdesk.client.Helpdesk'/>
+
+
+    <!-- Specify the app servlets.                   -->
+    <servlet path='/HelpdeskService' class='com.ntobjectives.hackazon.helpdesk.server.HelpdeskServiceImpl'/>
+    <source path='client'/>
+</module>
