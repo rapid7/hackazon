@@ -13,6 +13,7 @@ class Install extends \App\Page {
         // If wizard successfully passed, install entered data.
         if ($result->isCompleted()) {
             $this->pixie->installer->finish();
+            $this->pixie->session->set('isInstalled', true);
             $this->redirect('/');
 
         } else {
