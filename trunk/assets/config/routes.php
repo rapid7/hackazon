@@ -56,6 +56,13 @@ return array(
             'action' => 'index'
         )
     ),
+
+    'install' => array('/install(/<id>)',
+        array(
+            'controller' => 'install',
+            'action' => 'index'
+        )
+    ),
 	'default' => array('(/<controller>(/<action>(/<id>)))',
         array(
             'controller' => 'home',

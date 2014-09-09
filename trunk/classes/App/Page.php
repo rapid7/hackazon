@@ -16,16 +16,14 @@ class Page extends BaseController
 {
     public function before() {
         parent::before();
+        if (!$this->execute) {
+            return;
+        }
 
-        $this->view = $this->pixie->view('main');
-        $config = $this->pixie->config->get('parameters');
-        $this->view->common_path = $config['common_path'];
-        $this->common_path = $config['common_path'];
-        $className = $this->get_real_class($this);
-        $this->view->returnUrl = '';
-        $this->view->controller = $this;
+        $this->initView('main');
 
-        if (!($className == 'Home' && $this->request->param('action') == 'install')) {
+        if (!$this->installationProcess) {
+            $className = $this->get_real_class($this);
             $category = new Category($this->pixie);
             $this->view->sidebar = $category->getCategoriesSidebar();
             $this->view->search_category = $this->getSearchCategory($className);
@@ -34,13 +32,24 @@ class Page extends BaseController
             if ($className != "Home") {
                 $this->view->categories = $category->getRootCategories();
             }
+
+            $classModel = "App\\Model\\" . $className;
+            if (class_exists($classModel)) {
+                $this->model = new $classModel($this->pixie);
+            } else {
+                $this->model = null;
+            }
         }
-        $classModel = "App\\Model\\" . $className;
-        if (class_exists($classModel)) {
-            $this->model = new $classModel($this->pixie);
-        } else {
-            $this->model = null;
-        }
+    }
+
+    protected function initView($name = 'main')
+    {
+        $this->view = $this->pixie->view($name);
+        $config = $this->pixie->config->get('parameters');
+        $this->view->common_path = $config['common_path'];
+        $this->common_path = $config['common_path'];
+        $this->view->returnUrl = '';
+        $this->view->controller = $this;
     }
 
     public function after() {

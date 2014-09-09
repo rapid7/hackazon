@@ -12,6 +12,7 @@ use App\EventDispatcher\Events;
 use App\Events\GetResponseEvent;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
+use App\Installation\Installer;
 use App\Rest\RestService;
 use GWTModule\GWTModule;
 use PHPixie\Controller;
@@ -41,6 +42,7 @@ use VulnModule\VulnInjection;
  * @property-read \PHPixie\Paginate $paginate
  * @property-read GWTModule $gwt
  * @property-read Config $config
+ * @property-read Installer $installer
  * @method Controller|Rest\Controller controller
  */
 class Pixie extends \PHPixie\Pixie {
@@ -74,6 +76,7 @@ class Pixie extends \PHPixie\Pixie {
         $this->instance_classes['dispatcher'] = '\\App\\EventDispatcher\\EventDispatcher';
         $this->instance_classes['restRouteMatcher'] = '\\App\\Rest\\RouteMatcher';
         $this->instance_classes['restService'] = '\\App\\Rest\\RestService';
+        $this->instance_classes['installer'] = '\\App\\Installation\\Installer';
     }
 
     /**
