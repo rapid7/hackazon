@@ -1,5 +1,6 @@
 <form action="/install/email_settings" method="POST" id="emailSettingsForm">
     <div class="form-group">
+        <label>Mail Engine Type:</label>
         <select name="type" id="mailType" class="form-control">
             <option value="native" <?php $_(isset($type) && $type == 'native' ? 'selected' : ''); ?>>Native</option>
             <option value="smtp" <?php $_(isset($type) && $type == 'smtp' ? 'selected' : ''); ?>>SMTP</option>
@@ -9,30 +10,36 @@
 
     <div class="type-group type-native">
         <div class="form-group">
+            <label>mail() function parameters:</label>
             <input class="form-control" type="text" name="mail_parameters" value="<?php $_(isset($mail_parameters) ? $mail_parameters : ''); ?>" placeholder="Mail Parameters (defaults to &quot;-f%s&quot;)" />
         </div>
     </div>
 
     <div class="type-group type-sendmail">
         <div class="form-group">
+            <label>Sendmail Command:</label>
             <input class="form-control" type="text" name="sendmail_command" value="<?php $_(isset($sendmail_command) ? $sendmail_command : ''); ?>" placeholder="Sendmail Command (defaults to &quot;/usr/sbin/sendmail -bs&quot;)" />
         </div>
     </div>
 
     <div class="type-group type-smtp">
         <div class="form-group">
+            <label>Hostname:</label>
             <input class="form-control" type="text" name="hostname" value="<?php $_(isset($hostname) ? $hostname : ''); ?>" placeholder="Hostname" required />
         </div>
 
         <div class="form-group">
+            <label>Port:</label>
             <input class="form-control" type="text" name="port" value="<?php $_(isset($port) ? $port : ''); ?>" placeholder="Port" required />
         </div>
 
         <div class="form-group">
+            <label>Username:</label>
             <input class="form-control" type="text" name="username" value="<?php $_(isset($username) ? $username : ''); ?>" placeholder="Username" />
         </div>
 
         <div class="form-group">
+            <label>Password:</label>
             <input class="form-control" type="password" name="password" value="<?php $_(isset($password) ? $password : ''); ?>" placeholder="Password" />
         </div>
 
@@ -50,6 +57,7 @@
         </div>
 
         <div class="form-group">
+            <label>Timeout:</label>
             <input class="form-control" type="text" name="timeout" value="<?php $_(isset($timeout) ? $timeout : ''); ?>" placeholder="Timeout (defaults to 5 seconds)" />
         </div>
     </div>
