@@ -2,15 +2,13 @@
 
 namespace App\Controller;
 
-use App\Model\Cart;
 use App\Model\Product as Product;
-use \App\Model\Category as Category;
 use App\Model\Review;
 use \App\Model\SpecialOffers as SpecialOffers;
-use PHPixie\DB\PDOV\Connection;
 use App\DataImport\BestBuyReviewImporter;
+use App\Page;
 
-class Home extends \App\Page {
+class Home extends Page {
 
     const COUNT_RND_PRODUCTS = 3; //count products for rnd block of main page
 
@@ -101,87 +99,6 @@ class Home extends \App\Page {
     public function action_404() {
         $this->view->subview = '404';
         $this->view->message = "Index page";
-    }
-
-    /**
-     * DB installation script.
-     */
-    public function action_install() {
-        /** @var \PDO $conn */
-        $conn = $this->pixie->db->get()->conn;
-        $conn->setAttribute(\PDO::ATTR_TIMEOUT, 300);
-        
-        $this->pixie->db->get()->execute("SET foreign_key_checks = 0;");
-        //$this->view->subview = '';
-        // Remove Foreign Keys
-        $sql = "SELECT tc.TABLE_NAME `table`, tc.CONSTRAINT_NAME `fk` "
-                . "FROM information_schema.TABLE_CONSTRAINTS tc "
-                . "WHERE tc.CONSTRAINT_SCHEMA=(SELECT DATABASE()) AND tc.CONSTRAINT_TYPE='FOREIGN KEY'";
-
-        $foreignKeys = $this->pixie->db->get()->execute($sql);
-
-        foreach ($foreignKeys as $fk) {
-            if ($fk != "") {
-                $conn->exec("ALTER TABLE `{$fk->table}` DROP FOREIGN KEY `{$fk->fk}`;");
-            }
-        }
-
-        //Remove tables
-        $tables = $this->pixie->db->get()->execute("SELECT GROUP_CONCAT(table_name) as tbl FROM information_schema.tables  WHERE table_schema = (SELECT DATABASE())");
-        $tblRemove = "";
-        foreach ($tables as $table) {
-            if ($table->tbl != "") {
-                $tblRemove = "DROP TABLE IF EXISTS " . $table->tbl;
-            }
-        }
-
-        if ($tblRemove != "")
-            $this->pixie->db->get()->execute($tblRemove);
-
-        // Install schema
-        $dbScript = $this->pixie->root_dir . "database/db.sql";
-        $conn->exec(file_get_contents($dbScript));
-
-        // Install migrations
-        $migrationSql = "";
-        foreach (scandir($this->pixie->root_dir . "database/migrations") as $file) {
-            $file = $this->pixie->root_dir . "database/migrations/" . $file;
-            if (is_file($file)) {
-                //$migrationSql .= file_get_contents($file);
-                $conn->exec(file_get_contents($file));
-            }
-        }
-
-        // Install demo data
-        $demoScript = $this->pixie->root_dir . "database/demo_database.sql";
-        $conn->exec(file_get_contents($demoScript));
-
-        // Post-install scripts
-        $pixie = $this->pixie;
-        $db = $pixie->db;
-        $dirIterator = new \DirectoryIterator($this->pixie->root_dir . "database/post_migration");
-        /** @var \SplFileInfo $fileInfo */
-        foreach ($dirIterator as $fileInfo) {
-            if ($fileInfo->isFile() && $fileInfo->isReadable()) {
-                $ext = strtolower($fileInfo->getExtension());
-                $filePath = $fileInfo->getRealPath();
-
-                if ($ext == 'sql') {
-                    $sqlContent = file_get_contents($filePath);
-                    if (strpos($sqlContent, '# IGNORE') !== 0) {
-                        $res = $conn->exec($sqlContent);
-                    }
-
-                } else if ($ext == 'php') {
-                    $runner = function () use ($filePath, $pixie, $db) {
-                                include $filePath;
-                            };
-                    $runner();
-                }
-            }
-        }
-        $this->pixie->db->get()->execute("SET foreign_key_checks = 1;");
-        $this->redirect('/');
     }
 
     /**

@@ -47,10 +47,37 @@ class BaseController extends Controller
      */
     protected $vulninjection;
 
+    protected $installationProcess = false;
+
     public function before()
     {
         $className = $this->get_real_class($this);
         $controllerName = strtolower($className);
+
+        if ($className == 'Install' && $this->request->param('action') == 'index') {
+            $this->installationProcess = true;
+        }
+
+
+        // Check Hackazon is installed
+        if (!$this->installationProcess && !$this->pixie->session->get('isInstalled')) {
+            try {
+                /** @var \PDO $conn */
+                $conn = $this->pixie->db->get()->conn;
+                $res = $conn->query("SHOW TABLES");
+                $dbTables = $res->fetchAll();
+
+                if (count($dbTables) < 20) {
+                    throw new \Exception("Not all tables are existing");
+                }
+                $this->pixie->session->set('isInstalled', true);
+
+            } catch (\Exception $e) {
+                $this->redirect('/install');
+                $this->execute = false;
+                return;
+            }
+        }
 
         // Create vulnerability service.
         $this->vulninjection = $this->pixie->vulninjection->service($controllerName);
@@ -224,18 +251,20 @@ class BaseController extends Controller
         $this->execute = true;
         $this->before();
 
-        // Check referrer vulnerabilities
-        $service = $this->pixie->getVulnService();
-        $config = $service->getConfig();
-        $isControllerLevel = $config->getLevel() <= 1;
-        $actionName = $this->request->param('action');
+        if ($this->execute) {
+            // Check referrer vulnerabilities
+            $service = $this->pixie->getVulnService();
+            $config = $service->getConfig();
+            $isControllerLevel = $config->getLevel() <= 1;
+            $actionName = $this->request->param('action');
 
-        if ($isControllerLevel) {
-            if (!$config->has($actionName)) {
-                $context = $config->getCurrentContext();
-                $context->addContext(Context::createFromData($actionName, [], $context));
+            if ($isControllerLevel) {
+                if (!$config->has($actionName)) {
+                    $context = $config->getCurrentContext();
+                    $context->addContext(Context::createFromData($actionName, [], $context));
+                }
+                $service->goDown($actionName);
             }
-            $service->goDown($actionName);
         }
 
         if ($this->execute)
@@ -243,7 +272,7 @@ class BaseController extends Controller
         if ($this->execute)
             $this->after();
 
-        if ($isControllerLevel) {
+        if ($this->execute && $isControllerLevel) {
             $service->goUp();
         }
     }
