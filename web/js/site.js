@@ -423,6 +423,8 @@ $(document).ready(function () {
             var link = $(this),
                 l = link.ladda();
 
+            link.blur();
+
             $.ajax('/cart/add/', {
                 data: {
                     product_id: link.data('product-id'),

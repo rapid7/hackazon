@@ -26,8 +26,6 @@ class Context
     /** @var array Different props */
     protected $params = [];
 
-    public static $vulnTypes = ['xss', 'sql', 'csrf', 'os_command'];
-
     public static $contextTypes = [
         self::TYPE_DEFAULT,
         self::TYPE_FORM

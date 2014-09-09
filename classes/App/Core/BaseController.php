@@ -88,6 +88,9 @@ class BaseController extends Controller
 
         // Switch vulnerability config to the controller level
         $this->vulninjection->goDown($controllerName);
+
+        // Check referrer for controller level
+        $this->vulninjection->checkReferrer();
     }
 
     public function after()
@@ -264,6 +267,9 @@ class BaseController extends Controller
                     $context->addContext(Context::createFromData($actionName, [], $context));
                 }
                 $service->goDown($actionName);
+
+                // Check referrer for action level
+                $this->vulninjection->checkReferrer();
             }
         }
 
