@@ -87,11 +87,27 @@ class WishList extends BaseModel
     public function searchWishlists($searchQuery)
     {
         /** @var User[] $users */
-         $users = $this->pixie->orm->get('User')
+        $users = $this->pixie->db->query('select')->fields('id')->table('tbl_users', 'user')
+            ->join(['tbl_wish_list', 'wishlists'], ['wishlists.user_id', 'user.id'])
+            ->where('wishlists.type', 'public')
             ->where(
-                array('email', 'like', '%' . $searchQuery . '%'),
-                array('or', array('username', 'like', '%' . $searchQuery . '%'))
-            )->find_all()->as_array();
+                'and', [
+                    array('email', 'like', '%' . $searchQuery . '%'),
+                    array('or', array('username', 'like', '%' . $searchQuery . '%')),
+          //          array('or', array('wishlists.name', 'like', '%' . $searchQuery . '%'))
+                ]
+            )->execute()->as_array(true);
+        $userIds = [];
+        foreach ($users as $usr) {
+            $userIds[] = $usr->id;
+        }
+
+        if ($userIds) {
+            $users = $this->pixie->orm->get('User')->where('id', 'IN', $this->pixie->db->expr('(' . implode(',', $userIds) . ')'))
+                ->find_all()->as_array();
+        } else {
+            $users = [];
+        }
         $userList = array();
         $followers = array();
         if ($this->pixie->auth->user() !== null) {
