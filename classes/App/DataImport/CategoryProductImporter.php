@@ -196,7 +196,7 @@ class CategoryProductImporter
     {
         if (!$this->rootCategory) {
             $this->rootCategory = $this->createCategory([
-                'name' => 'ROOT',
+                'name' => '0_ROOT',
                 'enabled' => 1
             ]);
             $this->rootCategory->refresh();
