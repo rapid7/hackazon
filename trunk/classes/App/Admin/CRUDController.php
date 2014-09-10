@@ -107,11 +107,13 @@ class CRUDController extends Controller
                         }
                         $fieldSearchConditions[] = ['and', [str_replace('___', '.', $lf), 'LIKE', "%$sVal%"]];
                     }
-
-                    $searchConditions[] = ['or', $fieldSearchConditions];
+                    if ($fieldSearchConditions) {
+                        $searchConditions[] = ['or', $fieldSearchConditions];
+                    }
                 }
-
-                $this->model->where('and', $searchConditions);
+                if ($searchConditions) {
+                    $this->model->where('and', $searchConditions);
+                }
             }
 
             // Query for items
