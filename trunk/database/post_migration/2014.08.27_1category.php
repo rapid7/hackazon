@@ -29,10 +29,10 @@ $walker = function (\App\Model\Category $category) use ($pixie, &$walker) {
 $startProcessing = function () use ($walker, $pixie) {
     /** @var \App\Model\Category $rootCategory */
     $rootCategory = $pixie->orm->get('Category');
-    $rootCategory->name = 'ROOT';
+    $rootCategory->name = '0_ROOT';
     $rootCategory->enabled = 1;
     $rootCategory->values([
-        'name' => 'ROOT',
+        'name' => '0_ROOT',
         'enabled' => 1
     ]);
     $rootCategory->nested->prepare_append();

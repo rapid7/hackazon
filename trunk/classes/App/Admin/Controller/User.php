@@ -83,4 +83,37 @@ class User extends CRUDController
         $this->pixie->auth->logout();
         $this->redirect('/admin/user/login');
     }
+
+    public function action_index()
+    {
+        parent::action_index();
+    }
+
+    protected function getListFields()
+    {
+        return [
+            'id',
+            'username' => [
+                'max_length' => 30,
+                'type' => 'link'
+            ],
+            'first_name' => [
+                'max_length' => 30
+            ],
+            'last_name' => [
+                'max_length' => 30
+            ],
+            'email',
+            'oauth_provider',
+            'created_on',
+            'last_login',
+            'photo' => [
+                'type' => 'image',
+                'max_width' => 40,
+                'max_height' => 30,
+                'image_base' => '/user_pictures/',
+                'is_link' => true
+            ]
+        ];
+    }
 } 

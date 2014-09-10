@@ -310,12 +310,17 @@ class Query extends DB\Query
                 $query .= "UPDATE {$this->escape_table($this->_table, $params)} ";
             }
 
+            $joinedTables = [];
             foreach ($this->_joins as $join) {
                 $table = $join[0];
                 $table = $this->escape_table($table, $params);
+                if (in_array($table, $joinedTables)) {
+                    continue;
+                }
                 $query .= strtoupper($join[1]) . " JOIN {$table} ";
                 if (!empty($join[2]))
                     $query.="ON {$this->get_condition_query($join[2], $params, true, true)} ";
+                $joinedTables[] = $table;
             }
 
             if ($this->_type == 'update') {

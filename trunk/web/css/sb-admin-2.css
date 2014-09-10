@@ -343,3 +343,47 @@ table.dataTable thead .sorting:after {
 .panel-yellow a:hover {
     color: #df8a13;
 }
+
+.dataTables_filter {
+    text-align: right;
+}
+
+.dataTables_paginate {
+    text-align: right;
+}
+
+.dt-id-column {
+    width: 60px;
+}
+
+.dt-picture-column {
+    width: 60px;
+}
+
+.dt-flag-column {
+    width: 50px;
+}
+
+.fa-boolean.fa-circle {
+    color: #0c0;
+}
+
+.fa-boolean.fa-circle-o {
+    color: #c00;
+}
+
+.label-new {
+    background-color: green;
+    color: #fff;
+}
+
+.label-rejected {
+    background-color: red;
+    color: #fff;
+}
+
+.label-resolved,
+.label-closed {
+    background-color: gray;
+    color: #fff;
+}

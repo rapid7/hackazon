@@ -1,4 +1,4 @@
-<div id="wrapper">
+<div id="wrapper" class="admin">
 
 <!-- Navigation -->
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="/admin/">Webscantest Admin<?=(isset($pageTitle) ? " &mdash; " . $pageTitle : "") ?></a>
+    <a class="navbar-brand" href="/admin/">Hackazon Admin<?='';//(isset($pageTitle) ? " &mdash; " . $pageTitle : "") ?></a>
 </div>
 <!-- /.navbar-header -->
 
@@ -246,19 +246,25 @@
                 <!-- /input-group -->
             </li>
             <li>
-                <a class="active" href="<?php echo $adminRoot; ?>/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                <a href="<?php echo $adminRoot; ?>/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
             <li>
-                <a class="active" href="<?php echo $adminRoot; ?>/user/"><i class="fa fa-user fa-fw"></i> Users</a>
+                <a href="<?php echo $adminRoot; ?>/user/"><i class="fa fa-user fa-fw"></i> Users</a>
             </li>
             <li>
-                <a class="active" href="<?php echo $adminRoot; ?>/role/"><i class="fa fa-puzzle-piece fa-fw"></i> Roles</a>
+                <a href="<?php echo $adminRoot; ?>/role/"><i class="fa fa-puzzle-piece fa-fw"></i> Roles</a>
             </li>
             <li>
-                <a class="active" href="<?php echo $adminRoot; ?>/category/"><i class="fa fa-sitemap fa-fw"></i> Product Categories</a>
+                <a href="<?php echo $adminRoot; ?>/category/"><i class="fa fa-sitemap fa-fw"></i> Product Categories</a>
             </li>
             <li>
-                <a class="active" href="<?php echo $adminRoot; ?>/product/"><i class="fa fa-archive fa-fw"></i> Products</a>
+                <a href="<?php echo $adminRoot; ?>/product/"><i class="fa fa-archive fa-fw"></i> Products</a>
+            </li>
+            <li>
+                <a href="<?php echo $adminRoot; ?>/enquiry/"><i class="fa fa-life-saver fa-fw"></i> Enquiries</a>
+            </li>
+            <li>
+                <a href="<?php echo $adminRoot; ?>/faq/"><i class="fa fa-question-circle fa-fw"></i> Faq</a>
             </li>
 
             <?php /*<li>

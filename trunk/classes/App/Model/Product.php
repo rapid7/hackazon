@@ -64,6 +64,13 @@ class Product extends BaseModel {
         )
     );
 
+    protected $belongs_to = [
+        'category' => [
+            'model' => 'Category',
+            'key' => 'categoryID'
+        ]
+    ];
+
     public function getProduct($productID){
         $productData = array();
         $product = $this->pixie->orm->get('Product')->where('productID',$productID)->find();

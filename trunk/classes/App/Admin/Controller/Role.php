@@ -15,4 +15,17 @@ use App\Admin\CRUDController;
 class Role extends CRUDController
 {
     public $modelNamePlural = 'Roles';
+
+    protected function getListFields()
+    {
+        return [
+            'id' => [
+                'column_classes' => 'dt-id-column',
+            ],
+            'name' => [
+                'title' => 'Role',
+                'type' => 'link'
+            ]
+        ];
+    }
 } 
