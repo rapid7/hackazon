@@ -14,7 +14,8 @@
         <?php
         $currentCwd = getcwd();
         chdir(__DIR__ . '/../content_pages/help_articles');
-        include $page . '.php';
+        $path = preg_split("/[\\n\\r\\0]/", $page . '.php');
+        include trim($path[0]);
         chdir($currentCwd);
         ?>
     </div>
