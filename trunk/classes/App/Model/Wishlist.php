@@ -101,8 +101,9 @@ class WishList extends BaseModel
                 $followers[] = $userFollower->follower_id;
             }
         }
+        $curUser = $this->pixie->auth->user();
         foreach ($users as $user) {
-            if ($user->id() == $this->pixie->auth->user()->id()) continue;
+            if ($curUser && $user->id() == $curUser->id()) continue;
             $userList[$user->id()] = $user->as_array();
             $userList[$user->id()]['remembered'] = in_array($user->id(), $followers) ? true : false;
             $userList[$user->id()]['wishLists'] = array();
