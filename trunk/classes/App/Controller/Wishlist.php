@@ -42,7 +42,7 @@ class Wishlist extends Page {
             $this->view->subview = 'wishlist/no_list';
             return;
         }
-
+        $this->view->productsInCart = $this->getProductsInCartIds();
         $wishList = $this->model->getUserDefaultWishList($this->user);
 
         if ($wishList) {
