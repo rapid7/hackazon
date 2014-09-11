@@ -163,7 +163,7 @@
             ?>
             <div class="row product-list-inline-small">
 
-    <?php foreach ($pager->current_items() as $item): ?>
+                <?php foreach ($pager->current_items() as $item): ?>
                     <div class="col-sm-6 col-md-3">
                         <div class="thumbnail">
                             <a href="/product/view/<?= $item->productID ?>"><img src="/products_pictures/<?= $item->picture ?>" alt="">
@@ -179,20 +179,20 @@
                             </div>
                         </div>
                     </div>
-    <?php endforeach; ?>
+                <?php endforeach; ?>
             </div>
             <!-- Render pager links -->
             <ul class="pagination pull-right">
-    <?php for ($i = 1; $i <= $pager->num_pages; $i++): ?>
+                <?php for ($i = 1; $i <= $pager->num_pages; $i++): ?>
                     <li>
                         <a href="<?php echo $pager->url($i); ?>"><?php echo $i; ?>
                         </a>
                     </li>
-            <?php endfor; ?>
+                <?php endfor; ?>
             </ul>
         <?php } else { ?>
             <div class="alert alert-info">No products found.</div>
-<?php } ?>
+        <?php } ?>
         <!-- OLD -->
         <div class="hide">
             <?php
@@ -215,13 +215,13 @@
                                             <div class="caption">
                                                 <a href="/product/view/<?= $item->productID ?>"><?= $item->name ?></a>
                                                 <p>
-            <? //$item->getAnnotation(40)  ?>
+                                                    <? //$item->getAnnotation(40)  ?>
                                                     <span class="label label-info price pull-right">$<?= $item->Price ?></span>
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-        <?php } ?>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -230,7 +230,7 @@
             } else {
                 ?>
                 <div class="alert alert-info">No products found.</div>
-<?php } ?>        <!-- END CONTENT ITEM -->
+            <?php } ?>        <!-- END CONTENT ITEM -->
             <!-- /OLD -->
         </div>
     </div>

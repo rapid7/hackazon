@@ -16,7 +16,7 @@ class Search extends Page {
         $price = $this->request->get('price');
         $quality = $this->request->get('quality');
         $current_page = $this->request->get('page');//$this->request->param('page');
-
+        if(empty($current_page)) $current_page = 1;
         $model = new Product($this->pixie);
 
         $filterFabric = new FilterFabric($this->pixie, $this->request, $model);
@@ -55,7 +55,6 @@ class Search extends Page {
                     ->join('tbl_product_options_values', array('tbl_product_options_values.productID', 'tbl_products.productID'), 'left')
                     ->where("tbl_product_options_values.variantID", $quality);
         }
-
         $pager = $this->pixie->paginateDB->db($this->_products, $current_page, 12);
 
         $pager->set_url_callback(function($page) {
@@ -101,6 +100,7 @@ class Search extends Page {
 
             $this->view->subview = 'search/main';
         }
+        
     }
 
     /* public function action_index() {
