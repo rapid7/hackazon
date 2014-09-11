@@ -52,6 +52,10 @@ h1, h2, h3, h4 {
     .bs-callout-info h4 {
         color: #5bc0de;
     }
+.thumbnail>a:first-child {
+    min-height: 160px;
+    display: block;
+}
 .thumbnail img {
     width: auto;
 }
@@ -645,7 +649,13 @@ form.signin .error {
     -ms-transform:rotate(355deg);
 }
 .product-list-inline-small .thumbnail {
-    min-height: 280px;
+    min-height: 300px;
+}
+.product-list-inline-small .thumbnail img {
+    max-height: 160px;
+}
+.product-list-inline-small .thumbnail .caption {
+    min-height: 120px;
 }
 .product-list-inline-large .thumbnail {
     padding:10px;

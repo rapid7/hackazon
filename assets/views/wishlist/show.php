@@ -9,7 +9,7 @@ $isWishListOwner = isset($user) && $user->id() == $wishList->user_id;
             <h1 class="page-header"><?php echo $wishList->name; ?></h1>
             <ol class="breadcrumb">
                 <li><a href="/">Home</a></li>
-                <li>Wish Lists</li>
+                <li><a href="/wishlist">Wish Lists</a></li>
                 <li><?php echo $wishList->name; ?><?php if ($wishList->isDefault()): ?> (Default)<?php endif; ?></li>
             </ol>
         </div>
