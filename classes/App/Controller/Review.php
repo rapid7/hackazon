@@ -21,7 +21,7 @@ class Review extends \App\Page
                 $model->productID = $product->productID;
                 $model->add('product', $product);
                 $model->addReview($username, $email, $review, $rating);
-                $this->redirect('/product/view/'.$product->productID);
+                $this->redirect('/product/view?id='.$product->productID);
             }
         }
     }

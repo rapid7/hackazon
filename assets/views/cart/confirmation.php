@@ -86,7 +86,7 @@
                 foreach ($items as $item) :?>
                     <?php $item->product->find(); ?>
 	<tr>
-                    <td class="product-image"><a href="/product/view/<?php echo $item->product->id();?>"><img class="img-thumbnail img-rounded" src="/products_pictures/<?php $_($item->product->picture); ?>" alt=""/></a></td>
+                    <td class="product-image"><a href="/product/view?id=<?php echo $item->product->id();?>"><img class="img-thumbnail img-rounded" src="/products_pictures/<?php $_($item->product->picture); ?>" alt=""/></a></td>
                     <td><?php echo $item->name ?></td>
                     <td class="text-center"><?php echo $item->qty ?></td>
                     <td class="text-right">$<?php echo $item->price * $item->qty ?></td>

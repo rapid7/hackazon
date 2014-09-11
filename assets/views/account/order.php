@@ -17,62 +17,61 @@ $items = $order->orderItems->find_all()->as_array();
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-success">
-				<div class="panel-heading">
-					<h3 class="panel-title">Overview</h3>
-				</div>
+                <div class="panel-heading">
+                    <h3 class="panel-title">Overview</h3>
+                </div>
                 <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt>Date</dt>
-                    <dd><?php echo date('m/d/Y', strtotime($order->created_at));?></dd>
+                    <dl class="dl-horizontal">
+                        <dt>Date</dt>
+                        <dd><?php echo date('m/d/Y', strtotime($order->created_at)); ?></dd>
 
-                    <dt>Status</dt>
-                    <dd><?php echo $_order_status($order->status); ?></dd>
+                        <dt>Status</dt>
+                        <dd><?php echo $_order_status($order->status); ?></dd>
 
-                    <dt>Total</dt>
-                    <dd><span class="label label-danger">$<?php echo $order->orderItems->getItemsTotal();?></span></dd>
-                </dl>
+                        <dt>Total</dt>
+                        <dd><span class="label label-danger">$<?php echo $order->orderItems->getItemsTotal(); ?></span></dd>
+                    </dl>
                 </div>
             </div>
 
             <table class="table table-striped">
                 <thead>
-                <tr>
-                    <th colspan="2">Items</th>
-                    <th width="50">count</th>
-                    <th width="70">total</th>
-                </tr>
+                    <tr>
+                        <th colspan="2">Items</th>
+                        <th width="50">count</th>
+                        <th width="70">total</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <?php
-                if ($items) : ?>
-                    <?php foreach ($items as $item) :?>
-                        <?php $item->product->find(); ?>
-						<tr>
-                            <td class="product-image">
-								<div class="img-thumbnail-wrapper">
-									<a href="/product/view/<?php echo $item->product->id();?>"><img src="/products_pictures/<?php $_($item->product->picture); ?>" alt=""/></a>
-								</div>
-							</td>
-                            <td><a href="/product/view/<?php echo $item->product_id;?>"><?php echo $item->name ?></a></td>
-                            <td align="center"><?php echo $item->qty ?></td>
-                            <td align="right">$<?php echo $item->price * $item->qty ?></td>
-                        </tr>
-                    <?php endforeach;?>
-                <?php endif;?>
-                <tr>
-                    <th colspan="4">Services</th>
-                </tr>
-                <tr class="info">
-                    <td colspan="2">Shipping: <?php echo $order->shipping_method;?></td>
-                    <td align="right" colspan="2">$0</td>
-                </tr>
-                <tr class="info">
-                    <td colspan="2">Payment: <?php echo $order->payment_method;?></td>
-                    <td align="right" colspan="2">$0</td>
-                </tr>
-                <tr class="danger">
-                    <td align="right" colspan="4"><strong>$<?php echo $order->orderItems->getItemsTotal();?></strong></td>
-                </tr>
+                    <?php if ($items) : ?>
+                        <?php foreach ($items as $item) : ?>
+                            <?php $item->product->find(); ?>
+                            <tr>
+                                <td class="product-image">
+                                    <div class="img-thumbnail-wrapper">
+                                        <a href="/product/view?id=<?php echo $item->product->id(); ?>"><img src="/products_pictures/<?php $_($item->product->picture); ?>" alt=""/></a>
+                                    </div>
+                                </td>
+                                <td><a href="/product/view?id=<?php echo $item->product_id; ?>"><?php echo $item->name ?></a></td>
+                                <td align="center"><?php echo $item->qty ?></td>
+                                <td align="right">$<?php echo $item->price * $item->qty ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    <tr>
+                        <th colspan="4">Services</th>
+                    </tr>
+                    <tr class="info">
+                        <td colspan="2">Shipping: <?php echo $order->shipping_method; ?></td>
+                        <td align="right" colspan="2">$0</td>
+                    </tr>
+                    <tr class="info">
+                        <td colspan="2">Payment: <?php echo $order->payment_method; ?></td>
+                        <td align="right" colspan="2">$0</td>
+                    </tr>
+                    <tr class="danger">
+                        <td align="right" colspan="4"><strong>$<?php echo $order->orderItems->getItemsTotal(); ?></strong></td>
+                    </tr>
                 </tbody>
             </table>
 

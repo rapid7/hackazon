@@ -67,11 +67,11 @@
                                 ?>
                                 <div class="col-xs-4 col-sm-3">
                                     <div class="thumbnail">
-                                        <a href="/product/view/<?= $item->productID ?>"><img
+                                        <a href="/product/view?id=<?= $item->productID ?>"><img
                                                 src="/products_pictures/<?= $item->thumbnail ?>" alt=""></a>
 
                                         <div class="caption">
-                                            <a href="/product/view/<?= $item->productID ?>"><?= $item->name ?></a>
+                                            <a href="/product/view?id=<?= $item->productID ?>"><?= $item->name ?></a>
 
                                             <p><?= $item->getAnnotation(40) ?> <span
                                                     class="label label-info price pull-right">$<?= $item->Price ?></span>

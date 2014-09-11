@@ -166,10 +166,10 @@
                 <?php foreach ($pager->current_items() as $item): ?>
 	<div class="col-sm-6 col-md-3">
 	<div class="thumbnail">
-	<a href="/product/view/<?= $item->productID ?>"><img src="/products_pictures/<?= $item->picture ?>" alt="">
+	<a href="/product/view?id=<?= $item->productID ?>"><img src="/products_pictures/<?= $item->picture ?>" alt="">
 	</a>
 	<div class="caption">
-	<a href="/product/view/<?= $item->productID ?>" title="<?= $item->name ?>">
+	<a href="/product/view?id=<?= $item->productID ?>" title="<?= $item->name ?>">
 								<?php $_trim($item->name); ?>
 </a>
 <p>
@@ -212,10 +212,10 @@
                                 ?>
 <div class="col-xs-4 col-sm-3">
 <div class="thumbnail">
-<a href="/product/view/<?= $item->productID ?>"><img src="/products_pictures/<?= $item->thumbnail ?>" alt=""></a>
+<a href="/product/view?id=<?= $item->productID ?>"><img src="/products_pictures/<?= $item->thumbnail ?>" alt=""></a>
 
 <div class="caption">
-<a href="/product/view/<?= $item->productID ?>" title="<?= $item->name ?>">
+<a href="/product/view?id=<?= $item->productID ?>" title="<?= $item->name ?>">
 								<?php $_trim($item->name); ?></a>
 <p>
                                                     <small title="<?= $item->description ?>"><?php $_trim($item->description, 80); ?></small>

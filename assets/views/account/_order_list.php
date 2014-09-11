@@ -87,7 +87,7 @@ foreach($myOrders as $order) : ?>
                 if ($items) : ?>
                     <?php foreach ($items as $item) :?>
                         <tr>
-                            <td><a href="/product/view/<?php echo $item->product_id;?>"><?php echo $item->name ?></a></td>
+                            <td><a href="/?id=/<?php echo $item->product_id;?>"><?php echo $item->name ?></a></td>
                             <td align="center"><?php echo $item->qty ?></td>
                             <td align="right">$ <?php echo $item->price * $item->qty ?>,-</td>
                         </tr>

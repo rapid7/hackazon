@@ -45,13 +45,13 @@
                                 <?php $_addToCartLink($product->id(), $productsInCart); ?>
                                 <div class="thumbnail <?=$itemClass?>">
                                     <div class="img-box">
-                                        <a href="/product/view/<?=$product->productID?>">
+                                        <a href="/product/view?id=<?=$product->productID?>">
                                             <div class="label label-info price">$ <?=$product->Price?></div>
                                             <img class="category-list-product" data-hover="/products_pictures/<?=$product->picture?>" src="/products_pictures/<?=$product->picture?>" alt="">
                                         </a>
                                     </div>
                                     <div class="caption">
-                                        <a href="/product/view/<?=$product->productID?>"><?=$product->name?></a>
+                                        <a href="/product/view?id=<?=$product->productID?>"><?=$product->name?></a>
                                     </div>
                                     <div class="ratings">
                                         <p><?php include($common_path."rating_stars.php"); ?></p>
@@ -66,7 +66,7 @@
                             $itemClass = $itemClass == 'light' ? 'dark' : 'light';
                         } ?>
                     </div>
-                    <?php $_pager($pager, '/category/view/' . $categoryID . '?page=#page#'); ?>
+                    <?php $_pager($pager, '/category/view?id=' . $categoryID . '&page=#page#'); ?>
                     <!--END CONTENT ITEM-->
                 </div>
             </div>

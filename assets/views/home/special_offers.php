@@ -8,7 +8,7 @@
                 </a>
                 <div class="caption">
                     <h4 class="pull-right">$<?=$product['price']?></h4>
-                    <h4><a href="/product/view/<?=$product['productID']?>"><?=$product['name']?></a></h4>
+                    <h4><a href="/product/view?id=<?=$product['productID']?>"><?=$product['name']?></a></h4>
                     <p><?=$product['annotation']?></p>
                 </div>
                 <div class="ratings">

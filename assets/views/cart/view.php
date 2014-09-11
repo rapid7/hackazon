@@ -142,7 +142,7 @@ if (count($items) == 0) :?>
 								<img class="img-responsive img-home-portfolio " src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>"></td>
 							</div>
                         <td>
-                            <h4><a href="/product/view/<?=$product['productID']?>"><?=$product['name']?></a></h4>
+                            <h4><a href="/product/view?id=<?=$product['productID']?>"><?=$product['name']?></a></h4>
                         </td>
                         <td>
 

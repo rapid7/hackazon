@@ -44,7 +44,7 @@
                             $cart = $this->pixie->orm->get('Cart')->getCart();
                             $items = $this->pixie->orm->get('CartItems')->getAllItems();
                             foreach ($items as $item) {
-                            	echo '<li><a href="/product/view/' . $item->product_id . '"><span class="pull-left"><small>' . $item->qty . 'x</small> ' . $item->name . '</span> &nbsp; <small class="pull-right label label-info">$ ' . $item->price * $item->qty . ',-</small></a></li>';
+                            	echo '<li><a href="/product/view?id=' . $item->product_id . '"><span class="pull-left"><small>' . $item->qty . 'x</small> ' . $item->name . '</span> &nbsp; <small class="pull-right label label-info">$ ' . $item->price * $item->qty . ',-</small></a></li>';
                             }
                             ?>
                             <li class="divider"></li>

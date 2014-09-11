@@ -29,9 +29,9 @@ if ($reviewColumns == 3) {
                         <div class="review-icon-box"><span class="review-icon glyphicon glyphicon-<?php echo $iconVariants[$iconKey]; ?>"></span></div>
                     <?php endif; ?>
                     <h4><?php echo $review->username; ?></h4>
-                    <h5>about <a href="/product/view/<?php echo $review->product->productID; ?>"><?php echo $review->product->name; ?></a></h5>
+                    <h5>about <a href="/product/view?id=<?php echo $review->product->productID; ?>"><?php echo $review->product->name; ?></a></h5>
 
-                    <p><?php echo mb_substr($review->review, 0, 300, 'utf-8'); ?> <a href="/product/view/<?php echo $review->product->productID; ?>">More
+                    <p><?php echo mb_substr($review->review, 0, 300, 'utf-8'); ?> <a href="/product/view?id=<?php echo $review->product->productID; ?>">More
                             <span class="glyphicon glyphicon-chevron-right"></span></a></p>
                 </article>
             </div>

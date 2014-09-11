@@ -21,7 +21,7 @@ class Product extends \App\Page
 
     public function action_view()
     {
-        $productID = $this->request->param('id');
+        $productID = $this->request->get('id');//$this->request->param('id');
         $this->view->product = $this->model->where('productID', '=', $productID)->find();
         if ($this->view->product->loaded()) {
             $this->view->options = $this->view->product->options->find_all()->as_array();
@@ -43,9 +43,9 @@ class Product extends \App\Page
             $parents = $cat->parents();
             $breadcrumbsParts = [];
             foreach ($parents as $p) {
-                $breadcrumbsParts['/category/view/'.$p->categoryID] = $p->name;
+                $breadcrumbsParts['/category/view?id='.$p->categoryID] = $p->name;
             }
-            $breadcrumbsParts['/product/view/'.$this->view->product->productID] = $this->view->product->name;
+            $breadcrumbsParts['/product/view?id='.$this->view->product->productID] = $this->view->product->name;
             $breadcrumbs[] = array_merge(['/' => 'Home'], $breadcrumbsParts);
         }
         return $breadcrumbs;
