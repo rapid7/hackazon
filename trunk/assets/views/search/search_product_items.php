@@ -164,14 +164,16 @@
             <div class="row product-list-inline-small">
 
                 <?php foreach ($pager->current_items() as $item): ?>
-                    <div class="col-sm-6 col-md-3">
-                        <div class="thumbnail">
-                            <a href="/product/view/<?= $item->productID ?>"><img src="/products_pictures/<?= $item->picture ?>" alt="">
-                            </a>
-                            <div class="caption">
-                                <a href="/product/view/<?= $item->productID ?>"><?= $item->name ?>
-                                </a>
-                                <p>
+	<div class="col-sm-6 col-md-3">
+	<div class="thumbnail">
+	<a href="/product/view/<?= $item->productID ?>"><img src="/products_pictures/<?= $item->picture ?>" alt="">
+	</a>
+	<div class="caption">
+	<a href="/product/view/<?= $item->productID ?>" title="<?= $item->name ?>">
+								<?php $_trim($item->name); ?>
+</a>
+<p>
+									<small title="<?= $item->description ?>"><?php $_trim($item->description, 80); ?></small>
                                     <span class="label label-info price pull-right">
                                         $<?= $item->Price ?>
                                     </span>
@@ -207,15 +209,16 @@
                                 $count = count($products) < 4 ? count($products) : 4;
                                 for ($cnt = 0; $cnt < $count; $cnt++) {
                                     $item = array_shift($products);
-                                    ?>
-                                    <div class="col-xs-4 col-sm-3">
-                                        <div class="thumbnail">
-                                            <a href="/product/view/<?= $item->productID ?>"><img src="/products_pictures/<?= $item->thumbnail ?>" alt=""></a>
+                                ?>
+<div class="col-xs-4 col-sm-3">
+<div class="thumbnail">
+<a href="/product/view/<?= $item->productID ?>"><img src="/products_pictures/<?= $item->thumbnail ?>" alt=""></a>
 
-                                            <div class="caption">
-                                                <a href="/product/view/<?= $item->productID ?>"><?= $item->name ?></a>
-                                                <p>
-                                                    <? //$item->getAnnotation(40)  ?>
+<div class="caption">
+<a href="/product/view/<?= $item->productID ?>" title="<?= $item->name ?>">
+								<?php $_trim($item->name); ?></a>
+<p>
+                                                    <small title="<?= $item->description ?>"><?php $_trim($item->description, 80); ?></small>
                                                     <span class="label label-info price pull-right">$<?= $item->Price ?></span>
                                                 </p>
                                             </div>

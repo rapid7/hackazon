@@ -31,7 +31,8 @@ class Helper extends \PHPixie\View\Helper
         '_dump' => 'dump',
         '_order_status' => 'order_status',
         '_pager' => 'pager',
-        '_addToCartLink' => 'addToCartLink'
+        '_addToCartLink' => 'addToCartLink',
+        '_trim' => 'trim'
     );
 
     /**
@@ -148,4 +149,93 @@ class Helper extends \PHPixie\View\Helper
                     data-style="contract" title="Go to Cart">Added to Cart</a> <?php
         }
     }
+
+	public function trim($string, $trimLength = 40) {
+		echo $this->_smartTrim($string, $trimLength);
+	}
+	
+	private function _smartTrim($text, $max_len, $trim_middle = false, $trim_chars = '...')
+	{
+		$text = trim($text);
+
+		if (strlen($text) < $max_len) {
+
+			return $text;
+
+		} elseif ($trim_middle) {
+
+			$hasSpace = strpos($text, ' ');
+			if (!$hasSpace) {
+				/**
+				 * The entire string is one word. Just take a piece of the
+				 * beginning and a piece of the end.
+				 */
+				$first_half = substr($text, 0, $max_len / 2);
+				$last_half = substr($text, -($max_len - strlen($first_half)));
+			} else {
+				/**
+				 * Get last half first as it makes it more likely for the first
+				 * half to be of greater length. This is done because usually the
+				 * first half of a string is more recognizable. The last half can
+				 * be at most half of the maximum length and is potentially
+				 * shorter (only the last word).
+				 */
+				$last_half = substr($text, -($max_len / 2));
+				$last_half = trim($last_half);
+				$last_space = strrpos($last_half, ' ');
+				if (!($last_space === false)) {
+					$last_half = substr($last_half, $last_space + 1);
+				}
+				$first_half = substr($text, 0, $max_len - strlen($last_half));
+				$first_half = trim($first_half);
+				if (substr($text, $max_len - strlen($last_half), 1) == ' ') {
+					/**
+					 * The first half of the string was chopped at a space.
+					 */
+					$first_space = $max_len - strlen($last_half);
+				} else {
+					$first_space = strrpos($first_half, ' ');
+				}
+				if (!($first_space === false)) {
+					$first_half = substr($text, 0, $first_space);
+				}
+			}
+
+			return $first_half.$trim_chars.$last_half;
+
+		} else {
+
+			$trimmed_text = substr($text, 0, $max_len);
+			$trimmed_text = trim($trimmed_text);
+			if (substr($text, $max_len, 1) == ' ') {
+				/**
+				 * The string was chopped at a space.
+				 */
+				$last_space = $max_len;
+			} else {
+				/**
+				 * In PHP5, we can use 'offset' here -Mike
+				 */
+				$last_space = strrpos($trimmed_text, ' ');
+			}
+			if (!($last_space === false)) {
+				$trimmed_text = substr($trimmed_text, 0, $last_space);
+			}
+			return $this->_removeTrailingPunctuation($trimmed_text).$trim_chars;
+
+		}
+
+	}
+
+	/**
+	 * Strip trailing punctuation from a line of text.
+	 *
+	 * @param  string $text The text to have trailing punctuation removed from.
+	 *
+	 * @return string       The line of text with trailing punctuation removed.
+	 */
+	private function _removeTrailingPunctuation($text)
+	{
+		return preg_replace("'[^a-zA-Z_0-9]+$'s", '', $text);
+	}
 } 
