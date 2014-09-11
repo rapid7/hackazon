@@ -134,6 +134,9 @@ class CRUDController extends Controller
         }
     }
 
+    /**
+     * Must be overridden in child classes to fit the instance model to query (add relations and so on)
+     */
     protected function tuneModelForList()
     {
     }
@@ -151,7 +154,7 @@ class CRUDController extends Controller
      */
     public function action_edit()
     {
-
+        $this->view->subview = 'crud/show';
     }
 
     /**
@@ -193,7 +196,7 @@ class CRUDController extends Controller
             if ($data['type'] == 'link' || $data['is_link']) {
                 $data['is_link'] = true;
                 if (!$data['template']) {
-                    $data['template'] = '/admin/' . $this->model->model_name . '/%' . $this->model->id_field . '%';
+                    $data['template'] = '/admin/' . $this->model->model_name . '/edit/%' . $this->model->id_field . '%';
                 }
             }
 
@@ -236,7 +239,7 @@ class CRUDController extends Controller
         $listFields = $result;
         unset($data);
         $listFields[$this->model->id_field]['type'] = 'link';
-        $listFields[$this->model->id_field]['template'] = '/admin/'.$this->model->model_name.'/%'.$this->model->id_field.'%';
+        $listFields[$this->model->id_field]['template'] = '/admin/'.$this->model->model_name.'/edit/%'.$this->model->id_field.'%';
         $listFields[$this->model->id_field]['width'] = '60';
 
         return $listFields;

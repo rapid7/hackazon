@@ -1,3 +1,4 @@
+<?php $baseImgPath = $this->pixie->getParameter('parameters.use_perl_upload') ? '/upload/download.php?image=' : '/user_pictures/'; ?>
 <form role="form" method="post" class="profile-edit-form" action="/account/profile/edit" id="editProfileForm" enctype="multipart/form-data">
     <?php $_token('profile'); ?>
     <div class="row">
@@ -19,7 +20,7 @@
 
     <?php if (isset($photo) && $photo): ?>
         <div class="form-group">
-            <img src="/user_pictures/<?php $_($photo); ?>" alt="" class="profile-picture" /> <br>
+            <img src="<?php echo $baseImgPath; $_($photo); ?>" alt="" class="profile-picture" /> <br>
             <label><input type="checkbox" name="remove_photo" /> Remove photo</label>
         </div>
     <?php endif; ?>

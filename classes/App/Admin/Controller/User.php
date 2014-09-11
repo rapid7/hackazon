@@ -111,7 +111,7 @@ class User extends CRUDController
                 'type' => 'image',
                 'max_width' => 40,
                 'max_height' => 30,
-                'image_base' => '/user_pictures/',
+                'image_base' => $this->pixie->getParameter('parameters.use_perl_upload') ? '/upload/download.php?image=' : '/user_pictures/',
                 'is_link' => true
             ]
         ];

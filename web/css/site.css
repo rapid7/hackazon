@@ -1326,3 +1326,7 @@ ul.nav li.grey a {
 .installation label {
     margin-right: 20px;
 }
+
+.profile-show .buttons-row {
+    padding-top: 20px;
+}

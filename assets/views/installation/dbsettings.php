@@ -10,8 +10,8 @@
     </div>
 
     <div class="form-group">
-        <label>Password:</label>
-        <input class="form-control" type="password" name="password" value="<?php $_(isset($password) ? $password : ''); ?>" placeholder="Password" />
+        <label for="password_field">Password:</label>
+        <input class="form-control<?php $_(isset($password) && $password ? ' js-has-existing' : ''); ?>" type="password" name="password" value="" placeholder="Password" id="password_field" />
     </div>
 
     <div class="form-group">
