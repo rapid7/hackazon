@@ -8,8 +8,8 @@
                     <a class="img-small-wrap" href="/product/view?id=<?= $offer->productID ?>"><img src="/products_pictures/<?= $offer->picture ?>" alt=""></a>
                 </div>
                 <div class="caption">
-                    <a href="/product/view?id=<?= $offer->productID ?>"><?= $offer->name ?></a>
-                    <p><?= $offer->getAnnotation(30) ?><span class="label label-info pull-right price">$<?= $offer->Price ?></span></p>
+                    <a href="/product/view?id=<?= $offer->productID ?>" title="<?=$offer->name?>"><?php $_trim($offer->name, 50) ?></a>
+                    <p><?php $_trim($offer->description, 60) ?><span class="label label-info pull-right price">$<?= $offer->Price ?></span></p>
                 </div>
             </div>
         </li>
