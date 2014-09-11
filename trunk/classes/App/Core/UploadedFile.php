@@ -246,4 +246,86 @@ class UploadedFile
     {
         return $this->errors;
     }
+
+    /**
+     * Upload file to given url
+     * @param string $url Where to upload the file
+     * @param null|string $fileName File name to be set on uploaded file on the remote server.
+     * @return boolean|array Headers of the response
+     * @throws \LogicException
+     */
+    public function upload($url, $fileName = null)
+    {
+        if (!$this->loaded) {
+            throw new \LogicException('Can\'t upload missing file.');
+        }
+
+        $curlFile = $this->getCurlValue($this->tmpName, $this->type, $fileName ?: $this->name);
+
+        //NOTE: The top level key in the array is important, as some apis will insist that it is 'file'.
+        $data = ['file' => $curlFile];
+
+        $ch = curl_init();
+
+        $options = [
+            CURLOPT_URL => $url,
+            CURLOPT_COOKIE => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLINFO_HEADER_OUT => true, //Request header
+            CURLOPT_HEADER => true, //Return header
+            CURLOPT_SSL_VERIFYPEER => false, //Don't veryify server certificate
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_COOKIE => "SESSIONID_VULN_SITE=" . session_id(),
+            CURLOPT_TRANSFERTEXT => false
+        ];
+
+        curl_setopt_array($ch, $options);
+
+        $header = array('Content-Type: multipart/form-data');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        $result = curl_exec($ch);
+        $header_info = curl_getinfo($ch,CURLINFO_HEADER_OUT);
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $header = substr($result, 0, $header_size);
+        $body = substr($result, $header_size);
+        curl_close($ch);
+
+        if (!$result) {
+            return false;
+        }
+
+        $headersParsed = $this->parseHeaders($body);
+
+        return $headersParsed;
+    }
+
+    protected function parseHeaders($headers)
+    {
+        $lines = preg_split('/[\\n\\r]+/ims', $headers, -1, PREG_SPLIT_NO_EMPTY);
+        $result = [];
+        foreach ($lines as $line) {
+            $parts = preg_split('/:\s*/', $line, 2, PREG_SPLIT_NO_EMPTY);
+            $result[$parts[0]] = $parts[1];
+        }
+
+        return $result;
+    }
+
+    protected function getCurlValue($filename, $contentType, $postname)
+    {
+        // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
+        // See: https://wiki.php.net/rfc/curl-file-upload
+        if (function_exists('curl_file_create')) {
+            return curl_file_create($filename, $contentType, $postname);
+        }
+
+        // Use the old style if using an older version of PHP
+        $value = "@{$filename};filename=" . $postname;
+        if ($contentType) {
+            $value .= ';type=' . $contentType;
+        }
+
+        return $value;
+    }
 }

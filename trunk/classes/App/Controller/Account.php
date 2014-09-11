@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Core\UploadedFile;
 use App\Exception\NotFoundException;
 use App\Helpers\FSHelper;
+use App\Model\File;
 use App\Model\Order;
 use App\Model\User;
 use PHPixie\Paginate\Pager\ORM as ORMPager;
@@ -156,33 +158,52 @@ class Account extends \App\Page {
             $data = $user->filterValues($this->request->post(), $fields);
 
             if (!count($errors)) {
+                if ($this->pixie->getParameter('parameters.use_perl_upload')) {
+                    if ($this->request->post('remove_photo')) {
+                        $user->photo = '';
+                    }
 
-                $relativePath = $this->pixie->getParameter('parameters.user_pictures_path');
-                $pathDelimeter = preg_match('|^[/\\\\]|', $relativePath) ? '' : DIRECTORY_SEPARATOR;
-                $photoPath = preg_replace('#/+$#i', '', $this->pixie->root_dir) . $pathDelimeter . $relativePath;
+                    if ($photo->isLoaded()) {
+                        $scriptName = $this->pixie->isWindows() ? 'uploadwin.pl' : 'uploadux.pl';
+                        $photoName = $this->generatePhotoName($photo);
+                        $headers = $photo->upload('http' . ($_SERVER['HTTPS'] == 'on' ? 's' : '').'://'
+                                .$_SERVER['HTTP_HOST'].'/upload/'.$scriptName, $photoName);
 
-                if ($this->request->post('remove_photo')
-                    && $user->photo
-                    && file_exists($photoPath . $user->photo)
-                ) {
-                    unlink($photoPath.$user->photo);
-                    $user->photo = '';
+                        if ($headers['X-Created-Filename']) {
+                            /** @var File $newFile */
+                            $newFile = $this->pixie->orm->get('file');
+                            $newFile->path = $headers['X-Created-Filename'];
+                            $newFile->user_id = $user->id();
+                            $newFile->save();
+                            $user->photo = $newFile->id();
+                        }
+                    }
+
+                } else {
+                    $relativePath = $this->pixie->getParameter('parameters.user_pictures_path');
+                    $pathDelimeter = preg_match('|^[/\\\\]|', $relativePath) ? '' : DIRECTORY_SEPARATOR;
+                    $photoPath = preg_replace('#/+$#i', '', $this->pixie->root_dir) . $pathDelimeter . $relativePath;
+
+                    if ($this->request->post('remove_photo')
+                        && $user->photo
+                        && file_exists($photoPath . $user->photo)
+                    ) {
+                        unlink($photoPath . $user->photo);
+                        $user->photo = '';
+                    }
+
+                    if ($photo->isLoaded()) {
+                        if ($user->photo && file_exists($photoPath . $user->photo)) {
+                            unlink($photoPath . $user->photo);
+                        }
+
+                        $photoName = $this->generatePhotoName($photo);
+                        $photo->move($photoPath . $photoName);
+                        $user->photo = $photoName;
+                    }
                 }
 
                 $user->values($data);
-
-                if ($photo->isLoaded()) {
-                    if ($user->photo && file_exists($photoPath . $user->photo)) {
-                        unlink($photoPath . $user->photo);
-                    }
-
-                    $ext = FSHelper::cleanFileName($photo->getExtension());
-                    $photoName = $user->id() . '_' . substr(sha1(time() . $photo->getName()), 0, 6) . '_'
-                        . FSHelper::cleanFileName($photo->getBaseName(), 32) . ($ext ? '.' . $ext : '');
-
-                    $photo->move($photoPath . $photoName);
-                    $user->photo = $photoName;
-                }
 
                 $user->save();
 
@@ -220,5 +241,14 @@ class Account extends \App\Page {
     public function getUser()
     {
         return $this->pixie->auth->user();
+    }
+
+    protected function generatePhotoName(UploadedFile $photo)
+    {
+        $user = $this->getUser();
+        $ext = FSHelper::cleanFileName($photo->getExtension());
+        $photoName = $user->id() . '_' . substr(sha1(time() . $photo->getName()), 0, 6) . '_'
+            . FSHelper::cleanFileName($photo->getBaseName(), 32) . ($ext ? '.' . $ext : '');
+        return $photoName;
     }
 }

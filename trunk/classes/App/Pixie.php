@@ -259,4 +259,13 @@ class Pixie extends \PHPixie\Pixie {
     {
         $this->instances[$name] = $object;
     }
+
+    public function isWindows()
+    {
+        if (stristr(php_uname('s'), 'Windows NT')) {
+            return true;
+        }
+
+        return false;
+    }
 }
