@@ -6,7 +6,7 @@
                 <?php include($common_path . "breadcrumbs.php") ?>
             </div>
         </div>
-        <?php //if (count($products) > 0) include(__DIR__ . "/../search/search_product_items.php");
+        <?php 
         if (count($subCategories) > 0) {
             $rows = count($subCategories) % 4 == 0 ? count($subCategories) / 4 : ceil(count($subCategories) / 4);
             for ($r = 0; $r < $rows; $r++) {

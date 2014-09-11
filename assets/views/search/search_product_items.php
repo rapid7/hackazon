@@ -164,16 +164,16 @@
             <div class="row product-list-inline-small">
 
                 <?php foreach ($pager->current_items() as $item): ?>
-	<div class="col-sm-6 col-md-3">
-	<div class="thumbnail">
-	<a href="/product/view?id=<?= $item->productID ?>"><img src="/products_pictures/<?= $item->picture ?>" alt="">
-	</a>
-	<div class="caption">
-	<a href="/product/view?id=<?= $item->productID ?>" title="<?= $item->name ?>">
-								<?php $_trim($item->name); ?>
-</a>
-<p>
-									<small title="<?= $item->description ?>"><?php $_trim($item->description, 80); ?></small>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail">
+                            <a href="/product/view?id=<?= $item->productID ?>"><img src="/products_pictures/<?= $item->picture ?>" alt="">
+                            </a>
+                            <div class="caption">
+                                <a href="/product/view?id=<?= $item->productID ?>" title="<?= $item->name ?>">
+                                    <?php $_trim($item->name); ?>
+                                </a>
+                                <p>
+                                    <small title="<?= $item->description ?>"><?php $_trim($item->description, 80); ?></small>
                                     <span class="label label-info price pull-right">
                                         $<?= $item->Price ?>
                                     </span>
@@ -195,46 +195,5 @@
         <?php } else { ?>
             <div class="alert alert-info">No products found.</div>
         <?php } ?>
-        <!-- OLD -->
-        <div class="hide">
-            <?php
-            if (count($products) > 0) {
-                $rows = count($products) % 4 == 0 ? count($products) / 4 : ceil(count($products) / 4);
-                for ($r = 0; $r < $rows; $r++) {
-                    ?>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="row product-list-inline-small">
-                                <?php
-                                $count = count($products) < 4 ? count($products) : 4;
-                                for ($cnt = 0; $cnt < $count; $cnt++) {
-                                    $item = array_shift($products);
-                                ?>
-<div class="col-xs-4 col-sm-3">
-<div class="thumbnail">
-<a href="/product/view?id=<?= $item->productID ?>"><img src="/products_pictures/<?= $item->thumbnail ?>" alt=""></a>
-
-<div class="caption">
-<a href="/product/view?id=<?= $item->productID ?>" title="<?= $item->name ?>">
-								<?php $_trim($item->name); ?></a>
-<p>
-                                                    <small title="<?= $item->description ?>"><?php $_trim($item->description, 80); ?></small>
-                                                    <span class="label label-info price pull-right">$<?= $item->Price ?></span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                }
-            } else {
-                ?>
-                <div class="alert alert-info">No products found.</div>
-            <?php } ?>        <!-- END CONTENT ITEM -->
-            <!-- /OLD -->
-        </div>
     </div>
 </div>
