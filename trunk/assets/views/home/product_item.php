@@ -12,9 +12,9 @@
         </div>
 
         <div class="caption">
-            <a href="/product/view?id=<?php echo $product->productID; ?>"><?php echo $product->name; ?></a>
+            <a href="/product/view?id=<?php echo $product->productID; ?>" title="<?=$product->name?>"><?php $_trim($product->name, 50); ?></a>
 
-            <p class="product-annotation"><span class="text-block"><?php echo $product->getAnnotation(30); ?></span>
+            <p class="product-annotation"><span class="text-block" title="<?=$product->description?>"><?php $_trim($product->description, 60); ?></span>
                 <span class="label label-info price pull-right">$<?php echo $product->Price; ?></span>
                 <?php $_addToCartLink($product->id(), $productsInCart); ?>
             </p>
