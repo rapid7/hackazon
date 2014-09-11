@@ -53,8 +53,6 @@ h1, h2, h3, h4 {
         color: #5bc0de;
     }
 .thumbnail>a:first-child {
-    min-height: 160px;
-    display: block;
 }
 .thumbnail img {
     width: auto;
@@ -498,7 +496,7 @@ form.signin .error {
     padding: 4px;
 }
 .home-top-product-section .thumbnail .img-box {
-    height: 220px;
+    height: 170px;
     padding: 0;
     text-align: center;
     overflow: hidden;
@@ -770,7 +768,7 @@ form.signin .error {
 
 .home-top-product-section .product-annotation .text-block,
 .home-top-product-section .product-annotation {
-    height: 1.5em;
+    min-height: 1.5em;
 }
 .home-top-product-section .product-annotation .text-block {
     display: block;
