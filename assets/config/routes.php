@@ -35,7 +35,7 @@ return array(
         ),
         'POST'
     ),
-    'search' => array('/search(/page-<page>)', array(
+    'search' => array('/search(/page)', array(
         'controller' => 'Search',
         'action' => 'index',
         'page'   =>  1
