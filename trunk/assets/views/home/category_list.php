@@ -24,10 +24,10 @@ foreach ($sidebar as $footerCat) {
                     <?php /** @var \App\Model\Category $category */ ?>
                     <?php foreach ($columnCategories as $j => $category): ?>
                         <ul class="unstyled">
-                            <li class="footer-title"><a href="/category/view/<?php echo $category->categoryID; ?>"><?php echo $category->name; ?></a></li>
+                            <li class="footer-title"><a href="/category/view?id=<?php echo $category->categoryID; ?>"><?php echo $category->name; ?></a></li>
                             <?php if (is_array($category->childs) && count($category->childs)): ?>
                                 <?php /*foreach ($category->childs as $subCategory): ?>
-                                    <li><a href="/category/view/<?php echo $subCategory->categoryID; ?>"><?php echo $subCategory->name; ?></a></li>
+                                    <li><a href="/category/view?id=<?php echo $subCategory->categoryID; ?>"><?php echo $subCategory->name; ?></a></li>
                                 <?php endforeach;*/ ?>
                             <?php endif; ?>
                         </ul>

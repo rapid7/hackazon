@@ -12,7 +12,7 @@
             <ul class="nav nav-list">
                 <li class="nav-header"><?php echo $productBlock['title']; ?></li>
                 <?php foreach ($productBlock['products'] as $product): ?>
-                    <li><a href="/product/view/<?php echo $product->productID; ?>"><?php echo $product->name; ?></a></li>
+                    <li><a href="/product/view?id=<?php echo $product->productID; ?>"><?php echo $product->name; ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>

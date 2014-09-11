@@ -4,10 +4,10 @@
         <li class="col-xs-3">
             <div class="thumbnail">
                 <div class="special-offer-big-img">
-                    <a class="img-wrap" href="/product/view/<?= $offer->productID ?>"><img class="img-responsive" src="/products_pictures/<?= $offer->picture ?>" alt=""></a>
+                    <a class="img-wrap" href="/product/view?id=<?= $offer->productID ?>"><img class="img-responsive" src="/products_pictures/<?= $offer->picture ?>" alt=""></a>
                 </div>
                 <div class="caption">
-                    <a href="/product/view/<?= $offer->productID ?>"><?= $offer->name ?></a>
+                    <a href="/product/view?id=<?= $offer->productID ?>"><?= $offer->name ?></a>
                     <p><?= $offer->getAnnotation(30) ?><span class="label label-info price pull-right">$<?= $offer->Price ?></span></p>
                 </div>
             </div>

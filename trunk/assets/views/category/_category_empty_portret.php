@@ -4,8 +4,8 @@
             <span class="no-product-icon glyphicon glyphicon-question-sign"> </span>
         </div>
         <div class="caption">
-            <a href="/category/view/<?= $item->categoryID ?>"><?= $item->name ?></a>
+            <a href="/category/view?id=<?= $item->categoryID ?>"><?= $item->name ?></a>
         </div>
-        <a href="/category/view/<?= $item->categoryID ?>" class="btn btn-default btn-block"> No products </a>
+        <a href="/category/view?id=<?= $item->categoryID ?>" class="btn btn-default btn-block"> No products </a>
     </div>
 </div>

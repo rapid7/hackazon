@@ -15,7 +15,7 @@ class Category extends Page
 
     public function action_view()
     {
-        $categoryID = $this->request->param('id');
+        $categoryID = $this->request->get('id');//$this->request->param('id');
         if (!$categoryID) {
             throw new NotFoundException();
         }
@@ -44,7 +44,7 @@ class Category extends Page
         $parents = $category->parents();
         $breadcrumbs['/'] = 'Home';
         foreach ($parents as $p) {
-            $breadcrumbs['/category/view/' . $p->categoryID] = $p->name;
+            $breadcrumbs['/category/view?id=' . $p->categoryID] = $p->name;
         }
         $breadcrumbs[''] = $category->name;
         return $breadcrumbs;

@@ -39,7 +39,7 @@ if ($perRow == 3) {
                     <div class="thumbnail light product-item" data-id="<?php echo $product->id(); ?>">
                         <?php $_addToCartLink($product->id(), $productsInCart); ?>
                         <div class="img-box">
-                            <a href="/product/view/<?php echo $product->productID; ?>">
+                            <a href="/product/view?id=<?php echo $product->productID; ?>">
                                 <span class="label label-info price">$<?php echo $product->Price; ?></span>
                                 <!--span class="label label-danger price price-over">$<?php echo $product->Price; ?></span-->
                                 <img class="img-home-portfolio" alt="" src="/products_pictures/<?php echo $product->picture; ?>"
@@ -47,12 +47,12 @@ if ($perRow == 3) {
                             </a>
                         </div>
                         <div class="caption">
-                            <a href="/product/view/<?php echo $product->productID; ?>"><?php echo $product->name; ?></a>
+                            <a href="/product/view?id=<?php echo $product->productID; ?>"><?php echo $product->name; ?></a>
                         </div>
                         <div class="ratings">
                             <p><?php include($common_path."rating_stars.php"); ?></p>
                         </div>
-                        <a class="btn btn-default btn-block" href="/category/view/<?php echo $product->categoryID; ?>">all products in category</a>
+                        <a class="btn btn-default btn-block" href="/category/view?id=<?php echo $product->categoryID; ?>">all products in category</a>
 
                     </div>
                 </div>
