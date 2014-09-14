@@ -58,15 +58,13 @@ class Search extends Page {
         $pager = $this->pixie->paginateDB->db($this->_products, $current_page, 12);
 
         $pager->set_url_callback(function($page) {
-                    $catId = $this->request->get("id");
-                    $name = $this->request->get("searchString");
-                    $brand = $this->request->get('brands');
-                    $price = $this->request->get('price');
-                    $quality = $this->request->get('quality');
-                    return "/search/page/?page=$page&id=$catId&searchString=$name&brands=$brands&price=$price&quality=$quality";
-                });
-
-
+            $catId = $this->request->get("id");
+            $name = $this->request->get("searchString");
+            $brand = $this->request->get('brands');
+            $price = $this->request->get('price');
+            $quality = $this->request->get('quality');
+            return "/search/page/?page=$page&id=$catId&searchString=$name&brands=$brands&price=$price&quality=$quality";
+        });
 
         $label = $filterFabric->getFilter('nameFilter')->getValue();
 
@@ -81,7 +79,7 @@ class Search extends Page {
             $view->quality = $quality;
 
             $view->searchString = is_null($label) ? '' : $label;
-            $view->pageTitle = 'Search by %' . $view->searchString . '%';
+            $view->pageTitle = 'Search by &laquo;' . $view->searchString . '&raquo;';
             $view->pager = $pager;
 
             $this->response->body = $view->render();
@@ -95,7 +93,7 @@ class Search extends Page {
             $this->view->quality = $quality;
 
             $this->view->searchString = is_null($label) ? '' : $label;
-            $this->view->pageTitle = 'Search by %' . $this->view->searchString . '%';
+            $this->view->pageTitle = 'Search by &laquo;' . $view->searchString . '&raquo;';
             $this->view->pager = $pager;
 
             $this->view->subview = 'search/main';
