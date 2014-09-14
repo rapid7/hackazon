@@ -2,21 +2,26 @@
     <nav class="navbar hw-navbar navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#hw-navbar">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
                 <a class="navbar-brand hw-navbar-brand" href="/"><span>Hackazon <em>Webscantest</em></span></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse hw-navbar-collapse navbar-collapse navbar-ex1-collapse">
+            <div class="collapse hw-navbar-collapse navbar-collapse navbar-ex1-collapse" id="hw-navbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/faq">FAQ</a></li>
                     <li><a href="/contact">Contact Us</a></li>
                     <?php if (!is_null($this->pixie->auth->user())): ?>
-
-					<li class="dropdown">
-						<a href="/wishlist" class="dropdown-toggle" data-toggle="dropdown">Wish List <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="<?php echo $controller->generateUrl('default', array('controller' => 'wishlist')); ?>">Wish Lists</a></li>
-						</ul>
-					</li>
+					          <li class="dropdown">
+						          <a href="/wishlist" class="dropdown-toggle" data-toggle="dropdown">Wish List <b class="caret"></b></a>
+						          <ul class="dropdown-menu">
+							          <li><a href="<?php echo $controller->generateUrl('default', array('controller' => 'wishlist')); ?>">Wish Lists</a></li>
+						          </ul>
+					          </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle hw-account-link" data-toggle="dropdown">Your account <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAHDVQljAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA7NJREFUeNpiXHHi/o/ffxnAgAnI+vvvv5mSMJDBBBT4/fcfRIZFgItNTYIXyLJTFwMIIMYFh+8wwABID1CDGB8HVA8Q3H/9BUgyXn/2/v9/EP/7778AAQTSAzHdUVMcKHTu4bsvP/6A9EO0cLExQxi6MgJQgyHU119Qx1189B7CYLz5/APQHAYMABBAKO6CAxaI95w0xf/8+8/CxLjv+kuE6X/BDvwDM40JTS/E+VDRe6++AklmJkZGRpgoUF5WmBPIABoAMQSL44B2MmG6F6gcIICgYQIXAioCBqOsMNev3/8uP/kAtAnFGGQOGwuTpYoIxHkMHAzAMH3x8cetF58Q0YJi19//UEfjACiqf//79/vPP0SoMjK8+vQDp2pmRsYjt17D3fr47bf3336huxvoM252Fn1ZQS52ZiAbHhoyQlxA7wKNuPv6y91XX0Bhe+v5hz/YIhcrAAgg7DGOFXCwMrMgBzbYZ4wqYjy8nKwP33wFehFfeIvwsuvICPwDO0xbmh+YSPddf8GEFKZMyGlGXYLvH5IfgOb+/487vP8zoHv3P87YYWT4hRQ1EKWMuFT///+fnZUZWQ7oKGDKwa4a6JvbLz4jJxNg7v+NahuK1mcfvrMgBdm1px+ZUEMQPZ28/vITymZifPf1J840+AeUWpgFudjg2cJGTQwoiByILP/BEspiPMqiPMBcjCLHxOiqLfHt598Lj99/+wkqZBjP3n/Dy8GCP2EBvQ4Mg+vPPrFwsjETTINAC4HWaknxMTEQDYBGAgRotcpyGoaBaLxlaVrSQgCpSCyH4Lochj8ugJBAiB9AVC2kVbpkdZ8TBFVSW61UK/KP7fF43jIhd/fPDQjbm0AeqSqmcqqJ1OBmewBWTvUaR6mGA+869Ds2J9Udsqo4ZhjHZ7T8nqe6KxCWG5K9vTkJOmJT1Ypo1Xzac4Z992WktM014beXDwXwBINblFIaEOCU7upqm89BP1qkBbFMNV2k+d6hkaxv867DpT7rQlpXIcyQ6rbos05z1WL1TABJkqyAanU8oAYYYeJv4zlnW44Cusf36OF1YiCYCQfGyCROslyS1puiZTaaJYLtD+NvxUsZeAJZyxYSfU9cDLy8MGmNN84of2Qk7DrngXfUEYLSrT8auTKe3mXozxbZ13Q5jpO0kLSyj//QNXOPffsscMOuC92VpfVHZwOvsQSzHPg2PkQExdNcjuPVaLqCSrFKnj5+0LuKndvkLgPkAWvpwePW5oOwnCmxltahB8KuAf+pyQJVxN7hAAAAAElFTkSuQmCC" id="loginusericon" class="userpic small"><b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -31,11 +36,11 @@
                     <li><a href="<?php echo $controller->generateUrl('default', array('controller' => 'wishlist', 'action' => '')) ?>">Wish List</a>
                     <?php endif ?>
                     <li class="dropdown hw-login-item">
-                            <?php if (!is_null($this->pixie->auth->user())): ?>
-							<a href="/user/logout" class="login-window">Logout</a>
-                            <?php else: ?>
-							<a href="#login-box" class="login-window">Sign In / Sign Up</a>
-                            <?php endif ?>
+                      <?php if (!is_null($this->pixie->auth->user())): ?>
+							        <a href="/user/logout" class="login-window">Logout</a>
+                      <?php else: ?>
+							        <a href="#login-box" class="login-window">Sign In / Sign Up</a>
+                      <?php endif ?>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle js-cart-top-icon" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-shopping-cart"></span></a>
@@ -54,10 +59,7 @@
                 </ul>
             </div>
             <div class="row">
-                <div class="col-xs-3 col-md-2 col-lg-3">
-                    <?php include($common_path . "sidebar.php") ?>
-                </div>
-                <div class="col-xs-7 col-md-8 col-lg-8 col-md-offset-2 col-xs-offset-2 col-lg-offset-1">
+                <div class="col-xs-12 col-md-12 col-lg-12">
                   <?php include($common_path. "/../search/search.php") ?>
                 </div>
             </div>
