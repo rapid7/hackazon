@@ -29,7 +29,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-12">
-                                <textarea class="form-control" id="textReview" name="textReview"
+                                <textarea class="form-control form-text-review" id="textReview" name="textReview"
                                           placeholder="Input your review here..." required maxlength="500"
                                           data-bv-container="tooltip" ></textarea>
                             </div>
