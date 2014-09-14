@@ -5,7 +5,7 @@
     <tbody>
     <tr><td>Host:</td><td><?php $_($database['host']); ?></td></tr>
     <tr><td>User:</td><td><?php $_($database['user']); ?></td></tr>
-    <tr><td>Password:</td><td><?php $_($database['password']); ?></td></tr>
+    <tr><td>Password:</td><td>***************</td></tr>
     <tr><td>Database:</td><td><?php $_($database['db']); ?></td></tr>
     </tbody>
 </table>
@@ -22,7 +22,7 @@
         <tr><td>Hostname</td><td><?php $_($email['hostname']); ?></td></tr>
         <tr><td>Port</td><td><?php $_($email['port']); ?></td></tr>
         <tr><td>Username</td><td><?php $_($email['username']); ?></td></tr>
-        <tr><td>Password</td><td><?php $_($email['password']); ?></td></tr>
+        <tr><td>Password</td><td>***************</td></tr>
         <tr><td>Encryption</td><td><?php $_($email['encryption']); ?></td></tr>
         <tr><td>Timeout</td><td><?php $_($email['timeout']); ?></td></tr>
     <?php } ?>
