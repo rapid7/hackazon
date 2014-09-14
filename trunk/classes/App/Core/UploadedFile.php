@@ -328,4 +328,12 @@ class UploadedFile
 
         return $value;
     }
+
+    public function generateFileName($prefix = '')
+    {
+        $ext = FSHelper::cleanFileName($this->getExtension());
+        $photoName = ($prefix ?  $prefix.'_' : '') . substr(sha1(time() . $this->getName()), 0, 6) . '_'
+            . FSHelper::cleanFileName($this->getBaseName(), 32) . ($ext ? '.' . $ext : '');
+        return $photoName;
+    }
 }

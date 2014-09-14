@@ -387,3 +387,11 @@ table.dataTable thead .sorting:after {
     background-color: gray;
     color: #fff;
 }
+
+.model-form .form-control {
+    max-width: 800px;
+}
+
+.model-form .model-image {
+    max-width: 800px;
+}

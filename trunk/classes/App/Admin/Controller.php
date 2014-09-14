@@ -13,6 +13,7 @@ namespace App\Admin;
 use App\Core\BaseController;
 use App\Core\View;
 use App\Exception\HttpException;
+use App\Model\User;
 
 
 class Controller extends BaseController
@@ -22,6 +23,10 @@ class Controller extends BaseController
      */
     public $view;
     public $common_path;
+
+    /**
+     * @var User
+     */
     protected $user;
 
     public function before()

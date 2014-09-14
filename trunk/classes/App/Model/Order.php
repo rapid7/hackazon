@@ -27,6 +27,13 @@ class Order extends BaseModel
         ),
     );
 
+    protected $belongs_to = [
+        'customer' => [
+            'model' => 'User',
+            'key' => 'customer_id'
+        ]
+    ];
+
     public function getMyOrders()
     {
         $rows = $this->where('customer_id', $this->pixie->auth->user()->id)->find_all()->as_array();

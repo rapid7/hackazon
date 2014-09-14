@@ -53,6 +53,7 @@
     <script src="/js/plugins/dataTables/jquery.dataTables.js"></script>
     <script src="/js/plugins/dataTables/dataTables.bootstrap.js"></script>
 
+    <script src="/js/bootstrap.file-input.js"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="/js/sb-admin-2.js"></script>

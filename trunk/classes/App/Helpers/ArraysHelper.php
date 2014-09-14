@@ -110,4 +110,10 @@ class ArraysHelper
 
         return true;
     }
+
+    public static function arrayFillEqualPairs(array $arr)
+    {
+        $values = array_values($arr);
+        return array_combine($values, $values);
+    }
 } 
