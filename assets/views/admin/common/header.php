@@ -261,6 +261,9 @@
                 <a href="<?php echo $adminRoot; ?>/product/"><i class="fa fa-archive fa-fw"></i> Products</a>
             </li>
             <li>
+                <a href="<?php echo $adminRoot; ?>/order/"><i class="fa fa-shopping-cart fa-fw"></i> Orders</a>
+            </li>
+            <li>
                 <a href="<?php echo $adminRoot; ?>/enquiry/"><i class="fa fa-life-saver fa-fw"></i> Enquiries</a>
             </li>
             <li>

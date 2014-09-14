@@ -1,7 +1,5 @@
 $(function() {
-
     $('#side-menu').metisMenu();
-
 });
 
 //Loads the correct sidebar on window load,
@@ -24,5 +22,25 @@ $(function() {
         if (height > topOffset) {
             $("#page-wrapper").css("min-height", (height) + "px");
         }
-    })
-})
+    });
+
+    $('.file-input').bootstrapFileInput();
+
+    $(document).on('click', '.js-delete-item', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.target);
+        if (confirm("Are you sure you want to delete this itrm?")) {
+            $.ajax({
+                url: $link.attr('href'),
+                type: 'POST',
+                dataType: 'json'
+            }).success(function (res) {
+                if (res.location) {
+                    location.href = res.location;
+                }
+            }).error(function () {
+                alert('Error while deleting the item.')
+            });
+        }
+    });
+});

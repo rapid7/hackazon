@@ -11,6 +11,7 @@ namespace App\Admin\Controller;
 
 
 use App\Admin\CRUDController;
+use App\Helpers\ArraysHelper;
 
 class Enquiry extends CRUDController
 {
@@ -42,6 +43,28 @@ class Enquiry extends CRUDController
     protected function tuneModelForList()
     {
         $this->model->with('creator', 'assignee');
+    }
+
+    protected function getEditFields()
+    {
+        return [
+            'id' => [],
+            'created_by' => [
+                'type' => 'select',
+                'option_list' => 'App\Admin\Controller\User::getAvailableUsers',
+            ],
+            'assigned_to' => [
+                'type' => 'select',
+                'option_list' => 'App\Admin\Controller\User::getAvailableUsers',
+            ],
+            'title',
+            'description' => [
+                'type' => 'textarea'
+            ],
+            'status',
+            'created_on',
+            'updated_on',
+        ];
     }
 
     public function fieldFormatter($value, $item = null, array $format = [])

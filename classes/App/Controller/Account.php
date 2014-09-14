@@ -246,9 +246,6 @@ class Account extends \App\Page {
     protected function generatePhotoName(UploadedFile $photo)
     {
         $user = $this->getUser();
-        $ext = FSHelper::cleanFileName($photo->getExtension());
-        $photoName = $user->id() . '_' . substr(sha1(time() . $photo->getName()), 0, 6) . '_'
-            . FSHelper::cleanFileName($photo->getBaseName(), 32) . ($ext ? '.' . $ext : '');
-        return $photoName;
+        return $photo->generateFileName($user->id());
     }
 }

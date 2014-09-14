@@ -11,6 +11,7 @@ namespace App\Admin\Controller;
 
 
 use App\Admin\CRUDController;
+use App\Model\Category;
 
 class Product extends CRUDController
 {
@@ -40,7 +41,7 @@ class Product extends CRUDController
             ],
             'picture' => [
                 'type' => 'image',
-                'image_base' => '/products_pictures/',
+                'dir_path' => '/products_pictures/',
                 'max_width' => 40,
                 'max_height' => 30,
                 'is_link' => true,
@@ -54,4 +55,59 @@ class Product extends CRUDController
     {
         $this->model->with('category');
     }
-} 
+
+    protected function getEditFields()
+    {
+         $fields = [
+            'productID' => [
+                'label' => 'Id'
+            ],
+            'name' => [
+                'type' => 'text'
+            ],
+            'categoryID' => [
+                'label' => 'Category',
+                'type' => 'select',
+                'option_list' => 'App\Admin\Controller\Category::getAvailableCategoryOptions'
+            ],
+            'description' => [
+                'type' => 'textarea'
+            ],
+            'brief_description' => [
+                'type' => 'textarea'
+            ],
+            'Price' => [
+                'label' => 'Price ($)'
+            ],
+            'product_code' => [
+
+            ],
+            'picture' => [
+                'type' => 'image',
+                'dir_path' => '/products_pictures/'
+            ],
+            'big_picture' => [
+                'type' => 'image',
+                'dir_path' => '/products_pictures/'
+            ],
+            'meta_title' => [
+                'type' => 'textarea',
+            ],
+            'meta_keywords' => [
+                'type' => 'textarea',
+            ],
+            'meta_desc' => [
+                'type' => 'textarea',
+                'label' => 'Meta Description'
+            ],
+            'in_stock' => [
+                'type' => 'boolean'
+            ],
+            'enabled' => [
+                'type' => 'boolean'
+            ]
+        ];
+
+        return $fields;
+    }
+}

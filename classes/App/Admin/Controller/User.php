@@ -12,6 +12,7 @@ namespace App\Admin\Controller;
 
 use App\Admin\Controller;
 use App\Admin\CRUDController;
+use App\Pixie;
 
 /**
  * Class User
@@ -111,9 +112,46 @@ class User extends CRUDController
                 'type' => 'image',
                 'max_width' => 40,
                 'max_height' => 30,
-                'image_base' => $this->pixie->getParameter('parameters.use_perl_upload') ? '/upload/download.php?image=' : '/user_pictures/',
+                'dir_path' => $this->pixie->getParameter('parameters.use_perl_upload') ? '/upload/download.php?image=' : '/user_pictures/',
                 'is_link' => true
             ]
         ];
+    }
+
+    protected function getEditFields()
+    {
+        return [
+            'id' => [],
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'active' => [
+                'type' => 'boolean'
+            ],
+            'user_phone',
+            'oauth_provider',
+            'oauth_uid',
+            'rest_token',
+            'photo' => [
+                'type' => 'image'
+            ],
+            'created_on',
+            'last_login',
+        ];
+    }
+
+    public static function getAvailableUsers(Pixie $pixie, $options)
+    {
+        $results = ['' => '—'];
+        /** @var \App\Model\User $userModel */
+        $userModel = $pixie->orm->get('user');
+        /** @var \App\Model\User[] $items */
+        $items = $userModel->order_by('username', 'asc')->find_all();
+        foreach ($items as $user) {
+            $addons = trim(implode(' ', [$user->first_name, $user->last_name]));
+            $results[$user->id()] = $user->username . ($addons ? ' (' . $addons . ')' : '');
+        }
+        return $results;
     }
 } 

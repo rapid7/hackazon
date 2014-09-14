@@ -8,6 +8,8 @@
 
 
 namespace App\Admin;
+use App\Exception\NotFoundException;
+use App\Model\BaseModel;
 use PHPixie\ORM\Model;
 use PHPixie\Paginate;
 
@@ -30,6 +32,15 @@ class CRUDController extends Controller
     public $modelName = '';
 
     protected $modelFields;
+
+    public $listView = 'crud/list';
+
+    public $editView = 'crud/edit';
+
+    /**
+     * @var array|null
+     */
+    protected $preparedEditFields;
 
     public function before()
     {
@@ -128,7 +139,7 @@ class CRUDController extends Controller
             return;
 
         } else {
-            $this->view->subview = 'crud/list';
+            $this->view->subview = $this->listView;
             $this->view->listFields = $listFields;
             $this->view->modelName = $this->model->model_name;
         }
@@ -142,19 +153,54 @@ class CRUDController extends Controller
     }
 
     /**
-     * Shows single item
-     */
-    public function action_show()
-    {
-        $this->view->subview = 'crud/show';
-    }
-
-    /**
      * Edit existing item
      */
     public function action_edit()
     {
-        $this->view->subview = 'crud/show';
+        $id = $this->request->param('id');
+
+        if ($this->request->method == 'POST') {
+            $item = null;
+            if ($id) {
+                /** @var BaseModel $item */
+                $item = $this->pixie->orm->get($this->model->model_name, $id);
+            }
+
+            if (!$item || !$item->loaded()) {
+                throw new NotFoundException();
+            }
+
+            $data = $this->request->post();
+            $this->processRequestFilesForItem($item, $data);
+            $item->values($item->filterValues($data));
+            $item->save();
+
+            if ($item->loaded()) {
+                $this->redirect('/admin/' . strtolower($item->model_name) . '/edit/'.$item->id());
+                return;
+            }
+
+        } else {
+
+            if (!$id) {
+                throw new NotFoundException();
+            }
+
+            $item = $this->pixie->orm->get($this->model->model_name, $id);
+            if (!$item || !$item->loaded()) {
+                throw new NotFoundException();
+            }
+        }
+
+        $editFields = $this->prepareEditFields();
+        $this->view->pageTitle = $this->modelName;
+        $this->view->pageHeader = $this->view->pageTitle;
+        $this->view->modelName = $this->model->model_name;
+        $this->view->item = $item;
+        $this->view->editFields = $editFields;
+        $this->view->formatter = new FieldFormatter($item, $editFields);
+        $this->view->formatter->setPixie($this->pixie);
+        $this->view->subview = $this->editView;
     }
 
     /**
@@ -162,12 +208,68 @@ class CRUDController extends Controller
      */
     public function action_new()
     {
+        /** @var BaseModel $item */
+        $item = $this->pixie->orm->get($this->model->model_name);
 
+        if ($this->request->method == 'POST') {
+            $data = $this->request->post();
+            $this->processRequestFilesForItem($item, $data);
+            $item->values($item->filterValues($data));
+            $item->save();
+
+            if ($item->loaded()) {
+                $this->redirect('/admin/' . strtolower($item->model_name) . '/edit/'.$item->id());
+                return;
+            }
+        }
+
+        $editFields = $this->prepareEditFields();
+        $this->view->pageTitle = 'Add new ' . $this->modelName;
+        $this->view->pageHeader = $this->view->pageTitle;
+        $this->view->modelName = $this->model->model_name;
+        $this->view->item = $item;
+        $this->view->editFields = $editFields;
+        $this->view->formatter = new FieldFormatter($item, $editFields);
+        $this->view->formatter->setPixie($this->pixie);
+        $this->view->subview = $this->editView;
+    }
+
+    public function action_delete()
+    {
+        if ($this->request->method != 'POST') {
+            throw new NotFoundException();
+        }
+
+        $id = $this->request->param('id');
+        if (!$id) {
+            throw new NotFoundException();
+        }
+
+        $item = $this->pixie->orm->get($this->model->model_name, $id);
+
+        if (!$item || !$item->loaded()) {
+            throw new NotFoundException();
+        }
+
+        $item->delete();
+
+        $location = '/admin/'.strtolower($this->model->model_name);
+
+        if ($this->request->is_ajax()) {
+            $this->jsonResponse(['success' => 1, 'location' => $location]);
+        } else {
+            $this->redirect($location);
+        }
     }
 
     protected function prepareModelFields()
     {
         $this->modelFields = $this->model->columns();
+    }
+
+    protected function getListFields()
+    {
+        return array_combine($this->modelFields, array_fill(0, count($this->modelFields), []));
     }
 
     protected function prepareListFields()
@@ -209,8 +311,8 @@ class CRUDController extends Controller
                     $data['max_height'] = 30;
                 }
 
-                if (!$data['image_base']) {
-                    $data['image_base'] = '/images/';
+                if (!$data['dir_path']) {
+                    $data['dir_path'] = '/images/';
                 }
 
                 if (!array_key_exists('orderable', $data)) {
@@ -245,15 +347,74 @@ class CRUDController extends Controller
         return $listFields;
     }
 
-    protected function getListFields()
-    {
-        return array_combine($this->modelFields, array_fill(0, count($this->modelFields), []));
-    }
-
     protected function getEditFields()
     {
 
-        return $this->modelFields;
+        return array_combine($this->modelFields, array_fill(0, count($this->modelFields), []));
+    }
+
+    protected function prepareEditFields()
+    {
+        if ($this->preparedEditFields) {
+            return $this->preparedEditFields;
+        }
+
+        $editFields = $this->getEditFields();
+
+        $result = [];
+        foreach ($editFields as $field => &$data) {
+            if (is_numeric($field) && is_string($data)) {
+                $field = $data;
+                $data = [];
+            }
+
+            $data['original_field_name'] = $field;
+
+            if (!$data['type']) {
+                $data['type'] = 'text';
+            }
+
+            if (!$data['label']) {
+                $data['label'] = ucwords(implode(' ', preg_split('/_+/', $field, -1, PREG_SPLIT_NO_EMPTY)));
+            }
+
+            if ($data['select'] && !array_key_exists('multiple', $data)) {
+                $data['multiple'] = false;
+            }
+
+            if ($data['type'] == 'image') {
+                if (!$data['max_width']) {
+                    $data['max_width'] = 400;
+                }
+
+                if (!$data['max_height']) {
+                    $data['max_height'] = 300;
+                }
+
+                if (!$data['dir_path']) {
+                    $data['dir_path'] = '/images/';
+                }
+            }
+
+            if ($data['type'] == 'image' || $data['type'] == 'file') {
+                if (!$data['dir_path']) {
+                    $data['dir_path'] = '/upload/';
+                }
+
+                if (!array_key_exists('abs_path', $data)) {
+                    $data['abs_path'] = false;
+                }
+            }
+
+            $result[$field] = $data;
+        }
+        $editFields = $result;
+        unset($data);
+
+        $editFields[$this->model->id_field]['type'] = 'hidden';
+
+        $this->preparedEditFields = $editFields;
+        return $this->preparedEditFields;
     }
 
     /**
@@ -309,7 +470,7 @@ class CRUDController extends Controller
 
         if ($format['type'] == 'image') {
             if ($value) {
-                $value = '<img src="' . $format['image_base'] . $value . '" style="max-width: ' . $format['max_width'] . 'px; '
+                $value = '<img src="' . $format['dir_path'] . $value . '" style="max-width: ' . $format['max_width'] . 'px; '
                     . ' max-height: ' . $format['max_height'] . 'px;" />';
             } else {
                 $value = '';
@@ -350,4 +511,45 @@ class CRUDController extends Controller
             $data['model_prop'] = $matches['prop'];
         }
     }
-} 
+
+    private function processRequestFilesForItem(BaseModel $item, array &$data = [])
+    {
+        $editFields = $this->prepareEditFields();
+        foreach ($editFields as $field => $options) {
+            if (!in_array($options['type'], ['image', 'file'])) {
+                 continue;
+            }
+
+            $removeFieldName = 'remove_image_'.$field;
+            if (array_key_exists($removeFieldName, $data)) {
+                $this->removeExistingFile($item, $field, $options);
+            }
+
+            $file = $this->request->uploadedFile($field);
+            if (!$file->isLoaded()) {
+                continue;
+            }
+            $this->removeExistingFile($item, $field, $options);
+            $fileName = $file->generateFileName($this->user->id());
+            $dirPath = $options['abs_path']
+                ? $options['dir_path'] : $this->pixie->root_dir.'web/'.preg_replace('|^/+|', '', $options['dir_path']);
+            $destPath = $dirPath.$fileName;
+            $file->move($destPath);
+            $item->$field = $fileName;
+        }
+    }
+
+    protected function removeExistingFile(BaseModel $item, $field, array $options)
+    {
+        if (!$item->id()) {
+            return;
+        }
+        $existingFile = $item->$field;
+        $absPath = $options['abs_path'] ? $options['dir_path']
+            : $this->pixie->root_dir.'web/'.preg_replace('|^/+|', '', $options['dir_path']) . $existingFile;
+        if (file_exists($absPath) && is_file($absPath) && is_writable($absPath)) {
+            unlink($absPath);
+        }
+        $item->$field = '';
+    }
+}

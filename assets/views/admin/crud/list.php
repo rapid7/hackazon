@@ -1,7 +1,20 @@
 <div class="panel panel-default">
-<!--    <div class="panel-heading">-->
-<!--        DataTables Advanced Tables-->
-<!--    </div>-->
+    <div class="panel-heading">
+        <?php $_(ucfirst($modelName)); ?> list
+
+        <div class="pull-right">
+            <div class="btn-group">
+                <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button">
+                    Actions
+                    <span class="caret"></span>
+                </button>
+                <ul role="menu" class="dropdown-menu pull-right">
+                    <li><a href="/admin/<?php $_(strtolower($modelName)); ?>/new">Add new <?php $_($modelName); ?></a></li>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
         <div class="table-responsive">
