@@ -78,8 +78,8 @@ class Search extends Page {
             $view->brand = $brand;
             $view->quality = $quality;
 
-            $view->searchString = is_null($label) ? '' : $label;
-            $view->pageTitle = 'Search by &laquo;' . $view->searchString . '&raquo;';
+            $view->searchString = is_null($name) ? '' : $name;
+            $view->pageTitle = 'Search by &laquo;' . $name . '&raquo;';
             $view->pager = $pager;
 
             $this->response->body = $view->render();
@@ -92,8 +92,8 @@ class Search extends Page {
             $this->view->brand = $brand;
             $this->view->quality = $quality;
 
-            $this->view->searchString = is_null($label) ? '' : $label;
-            $this->view->pageTitle = 'Search by &laquo;' . $view->searchString . '&raquo;';
+            $this->view->searchString = is_null($name) ? '' : $name;
+            $this->view->pageTitle = 'Search by &laquo;' . $name . '&raquo;';
             $this->view->pager = $pager;
 
             $this->view->subview = 'search/main';
