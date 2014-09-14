@@ -153,7 +153,7 @@
         <!-- START CONTENT ITEM -->
         <div class="row">
             <div class="col-xs-12 col-sm-9">
-                <h2><?= $_($pageTitle, 'searchString'); ?></h2>
+                <h2><?= ($searchString == "") ? "Search" : $_($pageTitle, 'searchString') ?></h2>
             </div>
         </div>
         <!-- END CONTENT ITEM -->

@@ -15,10 +15,10 @@ class PriceFilter implements BaseFilter {
 
     private function init() {
         $this->_valueVariants[1] = [0, 100];
-        $this->_valueVariants[2] = [100, 500];
-        $this->_valueVariants[3] = [500, 1000];
-        $this->_valueVariants[4] = [10000, 20000];
-        $this->_valueVariants[5] = [20000, 200000];
+        $this->_valueVariants[2] = [100, 200];
+        $this->_valueVariants[3] = [200, 300];
+        $this->_valueVariants[4] = [300, 500];
+        $this->_valueVariants[5] = [500, 1000];
     }
 
     public function getValue() {
