@@ -20,29 +20,34 @@ class Order extends CRUDController
 
     protected function getListFields()
     {
-        return [
-            'id' => [
-                'column_classes' => 'dt-id-column',
+        return array_merge(
+            $this->getIdCheckboxProp(),
+            [
+                'id' => [
+                    'column_classes' => 'dt-id-column',
+                ],
+                'customer_firstname' => [
+                    'title' => 'First Name',
+                ],
+                'customer_lastname' => [
+                    'title' => 'Last Name',
+                ],
+                'customer_email' => [
+                    'title' => 'Email',
+                ],
+                'customer.username' => [
+                    'is_link' => true,
+                    'template' => '/admin/user/edit/%customer.id%'
+                ],
+                'status' => [
+                    'type' => 'status'
+                ],
+                'payment_method' => [],
+                'shipping_method' => []
             ],
-            'customer_firstname' => [
-                'title' => 'First Name',
-            ],
-            'customer_lastname' => [
-                'title' => 'Last Name',
-            ],
-            'customer_email' => [
-                'title' => 'Email',
-            ],
-            'customer.username' => [
-                'is_link' => true,
-                'template' => '/admin/user/edit/%customer.id%'
-            ],
-            'status' => [
-                'type' => 'status'
-            ],
-            'payment_method' => [],
-            'shipping_method' => []
-        ];
+            $this->getEditLinkProp(),
+            $this->getDeleteLinkProp()
+        );
     }
 
     protected function getEditFields()

@@ -18,14 +18,19 @@ class Role extends CRUDController
 
     protected function getListFields()
     {
-        return [
-            'id' => [
-                'column_classes' => 'dt-id-column',
+        return array_merge(
+            $this->getIdCheckboxProp(),
+            [
+                'id' => [
+                    'column_classes' => 'dt-id-column',
+                ],
+                'name' => [
+                    'title' => 'Role',
+                    'type' => 'link'
+                ]
             ],
-            'name' => [
-                'title' => 'Role',
-                'type' => 'link'
-            ]
-        ];
+            $this->getEditLinkProp(),
+            $this->getDeleteLinkProp()
+        );
     }
 } 

@@ -1,4 +1,4 @@
-<?php $baseImgPath = $this->pixie->getParameter('parameters.use_perl_upload') ? '/upload/download.php?image=' : '/user_pictures/'; ?>
+<?php $baseImgPath = $this->pixie->getParameter('parameters.use_external_dir') ? '/upload/download.php?image=' : '/user_pictures/'; ?>
 <div class="row">
 	<div class="col-xs-8">
 		<table class="table profile-table table-striped">

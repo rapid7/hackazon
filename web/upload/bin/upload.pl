@@ -66,4 +66,4 @@ while(<$file>) {
 }
 
 #print "Status: 302 Moved\nLocation: upload.php\n\n";
-print "Status: 302 Moved\nLocation: /upload/download.php?$filename\nX-Created-Filename: $fullpath\n\n";
+print "Status: 302 Moved\nLocation: /upload/download.php?image=\nX-Created-Filename: $fullpath\n\n";

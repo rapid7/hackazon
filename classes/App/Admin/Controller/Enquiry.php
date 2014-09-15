@@ -19,25 +19,30 @@ class Enquiry extends CRUDController
 
     protected function getListFields()
     {
-        return [
-            'id' => [
-                'column_classes' => 'dt-id-column',
+        return array_merge(
+            $this->getIdCheckboxProp(),
+            [
+                'id' => [
+                    'column_classes' => 'dt-id-column',
+                ],
+                'title' => [
+                    'type' => 'link'
+                ],
+                'status',
+                'creator.username' => [
+                    'is_link' => true,
+                    'title' => 'Created By',
+                    'template' => '/admin/user/%creator.id%'
+                ],
+                'assignee.username' => [
+                    'is_link' => true,
+                    'title' => 'Assigned To',
+                    'template' => '/admin/user/%assignee.id%'
+                ]
             ],
-            'title' => [
-                'type' => 'link'
-            ],
-            'status',
-            'creator.username' => [
-                'is_link' => true,
-                'title' => 'Created By',
-                'template' => '/admin/user/%creator.id%'
-            ],
-            'assignee.username' => [
-                'is_link' => true,
-                'title' => 'Assigned To',
-                'template' => '/admin/user/%assignee.id%'
-            ]
-        ];
+            $this->getEditLinkProp(),
+            $this->getDeleteLinkProp()
+        );
     }
 
     protected function tuneModelForList()

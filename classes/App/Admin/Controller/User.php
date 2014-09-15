@@ -92,30 +92,35 @@ class User extends CRUDController
 
     protected function getListFields()
     {
-        return [
-            'id',
-            'username' => [
-                'max_length' => 30,
-                'type' => 'link'
+        return array_merge(
+            $this->getIdCheckboxProp(),
+            [
+                'id',
+                'username' => [
+                    'max_length' => 30,
+                    'type' => 'link'
+                ],
+                'first_name' => [
+                    'max_length' => 30
+                ],
+                'last_name' => [
+                    'max_length' => 30
+                ],
+                'email',
+                'oauth_provider',
+                'created_on',
+                'last_login',
+                'photo' => [
+                    'type' => 'image',
+                    'max_width' => 40,
+                    'max_height' => 30,
+                    'dir_path' => $this->pixie->getParameter('parameters.use_external_dir') ? '/upload/download.php?image=' : '/user_pictures/',
+                    'is_link' => true
+                ]
             ],
-            'first_name' => [
-                'max_length' => 30
-            ],
-            'last_name' => [
-                'max_length' => 30
-            ],
-            'email',
-            'oauth_provider',
-            'created_on',
-            'last_login',
-            'photo' => [
-                'type' => 'image',
-                'max_width' => 40,
-                'max_height' => 30,
-                'dir_path' => $this->pixie->getParameter('parameters.use_perl_upload') ? '/upload/download.php?image=' : '/user_pictures/',
-                'is_link' => true
-            ]
-        ];
+            $this->getEditLinkProp(),
+            $this->getDeleteLinkProp()
+        );
     }
 
     protected function getEditFields()
@@ -134,7 +139,8 @@ class User extends CRUDController
             'oauth_uid',
             'rest_token',
             'photo' => [
-                'type' => 'image'
+                'type' => 'image',
+                'use_external_dir' => $this->pixie->getParameter('parameters.use_external_dir')
             ],
             'created_on',
             'last_login',

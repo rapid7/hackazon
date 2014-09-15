@@ -18,26 +18,31 @@ class Category extends CRUDController
 
     protected function getListFields()
     {
-        return [
-            'categoryID' => [
-                'title' => 'Id',
-                'column_classes' => 'dt-id-column',
+        return array_merge(
+            $this->getIdCheckboxProp(),
+            [
+                'categoryID' => [
+                    'title' => 'Id',
+                    'column_classes' => 'dt-id-column',
+                ],
+                'name' => [
+                    'max_length' => 64,
+                    'type' => 'link'
+                ],
+                'parentCategory.name' => [
+                    'is_link' => true,
+                    'template' => '/admin/category/%parentCategory.categoryID%',
+                    'title' => 'Parent'
+                ],
+                'enabled' => [
+                    'type' => 'boolean',
+                    'column_classes' => 'dt-flag-column',
+                    'title' => '+'
+                ]
             ],
-            'name' => [
-                'max_length' => 64,
-                'type' => 'link'
-            ],
-            'parentCategory.name' => [
-                'is_link' => true,
-                'template' => '/admin/category/%parentCategory.categoryID%',
-                'title' => 'Parent'
-            ],
-            'enabled' => [
-                'type' => 'boolean',
-                'column_classes' => 'dt-flag-column',
-                'title' => '+'
-            ]
-        ];
+            $this->getEditLinkProp(),
+            $this->getDeleteLinkProp()
+        );
     }
 
     protected function tuneModelForList()

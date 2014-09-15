@@ -14,7 +14,7 @@ $loader->add('', $root.'/classes/');
 $pixie = new \App\Pixie();
 $pixie->bootstrap($root);
 
-if (!$pixie->getParameter('parameters.use_perl_upload') || !is_numeric($_GET['image'])) {
+if (!$pixie->getParameter('parameters.use_external_dir') || !is_numeric($_GET['image'])) {
     header('HTTP/1.1 404 Not Found');
     exit;
 }

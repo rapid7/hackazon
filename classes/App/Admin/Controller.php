@@ -24,6 +24,8 @@ class Controller extends BaseController
     public $view;
     public $common_path;
 
+    public $root = '/admin';
+
     /**
      * @var User
      */
@@ -42,8 +44,9 @@ class Controller extends BaseController
         $this->view->common_path = $config['common_path'];
         $this->view->returnUrl = '';
         $this->view->controller = $this;
-        $this->view->adminRoot = '/admin';
+        $this->view->adminRoot = $this->root;
         $className = $this->get_real_class($this);
+        $this->view->sidebarLinks = $this->getSidebarLinks();
 
         $this->view->user = $user;
         $this->view->pageHeader = 'Dashboard';
@@ -76,5 +79,19 @@ class Controller extends BaseController
             $e->setOrigin(HttpException::ORIGIN_ADMIN);
             throw $e;
         }
+    }
+
+    public function getSidebarLinks()
+    {
+        return [
+            $this->root => ['label' => 'Dashboard', 'link_class' => 'fa fa-dashboard fa-fw'],
+            $this->root.'/user' => ['label' => 'Users', 'link_class' => 'fa fa-user fa-fw'],
+            $this->root.'/role' => ['label' => 'Roles', 'link_class' => 'fa fa-puzzle-piece fa-fw'],
+            $this->root.'/category' => ['label' => 'Product Categories', 'link_class' => 'fa fa-sitemap fa-fw'],
+            $this->root.'/product' => ['label' => 'Products', 'link_class' => 'fa fa-archive fa-fw'],
+            $this->root.'/order' => ['label' => 'Orders', 'link_class' => 'fa fa-shopping-cart fa-fw'],
+            $this->root.'/enquiry' => ['label' => 'Enquiries', 'link_class' => 'fa fa-life-saver fa-fw'],
+            $this->root.'/faq' => ['label' => 'Faq', 'link_class' => 'fa fa-question-circle fa-fw'],
+        ];
     }
 }

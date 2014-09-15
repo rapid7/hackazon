@@ -19,36 +19,41 @@ class Product extends CRUDController
 
     protected function getListFields()
     {
-        return [
-            'productID' => [
-                'title' => 'Id',
-                'column_classes' => 'dt-id-column',
-                'data_type' => 'integer',
+        return array_merge(
+            $this->getIdCheckboxProp(),
+            [
+                'productID' => [
+                    'title' => 'Id',
+                    'column_classes' => 'dt-id-column',
+                    'data_type' => 'integer',
+                ],
+                'name' => [
+                    'max_length' => 64,
+                    'type' => 'link'
+                ],
+                'category.name' => [
+                    'title' => 'Category',
+                    'type' => 'link',
+                    'template' => '/admin/category/%category.categoryID%',
+                    'width' => 150
+                ],
+                'Price' => [
+                    'value_prefix' => '$',
+                    'data_type' => 'integer',
+                ],
+                'picture' => [
+                    'type' => 'image',
+                    'dir_path' => '/products_pictures/',
+                    'max_width' => 40,
+                    'max_height' => 30,
+                    'is_link' => true,
+                    'column_classes' => 'dt-picture-column',
+                    'title' => 'Pic'
+                ]
             ],
-            'name' => [
-                'max_length' => 64,
-                'type' => 'link'
-            ],
-            'category.name' => [
-                'title' => 'Category',
-                'type' => 'link',
-                'template' => '/admin/category/%category.categoryID%',
-                'width' => 150
-            ],
-            'Price' => [
-                'value_prefix' => '$',
-                'data_type' => 'integer',
-            ],
-            'picture' => [
-                'type' => 'image',
-                'dir_path' => '/products_pictures/',
-                'max_width' => 40,
-                'max_height' => 30,
-                'is_link' => true,
-                'column_classes' => 'dt-picture-column',
-                'title' => 'Pic'
-            ]
-        ];
+            $this->getEditLinkProp(),
+            $this->getDeleteLinkProp()
+        );
     }
 
     protected function tuneModelForList()

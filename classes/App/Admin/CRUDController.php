@@ -93,6 +93,15 @@ class CRUDController extends Controller
             $order = $order[0];
             $orderColumn = $columns[$order['column']] ?: [];
             $orderColumn = $orderColumn['data'] ?: key($listFields);
+            if ($listFields[$orderColumn]['extra']) {
+                foreach ($listFields as $lKey => $lValue) {
+                    if (!$lValue['extra'] && $lValue['orderable']) {
+                        $orderColumn = $lKey;
+                        break;
+                    }
+                }
+            }
+
             if (strpos($orderColumn, '___') === false) {
                 $this->model->order_by($orderColumn, $order['dir'] ? : 'asc');
             } else {
@@ -267,11 +276,24 @@ class CRUDController extends Controller
         $this->modelFields = $this->model->columns();
     }
 
+    /**
+     * Meta information for fields in list. Can be overridden in child classes to describe fields more precisely.
+     * @return array
+     */
     protected function getListFields()
     {
-        return array_combine($this->modelFields, array_fill(0, count($this->modelFields), []));
+        return array_merge(
+            $this->getIdCheckboxProp(),
+            array_combine($this->modelFields, array_fill(0, count($this->modelFields), [])),
+            $this->getEditLinkProp(),
+            $this->getDeleteLinkProp()
+        );
     }
 
+    /**
+     * Prepares field meta information in a canonical form.
+     * @return array
+     */
     protected function prepareListFields()
     {
         $listFields = $this->getListFields();
@@ -289,7 +311,7 @@ class CRUDController extends Controller
                 $data['type'] = 'text';
             }
 
-            if (!$data['title']) {
+            if (!array_key_exists('title', $data) || $data['title'] === null) {
                 $data['title'] = ucwords(implode(' ', preg_split('/_+/', $field, -1, PREG_SPLIT_NO_EMPTY)));
             }
 
@@ -322,6 +344,11 @@ class CRUDController extends Controller
                 if (!array_key_exists('searching', $data)) {
                     $data['searching'] = false;
                 }
+            }
+
+            if ($data['extra']) {
+                $data['orderable'] = false;
+                $data['searching'] = false;
             }
 
             if (!array_key_exists('orderable', $data)) {
@@ -424,7 +451,7 @@ class CRUDController extends Controller
      */
     private function filterPaginator($items, $fields)
     {
-        /** @var Model[] $data */
+        /** @var BaseModel[] $data */
         $data = $items->current_items()->as_array();
         $result = [];
         foreach ($data as $item) {
@@ -437,6 +464,8 @@ class CRUDController extends Controller
 
                 } else if (isset($item->$field)) {
                     $resultItem[$field] = $this->fieldFormatter($item->$field, $item, $info);
+                } else if ($info['extra']) {
+                    $resultItem[$field] = $this->fieldFormatter($item->id(), $item, $info);
                 }
             }
             $result[] = $resultItem;
@@ -481,6 +510,23 @@ class CRUDController extends Controller
             $value = '<span class="fa-boolean fa fa-circle' . ($value ? '' : '-o') . '"></span>';
         }
 
+        if ($format['type'] == 'html' && $format['template']) {
+            $controller = $this;
+            $value = preg_replace_callback('/%(.+?)%/', function ($match) use ($item, $controller, $value) {
+                $prop = $match[1];
+                $controller->checkSubProp($prop, $matches);
+                if ($matches['model']) {
+                    $model = $matches['model'];
+                    $modelProp = $matches['model_prop'];
+                    $propValue = $item->$model->$modelProp;
+
+                } else {
+                    $propValue = $item->$prop;
+                }
+                return $propValue;
+            }, $format['template']);
+        }
+
         $isLink = $format['type'] == 'link' || $format['is_link'];
 
         if ($isLink) {
@@ -496,14 +542,15 @@ class CRUDController extends Controller
                 } else {
                     $linkPropValue = $item->$linkProp;
                 }
-                $value = '<a href="' . str_replace('%' . $linkProp . '%', $linkPropValue, $format['template']) . '">' . $value . '</a>';
+                $value = '<a href="' . str_replace('%' . $linkProp . '%', $linkPropValue, $format['template']) . '">'
+                    . ($format['text'] ?: $value) . '</a>';
             }
         }
 
         return $value;
     }
 
-    private function checkSubProp($field, &$data)
+    public function checkSubProp($field, &$data)
     {
         if (strpos($field, '.') !== false) {
             preg_match('/^(?<model>[^\.]*)\.(?<prop>.*)/', $field, $matches);
@@ -551,5 +598,40 @@ class CRUDController extends Controller
             unlink($absPath);
         }
         $item->$field = '';
+    }
+
+    protected function getEditLinkProp()
+    {
+        return [
+            'edit' => [
+                'extra' => true,
+                'type' => 'html',
+                'template' => '<a href="/admin/'.strtolower($this->model->model_name).'/edit/%'.$this->model->id_field.'%" '
+                    . ' class="js-edit-item">Edit</a>'
+            ]
+        ];
+    }
+
+    protected function getDeleteLinkProp() {
+        return [
+            'delete' => [
+                'extra' => true,
+                'type' => 'html',
+                'template' => '<a href="/admin/'.strtolower($this->model->model_name).'/delete/%'.$this->model->id_field.'%" '
+                    . ' class="js-delete-item">Delete</a>'
+            ],
+        ];
+    }
+
+    protected function getIdCheckboxProp()
+    {
+        return [
+            'cb' => [
+                'extra' => true,
+                'template' => '<input type="checkbox" name="ids[]" value="%'.$this->model->id_field.'%" />',
+                'title' => '',
+                'type' => 'html'
+            ]
+        ];
     }
 }
