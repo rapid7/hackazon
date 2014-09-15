@@ -24,4 +24,19 @@ class Enquiry extends BaseModel
             'key' => 'assigned_to'
         ]
     ];
+
+    public function getModelMeta()
+    {
+        return [
+            'assigned_to' => [
+                'is_key' => true
+            ]
+        ];
+    }
+
+    public function getNewEnquiriesCount()
+    {
+        $model  = new Enquiry($this->pixie);
+        return $model->where('status', 'new')->count_all();
+    }
 }

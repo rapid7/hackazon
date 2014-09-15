@@ -395,3 +395,12 @@ table.dataTable thead .sorting:after {
 .model-form .model-image {
     max-width: 800px;
 }
+
+.edit-action-column,
+.delete-action-column {
+    width: 60px;
+}
+
+.cb-column {
+    width: 30px;
+}

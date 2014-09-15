@@ -268,7 +268,7 @@ class Service {
      * @return mixed
      */
     public function filterXSS($value) {
-        return preg_replace(self::PATTERN_XSS, '', $value);
+        return $value === null ? null : preg_replace(self::PATTERN_XSS, '', $value);
     }
 
     /**

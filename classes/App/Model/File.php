@@ -9,7 +9,12 @@
 
 namespace App\Model;
 
-
+/**
+ * Class File
+ * @package App\Model
+ * @property int $user_id
+ * @property string $path
+ */
 class File extends BaseModel
 {
     public $table = 'tbl_files';

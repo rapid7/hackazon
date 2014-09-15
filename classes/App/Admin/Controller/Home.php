@@ -16,6 +16,7 @@ class Home extends Controller
 {
     public function action_index()
     {
+        $this->view->newEnquiryCount = $this->pixie->orm->get('enquiry')->getNewEnquiriesCount();
         $this->view->subview = 'home/dashboard';
         $this->view->message = "Index page";
     }

@@ -39,20 +39,37 @@ class FieldFormatter
         $this->renderFormEnd();
     }
 
-    public function renderFields()
+    public function renderFields($fields = null)
     {
-        foreach ($this->formatOptions as $field => $options) {
-            $this->renderField($field, $options);
+        if ($fields === null) {
+            $fields = array_keys($this->formatOptions);
+        }
+        if (!is_array($fields)) {
+            $fields = [$fields];
+        }
+
+        foreach ($fields as $field) {
+            $this->renderField($field, $this->formatOptions[$field]);
         }
     }
 
-    public function renderField($field, array $options)
+    public function renderField($field, array $options = null)
     {
+        if (in_array($field, $this->renderedFields)) {
+            return;
+        }
+
+        if ($options === null) {
+            $options = $this->formatOptions[$field];
+        }
+
         if ($options['type'] == 'extra') {
             $value = $options['title'];
+
         } else {
             $value = isset($this->item->$field) ? $this->item->$field : '';
         }
+
         $type = $options['type'];
         $escapedValue = htmlspecialchars($value);
         $fieldId = 'field_'.$field;
@@ -74,6 +91,9 @@ class FieldFormatter
         } else if ($options['type'] == 'textarea') {
             echo $label.'<textarea cols="40" rows="4" '.$commonAttrs.' '
                 .'class="form-control '.$options['class_names'].'">'.$escapedValue.'</textarea>';
+
+        } else if ($type == 'checkboxes') {
+
 
         } else if ($type == 'select') {
             $optionList = $options['option_list'];
@@ -111,6 +131,7 @@ class FieldFormatter
         }
 
         echo '</div>';
+        $this->renderedFields[] = $field;
     }
 
     public function renderFormStart()

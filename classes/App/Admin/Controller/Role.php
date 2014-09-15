@@ -33,4 +33,27 @@ class Role extends CRUDController
             $this->getDeleteLinkProp()
         );
     }
+
+    protected function getEditFields()
+    {
+        return [
+            'id',
+            'name'
+        ];
+    }
+
+    /**
+     * @param $value
+     * @param null|\App\Model\Role $item
+     * @param array $format
+     * @return string|void
+     */
+    public function fieldFormatter($value, $item = null, array $format = [])
+    {
+        if ($format['extra'] && in_array($format['original_field_name'], ['delete']) && !$item->removable) {
+            return '';
+        } else {
+            return parent::fieldFormatter($value, $item, $format);
+        }
+    }
 } 
