@@ -176,12 +176,17 @@ class BaseModel extends Model
         $result = [];
         $columns = $this->getFieldNames();
         $fieldCount = count($fields);
+        $meta = $this->getModelMeta();
 
         foreach ($values as $key => $value) {
             if ((!$fieldCount || $fieldCount && in_array($key, $fields))
                 && in_array($key, $columns)
             ) {
                 $result[$key] = $value;
+
+                if ($meta[$key]['is_key'] && !$value) {
+                    $result[$key] = null;
+                }
             }
         }
         return $result;
@@ -199,5 +204,21 @@ class BaseModel extends Model
         }
 
         return self::$fieldNames[$className] === false ? [] : self::$fieldNames[$className];
+    }
+
+    public function values($row, $set_loaded = false)
+    {
+        parent::values($row, $set_loaded);
+        foreach ($row as $field => $value) {
+            if ($value === null) {
+                $this->_row[$field] = $value;
+            }
+        }
+        return $this;
+    }
+
+    public function getModelMeta()
+    {
+        return [];
     }
 } 

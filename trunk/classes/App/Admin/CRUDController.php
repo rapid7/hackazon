@@ -8,8 +8,11 @@
 
 
 namespace App\Admin;
+use App\Events\PreRemoveEntityEvent;
 use App\Exception\NotFoundException;
+use App\Helpers\UserPictureUploader;
 use App\Model\BaseModel;
+use App\Model\User;
 use PHPixie\ORM\Model;
 use PHPixie\Paginate;
 
@@ -254,13 +257,22 @@ class CRUDController extends Controller
             throw new NotFoundException();
         }
 
+        /** @var BaseModel $item */
         $item = $this->pixie->orm->get($this->model->model_name, $id);
 
         if (!$item || !$item->loaded()) {
             throw new NotFoundException();
         }
 
-        $item->delete();
+        $event = new PreRemoveEntityEvent($item);
+        $this->pixie->dispatcher->dispatch('PRE_REMOVE_ENTITY', $event);
+
+        if ($event->getCanRemove()) {
+            $item->delete();
+
+        } else {
+            throw new \LogicException($event->getReason());
+        }
 
         $location = '/admin/'.strtolower($this->model->model_name);
 
@@ -482,6 +494,9 @@ class CRUDController extends Controller
      */
     public function fieldFormatter($value, $item = null, array $format = [])
     {
+//        $event = new AdminListFieldFilterEvent($value, $item, $format);
+//        $this->pixie->dispatcher->dispatch('PRE_ADMIN_LIST_FIELD_FORMAT', $event);
+//        $value = $event->getValue();
 
         if ($format['max_length']) {
             $length = strlen($value);
@@ -547,6 +562,10 @@ class CRUDController extends Controller
             }
         }
 
+//        $event = new AdminListFieldFilterEvent($value, $item, $format);
+//        $this->pixie->dispatcher->dispatch('POST_ADMIN_LIST_FIELD_FORMAT', $event);
+//        $value = $event->getValue();
+
         return $value;
     }
 
@@ -559,7 +578,7 @@ class CRUDController extends Controller
         }
     }
 
-    private function processRequestFilesForItem(BaseModel $item, array &$data = [])
+    protected function processRequestFilesForItem(BaseModel $item, array &$data = [])
     {
         $editFields = $this->prepareEditFields();
         foreach ($editFields as $field => $options) {
@@ -567,22 +586,30 @@ class CRUDController extends Controller
                  continue;
             }
 
-            $removeFieldName = 'remove_image_'.$field;
-            if (array_key_exists($removeFieldName, $data)) {
-                $this->removeExistingFile($item, $field, $options);
-            }
-
             $file = $this->request->uploadedFile($field);
-            if (!$file->isLoaded()) {
-                continue;
+            $removeFieldName = 'remove_image_' . $field;
+            $removeOld = array_key_exists($removeFieldName, $data);
+
+            if ($options['use_external_dir'] && $item instanceof User) {
+                UserPictureUploader::create($this->pixie, $item, $file, $removeOld)->execute();
+
+            } else {
+                if ($removeOld) {
+                    $this->removeExistingFile($item, $field, $options);
+                }
+
+                if (!$file->isLoaded()) {
+                    continue;
+                }
+
+                $this->removeExistingFile($item, $field, $options);
+                $fileName = $file->generateFileName($this->user->id());
+                $dirPath = $options['abs_path']
+                    ? $options['dir_path'] : $this->pixie->root_dir . 'web/' . preg_replace('|^/+|', '', $options['dir_path']);
+                $destPath = $dirPath . $fileName;
+                $file->move($destPath);
+                $item->$field = $fileName;
             }
-            $this->removeExistingFile($item, $field, $options);
-            $fileName = $file->generateFileName($this->user->id());
-            $dirPath = $options['abs_path']
-                ? $options['dir_path'] : $this->pixie->root_dir.'web/'.preg_replace('|^/+|', '', $options['dir_path']);
-            $destPath = $dirPath.$fileName;
-            $file->move($destPath);
-            $item->$field = $fileName;
         }
     }
 
@@ -607,7 +634,8 @@ class CRUDController extends Controller
                 'extra' => true,
                 'type' => 'html',
                 'template' => '<a href="/admin/'.strtolower($this->model->model_name).'/edit/%'.$this->model->id_field.'%" '
-                    . ' class="js-edit-item">Edit</a>'
+                    . ' class="js-edit-item">Edit</a>',
+                'column_classes' => 'edit-action-column'
             ]
         ];
     }
@@ -618,7 +646,8 @@ class CRUDController extends Controller
                 'extra' => true,
                 'type' => 'html',
                 'template' => '<a href="/admin/'.strtolower($this->model->model_name).'/delete/%'.$this->model->id_field.'%" '
-                    . ' class="js-delete-item">Delete</a>'
+                    . ' class="js-delete-item">Delete</a>',
+                'column_classes' => 'delete-action-column'
             ],
         ];
     }
@@ -630,7 +659,8 @@ class CRUDController extends Controller
                 'extra' => true,
                 'template' => '<input type="checkbox" name="ids[]" value="%'.$this->model->id_field.'%" />',
                 'title' => '',
-                'type' => 'html'
+                'type' => 'html',
+                'column_classes' => 'cb-column'
             ]
         ];
     }

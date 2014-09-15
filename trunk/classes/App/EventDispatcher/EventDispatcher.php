@@ -14,6 +14,7 @@ use App\Pixie;
 
 /**
  * Dispatches events throughout the system.
+ * Inspired by Symfony2 event system.
  * @package App\EventDispatcher
  */
 class EventDispatcher
@@ -86,7 +87,7 @@ class EventDispatcher
         }
 
         foreach ($this->listeners[$eventName] as $priority => $listeners) {
-            if (false !== ($key = array_search($listener, $listeners, true))) {
+            if (($key = array_search($listener, $listeners, true)) !== false) {
                 unset($this->listeners[$eventName][$priority][$key], $this->sorted[$eventName]);
             }
         }

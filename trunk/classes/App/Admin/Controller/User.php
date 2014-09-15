@@ -12,6 +12,10 @@ namespace App\Admin\Controller;
 
 use App\Admin\Controller;
 use App\Admin\CRUDController;
+use App\Admin\FieldFormatter;
+use App\Exception\NotFoundException;
+use App\Model\BaseModel;
+use App\Model\Role;
 use App\Pixie;
 
 /**
@@ -85,9 +89,112 @@ class User extends CRUDController
         $this->redirect('/admin/user/login');
     }
 
-    public function action_index()
+    public function action_edit()
     {
-        parent::action_index();
+        $id = $this->request->param('id');
+        $roles = self::getRoleOptions($this->pixie);
+
+        if ($this->request->method == 'POST') {
+            $user = null;
+            if ($id) {
+                /** @var BaseModel $user */
+                $user = $this->pixie->orm->get($this->model->model_name, $id);
+            }
+
+            if (!$user || !$user->loaded()) {
+                throw new NotFoundException();
+            }
+
+            $data = $this->request->post();
+            $this->processRequestFilesForItem($user, $data);
+            $user->values($user->filterValues($data));
+            $user->save();
+
+            $requestUserRoles = $data['roles'] ?: [];
+            $userRoles = array_intersect_key($roles, array_flip($requestUserRoles));
+
+            foreach ($this->pixie->orm->get('role')->find_all() as $role) {
+                if (array_key_exists($role->id(), $userRoles)) {
+                    $user->add('roles', $role);
+                } else {
+                    $user->remove('roles', $role);
+                }
+            }
+
+            if ($user->loaded()) {
+                $this->redirect('/admin/' . strtolower($user->model_name) . '/edit/'.$user->id());
+                return;
+            }
+
+        } else {
+
+            if (!$id) {
+                throw new NotFoundException();
+            }
+
+            $user = $this->pixie->orm->get($this->model->model_name, $id);
+            if (!$user || !$user->loaded()) {
+                throw new NotFoundException();
+            }
+        }
+
+        $editFields = $this->prepareEditFields();
+        $this->view->pageTitle = $this->modelName;
+        $this->view->pageHeader = $this->view->pageTitle;
+        $this->view->modelName = $this->model->model_name;
+        $this->view->item = $user;
+        $this->view->editFields = $editFields;
+        $this->view->formatter = new FieldFormatter($user, $editFields);
+        $this->view->formatter->setPixie($this->pixie);
+
+        $this->view->roles = self::getRoleOptions($this->pixie);
+        $this->view->subview = 'user/edit';
+        $this->view->userRoles = $this->getUserRolesOptions($user);
+    }
+
+    public function action_new()
+    {
+        /** @var \App\Model\User $user */
+        $user = $this->pixie->orm->get($this->model->model_name);
+        $roles = self::getRoleOptions($this->pixie);
+
+        if ($this->request->method == 'POST') {
+            $data = $this->request->post();
+            $user->values(array_merge($user->filterValues($data), [
+                'created_on' => $data['created_on'] ?: date('Y-m-d H:i:s')
+            ]));
+            $user->save();
+
+            if ($user->loaded()) {
+                $this->processRequestFilesForItem($user, $data);
+
+                $requestUserRoles = $data['roles'] ?: [];
+                $userRoles = array_intersect_key($roles, array_flip($requestUserRoles));
+
+                foreach ($this->pixie->orm->get('role')->find_all() as $role) {
+                    if (array_key_exists($role->id(), $userRoles)) {
+                        $user->add('roles', $role);
+                    }
+                }
+
+                $this->redirect('/admin/' . strtolower($user->model_name) . '/edit/'.$user->id());
+                return;
+            }
+        } else {
+            $userRoles = [];
+        }
+
+        $editFields = $this->prepareEditFields();
+        $this->view->pageTitle = 'Add new ' . $this->modelName;
+        $this->view->pageHeader = $this->view->pageTitle;
+        $this->view->modelName = $this->model->model_name;
+        $this->view->item = $user;
+        $this->view->editFields = $editFields;
+        $this->view->formatter = new FieldFormatter($user, $editFields);
+        $this->view->formatter->setPixie($this->pixie);
+        $this->view->roles = self::getRoleOptions($this->pixie);
+        $this->view->subview = 'user/edit';
+        $this->view->userRoles = $userRoles;
     }
 
     protected function getListFields()
@@ -159,5 +266,28 @@ class User extends CRUDController
             $results[$user->id()] = $user->username . ($addons ? ' (' . $addons . ')' : '');
         }
         return $results;
+    }
+
+    public static function getRoleOptions(Pixie $pixie)
+    {
+        $results = [];
+        /** @var Role $roleModel */
+        $roleModel = $pixie->orm->get('role');
+        /** @var Role[] $roles */
+        $roles = $roleModel->order_by('name', 'asc')->find_All();
+        foreach ($roles as $role) {
+            $results[$role->id()] = $role->name;
+        }
+        return $results;
+    }
+
+    public function getUserRolesOptions(\App\Model\User $user)
+    {
+        $result = [];
+        $roles = $user->roles->find_all()->as_array(true);
+        foreach ($roles as $role) {
+            $result[$role->id] = $role->name;
+        }
+        return $result;
     }
 } 

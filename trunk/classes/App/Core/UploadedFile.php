@@ -285,9 +285,9 @@ class UploadedFile
         $header = array('Content-Type: multipart/form-data');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         $result = curl_exec($ch);
-        $header_info = curl_getinfo($ch,CURLINFO_HEADER_OUT);
+        //$header_info = curl_getinfo($ch,CURLINFO_HEADER_OUT);
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $header = substr($result, 0, $header_size);
+        //$header = substr($result, 0, $header_size);
         $body = substr($result, $header_size);
         curl_close($ch);
 

@@ -101,6 +101,8 @@ class Pixie extends \PHPixie\Pixie {
         $this->dispatcher->addListener(Events::KERNEL_PRE_EXECUTE, '\\App\\Admin\\EventListeners::hasAccessListener');
 
         $this->dispatcher->addListener(Events::KERNEL_PRE_HANDLE_EXCEPTION, '\\App\\Admin\\EventListeners::redirectUnauthorized');
+
+        $this->dispatcher->addListener('PRE_REMOVE_ENTITY', '\\App\\Model\\Role::roleRemoveListener');
 	}
 
     /**

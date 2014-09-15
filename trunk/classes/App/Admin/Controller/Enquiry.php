@@ -57,17 +57,26 @@ class Enquiry extends CRUDController
             'created_by' => [
                 'type' => 'select',
                 'option_list' => 'App\Admin\Controller\User::getAvailableUsers',
+                'required' => true
             ],
             'assigned_to' => [
                 'type' => 'select',
                 'option_list' => 'App\Admin\Controller\User::getAvailableUsers',
             ],
-            'title',
-            'description' => [
-                'type' => 'textarea'
+            'title' => [
+                'required' => true
             ],
-            'status',
-            'created_on',
+            'description' => [
+                'type' => 'textarea',
+                'required' => true
+            ],
+            'status' => [
+                'type' => 'select',
+                'option_list' => ArraysHelper::arrayFillEqualPairs(['new', 'rejected', 'resolved'])
+            ],
+            'created_on' => [
+                'data_type' => 'date'
+            ],
             'updated_on',
         ];
     }
