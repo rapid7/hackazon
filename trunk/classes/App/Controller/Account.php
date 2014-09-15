@@ -158,21 +158,39 @@ class Account extends \App\Page {
             $data = $user->filterValues($this->request->post(), $fields);
 
             if (!count($errors)) {
-                if ($this->pixie->getParameter('parameters.use_perl_upload')) {
+                $this->pixie->session->get();
+                if ($this->pixie->getParameter('parameters.use_external_dir')) {
                     if ($this->request->post('remove_photo')) {
                         $user->photo = '';
                     }
 
                     if ($photo->isLoaded()) {
-                        $scriptName = $this->pixie->isWindows() ? 'uploadwin.pl' : 'uploadux.pl';
+                        $uploadDir = $this->pixie->getParameter('parameters.user_pictures_external_dir');
+                        $uploadPath = $uploadDir . "/sess_".session_id()."_uploadto";
+                        if (!file_exists($uploadPath) || !is_dir($uploadPath)) {
+                            mkdir($uploadPath);
+                        }
                         $photoName = $this->generatePhotoName($photo);
-                        $headers = $photo->upload('http' . ($_SERVER['HTTPS'] == 'on' ? 's' : '').'://'
-                                .$_SERVER['HTTP_HOST'].'/upload/'.$scriptName, $photoName);
 
-                        if ($headers['X-Created-Filename']) {
-                            /** @var File $newFile */
+                        if ($this->pixie->getParameter('parameters.use_perl_upload')) {
+                            $scriptName = $this->pixie->isWindows() ? 'uploadwin.pl' : 'uploadux.pl';
+                            $headers = $photo->upload('http' . ($_SERVER['HTTPS'] == 'on' ? 's' : '') . '://'
+                                . $_SERVER['HTTP_HOST'] . '/upload/' . $scriptName, $photoName);
+
+                            if ($headers['X-Created-Filename']) {
+                                /** @var File $newFile */
+                                $newFile = $this->pixie->orm->get('file');
+                                $newFile->path = $headers['X-Created-Filename'];
+                                $newFile->user_id = $user->id();
+                                $newFile->save();
+                                $user->photo = $newFile->id();
+                            }
+
+                        } else {
+                            $newPhotoPath = $uploadPath.'/'.$photoName;
+                            $photo->move($newPhotoPath);
                             $newFile = $this->pixie->orm->get('file');
-                            $newFile->path = $headers['X-Created-Filename'];
+                            $newFile->path = $newPhotoPath;
                             $newFile->user_id = $user->id();
                             $newFile->save();
                             $user->photo = $newFile->id();

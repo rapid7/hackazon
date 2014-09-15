@@ -10,7 +10,6 @@
 namespace App\Admin;
 
 
-//use App\EventDispatcher\EventDispatcher;
 use App\Core\Response;
 use App\Events\GetResponseEvent;
 use App\Exception\ForbiddenException;

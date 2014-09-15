@@ -48,7 +48,9 @@
                         <?php /** @var \App\Model\SpecialOffers $specOffer */ ?>
                         <?php foreach ($special_offers as $specOffer): ?>
                             <?php $product = $specOffer->product_offers; ?>
-                            <?php include __DIR__ . '/product_item.php'; ?>
+                            <?php if ($product->loaded()):?>
+                                <?php include __DIR__ . '/product_item.php'; ?>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </div>
                     <!-- END CONTENT ITEM -->

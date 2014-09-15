@@ -1,6 +1,6 @@
 <div class="panel panel-default">
         <div class="panel-heading">
-            <a href="/admin/<?php $_(strtolower($modelName)); ?>">Return to list</a>
+            <a href="/admin/<?php $_(strtolower($modelName)); ?>">&larr; Return to list</a>
         </div>
     <!-- /.panel-heading -->
     <div class="panel-body">

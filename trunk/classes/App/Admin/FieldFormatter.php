@@ -48,7 +48,12 @@ class FieldFormatter
 
     public function renderField($field, array $options)
     {
-        $value = isset($this->item->$field) ? $this->item->$field : '';
+        if ($options['type'] == 'extra') {
+            $value = $options['title'];
+        } else {
+            $value = isset($this->item->$field) ? $this->item->$field : '';
+        }
+        $type = $options['type'];
         $escapedValue = htmlspecialchars($value);
         $fieldId = 'field_'.$field;
         $commonAttrs = ' name="'.$field.'" id="'.$fieldId.'" ';
@@ -70,7 +75,7 @@ class FieldFormatter
             echo $label.'<textarea cols="40" rows="4" '.$commonAttrs.' '
                 .'class="form-control '.$options['class_names'].'">'.$escapedValue.'</textarea>';
 
-        } else if ($options['type'] == 'select') {
+        } else if ($type == 'select') {
             $optionList = $options['option_list'];
             if (is_callable($optionList)) {
                 $optionList = call_user_func_array($optionList, [$this->pixie, $options]);
@@ -84,8 +89,13 @@ class FieldFormatter
         } else if ($options['type'] == 'image') {
             echo $label;
             if ($value) {
+                if ($options['use_external_dir']) {
+                    $src = "/upload/download.php?image=".$escapedValue;
+                } else {
+                    $src = htmlspecialchars($options['dir_path'].$value);
+                }
 
-                echo '<br><img src="'.htmlspecialchars($options['dir_path'].$value).'" alt="" '
+                echo '<br><img src="'.$src.'" alt="" '
                     . 'class="model-image model-'.htmlspecialchars($this->item->model_name).'-image" /> <br>'
                     . '<label><input type="checkbox" name="remove_image_'.htmlspecialchars($field).'" /> Remove image</label>';
             }
