@@ -30,17 +30,7 @@
         <!-- START CONTENT ITEM -->
         <div class="row">
             <div class="hidden-xs col-sm-12">
-                <div class="slider-wrapper theme-light">
-                    <div class="ribbon"></div>
-                    <div id="slider2" class="nivoslider">
-                        <img src="/images/banner_01-v3.jpg" alt=""
-                             title="This is an example of an optional long caption text"/>
-                        <img src="/images/banner_02-v3.jpg" alt="" title=""/>
-                        <img src="/images/banner_03-v3.jpg" alt="" title=""/>
-                        <img src="/images/banner_04-v3.jpg" alt="" title="Another caption"/>
-                    </div>
-                </div>
-                <br>
+                <?php include $common_path.'/_side_slider.php'; ?>
             </div>
         </div>
     </div>

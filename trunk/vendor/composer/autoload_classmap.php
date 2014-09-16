@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AbstractList' => $vendorDir . '/gwtphp/gwtphp/src/maps/java/util/AbstractList.class.php',
+    'AmfphpModule\\AmfphpModule' => $baseDir . '/modules/amfphp/classes/AmfphpModule/AmfphpModule.php',
+    'AmfphpModule\\Core\\Config' => $baseDir . '/modules/amfphp/classes/AmfphpModule/Core/Config.php',
     'App\\Admin\\CRUDController' => $baseDir . '/classes/App/Admin/CRUDController.php',
     'App\\Admin\\Controller' => $baseDir . '/classes/App/Admin/Controller.php',
     'App\\Admin\\Controller\\Category' => $baseDir . '/classes/App/Admin/Controller/Category.php',
@@ -38,6 +40,7 @@ return array(
     'App\\Controller\\Search' => $baseDir . '/classes/App/Controller/Search.php',
     'App\\Controller\\Twitter' => $baseDir . '/classes/App/Controller/Twitter.php',
     'App\\Controller\\User' => $baseDir . '/classes/App/Controller/User.php',
+    'App\\Controller\\Voucher' => $baseDir . '/classes/App/Controller/Voucher.php',
     'App\\Controller\\Wishlist' => $baseDir . '/classes/App/Controller/Wishlist.php',
     'App\\Core\\BaseController' => $baseDir . '/classes/App/Core/BaseController.php',
     'App\\Core\\Config' => $baseDir . '/classes/App/Core/Config.php',

@@ -12,6 +12,7 @@ namespace App\Core;
 
 use App\Exception\HttpException;
 use PHPixie\Controller;
+use PHPixie\DB\PDOV\Connection;
 use PHPixie\Exception\PageNotFound;
 use PHPixie\ORM\Model;
 use VulnModule\Config\Context;
@@ -58,12 +59,13 @@ class BaseController extends Controller
             $this->installationProcess = true;
         }
 
-
         // Check Hackazon is installed
         if (!$this->installationProcess && !$this->pixie->session->get('isInstalled')) {
             try {
+                /** @var Connection $pdov */
+                $pdov = $this->pixie->db->get();
                 /** @var \PDO $conn */
-                $conn = $this->pixie->db->get()->conn;
+                $conn = $pdov->conn;
                 $res = $conn->query("SHOW TABLES");
                 $dbTables = $res->fetchAll();
 
@@ -83,14 +85,8 @@ class BaseController extends Controller
         $this->vulninjection = $this->pixie->vulninjection->service($controllerName);
         $this->pixie->setVulnService($this->vulninjection);
 
-        // Check referrer for system-wide level
-        $this->vulninjection->checkReferrer();
-
         // Switch vulnerability config to the controller level
         $this->vulninjection->goDown($controllerName);
-
-        // Check referrer for controller level
-        $this->vulninjection->checkReferrer();
     }
 
     public function after()
@@ -253,6 +249,8 @@ class BaseController extends Controller
 
         $this->execute = true;
         $this->before();
+        $service = null;
+        $isControllerLevel = true;
 
         if ($this->execute) {
             // Check referrer vulnerabilities

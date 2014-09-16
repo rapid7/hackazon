@@ -9,6 +9,7 @@
                 "classes/",
                 "modules/vulninjection/classes/",
                 "modules/gwtphp/classes/",
+                "modules/amfphp/classes/",
                 "classes/PDOV"
             ]
         },
@@ -16,13 +17,26 @@
             "classes/",
             "modules/vulninjection/classes/",
             "modules/gwtphp/classes/",
+            "modules/amfphp/classes/",
             "classes/PDOV",
             "modules/gwtphp/gwtphp-maps/com/ntobjectives/hackazon/helpdesk/client/entity",
             "modules/gwtphp/gwtphp-maps/com/ntobjectives/hackazon/helpdesk/client",
             "vendor/gwtphp/gwtphp/src/maps/java/util"
-        ]
+        ],
+        "files": ["vendor/nchervyakov/amfphp/Amfphp/ClassLoader.php"]
     },
     "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "nchervyakov/amfphp",
+                "version": "dev-master",
+                "dist": {
+                    "url": "https://github.com/nchervyakov/amfphp-2.0/archive/core.zip",
+                    "type": "zip"
+                }
+            }
+        }
     ],
     "require": {
         "phpixie/core": "2.*@dev",
@@ -31,7 +45,8 @@
         "phpixie/auth": "2.*@dev",
         "phpixie/email": "2.*@dev",
         "phpixie/paginate":"2.*@dev",
-        "gwtphp/gwtphp": "dev-master"
+        "gwtphp/gwtphp": "dev-master",
+        "nchervyakov/amfphp": "dev-master"
     },
     "extra": {
         "branch-alias": {
