@@ -56,23 +56,33 @@ class Order extends CRUDController
             'id' => [],
             'status' => [
                 'type' => 'select',
-                'option_list' => ArraysHelper::arrayFillEqualPairs(['new', 'pending', 'complete'])
+                'option_list' => ArraysHelper::arrayFillEqualPairs(['new', 'pending', 'complete']),
+                'required' => true
             ],
             'customer_id' => [
                 'label' => 'Customer',
                 'type' => 'select',
                 'option_list' => 'App\Admin\Controller\User::getAvailableUsers',
+                'required' => true
             ],
             'customer_firstname',
             'customer_lastname',
             'customer_email',
-            'payment_method',
-            'shipping_method',
+            'payment_method' => [
+                'required' => true
+            ],
+            'shipping_method' => [
+                'required' => true
+            ],
             'comment' => [
                 'type' => 'textarea'
             ],
-            'created_at',
-            'updated_at',
+            'created_at' => [
+                'data_type' => 'date'
+            ],
+            'updated_at' => [
+                'data_type' => 'date'
+            ],
         ];
     }
 }

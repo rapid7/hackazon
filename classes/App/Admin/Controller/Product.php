@@ -68,12 +68,14 @@ class Product extends CRUDController
                 'label' => 'Id'
             ],
             'name' => [
-                'type' => 'text'
+                'type' => 'text',
+                'required' => true
             ],
             'categoryID' => [
                 'label' => 'Category',
                 'type' => 'select',
-                'option_list' => 'App\Admin\Controller\Category::getAvailableCategoryOptions'
+                'option_list' => 'App\Admin\Controller\Category::getAvailableCategoryOptions',
+                'required' => true
             ],
             'description' => [
                 'type' => 'textarea'

@@ -28,11 +28,11 @@ class Faq extends CRUDController
                 'question' => [
                     'type' => 'link',
                     'max_length' => '80',
-                    'strip_tags' => true
+                    'strip_tags' => true,
                 ],
                 'answer' => [
                     'max_length' => '80',
-                    'strip_tags' => true
+                    'strip_tags' => true,
                 ],
             ],
             $this->getEditLinkProp(),
@@ -44,9 +44,12 @@ class Faq extends CRUDController
     {
         return [
             'faqID' => [],
-            'question',
+            'question' => [
+                'required' => true
+            ],
             'answer' => [
                 'type' => 'textarea',
+                'required' => true
             ],
             'email'
         ];
