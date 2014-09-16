@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2020ac5c04c14d014bfe48c6ecba9c4a",
+    "hash": "0f0aa1cdb324214948cde2a09c10c93d",
     "packages": [
         {
             "name": "apache/log4php",
@@ -38,11 +38,17 @@
         },
         {
             "name": "gwtphp/gwtphp",
-            "version": "dev-fix-array-list",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:nchervyakov/gwtphp-packagist.git",
-                "reference": "9d9d63615f2d440cf3638274effb988df22767dc"
+                "url": "https://github.com/tengyifei/gwtphp-packagist.git",
+                "reference": "9b204c62fa8706f7833f0b58df1c3a62fc3d578a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tengyifei/gwtphp-packagist/zipball/9b204c62fa8706f7833f0b58df1c3a62fc3d578a",
+                "reference": "9b204c62fa8706f7833f0b58df1c3a62fc3d578a",
+                "shasum": ""
             },
             "require": {
                 "apache/log4php": "2.3.0"
@@ -56,6 +62,7 @@
                     "src/lang/TypeSignatures.class.php"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
@@ -78,7 +85,7 @@
                 "php",
                 "rpc"
             ],
-            "time": "2014-09-04 10:05:45"
+            "time": "2014-09-09 14:24:17"
         },
         {
             "name": "phpixie/auth",
