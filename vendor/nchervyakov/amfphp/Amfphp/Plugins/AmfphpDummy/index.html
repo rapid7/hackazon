@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>amfPHP Entry Point</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style type="text/css">
+        
+.static, #left, .notParamEditor, pre{
+     /*don't apply font to ACE editor or else cursor position is messed up. :not selector dones't work, so need 
+     to do it to everything but it' */
+        font-family: Arial, Helvetica, sans-serif;
+        color: #33536D;
+}
+
+*{
+	font-size: 15px;
+	margin: 0px;
+	padding: 0px;
+}
+
+input{
+	color:black;
+}
+
+
+a, input[type="submit"], button  {
+	color: #007EE5;
+        cursor:pointer;
+        text-decoration: none;
+}
+
+input, #result, button{
+	padding: 8px;
+	border: 1px solid #525252;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	margin: 5px;
+}
+
+
+
+.static {
+	height: 20px;
+	padding: 20px;
+	padding-top: 10px;
+	border-bottom: 1px solid #525252;
+} 
+
+#titleSpan {
+	font-size: 24px;
+} 
+
+.static ul {
+	float: right;
+	list-style-type: none;
+	margin-top: 7px;
+}
+
+.static a{
+	padding-right: 20px;
+    
+}
+
+.static ul li {
+	float: left;
+	margin-left: 20px;
+}
+
+#left li ul {
+	padding-left: 15px;
+	margin-bottom: 10px;
+}
+
+#left{
+    float: left;
+    margin: 20px;
+}
+
+#right {
+	float: left;
+	margin-top: 20px;
+        position:relative;
+        border-left: 1px solid #525252;
+}
+
+
+#right form {
+	margin-bottom: 20px;
+}
+
+.menu {
+	padding: 16px;
+        margin-bottom:16px;
+}
+
+.menu li {
+	margin-left: 15px;
+	margin-bottom: 2px;
+}
+
+.menu li b {
+	font-size: 14px;
+}
+
+
+.menu a{
+    padding-right: 10px;
+}
+
+
+.underline {
+   text-decoration: underline;
+}
+
+
+#signin input{
+    margin-left: 0;
+    margin-right: 0;
+}
+#signin input[type="submit"] {
+    float: right;
+}
+input[type="submit"], button {
+    padding: 5px;
+    margin: 5px;
+    background: #FFFFFF;
+}
+
+#serviceMethods{
+    margin-top: 20px;
+}
+
+
+h3{
+    padding: 5px;
+}
+
+#dataView{
+    padding: 5px;
+}
+
+#dataView#tree{
+    font-size: 12px;
+}
+.warning{
+    color:red;
+    
+}
+
+.paramEditorContainer{
+    /* 
+    The editor must be created in a div with absolute position. So use a wrapper for positioning. 
+    See http://dylemma.io/post/4
+    */
+    position: relative;
+    height: 4em;
+    width: 500px;
+    margin:5px;
+    border: 1px solid #525252;
+    
+}
+
+button img,
+button span {
+    vertical-align: middle;
+}
+
+#newsBtn{
+    /*
+    Hide news button by default
+    */
+    display:none;
+}
+
+#chartDivContainer{
+    background-color: white;
+    padding: 10px;
+}
+
+#controls{
+    margin-bottom: 10px;
+}
+
+
+.jqplot-table-legend{
+    z-index: 1;
+}
+
+#divRss{
+    max-width: 300px;
+}
+
+    </style>
+  </head>
+  <body>
+                <div class='static'>
+            <span id="titleSpan">AmfPHP Entry Point</span>
+            <ul>
+                <li><a href="http://www.silexlabs.org/amfphp/feedback/">Feedback</a></li>
+                <li><a href="http://www.silexlabs.org/groups/amfphp/amfphp-users/">Forum</a></li>
+                <li><a href="http://www.silexlabs.org/amfphp/documentation/">Documentation</a></li>
+                <li><a href="http://community.silexlabs.org/amfphp/reference/">Class Reference</a></li>
+                <li><a href="https://github.com/silexlabs/amfphp-2.0">Source Code</a></li>
+                <li><a href="http://www.silexlabs.org/amfphp/">AmfPHP Website</a></li>
+                <li><a href="http://www.silexlabs.org/">Silex Labs</a></li>
+                <li><a href="http://www.silexlabs.org/category/exchange/exchange-amfphp/">More Plugins</a></li>
+
+            </ul>
+        </div>    <div id='content'>
+        This is the URL where you must send your requests to process them. In the <a href="http://www.silexlabs.org/amfphp/documentation/">documentation</a> it is known as the 'entry point'. You might also see 'gateway' in some other documentation.
+        <br/>
+        <br/>
+    </div>   
+  </body>
+</html>

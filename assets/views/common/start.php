@@ -31,8 +31,17 @@
     <link href="/css/site.css" rel="stylesheet">
     <link href="/css/sidebar.css" rel="stylesheet">
 
+    <script type="text/javascript">
+        var App = window.App || {};
+        App.config = <?php echo json_encode([
+            'host' => ($_SERVER['HTTPS'] == 'on' ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST']
+        ]);?>;
+    </script>
+
     <!-- JavaScript -->
     <script src="/js/jquery-1.10.2.js"></script>
+    <script src="/js/json3.min.js"></script>
+    <script src="/js/jquery.dump.js"></script>
     <script src="/js/jquery-migrate-1.2.1.js"></script>
     <script src="/js/bootstrap.js"></script>
     <script src="/js/modern-business.js"></script>
@@ -51,6 +60,7 @@
     <script src="/js/knockout-2.2.1.js"></script>
     <script src="/js/knockout.localStorage.js"></script>
     <script src="/js/koExternalTemplateEngine_all.min.js"></script>
+    <script src="/js/amf/services.js"></script>
 
     <script src="/js/site.js"></script>
     <?php if (isset($headScripts)) { echo $headScripts; } ?>

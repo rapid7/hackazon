@@ -11,4 +11,5 @@ return array(
     $vendorDir . '/gwtphp/gwtphp/src/lang/SimpleClassLoader.class.php',
     $vendorDir . '/gwtphp/gwtphp/src/lang/ArrayMappedClassLoader.class.php',
     $vendorDir . '/gwtphp/gwtphp/src/lang/TypeSignatures.class.php',
+    $vendorDir . '/nchervyakov/amfphp/Amfphp/ClassLoader.php',
 );

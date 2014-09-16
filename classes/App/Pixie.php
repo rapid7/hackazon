@@ -3,6 +3,7 @@
 namespace App;
 
 
+use AmfphpModule\AmfphpModule;
 use App\Core\Config;
 use App\Core\Request;
 use App\Core\Response;
@@ -41,6 +42,7 @@ use VulnModule\VulnInjection;
  * @property-read RestService $restService
  * @property-read \PHPixie\Paginate $paginate
  * @property-read GWTModule $gwt
+ * @property-read AmfphpModule $amf
  * @property-read Config $config
  * @property-read Installer $installer
  * @method Controller|Rest\Controller controller
@@ -62,6 +64,7 @@ class Pixie extends \PHPixie\Pixie {
 		'paginate' => '\PHPixie\Paginate',
 		'paginateDB' => '\App\Paginate\Paginate',
 		'gwt' => 'GWTModule\GWTModule',
+		'amf' => 'AmfphpModule\AmfphpModule',
     );
 
     /**

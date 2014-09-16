@@ -473,6 +473,24 @@ $(document).ready(function () {
     })();
 
     $('.file-input').bootstrapFileInput();
+
+    // Voucher processing
+    var slider = $('#slider2'),
+        sliderControl = slider.next('.nivo-controlNav');
+    slider.on('click', 'img', function (ev) {
+        if (!amfphp) {
+            return;
+        }
+        var activeImageIndex = sliderControl.find('.active').attr('rel'),
+            image = slider.children('img').get(activeImageIndex),
+            dayOfWeek = $(image).data('day-of-week');
+
+        amfphp.services.VoucherService.registerVoucher(function (res) {
+            alert('The Day of the week is ' + res.dayOfWeek + '\nYour discount is: ' + res.discount);
+        }, function () {
+
+        }, new Date(), dayOfWeek);
+    });
 });
 
 
