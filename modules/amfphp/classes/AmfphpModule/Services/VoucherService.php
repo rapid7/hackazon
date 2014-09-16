@@ -17,10 +17,19 @@ class VoucherService
 {
     public function registerVoucher($date, $dayOfWeek) {
         $daysOfWeek = [1 => 'Mondey', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        $discounts = [
+            1 => 10,
+            2 => 20,
+            3 => 20,
+            4 => 20,
+            5 => 30,
+            6 => 30,
+            7 => 50
+        ];
         return [
             'date' => date('Y/m/d H:i:s', strftime($date)),
             'dayOfWeek' => $daysOfWeek[$dayOfWeek],
-            'discount' => (10 * $dayOfWeek) . '%'
+            'discount' => $discounts[$dayOfWeek] . '%'
         ];
     }
 } 
