@@ -382,17 +382,23 @@
     },
     {
         "name": "gwtphp/gwtphp",
-        "version": "dev-fix-array-list",
-        "version_normalized": "dev-fix-array-list",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "git@github.com:nchervyakov/gwtphp-packagist.git",
-            "reference": "9d9d63615f2d440cf3638274effb988df22767dc"
+            "url": "https://github.com/tengyifei/gwtphp-packagist.git",
+            "reference": "9b204c62fa8706f7833f0b58df1c3a62fc3d578a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tengyifei/gwtphp-packagist/zipball/9b204c62fa8706f7833f0b58df1c3a62fc3d578a",
+            "reference": "9b204c62fa8706f7833f0b58df1c3a62fc3d578a",
+            "shasum": ""
         },
         "require": {
             "apache/log4php": "2.3.0"
         },
-        "time": "2014-09-04 07:50:28",
+        "time": "2014-09-09 14:24:17",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -403,6 +409,7 @@
                 "src/lang/TypeSignatures.class.php"
             ]
         },
+        "notification-url": "https://packagist.org/downloads/",
         "license": [
             "Apache-2.0"
         ],

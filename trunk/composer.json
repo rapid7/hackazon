@@ -23,10 +23,6 @@
         ]
     },
     "repositories": [
-        {
-            "type": "git",
-            "url": "git@github.com:nchervyakov/gwtphp-packagist.git"
-        }
     ],
     "require": {
         "phpixie/core": "2.*@dev",
@@ -35,7 +31,7 @@
         "phpixie/auth": "2.*@dev",
         "phpixie/email": "2.*@dev",
         "phpixie/paginate":"2.*@dev",
-        "gwtphp/gwtphp": "dev-fix-array-list#9d9d63615f2d440cf3638274effb988df22767dc"
+        "gwtphp/gwtphp": "dev-master"
     },
     "extra": {
         "branch-alias": {
