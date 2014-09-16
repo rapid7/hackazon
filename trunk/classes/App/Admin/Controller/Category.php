@@ -27,7 +27,7 @@ class Category extends CRUDController
                 ],
                 'name' => [
                     'max_length' => 64,
-                    'type' => 'link'
+                    'type' => 'link',
                 ],
                 'parentCategory.name' => [
                     'is_link' => true,
@@ -65,7 +65,8 @@ class Category extends CRUDController
                 'label' => 'Id'
             ],
             'name' => [
-                'type' => 'text'
+                'type' => 'text',
+                'required' => true
             ],
             'parent' => [
                 'label' => 'Category',

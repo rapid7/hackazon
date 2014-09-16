@@ -234,10 +234,16 @@ class User extends CRUDController
     {
         return [
             'id' => [],
-            'username',
+            'username' => [
+                'required' => true,
+                'max_length' => 64
+            ],
             'first_name',
             'last_name',
-            'email',
+            'email' => [
+                'required' => true,
+                'data_type' => 'email'
+            ],
             'active' => [
                 'type' => 'boolean'
             ],
@@ -249,7 +255,9 @@ class User extends CRUDController
                 'type' => 'image',
                 'use_external_dir' => $this->pixie->getParameter('parameters.use_external_dir')
             ],
-            'created_on',
+            'created_on' => [
+                'data_type' => 'date'
+            ],
             'last_login',
         ];
     }

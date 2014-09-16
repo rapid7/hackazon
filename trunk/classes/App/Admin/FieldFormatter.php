@@ -10,6 +10,7 @@
 namespace App\Admin;
 
 
+use App\Helpers\ArraysHelper;
 use App\Model\BaseModel;
 use App\Traits\Pixifiable;
 use PHPixie\ORM\Model;
@@ -74,6 +75,9 @@ class FieldFormatter
         $escapedValue = htmlspecialchars($value);
         $fieldId = 'field_'.$field;
         $commonAttrs = ' name="'.$field.'" id="'.$fieldId.'" ';
+        if ($options['required']) {
+            $commonAttrs .= ' required ';
+        }
         $label = '<label for="'.$fieldId.'">'.$options['label'].'</label>';
 
         echo '<div class="form-group"> ';
@@ -92,19 +96,18 @@ class FieldFormatter
             echo $label.'<textarea cols="40" rows="4" '.$commonAttrs.' '
                 .'class="form-control '.$options['class_names'].'">'.$escapedValue.'</textarea>';
 
-        } else if ($type == 'checkboxes') {
-
-
         } else if ($type == 'select') {
             $optionList = $options['option_list'];
             if (is_callable($optionList)) {
                 $optionList = call_user_func_array($optionList, [$this->pixie, $options]);
+            } else if (!is_array($optionList)) {
+                $optionList = ArraysHelper::arrayFillEqualPairs([$optionList]);
             }
-            echo $label . '<br>' . $this->renderSelect($value, $optionList, [
+            echo $label . '<br>' . $this->renderSelect($value, $optionList, array_merge([
                 'name' => $field,
                 'id' => $fieldId,
-                'class' => 'form-control '.$options['class_names']
-            ]);
+                'class' => 'form-control '.$options['class_names'],
+            ], $options['required'] ? ['required' => 'required'] : []));
 
         } else if ($options['type'] == 'image') {
             echo $label;
@@ -127,7 +130,8 @@ class FieldFormatter
             echo $label.' <input type="checkbox" '.$commonAttrs.$checked.' class="form-horizontal '.$options['class_names'].'" value="1" />';
 
         } else {
-            echo $label.'<input type="text" value="'.$escapedValue.'" '.$commonAttrs.' class="form-control '.$options['class_names'].'"/>';
+            $dataType = $options['data_type'] == 'email' ? 'email' : 'text';
+            echo $label.'<input type="'.$dataType.'" value="'.$escapedValue.'" '.$commonAttrs.' class="form-control '.$options['class_names'].'"/>';
         }
 
         echo '</div>';
@@ -164,7 +168,7 @@ class FieldFormatter
     public function renderSelect($selectedValue, array $optionList, array $attributes = [])
     {
         $result = [];
-        $result[] = '<select id="'.$attributes['id'].'" name="'.$attributes['name'].'" class="'.$attributes['class'].'">';
+        $result[] = '<select '.$this->mergeAttributes($attributes).'>';
         foreach ($optionList as $value => $label) {
             $result[] = '<option value="'.htmlspecialchars($value).'" '
                 . ($value == $selectedValue ? ' selected' : '').'>'.htmlspecialchars($label).'</option>';
@@ -183,5 +187,15 @@ class FieldFormatter
 
         $name = $this->item->id() ? 'Save' : 'Add';
         echo '<button class="btn btn-primary" type="submit">'.$name.'</button> ';
+    }
+
+    public function mergeAttributes(array $attributes)
+    {
+        $attrs = [];
+        array_walk($attributes, function ($value, $attr) use (&$attrs) {
+            $attrs[] = htmlspecialchars($attr).'="'.htmlspecialchars($value).'"';
+        });
+        $attrs = implode(" ", $attrs);
+        return $attrs;
     }
 } 

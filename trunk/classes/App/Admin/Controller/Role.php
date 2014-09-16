@@ -38,7 +38,9 @@ class Role extends CRUDController
     {
         return [
             'id',
-            'name'
+            'name' => [
+                'required' => true
+            ]
         ];
     }
 
