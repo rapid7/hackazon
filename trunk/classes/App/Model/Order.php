@@ -70,4 +70,9 @@ class Order extends BaseModel
 
         return $this->where('id', $id)->find();
     }
+
+    public static function getOrderStatuses()
+    {
+        return ['new', 'pending', 'shipped', 'complete'];
+    }
 }

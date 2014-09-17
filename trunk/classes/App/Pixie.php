@@ -171,7 +171,16 @@ class Pixie extends \PHPixie\Pixie {
             }
 
             if (!$response) {
-                $route_data = $this->router->match('/error/' . $exception->getCode());
+                $isAdmin = $exception instanceof HttpException
+                    && $exception->getParameter('request')
+                    && $exception->getParameter('request')->isAdminPath()
+                    && $this->auth->has_role('admin');
+
+                if ($isAdmin) {
+                    $route_data = $this->router->match('/admin/error/' . $exception->getCode());
+                } else {
+                    $route_data = $this->router->match('/error/' . $exception->getCode());
+                }
                 $route_data['params'] = array_merge($route_data['params'], [
                     'exception' => $exception
                 ]);

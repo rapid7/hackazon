@@ -13,6 +13,14 @@ return array(
             'action' => 'view'
         ),
     ),
+    'admin_error' => array(
+        '/admin/error/<id>',
+        array(
+            'namespace' => 'App\\Admin\\',
+            'controller' => 'error',
+            'action' => 'view'
+        ),
+    ),
     'wishlist_add_product' => array('/wishlist/add-product/<id>',
         array(
             'controller' => 'Wishlist',
@@ -48,6 +56,21 @@ return array(
             'action' => 'edit_profile'
         )
     ],
+
+    'admin_entity_action' => array(
+        array(
+            '/admin/<controller>/<id>/<action>',
+            array(
+                'id' => '\d+'
+            ),
+        ),
+        array(
+            'namespace' => 'App\\Admin\\',
+            'controller' => 'home',
+
+            'force_hyphens' => true
+        )
+    ),
 
     'admin' => array('/admin(/<controller>(/<action>(/<id>)))',
         array(

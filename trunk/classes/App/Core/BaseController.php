@@ -11,9 +11,9 @@ namespace App\Core;
 
 
 use App\Exception\HttpException;
+use App\Exception\NotFoundException;
 use PHPixie\Controller;
 use PHPixie\DB\PDOV\Connection;
-use PHPixie\Exception\PageNotFound;
 use PHPixie\ORM\Model;
 use VulnModule\Config\Context;
 use VulnModule\Csrf\CsrfToken;
@@ -243,9 +243,18 @@ class BaseController extends Controller
     public function run($action)
     {
         $action = 'action_'.$action;
+        $forceHyphens = $this->request->param('force_hyphens');
 
-        if (!method_exists($this, $action))
-            throw new PageNotFound("Method {$action} doesn't exist in ".get_class($this));
+        if (!method_exists($this, $action)) {
+            // Try to change hyphens to underscores in action name
+            $underscoredAction = str_replace('-', '_', $action);
+            if (!$forceHyphens || !method_exists($this, $underscoredAction)) {
+                throw new NotFoundException("Method {$action} doesn't exist in " . get_class($this));
+            } else {
+                $action = $underscoredAction;
+            }
+        }
+
 
         $this->execute = true;
         $this->before();

@@ -36,6 +36,7 @@ class Order extends CRUDController
                     'title' => 'Email',
                 ],
                 'customer.username' => [
+                    'title' => 'Customer Username',
                     'is_link' => true,
                     'template' => '/admin/user/edit/%customer.id%'
                 ],
@@ -56,7 +57,7 @@ class Order extends CRUDController
             'id' => [],
             'status' => [
                 'type' => 'select',
-                'option_list' => ArraysHelper::arrayFillEqualPairs(['new', 'pending', 'complete']),
+                'option_list' => ArraysHelper::arrayFillEqualPairs(\App\Model\Order::getOrderStatuses()),
                 'required' => true
             ],
             'customer_id' => [
@@ -84,5 +85,22 @@ class Order extends CRUDController
                 'data_type' => 'date'
             ],
         ];
+    }
+
+    protected function tuneModelForList()
+    {
+        $this->model->with('customer');
+    }
+
+    public function action_edit()
+    {
+        parent::action_edit();
+        /** @var \App\Model\Order $order */
+        $order = $this->view->item;
+        $this->view->order = $order;
+        $this->view->orderItems = $order->orderItems->find_all()->as_array();
+        if ($order->id()) {
+            $this->view->subview = 'order/edit';
+        }
     }
 }

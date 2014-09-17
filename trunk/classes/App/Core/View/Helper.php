@@ -27,6 +27,7 @@ class Helper extends \PHPixie\View\Helper
 
     protected $aliases = array(
         '_' => 'output',
+        '_esc' => 'escape',
         '_token' => 'token',
         '_dump' => 'dump',
         '_order_status' => 'order_status',
