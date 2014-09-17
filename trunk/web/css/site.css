@@ -406,7 +406,8 @@ ul.nav li.grey a {
     color: #fff;
 }
 .wishlist .product-list {
-    margin-bottom: 20px;
+    width: 60%;
+    margin: 20px auto;
 }
 .wishlist .search-form {
     padding-left: 0;
