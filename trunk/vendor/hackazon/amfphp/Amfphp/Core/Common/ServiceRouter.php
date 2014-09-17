@@ -93,7 +93,7 @@ class Amfphp_Core_Common_ServiceRouter {
                     $folderPath = $folder;
                 }
                 $servicePath = $folderPath . $serviceIncludePath;
-
+                
                 if (file_exists($servicePath)) {
                     require_once $servicePath;
                     if($rootNamespace == NULL){

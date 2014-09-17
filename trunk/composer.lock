@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "615be5c167a67f6b419e341186727a6a",
+    "hash": "96b087c79b3e518e6599108ea4893fd4",
     "packages": [
         {
             "name": "apache/log4php",
@@ -88,11 +88,11 @@
             "time": "2014-09-09 14:24:17"
         },
         {
-            "name": "nchervyakov/amfphp",
+            "name": "hackazon/amfphp",
             "version": "dev-master",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/nchervyakov/amfphp-2.0/archive/core.zip",
+                "url": "https://github.com/hackazon/amfphp-2.0/archive/core.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -449,7 +449,7 @@
         "phpixie/email": 20,
         "phpixie/paginate": 20,
         "gwtphp/gwtphp": 20,
-        "nchervyakov/amfphp": 20
+        "hackazon/amfphp": 20
     },
     "prefer-stable": false,
     "platform": [
