@@ -9,6 +9,8 @@ use App\Paginate;
 
 class Search extends Page {
 
+    protected $_products;
+
     public function action_index() {
         $catId = $this->request->get('id');
         $name = $this->request->get('searchString');
@@ -55,12 +57,13 @@ class Search extends Page {
                     ->join('tbl_product_options_values', array('tbl_product_options_values.productID', 'tbl_products.productID'), 'left')
                     ->where("tbl_product_options_values.variantID", $quality);
         }
+        /** @var Paginate\Paginate\Pager\DB $pager */
         $pager = $this->pixie->paginateDB->db($this->_products, $current_page, 12);
 
         $pager->set_url_callback(function($page) {
             $catId = $this->request->get("id");
             $name = $this->request->get("searchString");
-            $brand = $this->request->get('brands');
+            $brands = $this->request->get('brands');
             $price = $this->request->get('price');
             $quality = $this->request->get('quality');
             return "/search/page/?page=$page&id=$catId&searchString=$name&brands=$brands&price=$price&quality=$quality";
@@ -81,6 +84,7 @@ class Search extends Page {
             $view->searchString = is_null($name) ? '' : $name;
             $view->pageTitle = 'Search by &laquo;' . $name . '&raquo;';
             $view->pager = $pager;
+            $view->currentItems = $pager->current_items();
 
             $this->response->body = $view->render();
             $this->execute = false;
@@ -95,6 +99,7 @@ class Search extends Page {
             $this->view->searchString = is_null($name) ? '' : $name;
             $this->view->pageTitle = 'Search by &laquo;' . $name . '&raquo;';
             $this->view->pager = $pager;
+            $this->view->currentItems = $pager->current_items();
 
             $this->view->subview = 'search/main';
         }

@@ -149,14 +149,14 @@
         <!-- END CONTENT ITEM -->
         <?php
         if (count($pager->current_items()) > 0) {
-            $products_count = count($pager->current_items());
+            $products_count = count($currentItems);
             ?>
             <div class="row product-list-inline-small">
 
-                <?php foreach ($pager->current_items() as $item): ?>
+                <?php foreach ($currentItems as $item): ?>
                     <div class="col-sm-6 col-md-3">
                         <div class="thumbnail">
-                            <a href="/product/view?id=<?= $item->productID ?>"><img src="/products_pictures/<?= $item->picture ?>" alt="">
+                            <a href="/product/view?id=<?= $item->productID ?>"><img src="/products_pictures/<?= $item->picture ?: $item->big_picture?>" alt="">
                             </a>
                             <div class="caption">
                                 <a href="/product/view?id=<?= $item->productID ?>" title="<?= $item->name ?>">
