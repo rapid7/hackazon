@@ -16,7 +16,8 @@
 
     <div class="form-group">
         <label>Database Name:</label>
-        <input class="form-control" type="text" name="db" value="<?php $_(isset($db) ? $db : ''); ?>" placeholder="Database" required />
+        <input class="form-control" type="text" name="db" value="<?php $_(isset($db) ? $db : ''); ?>" placeholder="Database" required /><br>
+        <label><input type="checkbox" name="create_if_not_exists" <?php if (isset($create_if_not_exists) && $create_if_not_exists) { echo "checked"; } ?> /> Create if DB does not exist</label>
     </div>
 
     <div class="form-group">
