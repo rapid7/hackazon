@@ -134,7 +134,7 @@
         <!-- START CONTENT ITEM -->
         <div class="row">
             <div class="hidden-xs col-sm-12">
-                <?php include $common_path.'/_side_slider.php'; ?>
+                <?php include __DIR__.'/../common/_side_slider.php'; ?>
             </div>
         </div>
     </div>
