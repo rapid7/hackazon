@@ -337,6 +337,10 @@ ul.nav li.grey a {
     color: #1688b0;
     display: block;
 }
+.hw-navbar-brand img {
+    height: 60px;
+    margin-top: -10px;
+}
 .hw-navbar li.hw-login-item {
     white-space: nowrap;
     margin-left: 40px;
