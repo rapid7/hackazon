@@ -11,7 +11,12 @@ namespace App\Admin\Controller;
 
 
 use App\Admin\CRUDController;
+use App\Admin\FieldFormatter;
+use App\Exception\NotFoundException;
+use App\Model\BaseModel;
 use App\Model\Category;
+use App\Model\Option;
+use App\Model\OptionValue;
 
 class Product extends CRUDController
 {
@@ -116,5 +121,147 @@ class Product extends CRUDController
         ];
 
         return $fields;
+    }
+
+    public function action_edit()
+    {
+        $id = $this->request->param('id');
+        $options = $this->getAllProductOptionsWithValuesArray();
+
+        if ($this->request->method == 'POST') {
+            $user = null;
+            if ($id) {
+                /** @var BaseModel $user */
+                $user = $this->pixie->orm->get($this->model->model_name, $id);
+            }
+
+            if (!$user || !$user->loaded()) {
+                throw new NotFoundException();
+            }
+
+            $data = $this->request->post();
+            $this->processRequestFilesForItem($user, $data);
+            $user->values($user->filterValues($data));
+            $user->save();
+
+//            $requestUserRoles = $data['options'] ?: [];
+//            $userRoles = array_intersect_key($options, array_flip($requestUserRoles));
+
+//            foreach ($this->pixie->orm->get('role')->find_all() as $role) {
+//                if (array_key_exists($role->id(), $userRoles)) {
+//                    $user->add('roles', $role);
+//                } else {
+//                    $user->remove('roles', $role);
+//                }
+//            }
+
+            if ($user->loaded()) {
+                $this->redirect('/admin/' . strtolower($user->model_name) . '/edit/'.$user->id());
+                return;
+            }
+
+        } else {
+
+            if (!$id) {
+                throw new NotFoundException();
+            }
+
+            $user = $this->pixie->orm->get($this->model->model_name, $id);
+            if (!$user || !$user->loaded()) {
+                throw new NotFoundException();
+            }
+        }
+
+        $editFields = $this->prepareEditFields();
+        $this->view->pageTitle = $this->modelName;
+        $this->view->pageHeader = $this->view->pageTitle;
+        $this->view->modelName = $this->model->model_name;
+        $this->view->item = $user;
+        $this->view->editFields = $editFields;
+        $this->view->formatter = new FieldFormatter($user, $editFields);
+        $this->view->formatter->setPixie($this->pixie);
+
+        $this->view->options = $options;
+        $this->view->subview = 'product/edit';
+        //$this->view->userRoles = $this->getUserRolesOptions($user);
+    }
+
+    public function action_new()
+    {
+        /** @var \App\Model\User $user */
+        $user = $this->pixie->orm->get($this->model->model_name);
+        $roles = self::getRoleOptions($this->pixie);
+
+        if ($this->request->method == 'POST') {
+            $data = $this->request->post();
+            $user->values(array_merge($user->filterValues($data), [
+                'created_on' => $data['created_on'] ?: date('Y-m-d H:i:s')
+            ]));
+            $user->save();
+
+            if ($user->loaded()) {
+                $this->processRequestFilesForItem($user, $data);
+
+                $requestUserRoles = $data['roles'] ?: [];
+                $userRoles = array_intersect_key($roles, array_flip($requestUserRoles));
+
+                foreach ($this->pixie->orm->get('role')->find_all() as $role) {
+                    if (array_key_exists($role->id(), $userRoles)) {
+                        $user->add('roles', $role);
+                    }
+                }
+
+                $this->redirect('/admin/' . strtolower($user->model_name) . '/edit/'.$user->id());
+                return;
+            }
+        } else {
+            $userRoles = [];
+        }
+
+        $editFields = $this->prepareEditFields();
+        $this->view->pageTitle = 'Add new ' . $this->modelName;
+        $this->view->pageHeader = $this->view->pageTitle;
+        $this->view->modelName = $this->model->model_name;
+        $this->view->item = $user;
+        $this->view->editFields = $editFields;
+        $this->view->formatter = new FieldFormatter($user, $editFields);
+        $this->view->formatter->setPixie($this->pixie);
+        $this->view->roles = self::getRoleOptions($this->pixie);
+        $this->view->subview = 'product/edit';
+        $this->view->userRoles = $userRoles;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAllProductOptionsWithValuesArray()
+    {
+        $result = [];
+        /** @var Option[] $options */
+        $options = $this->pixie->orm->get('option')->order_by('sort_order', 'asc')->find_all()->as_array();
+        foreach ($options as $option) {
+            $res = ['name' => $option->name, 'variants' => []];
+
+            /** @var OptionValue $variant */
+            foreach ($option->variants->order_by('sort_order', 'asc')->find_all()->as_array() as $variant) {
+                $res['variants'][$variant->id()] = $variant->name;
+            }
+            $result[$option->id()] = $res;
+        }
+
+        return $result;
+    }
+
+    private function getProductOptionsWithValuesArray(\App\Model\Product $product)
+    {
+//        $result = [];
+//        /** @var Option[] $options */
+//        $optionVariants = $product->optionValues->order_by('sort_order', 'asc')->find_all()->as_array();
+//        foreach ($optionVariants as $variant) {
+//            $res = ['name' => $variant->name];
+//            $result[$option->id()] = $res;
+//        }
+//
+//        return $result;
     }
 }

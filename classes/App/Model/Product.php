@@ -17,6 +17,12 @@ use PHPixie\ORM;
  * @property string picture
  * @property int categoryID
  * @property Pixie pixie
+ * @property SpecialOffers $special_offers
+ * @property Review $reviews
+ * @property WishList $in_wishlists
+ * @property Category $categories
+ * @property Category $category
+ * @property OptionValue $options
  * @package App\Model
  */
 class Product extends BaseModel {

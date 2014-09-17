@@ -4,7 +4,14 @@ namespace App\Model;
 
 use PHPixie\ORM;
 
-class Option extends \PHPixie\ORM\Model {
+/**
+ * Class Option
+ * @package App\Model
+ * @property string name
+ * @property int $sort_order
+ * @property OptionValue $variants
+ */
+class Option extends BaseModel {
 
     public $table = 'tbl_product_options';
     public $id_field = 'optionID';
