@@ -22,6 +22,8 @@ class DBSettingsStep extends AbstractStep
 
     protected $db;
 
+    protected $createIfNotExists = false;
+
     protected function processRequest(array $data = [])
     {
         $this->isValid = false;
@@ -30,6 +32,7 @@ class DBSettingsStep extends AbstractStep
         $this->user = $data['user'];
         $this->password = $data['password'];
         $this->db = $data['db'];
+        $this->createIfNotExists = $data['create_if_not_exists'];
 
         if (!$data['host']) {
             $this->errors[] = 'Please enter host name.';
@@ -48,10 +51,26 @@ class DBSettingsStep extends AbstractStep
         }
 
         try {
-            $dsn = "mysql:host={$this->host};dbname={$this->db}";
+            $dsn = "mysql:host={$this->host}";
+            // Try to connect
             $conn = new \PDO($dsn, $this->user, $this->password);
 
-        } catch (\PDOException $e) {
+            $stmt = $conn->query('USE `'.$this->db.'`');
+
+            if (!$stmt || $stmt->errorCode() > 0) {
+                if ($this->createIfNotExists) {
+                    $stmt = $conn->query("CREATE DATABASE `".$this->db."` COLLATE 'utf8_general_ci'");
+
+                    if (!$stmt || $stmt->errorCode() > 0) {
+                        throw new \Exception('Can\'t create database ' . $this->db);
+                    }
+                } else {
+                    throw new \Exception('Can\'t connect to database ' . $this->db);
+                }
+            }
+
+
+        } catch (\Exception $e) {
             $this->errors[] = "Error " . $e->getCode() . ": " . $e->getMessage();
             return false;
         }
@@ -62,7 +81,7 @@ class DBSettingsStep extends AbstractStep
 
     protected function persistFields()
     {
-        return ['host', 'user', 'password', 'db'];
+        return ['host', 'user', 'password', 'db', 'createIfNotExists'];
     }
 
     public function init()
@@ -83,6 +102,7 @@ class DBSettingsStep extends AbstractStep
             'user' => $this->user,
             'password' => $this->password,
             'db' => $this->db,
+            'create_if_not_exists' => $this->createIfNotExists,
         ];
     }
 } 
