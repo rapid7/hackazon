@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Pixie;
+use RelationTest\Model\Role;
 
 /**
  * Class User.
@@ -12,6 +13,9 @@ use App\Pixie;
  * @property string $username
  * @property string $password
  * @property string $photo
+ *
+ * @property Role $roles
+ * @property WishListFollowers $wishlistFollowers
  * @package App\Model
  */
 class User extends BaseModel {
@@ -35,6 +39,11 @@ class User extends BaseModel {
             'foreign_key' => 'role_id'
         )
     );
+
+    /**
+     * @var array Cached roles
+     */
+    protected $_roles;
 
     public function checkExistingUser($dataUser) {
         if (strlen($dataUser['username']) && iterator_count($this->getUserByUsername($dataUser['username'])) > 0 ||
@@ -180,6 +189,7 @@ Recovering link is here
                     ->where('wf.user_id', $this->id)
                     ->execute();
             $followerIds = array();
+            /** @var User $followers */
             foreach ($followers->as_array() as $u) {
                 $followerIds[] = $u->id;
             }
@@ -192,5 +202,30 @@ Recovering link is here
             return $followers;
         }
         return null;
+    }
+
+    public function getRoles($refresh = false)
+    {
+        if (!$this->loaded()) {
+            throw new \LogicException('Can\'t get roles of invalid user object.');
+        }
+
+        if (!$refresh && $this->_roles !== null) {
+            return $this->_roles;
+        }
+
+        $this->_roles = [];
+        $roles = $this->roles->find_all()->as_array();
+        /** @var \App\Model\Role $role */
+        foreach ($roles as $role) {
+            $this->_roles[] = $role->name;
+        }
+
+        return $this->_roles;
+    }
+
+    public function hasRole($role)
+    {
+        return in_array($role, $this->getRoles());
     }
 }

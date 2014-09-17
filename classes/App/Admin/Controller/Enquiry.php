@@ -11,7 +11,10 @@ namespace App\Admin\Controller;
 
 
 use App\Admin\CRUDController;
+use App\Exception\HttpException;
+use App\Exception\NotFoundException;
 use App\Helpers\ArraysHelper;
+use App\Model\EnquiryMessage;
 
 class Enquiry extends CRUDController
 {
@@ -89,5 +92,55 @@ class Enquiry extends CRUDController
         }
 
         return $value2;
+    }
+
+    public function action_edit()
+    {
+        parent::action_edit();
+        /** @var \App\Model\Enquiry $enquiry */
+        $enquiry = $this->view->item;
+        if ($enquiry->id()) {
+            $this->view->enquiryMessages = $enquiry->messages->with('author')->find_all()->as_array();
+            $this->view->subview = 'enquiry/edit';
+        }
+    }
+
+    public function action_add_message()
+    {
+        if ($this->request->method != 'POST') {
+            throw new HttpException('Method Not Allowed', 405, null, 'Method Not Allowed');
+        }
+        $id = $this->request->param('id');
+
+        if (!$id) {
+            throw new NotFoundException();
+        }
+
+        /** @var \App\Model\Enquiry $enquiry */
+        $enquiry = $this->pixie->orm->get('enquiry', $id);
+
+        if (!$enquiry || !$enquiry->loaded()) {
+            throw new NotFoundException();
+        }
+
+        $message = $this->request->post('message');
+        if (!$message) {
+            $this->jsonResponse(['error' => 1, 'message' => 'Please enter the message.']);
+        }
+
+        /** @var EnquiryMessage $enquiryMessage */
+        $enquiryMessage = $enquiry->createMessage($message, $this->pixie->auth->user()->id());
+
+        if ($enquiryMessage->id()) {
+            $messageView = $this->view('enquiry/_enquiry_message');
+            $messageView->eMessage = $enquiryMessage;
+            $this->jsonResponse([
+                'success' => 1,
+                'enquiryMessage' => $enquiryMessage->as_array(true),
+                'html' => $messageView->render()
+            ]);
+        } else {
+            $this->jsonResponse(['error' => 1, 'message' => 'Error while adding message.']);
+        }
     }
 } 

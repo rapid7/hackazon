@@ -43,4 +43,30 @@ $(function() {
             });
         }
     });
+
+
+    $('.js-add-enquiry-message-form').each(function () {
+        var form = $(this),
+            errorBox = $('.js-add-enquiry-message-errors'),
+            list = $('#enquiry_messages');
+
+        form.on('submit', function (ev) {
+            ev.preventDefault();
+
+            errorBox.html('');
+            var data = form.serialize();
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                dataType: 'json',
+                data: data
+            }).success(function (res) {
+                if (res.success && res.enquiryMessage) {
+                    list.append(res.html);
+                } else {
+                    errorBox.html(res.message);
+                }
+            });
+        })
+    });
 });

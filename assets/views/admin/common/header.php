@@ -39,6 +39,7 @@
         <ul class="nav" id="side-menu">
             <?php //include __DIR__.'/_search_field.php'; ?>
             <?php $baseLen = strlen('/admin'); ?>
+            <?php if (isset($sidebarLinks)): ?>
             <?php foreach ($sidebarLinks as $sbLink => $sbLinkData): ?>
                 <?php $isLinkActive = strlen($sbLink) <= $baseLen && $_SERVER['REQUEST_URI'] == $sbLink
                     || strlen($sbLink) > $baseLen && strpos($_SERVER['REQUEST_URI'], $sbLink) === 0; ?>
@@ -47,6 +48,7 @@
                     ><i class="<?php $_($sbLinkData['link_class']); ?>"></i><?php $_($sbLinkData['label']); ?></a>
             </li>
             <?php endforeach; ?>
+            <?php endif; ?>
 
             <?php //include __DIR__.'/_sidebar_extra_items.php'; ?>
         </ul>

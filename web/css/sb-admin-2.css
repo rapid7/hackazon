@@ -404,3 +404,25 @@ table.dataTable thead .sorting:after {
 .cb-column {
     width: 30px;
 }
+
+.product-page .product-image img {
+    max-height: 30px;
+    max-width: 40px;
+}
+
+.helpdesk .buttons-panel {
+    text-align: right;
+    width: 100%;
+}
+
+.helpdesk .add-message-form {
+    width: 100%;
+}
+
+.helpdesk .buttons-panel td {
+    padding-top: 10px;
+}
+
+.helpdesk .messages-panel {
+    margin-bottom: 30px;
+}

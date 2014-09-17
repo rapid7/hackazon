@@ -1,6 +1,3 @@
-<?php
-$items = $order->orderItems->find_all()->as_array();
-?>
 <div class="container order-page">
 
     <div class="row">

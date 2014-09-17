@@ -44,6 +44,7 @@ class Account extends \App\Page {
             }
             $this->view->id = $orderId;
             $this->view->order = $order;
+            $this->view->items = $order->orderItems->find_all()->as_array();
             $this->view->subview = 'account/order';
 
         } else { // List orders

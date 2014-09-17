@@ -54,7 +54,7 @@ class Wishlist extends Page {
 
     /**
      * View wish list.
-     * @throws \PHPixie\Exception\PageNotFound
+     * @throws NotFoundException
      */
     public function action_view() {
         $this->prepare();
