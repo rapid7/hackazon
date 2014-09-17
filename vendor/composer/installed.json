@@ -434,12 +434,12 @@
         ]
     },
     {
-        "name": "nchervyakov/amfphp",
+        "name": "hackazon/amfphp",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "dist": {
             "type": "zip",
-            "url": "https://github.com/nchervyakov/amfphp-2.0/archive/core.zip",
+            "url": "https://github.com/hackazon/amfphp-2.0/archive/core.zip",
             "reference": null,
             "shasum": null
         },

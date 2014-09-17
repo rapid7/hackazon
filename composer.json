@@ -23,16 +23,16 @@
             "modules/gwtphp/gwtphp-maps/com/ntobjectives/hackazon/helpdesk/client",
             "vendor/gwtphp/gwtphp/src/maps/java/util"
         ],
-        "files": ["vendor/nchervyakov/amfphp/Amfphp/ClassLoader.php"]
+        "files": ["vendor/hackazon/amfphp/Amfphp/ClassLoader.php"]
     },
     "repositories": [
         {
             "type": "package",
             "package": {
-                "name": "nchervyakov/amfphp",
+                "name": "hackazon/amfphp",
                 "version": "dev-master",
                 "dist": {
-                    "url": "https://github.com/nchervyakov/amfphp-2.0/archive/core.zip",
+                    "url": "https://github.com/hackazon/amfphp-2.0/archive/core.zip",
                     "type": "zip"
                 }
             }
@@ -46,7 +46,7 @@
         "phpixie/email": "2.*@dev",
         "phpixie/paginate":"2.*@dev",
         "gwtphp/gwtphp": "dev-master",
-        "nchervyakov/amfphp": "dev-master"
+        "hackazon/amfphp": "dev-master"
     },
     "extra": {
         "branch-alias": {
