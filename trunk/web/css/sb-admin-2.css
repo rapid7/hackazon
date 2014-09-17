@@ -426,3 +426,7 @@ table.dataTable thead .sorting:after {
 .helpdesk .messages-panel {
     margin-bottom: 30px;
 }
+
+.option-label {
+    margin-left: 10px;
+}
