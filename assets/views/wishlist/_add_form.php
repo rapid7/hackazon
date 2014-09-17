@@ -8,7 +8,6 @@
             <label>Type</label>
             <select class="form-control" name="type" required>
                 <option value="<?php echo \App\Model\WishList::TYPE_PRIVATE; ?>" selected>Private</option>
-                <option value="<?php echo \App\Model\WishList::TYPE_SHARED; ?>">Shared</option>
                 <option value="<?php echo \App\Model\WishList::TYPE_PUBLIC; ?>">Public</option>
             </select>
         </div>
