@@ -406,8 +406,6 @@ ul.nav li.grey a {
     color: #fff;
 }
 .wishlist .product-list {
-    width: 60%;
-    margin: 20px auto;
 }
 .wishlist .search-form {
     padding-left: 0;
@@ -440,6 +438,10 @@ ul.nav li.grey a {
 }
 .wishlist .product-item .item-action-icon:first-child {
     margin-left: 0;
+}
+.wishlist .product-list .panel {
+    width: 60%;
+    margin: 20px auto;
 }
 .people-box {
     float: left;
