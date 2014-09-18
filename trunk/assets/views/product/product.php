@@ -48,7 +48,7 @@
                             <?php if (count($options) > 0) { ?>
                             <div class="option-variants">
                                 <?php foreach ($options as $variant) { ?>
-                                    <strong><?= $variant->option->name; ?>:</strong> <span><?= $variant->name; ?></span>
+                                    <strong><?= $variant->parentOption->name; ?>:</strong> <span><?= $variant->name; ?></span>
                                     <br>
 
                                 <?php } ?>
