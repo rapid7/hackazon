@@ -24,13 +24,18 @@ class DBSettingsStep extends AbstractStep
 
     protected $createIfNotExists = false;
 
+    protected $useExistingPassword;
+
+    protected $defaultPassword;
+
     protected function processRequest(array $data = [])
     {
         $this->isValid = false;
 
+        $this->useExistingPassword = (boolean) $data['use_existing_password'];
         $this->host = $data['host'];
         $this->user = $data['user'];
-        $this->password = $data['password'];
+        $this->password = $this->useExistingPassword ? $this->defaultPassword : $data['password'];
         $this->db = $data['db'];
         $this->createIfNotExists = $data['create_if_not_exists'];
 
@@ -81,7 +86,7 @@ class DBSettingsStep extends AbstractStep
 
     protected function persistFields()
     {
-        return ['host', 'user', 'password', 'db', 'createIfNotExists'];
+        return ['host', 'user', 'password', 'db', 'createIfNotExists', 'useExistingPassword', 'defaultPassword'];
     }
 
     public function init()
@@ -93,6 +98,8 @@ class DBSettingsStep extends AbstractStep
         $this->user = $config['default']['user'];
         $this->password = $config['default']['password'];
         $this->db = $config['default']['db'];
+
+        $this->defaultPassword = $this->password;
     }
 
     public function getViewData()
@@ -103,6 +110,7 @@ class DBSettingsStep extends AbstractStep
             'password' => $this->password,
             'db' => $this->db,
             'create_if_not_exists' => $this->createIfNotExists,
+            'use_existing_password' => $this->useExistingPassword,
         ];
     }
 } 

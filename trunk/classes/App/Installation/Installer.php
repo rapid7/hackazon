@@ -199,6 +199,7 @@ class Installer
     {
         $stepObj = $this->firstStep;
         $this->stepsData = [];
+        $lastStartedStep = $stepObj;
 
         while ($stepObj) {
             $this->stepsData['steps'][$stepObj->getName()] = [
@@ -207,8 +208,12 @@ class Installer
                 'started' => $stepObj->isStarted(),
                 'valid' => $stepObj->isValid()
             ];
+            if ($stepObj->isStarted()) {
+                $lastStartedStep = $stepObj;
+            }
             $stepObj = $stepObj->getNextStep();
         }
+        $this->stepsData['steps'][$lastStartedStep->getName()]['is_last_started'] = true;
     }
 
     /**
