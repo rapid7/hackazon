@@ -9,7 +9,8 @@
         <div class="row step-meter">
             <div class="row bs-wizard" style="border-bottom:0;">
                 <?php foreach ($steps as $stepName => $stepData): ?>
-                    <div class="col-xs-4 bs-wizard-step <?php if ($stepData['started']) { echo 'complete'; } else { echo "disabled"; } ?>">
+                    <div class="col-xs-4 bs-wizard-step <?php if ($stepData['started']) { echo 'complete'; } else { echo "disabled"; }
+                            if ($stepData['is_last_started']) { echo ' active'; } ?>">
                         <div class="text-center bs-wizard-stepnum <?php if ($stepData['current']) { echo 'active'; } ?>">
                             <?php $_($stepData['title']); ?>
                         </div>
