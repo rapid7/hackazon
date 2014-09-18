@@ -50,8 +50,8 @@
             <p><i class="fa fa-clock-o"></i> <abbr title="Hours">H</abbr>: Monday - Friday: 9:00 AM to 5:00 PM</p>
             <ul class="list-unstyled list-inline list-social-icons">
                 <li class="tooltip-social facebook-link"><a href="#facebook-page" onclick="window.open(
-                                'http://vkontakte.ru/share.php?url=' + encodeURIComponent(location.href),
-                                'vkontakte-share-dialog',
+                                'http://www.facebook.com/sharer.php?u=' + encodeURIComponent(location.href),
+                                'facebook-share-dialog',
                                 'width=626,height=436');
                         return false;" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-2x"></i></a></li>
                 <li class="tooltip-social twitter-link"><a href="#twitter-profile" onclick="window.open(
