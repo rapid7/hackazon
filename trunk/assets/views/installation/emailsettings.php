@@ -86,14 +86,7 @@
                 if (form.data('bootstrapValidator')) {
                     form.data('bootstrapValidator').resetForm();
                 }
-                form.bootstrapValidator({
-                    feedbackIcons: {
-                        valid: 'glyphicon glyphicon-ok',
-                        invalid: 'glyphicon glyphicon-remove',
-                        validating: 'glyphicon glyphicon-refresh'
-                    },
-                    container: 'tooltip'
-                });
+                form.hzBootstrapValidator();
             };
             updateLayout();
 

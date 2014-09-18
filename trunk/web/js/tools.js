@@ -16,7 +16,7 @@
             }
 
             if (options) {
-                options = $.extend(defaultOptions, options);
+                options = $.extend({}, defaultOptions, options);
                 params[0] = options;
             }
             return $.fn[parentName].apply(this, params);
