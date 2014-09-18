@@ -13,6 +13,7 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrapValidator.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
     <link href="/css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
@@ -42,6 +43,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrapValidator.min.js"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
     <script src="/js/plugins/metisMenu/metisMenu.min.js"></script>
@@ -56,6 +58,7 @@
     <script src="/js/bootstrap.file-input.js"></script>
 
     <!-- Custom Theme JavaScript -->
+    <script src="/js/tools.js"></script>
     <script src="/js/sb-admin-2.js"></script>
 </head>
 

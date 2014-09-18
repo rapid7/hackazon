@@ -430,3 +430,19 @@ table.dataTable thead .sorting:after {
 .option-label {
     margin-left: 10px;
 }
+
+.option-variants-pane .variant-edit-block {
+    display: none;
+}
+
+.option-variants-pane .variant-edit-block .btn {
+    margin-left: 10px;
+}
+
+.option-variants-pane .option-list {
+    margin-bottom: 20px;
+}
+
+.option-variants-pane .add-variant-errors {
+    display: none;
+}
