@@ -121,10 +121,10 @@
                         <li class=""><a href="#bestsell" data-toggle="tab">Best selling products</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div class="row tab-pane active" id="offers">
+                        <div class="row tab-pane offers-tab-pane active" id="offers">
                             <?php include __DIR__ . '/small_productlist.php'; ?>
                         </div>
-                        <div class="row tab-pane" id="bestsell">
+                        <div class="row tab-pane bestsell-tab-pane" id="bestsell">
                             <?php include __DIR__ . '/big_productlist.php'; ?>
                         </div>
                     </div>

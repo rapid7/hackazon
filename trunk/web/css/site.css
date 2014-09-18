@@ -1078,6 +1078,9 @@ img.btn_close {
 .product-detail .product-image {
     margin: auto;
 }
+.bestsell-tab-pane, .offers-tab-pane {
+    min-height: 350px;
+}
 
 /* HOME PRODUCTS */
 .section + .home-top-product-section {
