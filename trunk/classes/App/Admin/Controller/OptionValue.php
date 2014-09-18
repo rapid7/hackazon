@@ -13,7 +13,6 @@ namespace App\Admin\Controller;
 use App\Admin\CRUDController;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
-use App\Model\Option;
 
 class OptionValue extends CRUDController
 {
