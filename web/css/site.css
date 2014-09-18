@@ -217,8 +217,8 @@ h1, h2, h3, h4 {
     transition: all 0.2s ease-in-out 0s;
 }
 .thumbnail .category-list-product {
-    height: 266px;
-    width: 100%;
+    max-height: 260px;
+    max-width: 100%;
 }
 
 .preview-image {
@@ -1047,6 +1047,9 @@ img.btn_close {
     bottom: 60px;
     right: 20px;
     position: absolute;
+}
+.product-list-inline-large .img-box {
+    min-height: 260px;
 }
 
 /* PRODUCT DETAIL */
