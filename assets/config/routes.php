@@ -72,6 +72,14 @@ return array(
         )
     ),
 
+    'admin_option_value' => array('/admin/option-value(/<action>(/<id>))',
+        array(
+            'namespace' => 'App\\Admin\\',
+            'controller' => 'OptionValue',
+            'action' => 'index'
+        )
+    ),
+
     'admin' => array('/admin(/<controller>(/<action>(/<id>)))',
         array(
             'namespace' => 'App\\Admin\\',

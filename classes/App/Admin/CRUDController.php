@@ -71,83 +71,7 @@ class CRUDController extends Controller
         $listFields = $this->prepareListFields();
 
         if ($this->request->is_ajax()) {
-            $perPage = $this->request->get('length', 10);
-            if ($perPage < 1 || $perPage > 100) {
-                $perPage = 10;
-            }
-            $start = $this->request->get('start', 0);
-            if ($start < 0) {
-                $start = 0;
-            }
-
-            $page = floor($start / $perPage) + 1;
-            if ($page < 1) {
-                $page = 1;
-            }
-
-            $columns = $this->request->get('columns', []);
-            $this->tuneModelForList();
-
-            $totalCount = $this->model->count_all();
-            $this->model->prepare_relations();
-
-            // Set ordering
-            $order = $this->request->get('order', [['column' => 0, 'dir' => 'asc']]);
-            $order = $order[0];
-            $orderColumn = $columns[$order['column']] ?: [];
-            $orderColumn = $orderColumn['data'] ?: key($listFields);
-            if ($listFields[$orderColumn]['extra']) {
-                foreach ($listFields as $lKey => $lValue) {
-                    if (!$lValue['extra'] && $lValue['orderable']) {
-                        $orderColumn = $lKey;
-                        break;
-                    }
-                }
-            }
-
-            if (strpos($orderColumn, '___') === false) {
-                $this->model->order_by($orderColumn, $order['dir'] ? : 'asc');
-            } else {
-                $orderColumn = str_replace('___', '.', $orderColumn);
-                $this->model->order_by($orderColumn, $order['dir'] ? : 'asc');
-            }
-
-            // Set filtering
-            $search = $this->request->get('search', ['value' => '']);
-            $searchValue = $search['value'];
-            $searchValues = preg_split('/\s+/', $searchValue, -1, PREG_SPLIT_NO_EMPTY);
-
-            if ($searchValues) {
-                $searchConditions = [];
-                foreach ($listFields as $lf => $lfData) {
-                    if (!$lfData['searching']) {
-                        continue;
-                    }
-                    $fieldSearchConditions = [];
-                    foreach ($searchValues as $sVal) {
-                        if (!is_numeric($sVal) && $lfData['data_type'] == 'integer' ) {
-                            continue;
-                        }
-                        $fieldSearchConditions[] = ['and', [str_replace('___', '.', $lf), 'LIKE', "%$sVal%"]];
-                    }
-                    if ($fieldSearchConditions) {
-                        $searchConditions[] = ['or', $fieldSearchConditions];
-                    }
-                }
-                if ($searchConditions) {
-                    $this->model->where('and', $searchConditions);
-                }
-            }
-
-            // Query for items
-            $items = $this->pixie->paginate->orm($this->model, $page, $perPage);
-            $result = [
-                'data' => $this->filterPaginator($items, $listFields),
-                'recordsTotal' => (int) $totalCount,
-                'recordsFiltered' => (int) $items->num_items
-            ];
-
-            $this->jsonResponse($result);
+            $this->processDataTableRequest($listFields);
             return;
 
         } else {
@@ -379,9 +303,13 @@ class CRUDController extends Controller
         }
         $listFields = $result;
         unset($data);
-        $listFields[$this->model->id_field]['type'] = 'link';
-        $listFields[$this->model->id_field]['template'] = '/admin/'.$this->model->model_name.'/edit/%'.$this->model->id_field.'%';
-        $listFields[$this->model->id_field]['width'] = '60';
+        if (array_key_exists($this->model->id_field, $listFields)) {
+            if (!array_key_exists('type', $listFields[$this->model->id_field])) {
+                $listFields[$this->model->id_field]['type'] = 'link';
+                $listFields[$this->model->id_field]['template'] = '/admin/' . $this->model->model_name . '/edit/%' . $this->model->id_field . '%';
+            }
+            $listFields[$this->model->id_field]['width'] = '60';
+        }
 
         return $listFields;
     }
@@ -663,5 +591,86 @@ class CRUDController extends Controller
                 'column_classes' => 'cb-column'
             ]
         ];
+    }
+
+    protected function processDataTableRequest($listFields)
+    {
+        $perPage = $this->request->get('length', 10);
+        if ($perPage < 1 || $perPage > 100) {
+            $perPage = 10;
+        }
+        $start = $this->request->get('start', 0);
+        if ($start < 0) {
+            $start = 0;
+        }
+
+        $page = floor($start / $perPage) + 1;
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        $columns = $this->request->get('columns', []);
+        $this->tuneModelForList();
+
+        $totalCount = $this->model->count_all();
+        $this->model->prepare_relations();
+
+        // Set ordering
+        $order = $this->request->get('order', [['column' => 0, 'dir' => 'asc']]);
+        $order = $order[0];
+        $orderColumn = $columns[$order['column']] ?: [];
+        $orderColumn = $orderColumn['data'] ?: key($listFields);
+        if ($listFields[$orderColumn]['extra']) {
+            foreach ($listFields as $lKey => $lValue) {
+                if (!$lValue['extra'] && $lValue['orderable']) {
+                    $orderColumn = $lKey;
+                    break;
+                }
+            }
+        }
+
+        if (strpos($orderColumn, '___') === false) {
+            $this->model->order_by($orderColumn, $order['dir'] ? : 'asc');
+        } else {
+            $orderColumn = str_replace('___', '.', $orderColumn);
+            $this->model->order_by($orderColumn, $order['dir'] ? : 'asc');
+        }
+
+        // Set filtering
+        $search = $this->request->get('search', ['value' => '']);
+        $searchValue = $search['value'];
+        $searchValues = preg_split('/\s+/', $searchValue, -1, PREG_SPLIT_NO_EMPTY);
+
+        if ($searchValues) {
+            $searchConditions = [];
+            foreach ($listFields as $lf => $lfData) {
+                if (!$lfData['searching']) {
+                    continue;
+                }
+                $fieldSearchConditions = [];
+                foreach ($searchValues as $sVal) {
+                    if (!is_numeric($sVal) && $lfData['data_type'] == 'integer' ) {
+                        continue;
+                    }
+                    $fieldSearchConditions[] = ['and', [str_replace('___', '.', $lf), 'LIKE', "%$sVal%"]];
+                }
+                if ($fieldSearchConditions) {
+                    $searchConditions[] = ['or', $fieldSearchConditions];
+                }
+            }
+            if ($searchConditions) {
+                $this->model->where('and', $searchConditions);
+            }
+        }
+
+        // Query for items
+        $items = $this->pixie->paginate->orm($this->model, $page, $perPage);
+        $result = [
+            'data' => $this->filterPaginator($items, $listFields),
+            'recordsTotal' => (int) $totalCount,
+            'recordsFiltered' => (int) $items->num_items
+        ];
+
+        $this->jsonResponse($result);
     }
 }

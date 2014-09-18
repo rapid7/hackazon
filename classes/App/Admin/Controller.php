@@ -89,6 +89,7 @@ class Controller extends BaseController
             $this->root.'/role' => ['label' => 'Roles', 'link_class' => 'fa fa-puzzle-piece fa-fw'],
             $this->root.'/category' => ['label' => 'Product Categories', 'link_class' => 'fa fa-sitemap fa-fw'],
             $this->root.'/product' => ['label' => 'Products', 'link_class' => 'fa fa-archive fa-fw'],
+            $this->root.'/option' => ['label' => 'Product Options', 'link_class' => 'fa fa-check-circle-o fa-fw'],
             $this->root.'/order' => ['label' => 'Orders', 'link_class' => 'fa fa-shopping-cart fa-fw'],
             $this->root.'/enquiry' => ['label' => 'Enquiries', 'link_class' => 'fa fa-life-saver fa-fw'],
             $this->root.'/faq' => ['label' => 'Faq', 'link_class' => 'fa fa-question-circle fa-fw'],

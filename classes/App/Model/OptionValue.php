@@ -8,6 +8,7 @@ use PHPixie\ORM;
  * Class OptionValue
  * @package App\Model
  * @property int $variantID
+ * @property int $optionID
  * @property string $name
  * @property int $sort_order
  * @property Option $option
@@ -18,7 +19,7 @@ class OptionValue extends BaseModel {
     public $id_field = 'variantID';
 
     protected $belongs_to=array(
-        'option'=>array(
+        'parentOption'=>array(
             'model'=>'Option',
             'key'=>'optionID'
         )
