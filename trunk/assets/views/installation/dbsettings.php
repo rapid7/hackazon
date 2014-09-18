@@ -38,16 +38,7 @@
 
         jQuery(function($) {
             var $settingsForm = $('#dbSettingsForm');
-            $settingsForm.bootstrapValidator({
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                container: 'tooltip',
-                fields: {
-                }
-            });
+            $settingsForm.hzBootstrapValidator({});
 
             var $passwordField = $('#password_field'),
                 $useExistingPw = $('.js-use-existing-password');

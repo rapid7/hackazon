@@ -68,14 +68,7 @@
     $(function() {
         Ladda.bind( 'input[type=submit]' );
         
-        $('#contactForm').bootstrapValidator({
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            container: 'tooltip'
-        }).on('success.form.bv', function(e) {
+        $('#contactForm').hzBootstrapValidator().on('success.form.bv', function(e) {
             var l = Ladda.create(document.querySelector( '#form-submit' ));
             l.start();
             $.ajax({
