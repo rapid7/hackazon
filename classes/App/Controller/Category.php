@@ -33,7 +33,6 @@ class Category extends Page
             $this->view->pager = $pager;
             $this->view->subview = 'category/category';
             $this->view->breadcrumbs = $this->getBreadcrumbs($category);
-            $this->view->productsInCart = $this->getProductsInCartIds();
             $this->view->categoryID = $categoryID;
         }
     }

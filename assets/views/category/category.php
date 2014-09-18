@@ -42,7 +42,7 @@
                         foreach ($products as $product) {
                             $item = array_shift($subCategories); ?>
                             <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
-                                <?php $_addToCartLink($product->id(), $productsInCart); ?>
+                                <?php $_addToCartLink($product->id()); ?>
                                 <div class="thumbnail <?=$itemClass?>">
                                     <div class="img-box">
                                         <a href="/product/view?id=<?=$product->productID?>">

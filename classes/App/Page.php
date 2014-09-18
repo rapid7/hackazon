@@ -50,6 +50,7 @@ class Page extends BaseController
         $this->common_path = $config['common_path'];
         $this->view->returnUrl = '';
         $this->view->controller = $this;
+        $this->view->getHelper()->setController($this);
     }
 
     public function after() {
@@ -104,7 +105,7 @@ class Page extends BaseController
         return $model->getCart();
     }
 
-    protected function getProductsInCartIds() {
+    public function getProductsInCartIds() {
         $items = $this->getProductsInCart()->as_array();
         $ids = [];
         foreach ($items as $item) {
@@ -112,5 +113,4 @@ class Page extends BaseController
         }
         return $ids;
     }
-
 }

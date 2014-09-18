@@ -8,6 +8,7 @@
 
 
 namespace App\Core\View;
+use App\Core\BaseController;
 use App\Page;
 use App\Pixie;
 use PHPixie\Paginate\Pager\ORM as ORMPager;
@@ -24,6 +25,11 @@ class Helper extends \PHPixie\View\Helper
     protected $orderStatusLabelMapping = [
         'complete' => 'label-success'
     ];
+
+    /**
+     * @var BaseController|Page
+     */
+    protected $controller;
 
     protected $aliases = array(
         '_' => 'output',
@@ -138,8 +144,12 @@ class Helper extends \PHPixie\View\Helper
         }
     }
 
-    public function addToCartLink($productId, $productsInCart)
+    public function addToCartLink($productId)
     {
+        static $productsInCart;
+        if (!$productsInCart) {
+            $productsInCart = $this->controller->getProductsInCartIds();
+        }
         if (!in_array($productId, $productsInCart)) { ?>
             <a href="/cart/view" class="btn btn-primary pull-left ladda-button buy-link js-add-to-cart-shortcut"
                data-product-id="<?php echo $productId; ?>"
@@ -239,4 +249,20 @@ class Helper extends \PHPixie\View\Helper
 	{
 		return preg_replace("'[^a-zA-Z_0-9]+$'s", '', $text);
 	}
-} 
+
+    /**
+     * @return mixed
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @param mixed $controller
+     */
+    public function setController($controller)
+    {
+        $this->controller = $controller;
+    }
+}

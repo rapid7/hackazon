@@ -16,7 +16,7 @@
 
             <p class="product-annotation"><span class="text-block" title="<?=$product->description?>"><?php $_trim($product->description, 60); ?></span>
                 <span class="label label-info price pull-right">$<?php echo $product->Price; ?></span>
-                <?php $_addToCartLink($product->id(), $productsInCart); ?>
+                <?php $_addToCartLink($product->id()); ?>
             </p>
         </div>
     </div>

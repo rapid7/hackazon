@@ -8,6 +8,7 @@
 
 
 namespace App\Core;
+use App\Core\View\Helper;
 use App\Pixie;
 
 /**
@@ -17,6 +18,7 @@ use App\Pixie;
  * @property string $common_path
  * @property string $returnUrl
  * @property BaseController $controller
+ * @property Helper $helpers
  */
 class View extends \PHPixie\View implements \ArrayAccess
 {
@@ -69,5 +71,13 @@ class View extends \PHPixie\View implements \ArrayAccess
     public function getToken($name)
     {
         return $this->pixie->vulnService->getToken($name);
+    }
+
+    /**
+     * @return Helper
+     */
+    public function getHelper()
+    {
+        return $this->helper;
     }
 }
