@@ -27,10 +27,16 @@ class Search extends Page {
         $this->_products = $this->pixie->db->query('select')->table('tbl_products');
 
         if (!empty($catId)) {
-            $this->_products
+			$subCategoriesIds = $this->pixie->orm->get('Category')->loadCategory($catId)->getChildrenIDs();
+			if(sizeof($subCategoriesIds) > 0) {
+				$this->_products
                     ->join('tbl_category_product', array('tbl_category_product.productID', 'tbl_products.productID'), 'left')
-                    ->where("tbl_category_product.categoryID", $catId);
-            $cat = $this->pixie->orm->get('Category')->loadCategory($catId);
+					->where("tbl_category_product.categoryID", "IN", $this->pixie->db->expr("(".implode(",", $subCategoriesIds).")"));
+			} else {
+				$this->_products
+                    ->join('tbl_category_product', array('tbl_category_product.productID', 'tbl_products.productID'), 'left')
+					->where("tbl_category_product.categoryID", $catId);
+			}
         }
         if (!empty($name)) {
             $this->_products
