@@ -45,6 +45,7 @@ class Product extends \App\Page
             foreach ($parents as $p) {
                 $breadcrumbsParts['/category/view?id='.$p->categoryID] = $p->name;
             }
+			$breadcrumbsParts['/category/view?id='.$cat->categoryID] = $cat->name;
             $breadcrumbsParts['/product/view?id='.$this->view->product->productID] = $this->view->product->name;
             $breadcrumbs[] = array_merge(['/' => 'Home'], $breadcrumbsParts);
         }

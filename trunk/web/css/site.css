@@ -935,6 +935,7 @@ img.btn_close {
     width: 100%;
     display: inline-block;
     overflow: hidden;
+    background-color: white;
 }
 .product-list .product-description {
     max-height: 3em;
@@ -1050,6 +1051,7 @@ img.btn_close {
 }
 .product-list-inline-large .img-box {
     min-height: 260px;
+    background-color: white;
 }
 
 /* PRODUCT DETAIL */
