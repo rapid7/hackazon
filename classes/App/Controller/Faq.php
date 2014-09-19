@@ -17,7 +17,9 @@ class Faq extends Page
 
             $post = $this->request->post();
             $item = $this->pixie->orm->get('Faq')->create($post);
+            $this->pixie->session->flash('success', 'Thank you for your question. We will contact you as soon.');
             $this->response->body = json_encode(array($item->as_array()));
+
             $this->execute = false;
         }        
         $this->view->subview = 'pages/faq';

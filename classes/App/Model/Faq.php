@@ -17,9 +17,9 @@ class Faq extends BaseModel {
         $this->email = $post['userEmail'];
         $this->question = $post['userQuestion'];
         $this->answer = 'Processing...';
-        if (!is_null($this->pixie->auth->user())) {
-            $this->customer_id = $this->pixie->auth->user()->id;
-        }
+//        if (!is_null($this->pixie->auth->user())) {
+//            $this->customer_id = $this->pixie->auth->user()->id;
+//        }
         $this->save();
         return $this;
     }

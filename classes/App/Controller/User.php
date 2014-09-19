@@ -180,8 +180,12 @@ class User extends Page {
             $confirm_passw = $this->request->post('cpassword');
             if(!empty($username) && !empty($recover_passw) && !empty($new_passw) && !empty($confirm_passw)){
                 if($confirm_passw === $new_passw && $this->model->checkRecoverPass($username, $recover_passw)){
-                    if($this->model->changeUserPassword($username, $new_passw))
+                    if($this->model->changeUserPassword($username, $new_passw)) {
                         $this->view->successMessage = "The password has been changed successfully";
+                        $this->pixie->auth
+                            ->provider('password')
+                            ->login($username, $new_passw);
+                    }
                     $this->view->subview = 'user/recover';
                     return;
                 }
