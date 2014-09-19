@@ -217,7 +217,7 @@ if (count($items) == 0) :?>
                     <tr class="danger">
                         <th class="text-right" colspan="3">Quantity items:<br>Total: </th>
                         <th class="text-left" colspan="2">
-                            $ <span id="items_qty"><?=$itemQty?></span>,-<br>
+                            <span id="items_qty"><?=$itemQty?></span><br>
                             $ <span id="total_price"><?=$totalPrice?>,-<br>
                         </th>
                     </tr>

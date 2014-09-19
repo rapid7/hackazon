@@ -587,6 +587,20 @@ ul.nav li.grey a {
     border-color: #CCC;
 }
 
+.cart-top-list li {
+    position: relative;
+}
+
+.cart-top-list li .label-info {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+}
+.cart-top-list li .product-name {
+    max-width: 90%;
+    overflow-x: hidden;
+}
+
 /* CART TABLE */
 .cart-overview tbody tr td {
     border: none;

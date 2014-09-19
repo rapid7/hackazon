@@ -13,7 +13,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="col-lg-6 col-md-6">
-                        <h3><i class="fa fa-pencil"></i><a href="user/register"> Register on the site</a></h3>
+                        <?php if (!$this->pixie->auth->user()): ?>
+                            <h3><i class="fa fa-pencil"></i><a href="user/register"> Register on the site</a></h3>
+                        <?php endif; ?>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <h3 style="text-align: right"><i class="fa fa-thumbs-up"></i><a href="bestprice"> Get the Best Price</a></h3>

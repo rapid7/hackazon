@@ -417,6 +417,26 @@ $(document).ready(function () {
     (function () {
         var counter = 0;
 
+        window.addTopCartItem = function (cartItem) {
+            var list = $('.js-cart-top-list');
+            list.find('li[data-id="' + cartItem.productId + '"]').remove();
+
+            var itemListId = 'cartTopListItem' + counter++;
+            var html = '<li id="' + itemListId + '" data-id="' + cartItem.productId + '">'
+                + '<a href="/product/view/' + cartItem.productId + '"><span class="pull-left product-name"><small>'
+                + cartItem.item.qty + 'x</small> ' + cartItem.product.name + '</span> &nbsp; <small class="pull-right label label-info">$'
+                + cartItem.product.Price + '</small></a></li>';
+
+            list.prepend(html);
+            var listItem = list.find('#' + itemListId);
+            if (list.is(':hidden')) {
+                $('.js-cart-top-icon').dropdown('toggle');
+            }
+            listItem.modernBlink({
+                iterationCount: 3
+            });
+        };
+
         $(document).on('click', '.js-add-to-cart-shortcut', function (ev) {
             ev.preventDefault();
 
@@ -431,7 +451,7 @@ $(document).ready(function () {
                     shortcut: true
                 },
                 dataType: 'json',
-                timeout: 60000,
+                timeout: 15000,
                 type: 'POST',
                 beforeSend: function () {
                     link.attr('disabled', 'disabled');
@@ -452,23 +472,8 @@ $(document).ready(function () {
                 if (!(res && res.newProduct && res.product)) {
                     return;
                 }
-
-                var itemListId = 'cartTopListItem' + counter;
-                var html = '<li id="' + itemListId + '"><a href="/product/view/' + res.productId + '"><span class="pull-left"><small>'
-                    + res.item.qty + 'x</small> ' + res.product.name + '</span> &nbsp; <small class="pull-right label label-info">$'
-                    + res.product.Price + '</small></a></li>';
-
-                var list = $('.js-cart-top-list');
-                list.prepend(html);
-                var listItem = list.find('#' + itemListId);
-                $('.js-cart-top-icon').dropdown('toggle');
-                listItem.modernBlink({
-                    iterationCount: 3
-                });
-
+                addTopCartItem(res);
             });
-
-
         });
     })();
 
