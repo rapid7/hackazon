@@ -1,7 +1,42 @@
 <script>
     $(function () {
-        $("#add_to_cart").click(function () {
-            $("#cart_form").submit();
+        var form = $("#cart_form"),
+            link = $("#add_to_cart"),
+            counter = 0;
+
+        link.click(function (ev) {
+            ev.preventDefault();
+
+            var l = link.ladda();
+
+            link.blur();
+
+            $.ajax({
+                url: form.attr('action'),
+                data: form.serialize(),
+                dataType: 'json',
+                timeout: 15000,
+                type: 'POST',
+                beforeSend: function () {
+                    link.attr('disabled', 'disabled');
+                    l.ladda('start');
+                },
+                complete: function () {
+                    link.removeAttr('disbled');
+                    l.ladda('stop');
+                }
+
+            }).success(function (res) {
+                link.removeAttr('disabled');
+                link.blur();
+
+                if (!(res && res.product)) {
+                    return;
+                }
+
+                addTopCartItem(res);
+            });
+
             return false;
         });
     });
@@ -104,8 +139,8 @@
                             </form>
                         </div>
                         <div class="col-xs-12 col-md-3">
-                            <a class="btn btn-block btn-primary" id="add_to_cart" href="#"><span
-                                    class="glyphicon glyphicon-shopping-cart"></span> Add to cart</a>
+                            <a class="btn btn-block btn-primary ladda-button" id="add_to_cart" href="#" data-style="expand-right"
+                               data-size="xs" data-spinner-size="16"><span class="glyphicon glyphicon-shopping-cart"></span> Add to cart</a>
                         </div>
                     </div>
                 </div>
