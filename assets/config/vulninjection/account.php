@@ -29,16 +29,15 @@ return [
     ],
 
     'actions' => [
+        
         'help_articles' => [
             'fields' => [
                 'page' => [
                     'RemoteFileInclude'
                 ]
             ]
-        ]
-    ],
-    
-    'actions' => [
+        ],
+        
         'documents' => [
             'vulnerabilities' => [
                 'os_command' => [
@@ -47,6 +46,7 @@ return [
             ]
         ]
     ],
+    
 
 
 ];
