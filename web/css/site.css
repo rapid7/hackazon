@@ -1019,12 +1019,12 @@ img.btn_close {
     background-color: #eeeeee;
 }
 .product-list-inline-large .thumbnail .price {
-    font-size: 200%;
-    line-height: 150%;
+    font-size: 180%;
+    line-height: 130%;
     position: absolute;
     z-index: 10;
-    margin-left: -15px;
-    margin-top: -10px;
+    margin-left: -30px;
+    margin-top: -20px;
     width: 135px;
     text-align: center;
     padding-left: 5px;
