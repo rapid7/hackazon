@@ -413,9 +413,8 @@ $(document).ready(function () {
             nav.find('a[data-toggle="tab"]').filter('[href="' + hash + '"]').tab('show');
         });
 
-        $(window).on('hashchange', function (ev) {
-//            console.log(location.hash);
-//            $('.nav').find('a[data-toggle="tab"]').filter('[href="' + hash + '"]').tab('show');
+        $(window).on('hashchange', function () {
+            $('.nav').find('a[data-toggle="tab"]').filter('[href="' + location.hash + '"]').tab('show');
         });
     })();
 
