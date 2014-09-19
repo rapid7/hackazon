@@ -6,16 +6,11 @@ return array(
             'db_field' => 'tbl_category_product.categoryID'
         ],
         
-//        'brand-filter' => [
-//            'db_field' => 'category.categoryID'
-//        ],
-//        'quality-filter' => [
-//            'db_field' => 'category.categoryID'
-//        ],
         'searchString' => ['xss']
     ],
     'vulnerabilities' => [
         'sql' => [ 
+            'enabled' => true,
             'blind' => true
         ],
     ]
