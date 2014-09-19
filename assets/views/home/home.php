@@ -103,7 +103,7 @@ foreach ($productSections as $sectionData) {
 
     <div class="section">
         <div class="container">
-
+            <?php if (!$this->pixie->auth->user()): ?>
             <div class="row well">
                 <div class="col-lg-8 col-md-8">
                     <h4>Sign up for mailing list and get the best products and best price!</h4>
@@ -113,8 +113,9 @@ foreach ($productSections as $sectionData) {
                 </div>
             </div>
             <!-- /.row -->
-
+            <?php endif; ?>
         </div>
         <!-- /.container -->
     </div>
+
 <?php include __DIR__ . '/category_list.php'; ?>
