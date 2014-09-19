@@ -250,6 +250,7 @@ h1, h2, h3, h4 {
     min-height: -webkit-calc(100% - 140px);
     min-height: -o-calc(100% - 140px);
     min-height: calc(100% - 140px);
+    padding-top: 10px;
 }
 
 .section, .section-colored {

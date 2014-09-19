@@ -9,8 +9,12 @@
             </ol>
         </div>
     </div>
+
     <div class="row">
         <div class="col-lg-12">
+            <?php if ($success = $this->pixie->session->flash('success')): ?>
+                <div class="alert alert-success" role="alert"><?php echo $success; ?></div>
+            <?php endif; ?>
             <?php if (isset($entries) && !is_null($entries)): ?>
                 <div class="panel-group" id="accordion"  id="dataGrid">
                     <?php foreach ($entries as $obj): ?>
@@ -90,15 +94,16 @@
                 dataType: "json",
                 data: $("#faqForm").serialize(),
                 success: function(data) {
-                    $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
-                    if (data.length) {
-                        ko.applyBindings(model);
-                        model.data(data);
-                        $('#accordion1').css('display', 'block');
-                    }
-                    else {
-                        $(".alert").empty().append('There is some error happened during processing your request.').show();
-                    }
+                    location.reload();
+//                    $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
+//                    if (data.length) {
+//                        ko.applyBindings(model);
+//                        model.data(data);
+//                        $('#accordion1').css('display', 'block');
+//                    }
+//                    else {
+//                        $(".alert").empty().append('There is some error happened during processing your request.').show();
+//                    }
                 },
                 fail: function() {
                     $(".alert").empty().append('There is some error happened during processing your request.').show();
