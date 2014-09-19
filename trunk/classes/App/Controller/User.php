@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exception\NotFoundException;
 use App\Page;
 use PHPixie\View;
 
@@ -103,16 +104,6 @@ class User extends Page {
             }
 
             if ($valid) {
-//                if (!$dataUser['first_name']) {
-//                    $valid = false;
-//                    $errors[] = 'Please enter your first name.';
-//                }
-//
-//                if (!$dataUser['last_name']) {
-//                    $valid = false;
-//                    $errors[] = 'Please enter your last name.';
-//                }
-//
                 if (!$dataUser['username']) {
                     $valid = false;
                     $errors[] = 'Please enter your username.';
@@ -161,18 +152,24 @@ class User extends Page {
 
     public function action_recover(){
         if ($this->request->method == 'GET') {
-            $username = $this->request->get('username');
             $recover_passw = $this->request->get('recover');
-            if(!empty($username) && !empty($recover_passw) && $this->model->checkRecoverPass($username,$recover_passw)){
-                $this->view->username = $username;
+            if (!$recover_passw) {
+                throw new NotFoundException;
+            }
+
+            $user = $this->model->getUserByRecoveryPass($recover_passw);
+
+            if($user){
+                $this->view->username = $user->username;
                 $this->view->recover_passw = $recover_passw;
                 $this->view->subview = 'user/recover';
+
+            } else {
+                throw new NotFoundException;
             }
-            else
-                $this->redirect('/404');
+        } else {
+            throw new NotFoundException;
         }
-        else
-            $this->redirect('/404');
     }
 
     public function action_newpassw(){
@@ -189,9 +186,9 @@ class User extends Page {
                     return;
                 }
             }
+        } else {
+            throw new NotFoundException;
         }
-        else
-            $this->redirect('/404');
     }
 
 
