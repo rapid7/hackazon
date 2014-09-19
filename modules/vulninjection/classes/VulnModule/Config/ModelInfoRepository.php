@@ -43,16 +43,22 @@ class ModelInfoRepository
         }
 
         if (!is_array($this->models[$modelName])) {
-            try {
-                $model = $this->pixie->orm->get($modelName);
+            if (preg_match('/^tbl_/i', $modelName)) {
                 $modelInfo = [
-                    'table' => $model->table
+                    'table' => $modelName
                 ];
 
-            } catch (\Exception $e) {
-                $modelInfo = false;
-            }
+            } else {
+                try {
+                    $model = $this->pixie->orm->get($modelName);
+                    $modelInfo = [
+                        'table' => $model->table
+                    ];
 
+                } catch (\Exception $e) {
+                    $modelInfo = false;
+                }
+            }
             $this->models[$modelName] = $modelInfo;
         }
 

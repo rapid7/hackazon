@@ -27,7 +27,8 @@ class Search extends Page {
         $this->_products = $this->pixie->db->query('select')->table('tbl_products');
 
         if (!empty($catId)) {
-			$subCategoriesIds = $this->pixie->orm->get('Category')->loadCategory($catId)->getChildrenIDs();
+            $category = $this->pixie->orm->get('Category')->loadCategory($catId);
+			$subCategoriesIds = $category ? $category->getChildrenIDs() : [];
 			if(sizeof($subCategoriesIds) > 0) {
 				$this->_products
                     ->join('tbl_category_product', array('tbl_category_product.productID', 'tbl_products.productID'), 'left')
