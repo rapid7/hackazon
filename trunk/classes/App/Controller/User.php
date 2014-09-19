@@ -191,6 +191,11 @@ class User extends Page {
         }
     }
 
+    public function action_terms()
+    {
+        $this->view->subview = 'user/terms';
+        
+    }
 
     private function getDataUser(){
         return array(
