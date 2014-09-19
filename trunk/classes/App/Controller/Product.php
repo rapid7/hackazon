@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exception\NotFoundException;
 use \App\Model\SpecialOffers;
 use \App\Model\Category;
 
@@ -22,7 +23,17 @@ class Product extends \App\Page
     public function action_view()
     {
         $productID = $this->request->get('id');//$this->request->param('id');
-        $this->view->product = $this->model->where('productID', '=', $productID)->find();
+        if (!$productID) {
+            throw new NotFoundException;
+        }
+        /** @var \App\Model\Product $product */
+        $product = $this->model->where('productID', '=', $productID)->find();
+
+        if (!$product || !$product->loaded()) {
+            throw new NotFoundException;
+        }
+
+        $this->view->product = $product;
         if ($this->view->product->loaded()) {
             $this->view->options = $this->view->product->options->find_all()->as_array();
             $this->view->pageTitle = $this->model->getPageTitle($productID);

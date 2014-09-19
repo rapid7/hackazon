@@ -412,6 +412,11 @@ $(document).ready(function () {
             var nav = $(this);
             nav.find('a[data-toggle="tab"]').filter('[href="' + hash + '"]').tab('show');
         });
+
+        $(window).on('hashchange', function (ev) {
+//            console.log(location.hash);
+//            $('.nav').find('a[data-toggle="tab"]').filter('[href="' + hash + '"]').tab('show');
+        });
     })();
 
     (function () {
@@ -423,7 +428,7 @@ $(document).ready(function () {
 
             var itemListId = 'cartTopListItem' + counter++;
             var html = '<li id="' + itemListId + '" data-id="' + cartItem.productId + '">'
-                + '<a href="/product/view/' + cartItem.productId + '"><span class="pull-left product-name"><small>'
+                + '<a href="/product/view?id=' + cartItem.productId + '"><span class="pull-left product-name"><small>'
                 + cartItem.item.qty + 'x</small> ' + cartItem.product.name + '</span> &nbsp; <small class="pull-right label label-info">$'
                 + cartItem.product.Price + '</small></a></li>';
 
