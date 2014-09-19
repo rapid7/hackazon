@@ -520,6 +520,10 @@ ul.nav li.grey a {
     margin-right: 0px !important;
 }
 
+.repeat-contact {
+    display:none;
+}
+
 /* CART */
 .hw-steps-nav {
     border-top: 1px solid #ddd;
