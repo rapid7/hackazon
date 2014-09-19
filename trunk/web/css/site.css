@@ -356,6 +356,11 @@ ul.nav li.grey a {
 .hw-navbar-collapse {
     min-height: 70px;
 }
+.header-user-photo {
+    max-width: 30px;
+    max-height: 30px;
+    padding-left: 5px;
+}
 
 /* FOOTER */
 .footer ul.unstyled {
