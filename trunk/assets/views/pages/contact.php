@@ -37,6 +37,9 @@
                     <button id="form-submit" type="submit" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Submit</span></button>
                 </div>
 	        </form>
+            <div class="repeat-contact js-repeat-contact">
+                <button class="btn btn-primary js-repeat-contact-link">Send One More Request</button>
+            </div>
 		</div>
         <div class="col-sm-4">
             <h3>Modern Business</h3>
@@ -67,8 +70,10 @@
 <script>
     $(function() {
         Ladda.bind( 'input[type=submit]' );
-        
-        $('#contactForm').hzBootstrapValidator().on('success.form.bv', function(e) {
+        var form = $('#contactForm'),
+            repeatContactBlock = $('.js-repeat-contact');
+
+        form.hzBootstrapValidator().on('success.form.bv', function(e) {
             var l = Ladda.create(document.querySelector( '#form-submit' ));
             l.start();
             $.ajax({
@@ -78,13 +83,18 @@
                 data: $("#contactForm").serialize(),
                 success: function(data) {
                     $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
-
+                    form.hide();
+                    repeatContactBlock.show();
                 },
                 fail: function() {
                     $(".alert").empty().append('There is some error happened during processing your request.').show();
                 }
             }).always(function() { l.stop(); });
             return false; // Will stop the submission of the form
+        });
+
+        $(document).on('click', '.js-repeat-contact-link', function () {
+            location.reload();
         });
     });
 </script>
