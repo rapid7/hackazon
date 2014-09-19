@@ -122,7 +122,7 @@ class User extends BaseModel {
                 'to' => $email,
                 'from' => 'RobotHackazon@hackazon.com',
                 'subject' => 'recovering password',
-                'text' => 'Hello, ' . $user->username . ".\nRecovering link is here"
+                'text' => 'Hello, ' . $user->username . ".\nRecovering link is here "
                     . $host . '/user/recover?recover=' . $this->getTempPassword($user),
             );
         }
