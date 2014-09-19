@@ -18,6 +18,16 @@ The app allows to turn on/off following vulnerabilities:
     - blind (when there is no error output, or when the behavior 
     of the app slightly changes after injecting SQL)
     
+* Referrer check on/off
+
+* OS Command Injection
+
+* Arbitrary File Upload
+
+* Remote File Include
+
+* XML External Entity
+    
 
 ## XSS
 
@@ -196,6 +206,78 @@ On Linux the same should be as follows:
 ```
 http://hackazon.dev/page/show?page=terms.html%20%2620ls%20%2F
 ```
+
+## Arbitrary File Upload
+
+Allows to enable or disable the possibility to upload either only allowed file types or arbitrary ones.
+In this app it is implemented on the user photo upload page:
+```
+http://hackazon.dev/account/profile/edit
+```
+
+It is enabled in account controller config:
+```php
+return [
+    'fields' => [
+        //....
+        'photo' => [
+            'ArbitraryFileUpload',
+            'db_field' => 'user.photo',
+        ]
+        //....
+    ],
+];
+```
+
+## Remote File Include
+RFI Injection allows to use an app logic where the app includes some file based on user input.
+In our app it's implemented in the Help Articles section:
+```
+http://hackazon.dev/account/help_articles?page=add_product_to_cart
+```
+
+Vulnerability can be used as such:
+```
+http://hackazon.dev/account/help_articles?page=/etc/passwd%00
+```
+
+It is enabled in account controller config:
+```php
+return [
+    'actions' => [
+        'help_articles' => [
+            'fields' => [
+                'page' => [
+                    'RemoteFileInclude'
+                ]
+            ]
+        ]
+    ],
+];
+```
+
+## XML External Entity
+This vulnerability uses the capability of XML to link itself to external files.
+XML parsers usually include content from these files when parse XML. If the app and http server 
+are not protected against this vulnerability, important files can leak:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE roottag [<!ENTITY goodies SYSTEM "file:///etc/fstab">]>
+<roottag>&goodies;</roottag> 
+```
+
+In our app this vulnerability is implemented in REST service when the XML format is used.
+You can enable/disable it in rest config:
+```php
+return array(
+    //.....
+    'vulnerabilities' => [
+        //....
+        'XMLExternalEntity' => true
+    ]
+);
+```
+
 
 Vulnerability Module Structure
 ==============================
