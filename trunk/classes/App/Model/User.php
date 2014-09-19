@@ -114,8 +114,9 @@ class User extends BaseModel {
         $user = $this->pixie->orm->get('User')->where('email', $email)->find();
 
         if ($user->loaded()) {
-            $host = $this->pixie->config->get('parameters.host');
-            $host = $host ? $host : 'http://hackazon.com';
+            $host = $_SERVER['HTTP_HOST'] ? $host = 'http://'.$_SERVER['HTTP_HOST'] : '';
+            $host = $host ?: $this->pixie->config->get('parameters.host');
+            $host = $host ?: 'http://hackazon.com';
 
             return array(
                 'to' => $email,
