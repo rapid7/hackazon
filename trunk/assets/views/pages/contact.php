@@ -19,7 +19,7 @@
             <div style="display: none" class="alert alert-success"></div>
             <form role="form" method="POST" id="contactForm" class="form-horizontal hw-form-contact">
                 <div class="row form-group col-lg-4 field-group pull-left r-margin">
-                    <input type="text" maxlength="100" required class="form-control" placeholder="Username or Email" name="contact_name" id="userName">
+                    <input type="text" maxlength="100" required class="form-control" placeholder="Username" name="contact_name" id="userName">
                 </div>
                 <div class="form-group col-lg-4 field-group pull-left r-margin">
                     <input type="email" name="contact_email" required class="form-control" id="input2" data-validation="email" placeholder="Email Address">
