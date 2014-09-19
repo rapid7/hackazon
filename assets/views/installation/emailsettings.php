@@ -39,8 +39,14 @@
         </div>
 
         <div class="form-group">
+            <?php $useExistingPassword = isset($use_existing_password) && $use_existing_password; ?>
             <label>Password:</label>
-            <input class="form-control<?php $_(isset($password) && $password ? ' js-has-existing' : ''); ?>" type="password" name="password" value="" placeholder="Password" />
+            <input class="form-control<?php $_(isset($password) && $password ? ' js-has-existing' : ''); ?>"
+                   type="password" name="password" value="" placeholder="Password"
+                   <?php echo $useExistingPassword ? "disabled" : ""; ?>/><br>
+            <label><input type="checkbox" name="use_existing_password" class="js-use-existing-password"
+                    <?php echo $useExistingPassword ? "checked" : ""; ?> />
+                Use existing password</label><br>
         </div>
 
         <div class="form-group">
@@ -73,7 +79,11 @@
     $(function() {
         jQuery(function($) {
             var form = $('#emailSettingsForm'),
-                type = form.find('#mailType');
+                type = form.find('#mailType'),
+                $passwordField = $('input[name="password"]'),
+                $useExistingPw = $('.js-use-existing-password');
+
+            form.hzBootstrapValidator();
 
             var updateLayout = function () {
                 form.find('.type-group').hide();
@@ -86,11 +96,21 @@
                 if (form.data('bootstrapValidator')) {
                     form.data('bootstrapValidator').resetForm();
                 }
-                form.hzBootstrapValidator();
+                $useExistingPw.trigger('change');
             };
             updateLayout();
 
             type.on('change', updateLayout);
+
+            $useExistingPw.on('change', function (ev) {
+                if ($useExistingPw.is(':checked')) {
+                    $passwordField.attr('disabled', 'disabled');
+                } else {
+                    $passwordField.removeAttr('disabled');
+                }
+                $settingsForm.data('bootstrapValidator').resetForm();
+            });
+            $useExistingPw.trigger('change');
         });
     });
 </script>
