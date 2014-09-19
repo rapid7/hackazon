@@ -37,10 +37,16 @@ return [
             ]
         ]
     ],
-
-    'vulnerabilities' => [
-        'os_command' => [
-            'enabled' => true
+    
+    'actions' => [
+        'documents' => [
+            'vulnerabilities' => [
+                'os_command' => [
+                    'enabled' => true
+                ]
+            ]
         ]
-    ]
+    ],
+
+
 ];
