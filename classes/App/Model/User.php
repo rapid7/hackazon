@@ -121,9 +121,8 @@ class User extends BaseModel {
                 'to' => $email,
                 'from' => 'RobotHackazon@hackazon.com',
                 'subject' => 'recovering password',
-                'text' => 'Hello, ' . $user->username . '.
-Recovering link is here
-' . $host . '/user/recover?username=' . $user->username . '&recover=' . $this->getTempPassword($user),
+                'text' => 'Hello, ' . $user->username . ".\nRecovering link is here"
+                    . $host . '/user/recover?recover=' . $this->getTempPassword($user),
             );
         }
         return null;
@@ -164,6 +163,15 @@ Recovering link is here
             return true;
         else
             return false;
+    }
+
+    public function getUserByRecoveryPass($recover_passw) {
+        /** @var User $user */
+        $user = $this->pixie->orm->get('User')->where('recover_passw', md5($recover_passw))->find();
+        if ($user && $user->loaded())
+            return $user;
+        else
+            return null;
     }
 
     public function changeUserPassword($username, $new_passw) {
