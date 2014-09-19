@@ -44,6 +44,10 @@ class EmailSettingsStep extends AbstractStep
 
     protected $timeout;
 
+    protected $useExistingPassword;
+
+    protected $defaultPassword;
+
     protected function processRequest(array $data = [])
     {
         $this->isValid = false;
@@ -62,10 +66,11 @@ class EmailSettingsStep extends AbstractStep
             $this->sendmail_command = $data['sendmail_command'] ?: null;
 
         } else if ($this->type == 'smtp') {
+            $this->useExistingPassword = (boolean) $data['use_existing_password'];
             $this->hostname = $data['hostname'];
             $this->port = $data['port'];
             $this->username = $data['username'] ?: null;
-            $this->password = $data['password'] ?: null;
+            $this->password = $this->useExistingPassword ? $this->defaultPassword : $data['password'];
             $this->encryption = $data['encryption'] ?: null;
             $this->timeout = $data['timeout'] ?: null;
 
@@ -92,7 +97,8 @@ class EmailSettingsStep extends AbstractStep
 
     protected function persistFields()
     {
-        return ['type', 'mail_parameters', 'sendmail_command', 'username', 'password', 'hostname', 'port', 'encryption', 'timeout'];
+        return ['type', 'mail_parameters', 'sendmail_command', 'username', 'password', 'hostname', 'port',
+            'encryption', 'timeout', 'useExistingPassword', 'defaultPassword'];
     }
 
     public function init()
@@ -109,6 +115,8 @@ class EmailSettingsStep extends AbstractStep
         $this->type = $config['default']['type'];
         $this->mail_parameters = $config['default']['mail_parameters'];
         $this->sendmail_command = $config['default']['sendmail_command'];
+
+        $this->defaultPassword = $this->password;
     }
 
     public function getViewData()
@@ -123,6 +131,7 @@ class EmailSettingsStep extends AbstractStep
             'type' => $this->type,
             'mail_parameters' => $this->mail_parameters,
             'sendmail_command' => $this->sendmail_command,
+            'use_existing_password' => $this->useExistingPassword,
         ];
     }
 
