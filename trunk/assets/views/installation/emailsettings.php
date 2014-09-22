@@ -108,7 +108,7 @@
                 } else {
                     $passwordField.removeAttr('disabled');
                 }
-                $settingsForm.data('bootstrapValidator').resetForm();
+                form.data('bootstrapValidator').resetForm();
             });
             $useExistingPw.trigger('change');
         });
