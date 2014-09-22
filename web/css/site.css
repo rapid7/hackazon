@@ -1024,8 +1024,8 @@ img.btn_close {
     line-height: 130%;
     position: absolute;
     z-index: 10;
-    margin-left: -30px;
-    margin-top: -20px;
+    right: 0px;
+    top: 230px;
     width: 135px;
     text-align: center;
     padding-left: 5px;
