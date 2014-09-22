@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Exception\NotFoundException;
 use \App\Model\SpecialOffers;
 use \App\Model\Category;
 
@@ -39,7 +38,7 @@ class Product extends \App\Page
             $this->view->pageTitle = $this->model->getPageTitle($productID);
             $this->view->breadcrumbs = $this->getBreadcrumbs();
             $offers = new SpecialOffers($this->pixie);
-            $this->view->special_offers = $offers->getRandomOffers(5);
+            $this->view->special_offers = $offers->getRandomOffers(4);
             $this->view->related = $this->model->getRandomProducts(4);
             $this->model->checkProductInCookie($productID);
         }
