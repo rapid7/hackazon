@@ -569,7 +569,8 @@ ul.nav li.grey a {
     max-width: 126px;
 }
 .table-order .hw-count-control input {
-    width: 40px;
+    width: 50px;
+    text-align: center;
 }
 .table-order tbody tr td {
     border-top: none;

@@ -29,7 +29,7 @@
             </div>
             <div class="variant-edit-block js-variant-edit-block">
                 <h4>Add Option Variant</h4>
-                <div class="js-add-variant-errors alert alert-danger add-variant-errors">asd</div>
+                <div class="js-add-variant-errors alert alert-danger add-variant-errors"></div>
                 <form action="/admin/option-value/save" class="js-add-option-variant-form" method="post">
                     <input type="hidden" name="variantID" id="field_variant_id" />
                     <input type="hidden" name="optionID" id="field_option_id" value="<?php echo $item->id(); ?>" />

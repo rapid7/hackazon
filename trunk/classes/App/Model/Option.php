@@ -22,4 +22,20 @@ class Option extends BaseModel {
             'key'=>'optionID'
         ),
     );
+
+    public function getValuesForOption()
+    {
+        if (!$this->loaded()) {
+            throw new \InvalidArgumentException("Option provided does not exist.");
+        }
+
+        $values = $this->variants->find_all()->as_array();
+        $result = [];
+        /** @var \App\Model\OptionValue[] $values */
+        foreach ($values as $val) {
+            $result[$val->id()] = $val->name;
+        }
+
+        return $result;
+    }
 }

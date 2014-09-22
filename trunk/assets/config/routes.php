@@ -57,6 +57,24 @@ return array(
         )
     ],
 
+    'admin_option_value' => array('/admin/option-value(/<action>(/<id>))',
+        array(
+            'namespace' => 'App\\Admin\\',
+            'controller' => 'OptionValue',
+            'action' => 'index',
+            'force_hyphens' => true
+        )
+    ),
+
+    'admin_product_option_value' => array('/admin/product-option-value(/<action>(/<id>))',
+        array(
+            'namespace' => 'App\\Admin\\',
+            'controller' => 'ProductOptionValue',
+            'action' => 'index',
+            'force_hyphens' => true
+        )
+    ),
+
     'admin_entity_action' => array(
         array(
             '/admin/<controller>/<id>/<action>',
@@ -69,14 +87,6 @@ return array(
             'controller' => 'home',
 
             'force_hyphens' => true
-        )
-    ),
-
-    'admin_option_value' => array('/admin/option-value(/<action>(/<id>))',
-        array(
-            'namespace' => 'App\\Admin\\',
-            'controller' => 'OptionValue',
-            'action' => 'index'
         )
     ),
 
