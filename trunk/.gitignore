@@ -1,4 +1,12 @@
 /.idea
+/.svn
 /assets/config/db.php
 /assets/config/parameters.php
+/assets/config/email.php
+/assets/config/bak/*
+/web/log.txt
+/web/test.php
+/web/user_pictures
+/Hackazon
+
 

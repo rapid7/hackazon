@@ -149,7 +149,10 @@ class ConfirmationStep extends AbstractStep
         foreach (scandir($this->pixie->root_dir . "database/migrations") as $file) {
             $file = $this->pixie->root_dir . "database/migrations/" . $file;
             if (is_file($file)) {
-                $conn->exec(file_get_contents($file));
+                $sqlContent = file_get_contents($file);
+                if (strpos($sqlContent, '# IGNORE') !== 0) {
+                    $conn->exec($sqlContent);
+                }
             }
         }
 
