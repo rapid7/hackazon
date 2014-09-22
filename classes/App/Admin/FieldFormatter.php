@@ -60,11 +60,15 @@ class FieldFormatter
             return;
         }
 
-        if ($options === null) {
+        if (!is_array($options)) {
             $options = $this->formatOptions[$field];
+        } else {
+            $options = array_merge($this->formatOptions[$field], $options);
         }
 
-        if ($options['type'] == 'extra') {
+        if (isset($options['value'])) {
+            $value = $options['value'];
+        } else  if ($options['type'] == 'extra') {
             $value = $options['title'];
 
         } else {
@@ -165,7 +169,7 @@ class FieldFormatter
         return false;
     }
 
-    public function renderSelect($selectedValue, array $optionList, array $attributes = [])
+    public function renderSelect($selectedValue = null, array $optionList, array $attributes = [])
     {
         $result = [];
         $result[] = '<select '.$this->mergeAttributes($attributes).'>';

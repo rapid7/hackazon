@@ -11,7 +11,7 @@ use PHPixie\ORM;
  * @property int $optionID
  * @property string $name
  * @property int $sort_order
- * @property Option $option
+ * @property Option $parentOption
  */
 class OptionValue extends BaseModel {
 

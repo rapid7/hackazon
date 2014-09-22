@@ -295,9 +295,7 @@ class CRUDController extends Controller
                 $data['searching'] = true;
             }
 
-            if (strpos($field, '.') !== false) {
-                $field = $data['model'] . '___' . $data['model_prop'];
-            }
+            $field = $this->recursiveCreateRelativeFieldName($field, $data);
 
             $result[$field] = $data;
         }
@@ -397,16 +395,7 @@ class CRUDController extends Controller
         foreach ($data as $item) {
             $resultItem = [];
             foreach ($fields as $field => $info) {
-                if ($info['model']) {
-                    $modelName = $info['model'];
-                    $modelProp = $info['model_prop'];
-                    $resultItem[$field] = $this->fieldFormatter($item->$modelName->$modelProp, $item, $info);
-
-                } else if (isset($item->$field)) {
-                    $resultItem[$field] = $this->fieldFormatter($item->$field, $item, $info);
-                } else if ($info['extra']) {
-                    $resultItem[$field] = $this->fieldFormatter($item->id(), $item, $info);
-                }
+                $resultItem[$field] = $this->recursiveFormatField($item, $field, $info);
             }
             $result[] = $resultItem;
         }
@@ -500,9 +489,13 @@ class CRUDController extends Controller
     public function checkSubProp($field, &$data)
     {
         if (strpos($field, '.') !== false) {
+            if (!is_array($data)) {
+                $data = [];
+            }
             preg_match('/^(?<model>[^\.]*)\.(?<prop>.*)/', $field, $matches);
             $data['model'] = $matches['model'];
             $data['model_prop'] = $matches['prop'];
+            $this->checkSubProp($matches['prop'], $data['model_prop']);
         }
     }
 
@@ -632,7 +625,10 @@ class CRUDController extends Controller
         if (strpos($orderColumn, '___') === false) {
             $this->model->order_by($orderColumn, $order['dir'] ? : 'asc');
         } else {
+            // Convert field names o DB relations
             $orderColumn = str_replace('___', '.', $orderColumn);
+            // Convert all dots into underscores except the last dot (to comply Pixie's naming convention)
+            $orderColumn = preg_replace('/\.(?![^\.]+$)/', '_', $orderColumn);
             $this->model->order_by($orderColumn, $order['dir'] ? : 'asc');
         }
 
@@ -672,5 +668,42 @@ class CRUDController extends Controller
         ];
 
         $this->jsonResponse($result);
+    }
+
+    protected function recursiveCreateRelativeFieldName($field, $data)
+    {
+        if (strpos($field, '.') !== false) {
+            $parts = preg_split('/\./', $field, 2);
+            return $data['model'] . '___' . $this->recursiveCreateRelativeFieldName($parts[1], $data['model_prop']);
+        } else {
+            return $field;
+        }
+    }
+
+    /**
+     * @param BaseModel $item
+     * @param string $field
+     * @param array $info
+     * @return string
+     */
+    protected  function recursiveFormatField($item, $field, $info)
+    {
+        $resultField = '';
+        if ($info['model']) {
+            $modelName = $info['model'];
+            $modelProp = $info['model_prop'];
+            if (is_array($info['model_prop'])) {
+                $resultField = $this->recursiveFormatField($item->$modelName, null, $info['model_prop']);
+            } else {
+                $resultField = $this->fieldFormatter($item->$modelName->$modelProp, $item, $info);
+            }
+
+        } else if (isset($item->$field)) {
+            $resultField = $this->fieldFormatter($item->$field, $item, $info);
+        } else if ($info['extra']) {
+            $resultField = $this->fieldFormatter($item->id(), $item, $info);
+        }
+
+        return $resultField;
     }
 }

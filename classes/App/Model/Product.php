@@ -23,6 +23,7 @@ use PHPixie\ORM;
  * @property Category $categories
  * @property Category $category
  * @property OptionValue $options
+ * @property ProductOptionValue $productOptions
  * @package App\Model
  */
 class Product extends BaseModel {
@@ -66,6 +67,10 @@ class Product extends BaseModel {
             'model' => 'OptionValue',
             'through' => 'tbl_product_options_values',
             'foreign_key' => 'ID',
+            'key' => 'productID'
+        ),
+        'productOptions' => array(
+            'model' => 'ProductOptionValue',
             'key' => 'productID'
         )
     );

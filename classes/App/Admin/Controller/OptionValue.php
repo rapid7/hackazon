@@ -13,6 +13,7 @@ namespace App\Admin\Controller;
 use App\Admin\CRUDController;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
+use App\Model\Option;
 
 class OptionValue extends CRUDController
 {
@@ -131,4 +132,22 @@ class OptionValue extends CRUDController
         $variant->delete();
         $this->jsonResponse(['success' => 1]);
     }
-} 
+
+    public function action_get_option_values()
+    {
+        $optionId = $this->request->getRequestData('option_id');
+        if (!$optionId) {
+            throw new NotFoundException();
+        }
+        $option = $this->pixie->orm->get('Option', $optionId);
+
+        /** @var Option $option */
+        if (!$option->loaded()) {
+            throw new NotFoundException;
+        }
+
+        $values = $option->getValuesForOption($optionId);
+
+        $this->jsonResponse(['optionVariants' => $values]);
+    }
+}
