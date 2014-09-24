@@ -209,7 +209,7 @@ class Service {
      */
     public function goDown($contextName) {
         $this->config->goDown($contextName);
-        $this->checkReferrer();
+        //$this->checkReferrer();
         return $this;
     }
 
