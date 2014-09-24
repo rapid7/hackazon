@@ -2,8 +2,9 @@
     $(function () {
         var form = $("#cart_form"),
             link = $("#add_to_cart"),
-            counter = 0;
-
+            counter = 0,
+			backBtn = $("#hw-back-btn");
+		
         link.click(function (ev) {
             ev.preventDefault();
 
@@ -39,6 +40,12 @@
 
             return false;
         });
+		backBtn.click(function(e) {
+			if(history.length > 1) {
+				history.back();
+				e.preventDefault();
+			}
+		});
     });
 </script>
 <div class="section">
@@ -114,8 +121,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-xs-12 col-md-3">
-                            <a class="btn btn-block btn-default"><span class="glyphicon glyphicon-chevron-left"></span>
-                                Back</a>
+                            <a class="btn btn-block btn-default" href="/category/view?id=<?=$product->categoryID;?>" id="hw-back-btn"><span class="glyphicon glyphicon-chevron-left"></span>Back</a>
                         </div>
                         <div class="col-xs-12 col-md-6">
                             <form id="cart_form" action="/cart/add" method="post" class="form-horizontal" role="form">
