@@ -71,9 +71,9 @@ abstract class Provider
         return compact('user', 'logged');
     }
 
-    protected function askForBasicCredentials()
+    protected function askForBasicCredentials($realm = "Provide your credentials.", $authMethod = "Basic")
     {
-        header('WWW-Authenticate: Basic realm="Provide your credentials."');
+        header('WWW-Authenticate: '.$authMethod.' realm="'.$realm.'"');
         header('HTTP/1.1 401 Unauthorized', true, 401);
         exit;
     }

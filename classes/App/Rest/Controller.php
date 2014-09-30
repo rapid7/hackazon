@@ -129,7 +129,6 @@ class Controller extends BaseController
         // Create vulnerability service.
         $this->vulninjection = $this->pixie->vulninjection->service('rest');
         $this->pixie->setVulnService($this->vulninjection);
-        //$this->vulninjection->checkReferrer();
 
         // Switch vulnerability config to the controller level
         $this->vulninjection->goDown('rest');
