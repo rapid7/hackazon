@@ -47,8 +47,10 @@ class TokenProvider extends Provider
             $this->controller->setUser($user);
             return;
 
+        }
+
         // Else require basic authorization request from client to get token.
-        } else {
+        if ($this->controller->request->param('controller') == 'auth') {
             /**
              * @var User $user
              * @var boolean $logged
@@ -64,8 +66,7 @@ class TokenProvider extends Provider
                 $responseException->setParameter('token', $token);
                 throw $responseException;
             }
-
-            $this->askForBasicCredentials();
         }
+        $this->askForBasicCredentials("Please provide your credentials using url /api/auth");
     }
 } 

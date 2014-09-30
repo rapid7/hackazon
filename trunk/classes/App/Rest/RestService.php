@@ -136,6 +136,17 @@ class RestService
         $type = trim(strtolower($this->pixie->config->get('rest.auth.type')));
         $type = $type ?: 'basic';
 
+        if ($this->pixie->getParameter('rest.auth.session')) {
+            try {
+                $this->getAuthFactory()->get('session')
+                    ->setController($event->getController())
+                    ->authenticate();
+                return;
+
+            } catch (\Exception $e) {
+            }
+        }
+
         $this->getAuthFactory()->get($type)
             ->setController($event->getController())
             ->authenticate();
