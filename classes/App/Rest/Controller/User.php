@@ -43,8 +43,7 @@ class User extends Controller
 
     protected function checkUpdateData(array $data)
     {
-        $data['password'] = '';
-        parent::checkUpdateData($data);
         unset($data['password']);
+        parent::checkUpdateData($data);
     }
 } 

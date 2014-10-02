@@ -179,7 +179,7 @@ class Controller extends BaseController
 
         if ($this->responseFormat == self::FORMAT_XML) {
             $this->response->body = $this->asXML(is_array($this->response->body) ? $this->response->body : []);
-           // echo $this->response->body;exit;
+
         } else {
             $this->response->body = $this->response->body || is_array($this->response->body)
                 ? json_encode($this->response->body) : '';
