@@ -265,4 +265,9 @@ class Helper extends \PHPixie\View\Helper
     {
         $this->controller = $controller;
     }
+
+    public function getOrderStatusLabelMapping()
+    {
+        return $this->orderStatusLabelMapping;
+    }
 }

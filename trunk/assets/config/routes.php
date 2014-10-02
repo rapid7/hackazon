@@ -1,5 +1,17 @@
 <?php
 return array(
+    'rest_my' => array('/api/my/<controller>(/<id>(/<property>))',
+        array(
+            'namespace' => 'App\\Rest\\My',
+            'action' => 'get'
+        )
+    ),
+    'rest_parented' => array('/api/<parent_controller>/<parent_id>/<controller>(/<id>(/<property>))',
+        array(
+            'controller' => 'Default',
+            'action' => 'get'
+        )
+    ),
     'rest' => array('/api(/<controller>(/<id>(/<property>)))',
         array(
             'controller' => 'Default',

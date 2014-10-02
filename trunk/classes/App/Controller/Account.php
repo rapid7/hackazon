@@ -3,15 +3,23 @@
 namespace App\Controller;
 
 use App\Core\UploadedFile;
+use App\Exception\HttpException;
 use App\Exception\NotFoundException;
 use App\Helpers\FSHelper;
 use App\Helpers\UserPictureUploader;
 use App\Model\File;
 use App\Model\Order;
 use App\Model\User;
+use App\Page;
 use PHPixie\Paginate\Pager\ORM as ORMPager;
 
-class Account extends \App\Page {
+/**
+ * Class Account
+ * @package App\Controller
+ */
+class Account extends Page
+{
+    protected $useRest = false;
 
     /**
      * require auth
@@ -21,14 +29,19 @@ class Account extends \App\Page {
             $this->redirect('/user/login?return_url=' . rawurlencode($this->request->server('REQUEST_URI')));
         }
         parent::before();
+
+        $this->useRest = $this->pixie->getParameter('parameters.rest_in_profile');
+        $this->view->useRest = $this->useRest;
     }
 
     public function action_index() {
-        /** @var ORMPager $ordersPager */
-        $ordersPager = $this->pixie->orm->get('Order')->order_by('created_at', 'DESC')->getMyOrdersPager(1, 5);
-        $myOrders = $ordersPager->current_items()->as_array();
+        if (!$this->useRest) {
+            /** @var ORMPager $ordersPager */
+            $ordersPager = $this->pixie->orm->get('Order')->order_by('created_at', 'DESC')->getMyOrdersPager(1, 5);
+            $myOrders = $ordersPager->current_items()->as_array();
+            $this->view->myOrders = $myOrders;
+        }
         $this->view->user = $this->pixie->auth->user();
-        $this->view->myOrders = $myOrders;
         $this->view->subview = 'account/account';
     }
 
@@ -140,6 +153,9 @@ class Account extends \App\Page {
 
     public function action_edit_profile()
     {
+        if ($this->useRest) {
+            throw new NotFoundException;
+        }
         $user = $this->getUser();
         $fields = ['first_name', 'last_name', 'user_phone'];
         $errors = [];
@@ -193,6 +209,38 @@ class Account extends \App\Page {
         $this->view->errorMessage = implode('<br>', $errors);
         $this->view->user = $user;
         $this->view->subview = 'account/edit_profile';
+    }
+
+    public function action_add_photo()
+    {
+        $user = $this->getUser();
+        $this->view->success = false;
+        $errors = [];
+
+        if ($this->request->method == 'POST') {
+
+            $photo = $this->request->uploadedFile('photo', [
+                'extensions' => ['jpeg', 'jpg', 'gif', 'png'],
+                'types' => ['image']
+            ]);
+
+            if ($photo->isLoaded() && !$photo->isValid()) {
+                $errors[] = 'Incorrect avatar file';
+            }
+
+            if (!count($errors)) {
+                $uploader = UserPictureUploader::create($this->pixie, $user, $photo, $this->request->post('remove_photo'));
+                $uploader->setModifyUser(false);
+                $uploader->execute();
+                $this->jsonResponse(['photo' => $uploader->getResult()]);
+
+            } else {
+                $this->jsonResponse(['errors' => $errors]);
+            }
+
+        } else {
+            throw new HttpException('Method Not Allowed', 405, null, 'Method Not Allowed');
+        }
     }
 
     /**

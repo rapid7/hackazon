@@ -33,8 +33,8 @@
                         <a href="#" class="dropdown-toggle hw-account-link" data-toggle="dropdown">Your account
                             <img src="<?php echo $userImage; ?>" class="header-user-photo"><b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/account/orders">My orders</a></li>
-                            <li><a href="/account#profile">My profile</a></li>
+                            <li><a href="/account<?php echo $useRest ? '#!orders' : '/orders'; ?>">My orders</a></li>
+                            <li><a href="/account<?php echo $useRest ? '#!profile' : '#profile'; ?>">My profile</a></li>
                             <li><a href="/account/documents">My documents</a></li>
                             <li><a href="/account/help_articles">Help Articles</a></li>
                             <li><a href="/helpdesk">Helpdesk</a></li>

@@ -76,6 +76,8 @@ class Controller extends BaseController
 
     protected $isSubRequest = false;
 
+    protected $isCollectionRequested = false;
+
     /**
      * @var array Additional links and information
      */
@@ -141,17 +143,7 @@ class Controller extends BaseController
             }
         }
 
-        if ($this->model && $this->request->param('id')) {
-            /** @var Model $model */
-            $model = $this->model
-                ->where($this->model->id_field, $this->request->param('id'))
-                ->find();
-            if ($model->loaded()) {
-                $this->item = $model;
-            } else {
-                throw new NotFoundException();
-            }
-        }
+        $this->preloadModel();
     }
 
     /**
@@ -177,6 +169,12 @@ class Controller extends BaseController
                 }
             }
             $this->response->body = $tmpData;
+        }
+
+        if ($this->isCollectionRequested) {
+            $this->response->body = array_merge([
+                'data' => $this->response->body,
+            ], $this->meta);
         }
 
         if ($this->responseFormat == self::FORMAT_XML) {
@@ -293,7 +291,9 @@ class Controller extends BaseController
     public function action_get_collection()
     {
         $page = $this->request->get('page', 1);
-        $pager = $this->pixie->paginate->orm($this->model, $page, $this->perPage);
+        $perPage = $this->request->get('per_page', $this->perPage);
+        $this->adjustOrder();
+        $pager = $this->pixie->paginate->orm($this->model, $page, $perPage);
         $currentItems = $pager->current_items()->as_array(true);
         $this->addLinksForCollection($pager);
         return $currentItems;
@@ -521,15 +521,27 @@ class Controller extends BaseController
     {
         $pager->set_url_pattern($this->prefix . $this->underscorifyName($this->modelName) . '?page=#page#');
 
+        $this->meta['page'] = $pager->page;
+        $this->meta['page_url'] = $pager->url($pager->page);
         $this->response->addLinkUrl($pager->url($pager->page), 'current');
+        $this->meta['first_page'] = 1;
+        $this->meta['first_page_url'] = $pager->url(1);
         $this->response->addLinkUrl($pager->url(1), 'first');
+        $this->meta['last_page'] = 1;
+        $this->meta['last_page_url'] = $pager->url(1);
         $this->response->addLinkUrl($pager->url($pager->num_pages), 'last');
         if ($pager->page > 1) {
+            $this->meta['prev_page'] = $pager->page - 1;
+            $this->meta['prev_page_url'] = $pager->url($pager->page - 1);
             $this->response->addLinkUrl($pager->url($pager->page - 1), 'prev');
         }
         if ($pager->page < $pager->num_pages) {
+            $this->meta['next_page'] = $pager->page + 1;
+            $this->meta['next_page_url'] = $pager->url($pager->page + 1);
             $this->response->addLinkUrl($pager->url($pager->page + 1), 'next');
         }
+        $this->meta['total_items'] = (int)$pager->num_items;
+        $this->meta['pages'] = (int)$pager->num_pages;
     }
 
     /**
@@ -627,5 +639,45 @@ class Controller extends BaseController
                 $xml->addChild("$key", htmlspecialchars("$value"));
             }
         }
+    }
+
+    protected function preloadModel()
+    {
+        if ($this->model && $this->request->param('id')) {
+            /** @var Model $model */
+            $model = $this->model
+                ->where($this->model->id_field, $this->request->param('id'))
+                ->find();
+            if ($model->loaded()) {
+                $this->item = $model;
+            } else {
+                throw new NotFoundException();
+            }
+        }
+    }
+
+    protected function adjustOrder()
+    {
+        $order = 'asc';
+        if (in_array(strtolower($this->request->get('order')), ['asc', 'desc'])) {
+            $order = strtolower($this->request->get('order'));
+        }
+
+        $orderBy = $this->request->get('order');
+        if ($orderBy && !in_array($orderBy, $this->exposedFields())) {
+            $orderBy = '';
+        }
+
+        if ($order && $orderBy) {
+            $this->model->order_by($orderBy, $order);
+        }
+    }
+
+    /**
+     * @param boolean $isCollectionRequested
+     */
+    public function setIsCollectionRequested($isCollectionRequested)
+    {
+        $this->isCollectionRequested = $isCollectionRequested;
     }
 }

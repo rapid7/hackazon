@@ -162,6 +162,10 @@ class Request extends \PHPixie\Request
                 throw new HttpException('Request data are malformed. Please check it.', 400, null, 'Bad Request');
             }
             $this->$fieldName = json_decode(json_encode($xml), true);
+
+        } else if ($fieldName == 'adjustedRawInputData') {
+            $this->rawRequestData();
+            $this->$fieldName = $this->parseRawHttpRequest();
         }
 
         $this->$fieldName = is_array($this->$fieldName) ? $this->$fieldName : [];
@@ -185,5 +189,61 @@ class Request extends \PHPixie\Request
     public function uploadedFile($name, array $params = [])
     {
         return new UploadedFile($this->pixie, $name, $params);
+    }
+
+    /**
+     * RAW Request data parser
+     * @see http://www.chlab.ch/blog/archives/php/manually-parse-raw-http-data-php
+     * @return array
+     */
+    function parseRawHttpRequest()
+    {
+        $aData = [];
+
+        // read incoming data
+        $input = $this->rawInputData;
+
+        // grab multipart boundary from content type header
+        preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
+
+        // content type is probably regular form-encoded
+        if (!count($matches))
+        {
+            // we expect regular puts to contain a query string containing data
+            parse_str(urldecode($input), $aData);
+            return $aData;
+        }
+
+        $boundary = $matches[1];
+
+        // split content by boundary and get rid of last -- element
+        $aBlocks = preg_split("/-+$boundary/", $input);
+        array_pop($aBlocks);
+
+        // loop data blocks
+        foreach ($aBlocks as $id => $block)
+        {
+            if (empty($block))
+                continue;
+
+            // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visible char
+
+            // parse uploaded files
+            if (strpos($block, 'application/octet-stream') !== FALSE)
+            {
+                // match "name", then everything after "stream" (optional) except for prepending newlines
+                preg_match("/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s", $block, $matches);
+                $aData['files'][$matches[1]] = $matches[2];
+            }
+            // parse all other fields
+            else
+            {
+                // match "name" and optional value in between newline sequences
+                preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+                $aData[$matches[1]] = $matches[2];
+            }
+        }
+
+        return $aData;
     }
 }

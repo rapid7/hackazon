@@ -12,6 +12,7 @@ namespace App\Rest\Controller;
 
 use App\Exception\NotFoundException;
 use App\Rest\Controller;
+use PHPixie\ORM\Model;
 
 /**
  * Class Order
@@ -23,7 +24,11 @@ class Order extends Controller
     public function action_get()
     {
         if ($this->item->customer_id == $this->user->id()) {
-            return $this->asArrayWith(parent::action_get(), ['orderAddress']);
+            $this->item->orderItems->with('product');
+            $data = $this->asArrayWith(parent::action_get(), ['orderAddress', 'orderItems']);
+            $data['increment_id'] = 1000000 + $data['id'];
+            $data['total_price'] = $this->item->orderItems->getItemsTotal();
+            return $data;
         } else {
             throw new NotFoundException();
         }
@@ -59,9 +64,15 @@ class Order extends Controller
     public function action_get_collection()
     {
         $page = $this->request->get('page', 1);
+        $perPage = $this->request->get('per_page', $this->perPage);
         $this->model->where('customer_id', $this->user->id());
-        $pager = $this->pixie->paginate->orm($this->model, $page, $this->perPage);
+        $this->adjustOrder();
+        $pager = $this->pixie->paginate->orm($this->model, $page, $perPage);
         $currentItems = $this->asArrayWith($pager->current_items());
+        foreach ($currentItems as $key => $item) {
+            $currentItems[$key]['increment_id'] = 1000000 + $item['id'];
+        }
+
         $this->addLinksForCollection($pager);
         return $currentItems;
     }
@@ -85,5 +96,20 @@ class Order extends Controller
         $address = $controller->response->body;
         $this->execute = false;      // important in order to not escape output twice
         return $address;
+    }
+
+    protected function preloadModel()
+    {
+        if ($this->request->param('id')) {
+            /** @var Model $model */
+            $model = $this->model
+                ->where($this->model->id_field, $this->request->param('id') - 1000000)
+                ->find();
+            if ($model->loaded()) {
+                $this->item = $model;
+            } else {
+                throw new NotFoundException();
+            }
+        }
     }
 }

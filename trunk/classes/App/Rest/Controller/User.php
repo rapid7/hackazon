@@ -40,4 +40,11 @@ class User extends Controller
         $fields = parent::exposedFields();
         return $this->removeValues($fields, ['password']);
     }
+
+    protected function checkUpdateData(array $data)
+    {
+        $data['password'] = '';
+        parent::checkUpdateData($data);
+        unset($data['password']);
+    }
 } 

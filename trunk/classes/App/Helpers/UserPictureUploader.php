@@ -43,6 +43,10 @@ class UserPictureUploader
 
     protected $processed = false;
 
+    protected $modifyUser = true;
+
+    protected $result = '';
+
     public function __construct(Pixie $pixie, User $user, UploadedFile $picture, $removeOld = true)
     {
         $this->pixie = $pixie;
@@ -65,7 +69,9 @@ class UserPictureUploader
         $this->pixie->session->get();
         if ($this->pixie->getParameter('parameters.use_external_dir')) {
             if ($this->removeOld) {
-                $this->user->photo = '';
+                if ($this->modifyUser) {
+                    $this->user->photo = '';
+                }
             }
 
             if ($this->picture->isLoaded()) {
@@ -87,7 +93,10 @@ class UserPictureUploader
                         $newFile->path = $headers['X-Created-Filename'];
                         $newFile->user_id = $this->user->id();
                         $newFile->save();
-                        $this->user->photo = $newFile->id();
+                        $this->result = $newFile->id();
+                        if ($this->modifyUser) {
+                            $this->user->photo = $newFile->id();
+                        }
                     }
 
                 } else {
@@ -98,7 +107,10 @@ class UserPictureUploader
                     $newFile->path = $newPhotoPath;
                     $newFile->user_id = $this->user->id();
                     $newFile->save();
-                    $this->user->photo = $newFile->id();
+                    $this->result = $newFile->id();
+                    if ($this->modifyUser) {
+                        $this->user->photo = $newFile->id();
+                    }
                 }
             }
 
@@ -109,7 +121,9 @@ class UserPictureUploader
 
             if ($this->removeOld && $this->user->photo && file_exists($photoPath . $this->user->photo)) {
                 unlink($photoPath . $this->user->photo);
-                $this->user->photo = '';
+                if ($this->modifyUser) {
+                    $this->user->photo = '';
+                }
             }
 
             if ($this->picture->isLoaded()) {
@@ -119,7 +133,10 @@ class UserPictureUploader
 
                 $photoName = $this->generatePhotoName($this->picture);
                 $this->picture->move($photoPath . $photoName);
-                $this->user->photo = $photoName;
+                $this->result = $photoName;
+                if ($this->modifyUser) {
+                    $this->user->photo = $photoName;
+                }
             }
         }
         $this->processed = true;
@@ -132,5 +149,29 @@ class UserPictureUploader
 
     public function getResultFileName()
     {
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getModifyUser()
+    {
+        return $this->modifyUser;
+    }
+
+    /**
+     * @param boolean $modifyUser
+     */
+    public function setModifyUser($modifyUser)
+    {
+        $this->modifyUser = $modifyUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
     }
 } 
