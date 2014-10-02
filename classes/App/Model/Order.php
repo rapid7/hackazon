@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Model;
-use PHPixie\ORM\Model;
+
 
 /**
  * Class Order
  * @package App\Model
- * @property Model $orderAddress
+ * @property OrderAddress $orderAddress
+ * @property OrderItems $orderItems
  * @property int $customer_id
  */
 class Order extends BaseModel

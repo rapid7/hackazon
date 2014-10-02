@@ -5,7 +5,7 @@
             <h1 class="page-header">Edit Profile</h1>
             <ol class="breadcrumb">
                 <li><a href="/">Home</a></li>
-                <li><a href="/account#profile">My Account</a></li>
+                <li><a href="/account<?php echo $useRest ? '#!profile/edit' : '#profile'; ?>">My Account</a></li>
                 <li class="active">Edit Profile</li>
             </ol>
         </div>

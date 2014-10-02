@@ -5,8 +5,8 @@
             <h1 class="page-header">Order №<?php echo $order->increment_id; ?> <small><?php echo $_order_status($order->status); ?></small></h1>
             <ol class="breadcrumb">
                 <li><a href="/">Home</a></li>
-                <li><a href="/account#my-orders">My Account</a></li>
-                <li><a href="/account/orders">Orders</a></li>
+                <li><a href="/account<?php echo $useRest ? '#!' : '#my-orders'; ?>">My Account</a></li>
+                <li><a href="/account<?php echo $useRest ? '#!orders' : '/orders'; ?>">Orders</a></li>
                 <li class="active">Order №<?php echo $order->increment_id; ?></li>
             </ol>
         </div>

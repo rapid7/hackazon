@@ -237,4 +237,13 @@ class User extends BaseModel {
     {
         return in_array($role, $this->getRoles());
     }
+
+    public function getPublicData()
+    {
+        $allowedUserFields = [
+            'id', 'username', 'first_name', 'last_name', 'email', 'photo', 'user_phone', 'created_on'
+        ];
+
+        return array_intersect_key($this->as_array(true), array_flip($allowedUserFields));
+    }
 }

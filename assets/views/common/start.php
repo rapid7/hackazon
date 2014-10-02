@@ -31,10 +31,16 @@
     <link href="/css/site.css" rel="stylesheet">
     <link href="/css/sidebar.css" rel="stylesheet">
 
+    <?php
+    $currentUser = $this->pixie->auth->user();
+    ?>
     <script type="text/javascript">
         var App = window.App || {};
         App.config = <?php echo json_encode([
-            'host' => ($_SERVER['HTTPS'] == 'on' ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST']
+            'host' => ($_SERVER['HTTPS'] == 'on' ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'],
+            'user' => $currentUser ? $currentUser->getPublicData() : null,
+            'baseImgPath' => $this->pixie->getParameter('parameters.use_external_dir') ? '/upload/download.php?image=' : '/user_pictures/',
+            'dataType' => $this->pixie->getParameter('parameters.profile_rest_data_type', 'xml')
         ]);?>;
     </script>
 
@@ -48,6 +54,7 @@
     <script src="/js/bootstrapValidator.min.js"></script>
     <script src="/js/jquery.validate.min.js"></script>
     <script src="/js/spin.min.js"></script>
+    <script src="/js/moment.min.js"></script>
     <script src="/js/jquery.modern-blink.js"></script>
     <script src="/js/ladda.min.js"></script>
     <script src="/js/ladda.jquery.min.js"></script>

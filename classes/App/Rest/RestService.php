@@ -101,6 +101,7 @@ class RestService
             if (!$request->param('id')) {
                 if (in_array($this->request->method, ['GET', 'HEAD'])) {
                     $action .= '_collection';
+                    $controller->setIsCollectionRequested(true);
                 }
 
             } else {

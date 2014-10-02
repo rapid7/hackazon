@@ -14,4 +14,6 @@ return array(
     'user_pictures_path' => '/web/user_pictures/',
     'common_path' => dirname(dirname(__DIR__)) . '/assets/views/common/',
     'annotation_length' => 900,
+    'rest_in_profile' => false,
+    'profile_rest_data_type' => 'xml', // json | xml
 );
