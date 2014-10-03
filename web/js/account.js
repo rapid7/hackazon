@@ -2,25 +2,6 @@
  * Single page application for Account section
  */
 
-//function js2xml(obj, name) {
-//    name = name || 'XMLDocument';
-//    var node = $('<' + name + ' />');
-//    if (obj instanceof Object && obj !== null) {
-//        if ($.isArray(obj)) {
-//            $.each(obj, function (key, value) {
-//                node.append(js2xml(value, 'item' + key));
-//            });
-//        } else {
-//            $.each(obj, function (key, value) {
-//                node.append(js2xml(value, key));
-//            });
-//        }
-//    } else {
-//        node.text(obj || '');
-//    }
-//    return node;
-//}
-
 function js2xml2(obj) {
     var xw = new XMLWriter('UTF-8');
     xw.formatting = 'indented';//add indentation and newlines
