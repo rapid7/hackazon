@@ -9,18 +9,18 @@ amfphp.services = {};
 /**
  * set by default to server url with which the code was generated. The contentType parameter is to make sure the server interprets the request as JSON
  * */
-amfphp.entryPointUrl = (App.config.host || "http://hackazon.com") + "/voucher?contentType=application/json";
+amfphp.entryPointUrl = (App.config.host || "http://hackazon.com") + "/amf?contentType=application/json";
 
 /** 
-*   Voucher service. Provides method for operating vouchers
+*   Coupon service. Provides method for operating vouchers
 *   @package AmfphpModule\Services
 *   */
-amfphp.services.VoucherService = {};
+amfphp.services.CouponService = {};
 
 
 /**  */
-amfphp.services.VoucherService.registerVoucher = function(onSuccess, onError, date, dayOfWeek){
-	var callData = JSON.stringify({"serviceName":"VoucherService", "methodName":"registerVoucher","parameters":[date, dayOfWeek]});
+amfphp.services.CouponService.registerVoucher = function(onSuccess, onError, date, dayOfWeek){
+	var callData = JSON.stringify({"serviceName":"CouponService", "methodName":"registerVoucher","parameters":[date, dayOfWeek]});
 	    $.post(amfphp.entryPointUrl, callData, onSuccess)
 	    	.error(onError);
 	

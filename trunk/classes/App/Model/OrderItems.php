@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-class OrderItems extends \PHPixie\ORM\Model {
+class OrderItems extends BaseModel {
 
     public $table = 'tbl_order_items';
     public $id_field = 'id';
@@ -11,6 +11,10 @@ class OrderItems extends \PHPixie\ORM\Model {
         'product' => array(
             'model' => 'Product',
             'key' => 'product_id',
+        ),
+        'order' => array(
+            'model' => 'Order',
+            'key' => 'order_id',
         )
     );
 
@@ -18,9 +22,11 @@ class OrderItems extends \PHPixie\ORM\Model {
     {
         $total = 0;
         $items = $this->find_all()->as_array();
+        $order = $items[0] ? $items[0]->order : null;
+        $multiplier = (100 - (int)($order ? $order->discount : 0)) / 100;
         foreach ($items as $item) {
             $total += $item->price * $item->qty;
         }
-        return $total;
+        return $total * $multiplier;
     }
 }

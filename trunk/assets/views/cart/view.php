@@ -83,9 +83,9 @@
                 timeout: 10000,
                 success: function(data) {
                     <?php if (is_null($this->pixie->auth->user())): ?>
-                    window.location.href = "<?php echo '/user/login?return_url=' . rawurlencode('/checkout/shipping');?>"
+                        window.location.href = "<?php echo '/user/login?return_url=' . rawurlencode('/checkout/shipping');?>"
                     <?php else : ?>
-window.location.href = "/checkout/shipping";
+                        window.location.href = "/checkout/shipping";
                     <?php endif;?>
                 },
                 fail: function() {
@@ -94,9 +94,41 @@ window.location.href = "/checkout/shipping";
                     el.removeAttr('disabled');
                 }
             });
-        })
+        });
+
+        $('#useCouponLink').on('click', function (ev) {
+            ev.preventDefault();
+            getCouponWidget().useCoupon($('#couponField').val());
+        });
+
+        $('#clearCouponLink').on('click', function (ev) {
+            ev.preventDefault();
+            getCouponWidget().unsetCoupon();
+        });
     });
 
+    function successCouponCallback(result) {
+        location.reload();
+    }
+
+    function successCouponUnsetCallback(result) {
+        location.reload();
+    }
+
+    function invalidCouponCallback(error) {
+        var el = $('#couponField').tooltip('destroy').tooltip({
+            title : 'Wrong coupon',
+            delay: 3000
+        }).tooltip('show');
+        setTimeout(function () { el.tooltip('hide'); }, 2000);
+
+//        console.log("Error: ");
+//        console.log(error);
+    }
+
+    function getCouponWidget() {
+        return getFlashMovie('coupon_as');
+    }
 </script>
 
 <?php
@@ -214,6 +246,36 @@ if (count($items) == 0) :?>
                             <span class="label label-success">FREE</span>
                         </td>
                     </tr>
+                    <tr class="info">
+                        <td class="text-right" colspan="3">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-xs-4 col-xs-offset-4 control-label">Use coupon: </label>
+                                    <div class="col-xs-4">
+                                        <input type="text" name="coupon" id="couponField" value="<?php $_($coupon ? $coupon->coupon : ''); ?>" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2" class="text-center">
+                            <div class="form-horizontal">
+                                <a href="#" class="btn btn-primary" id="useCouponLink">Use</a>
+                            </div>
+                            <?php include __DIR__.'/_coupon_flash_widget.php'; ?>
+                        </td>
+                    </tr>
+                    <tr class="info" id="currentCouponRow" style="<?php if (!$coupon): ?>display: none;<?php endif; ?>">
+                        <td class="text-right" colspan="3">
+                            <label>Your coupon is &laquo;<span id="currentCoupon"><?php $_($coupon->coupon); ?></span>&raquo;, and you have a discount:
+                                <span id="currentCouponDiscount"><?php echo $coupon->discount ?: 0; ?></span>%</label>
+                        </td>
+                        <td colspan="2" class="text-center">
+                            <div class="form-horizontal">
+                                <a href="#" class="btn btn-warning" id="clearCouponLink">Clear coupon</a>
+                            </div>
+                        </td>
+                    </tr>
+
                     <tr class="danger">
                         <th class="text-right" colspan="3">Quantity items:<br>Total: </th>
                         <th class="text-left" colspan="2">

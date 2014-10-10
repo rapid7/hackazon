@@ -68,9 +68,42 @@
     <script src="/js/knockout.localStorage.js"></script>
     <script src="/js/koExternalTemplateEngine_all.min.js"></script>
     <script src="/js/amf/services.js"></script>
+    <script src="/js/swfobject.js"></script>
 
     <script src="/js/tools.js"></script>
     <script src="/js/site.js"></script>
+
+    <script type="text/javascript">
+        // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection.
+        var swfVersionStr = "11.1.0";
+        // To use express install, set to playerProductInstall.swf, otherwise the empty string.
+        var xiSwfUrlStr = "/swf/playerProductInstall.swf";
+        var flashvars = {
+            host: "<?php echo $_SERVER['HTTP_HOST'] ? 'http://'.$_SERVER['HTTP_HOST'] : $this->pixie->config->get('parameters.host'); ?>"
+        };
+        var params = {};
+        params.quality = "high";
+        params.bgcolor = "#ffffff";
+        params.allowscriptaccess = "sameDomain";
+        params.allowfullscreen = "false";
+        var attributes = {};
+        attributes.id = "SliderBanner";
+        attributes.name = "SliderBanner";
+        attributes.align = "middle";
+
+        $(function () {
+            if ($('#flashBanner').length) {
+                swfobject.embedSWF(
+                    "/swf/SliderBanner.swf", "flashBanner",
+                    "360", "290",
+                    swfVersionStr, xiSwfUrlStr,
+                    flashvars, params, attributes);
+                // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
+                swfobject.createCSS("#flashBanner", "display:block;text-align:left;");
+            }
+        });
+    </script>
+
     <?php if (isset($headScripts)) { echo $headScripts; } ?>
 </head>
 <body class="<?php $_(isset($bodyClass) ? $bodyClass : ''); ?>">

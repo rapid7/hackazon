@@ -29,10 +29,17 @@ class CRUDController extends Controller
      */
     public $modelNamePlural = '';
 
+    public $modelNameSingle = '';
+
     /**
      * @var string Singular name of the model
      */
     public $modelName = '';
+
+    /**
+     * @var string URL path alias
+     */
+    protected $alias = null;
 
     protected $modelFields;
 
@@ -53,12 +60,22 @@ class CRUDController extends Controller
             $this->modelName = $this->get_real_class($this);;
         }
 
+        if (!$this->alias) {
+            $this->alias = strtolower($this->modelName);
+        }
+
         if (!$this->modelNamePlural) {
             $this->modelNamePlural = $this->modelName . 's';
         }
 
+        if (!$this->modelNameSingle) {
+            $this->modelNameSingle = $this->modelName;
+        }
+
+        $this->view->modelNameSingle = $this->modelNameSingle;
         $this->view->pageTitle = $this->modelNamePlural;
         $this->view->pageHeader = $this->modelNamePlural;
+        $this->view->alias = $this->alias;
 
         $this->prepareModelFields();
     }
@@ -78,6 +95,7 @@ class CRUDController extends Controller
             $this->view->subview = $this->listView;
             $this->view->listFields = $listFields;
             $this->view->modelName = $this->model->model_name;
+            $this->view->alias = $this->alias;
         }
     }
 
@@ -107,12 +125,21 @@ class CRUDController extends Controller
             }
 
             $data = $this->request->post();
+            $this->preProcessEdit($item, $data);
+
+            // Ensure checkbox fields are existing in dataset even if it is missing (unchecked)
+            $data = array_merge(array_fill_keys(array_keys($this->getEditFields()), ''), $data);
+
+            // Process files
             $this->processRequestFilesForItem($item, $data);
+
+            // Submit request data and save
             $item->values($item->filterValues($data));
             $item->save();
 
             if ($item->loaded()) {
-                $this->redirect('/admin/' . strtolower($item->model_name) . '/edit/'.$item->id());
+                $this->onSuccessfulEdit($item);
+                $this->redirect('/admin/' . strtolower($this->alias) . '/edit/'.$item->id());
                 return;
             }
 
@@ -129,12 +156,12 @@ class CRUDController extends Controller
         }
 
         $editFields = $this->prepareEditFields();
-        $this->view->pageTitle = $this->modelName;
+        $this->view->pageTitle = $this->modelNameSingle;
         $this->view->pageHeader = $this->view->pageTitle;
         $this->view->modelName = $this->model->model_name;
         $this->view->item = $item;
         $this->view->editFields = $editFields;
-        $this->view->formatter = new FieldFormatter($item, $editFields);
+        $this->view->formatter = new FieldFormatter($item, $editFields, ['alias' => $this->alias]);
         $this->view->formatter->setPixie($this->pixie);
         $this->view->subview = $this->editView;
     }
@@ -154,18 +181,18 @@ class CRUDController extends Controller
             $item->save();
 
             if ($item->loaded()) {
-                $this->redirect('/admin/' . strtolower($item->model_name) . '/edit/'.$item->id());
+                $this->redirect('/admin/' . strtolower($this->alias) . '/edit/'.$item->id());
                 return;
             }
         }
 
         $editFields = $this->prepareEditFields();
-        $this->view->pageTitle = 'Add new ' . $this->modelName;
+        $this->view->pageTitle = 'Add new ' . $this->modelNameSingle;
         $this->view->pageHeader = $this->view->pageTitle;
         $this->view->modelName = $this->model->model_name;
         $this->view->item = $item;
         $this->view->editFields = $editFields;
-        $this->view->formatter = new FieldFormatter($item, $editFields);
+        $this->view->formatter = new FieldFormatter($item, $editFields, ['alias' => $this->alias]);
         $this->view->formatter->setPixie($this->pixie);
         $this->view->subview = $this->editView;
     }
@@ -243,7 +270,7 @@ class CRUDController extends Controller
 
             $data['original_field_name'] = $field;
 
-            if (!$data['type']) {
+            if (!$data['type'] && $field != $this->model->id_field) {
                 $data['type'] = 'text';
             }
 
@@ -256,7 +283,7 @@ class CRUDController extends Controller
             if ($data['type'] == 'link' || $data['is_link']) {
                 $data['is_link'] = true;
                 if (!$data['template']) {
-                    $data['template'] = '/admin/' . $this->model->model_name . '/edit/%' . $this->model->id_field . '%';
+                    $data['template'] = '/admin/' . $this->alias . '/edit/%' . $this->model->id_field . '%';
                 }
             }
 
@@ -304,7 +331,7 @@ class CRUDController extends Controller
         if (array_key_exists($this->model->id_field, $listFields)) {
             if (!array_key_exists('type', $listFields[$this->model->id_field])) {
                 $listFields[$this->model->id_field]['type'] = 'link';
-                $listFields[$this->model->id_field]['template'] = '/admin/' . $this->model->model_name . '/edit/%' . $this->model->id_field . '%';
+                $listFields[$this->model->id_field]['template'] = '/admin/' . $this->alias . '/edit/%' . $this->model->id_field . '%';
             }
             $listFields[$this->model->id_field]['width'] = '60';
         }
@@ -554,7 +581,7 @@ class CRUDController extends Controller
             'edit' => [
                 'extra' => true,
                 'type' => 'html',
-                'template' => '<a href="/admin/'.strtolower($this->model->model_name).'/edit/%'.$this->model->id_field.'%" '
+                'template' => '<a href="/admin/'.strtolower($this->alias).'/edit/%'.$this->model->id_field.'%" '
                     . ' class="js-edit-item">Edit</a>',
                 'column_classes' => 'edit-action-column'
             ]
@@ -566,7 +593,7 @@ class CRUDController extends Controller
             'delete' => [
                 'extra' => true,
                 'type' => 'html',
-                'template' => '<a href="/admin/'.strtolower($this->model->model_name).'/delete/%'.$this->model->id_field.'%" '
+                'template' => '<a href="/admin/'.strtolower($this->alias).'/delete/%'.$this->model->id_field.'%" '
                     . ' class="js-delete-item">Delete</a>',
                 'column_classes' => 'delete-action-column'
             ],
@@ -705,5 +732,13 @@ class CRUDController extends Controller
         }
 
         return $resultField;
+    }
+
+    protected function onSuccessfulEdit(Model $model)
+    {
+    }
+
+    protected function preProcessEdit($item, $data)
+    {
     }
 }

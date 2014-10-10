@@ -24,7 +24,10 @@
 
                         <dt>Status</dt>
                         <dd><?php echo $_order_status($order->status); ?></dd>
-
+                        <?php if ($order->discount > 0): ?>
+                            <dt>Discount</dt>
+                            <dd><?php echo $_($order->discount); ?>%</dd>
+                        <?php endif; ?>
                         <dt>Total</dt>
                         <dd><span class="label label-danger">$<?php echo $order->orderItems->getItemsTotal(); ?></span></dd>
                     </dl>

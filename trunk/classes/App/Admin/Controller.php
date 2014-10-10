@@ -45,7 +45,7 @@ class Controller extends BaseController
         $this->view->returnUrl = '';
         $this->view->controller = $this;
         $this->view->adminRoot = $this->root;
-        $className = $this->get_real_class($this);
+        $className = isset($this->modelName) && $this->modelName ? $this->modelName : $this->get_real_class($this);
         $this->view->sidebarLinks = $this->getSidebarLinks();
 
         $this->view->user = $user;
@@ -91,6 +91,7 @@ class Controller extends BaseController
             $this->root.'/product' => ['label' => 'Products', 'link_class' => 'fa fa-archive fa-fw'],
             $this->root.'/option' => ['label' => 'Product Options', 'link_class' => 'fa fa-check-circle-o fa-fw'],
             $this->root.'/order' => ['label' => 'Orders', 'link_class' => 'fa fa-shopping-cart fa-fw'],
+            $this->root.'/coupon' => ['label' => 'Coupons', 'link_class' => 'fa fa-percent fa-fw'],
             $this->root.'/enquiry' => ['label' => 'Enquiries', 'link_class' => 'fa fa-life-saver fa-fw'],
             $this->root.'/faq' => ['label' => 'Faq', 'link_class' => 'fa fa-question-circle fa-fw'],
         ];

@@ -7,7 +7,7 @@ namespace App\Model;
  * @package App\Model
  * @property Product $products Products residing in cart.
  */
-class Cart extends \PHPixie\ORM\Model {
+class Cart extends BaseModel {
 
     public $table = 'tbl_cart';
     public $id_field = 'id';
@@ -159,6 +159,9 @@ class Cart extends \PHPixie\ORM\Model {
         return array();
     }
 
+    /**
+     * @return CartItems
+     */
     public function getCartItemsModel()
     {
         return $this->pixie->orm->get('CartItems');
@@ -185,6 +188,7 @@ class Cart extends \PHPixie\ORM\Model {
 
         $order = $this->pixie->orm->get('Order');//set order
         $customer = $this->pixie->orm->get('User')->where('id',$this->pixie->auth->user()->id)->find();
+        $coupon = $this->getCart()->getCoupon();
         $order->created_at = date('Y-m-d H:i:s');
         $order->customer_firstname = $customer->username;
         $order->customer_email = $customer->email;
@@ -192,6 +196,7 @@ class Cart extends \PHPixie\ORM\Model {
         $order->payment_method = $this->getCart()->payment_method;
         $order->shipping_method = $this->getCart()->shipping_method;
         $order->status = 'complete';
+        $order->discount = $coupon ? (int)$coupon->discount : 0;
         $order->save();
 
         $items = $this->getCartItemsModel()->getAllItems();
@@ -226,6 +231,49 @@ class Cart extends \PHPixie\ORM\Model {
             $orderAddress->save();
         }
         $this->updateLastStep(self::STEP_ORDER);
+        $this->getCart()->unsetCoupon();
         //$this->pixie->db->get()->execute("COMMIT");//end transaction
+    }
+
+    /**
+     * @param int $couponId
+     */
+    public function useCoupon($couponId)
+    {
+        $coupons = $this->pixie->session->get('_coupons', []);
+        $coupons[$this->id()] = $couponId;
+        $this->pixie->session->set('_coupons', $coupons);
+
+        $this->total_price = $this->getCartItemsModel()->getItemsTotal();
+        $this->save();
+    }
+
+    public function unsetCoupon()
+    {
+        $coupons = $this->pixie->session->get('_coupons', []);
+        unset($coupons[$this->id()]);
+        $this->pixie->session->set('_coupons', $coupons);
+
+        $this->total_price = $this->getCartItemsModel()->getItemsTotal();
+        $this->save();
+    }
+
+    /**
+     * @return Coupon|null
+     */
+    public function getCoupon()
+    {
+        $coupons = $this->pixie->session->get('_coupons', []);
+        if (!($couponId = $coupons[$this->id()])) {
+            return null;
+        }
+
+        /** @var Coupon $coupon */
+        $coupon = $this->pixie->orm->get('coupon', $couponId);
+        if (!$coupon->loaded()) {
+            return null;
+        }
+
+        return $coupon;
     }
 }

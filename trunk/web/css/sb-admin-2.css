@@ -446,3 +446,7 @@ table.dataTable thead .sorting:after {
 .option-variants-pane .add-variant-errors {
     display: none;
 }
+
+.fa-percent:before {
+    content: "%";
+}

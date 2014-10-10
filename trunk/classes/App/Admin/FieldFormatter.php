@@ -25,11 +25,15 @@ class FieldFormatter
     protected $item;
     protected $formatOptions = [];
     protected $renderedFields = [];
+    protected $options = [];
+    protected $controllerAlias;
 
-    public function __construct(Model $item, array $formatOptions)
+    public function __construct(Model $item, array $formatOptions, array $options = [])
     {
         $this->item = $item;
         $this->formatOptions = $formatOptions;
+        $this->options = $options;
+        $this->controllerAlias = $options['alias'] ?: $this->item->model_name;
     }
 
     public function renderForm()
@@ -68,11 +72,11 @@ class FieldFormatter
 
         if (isset($options['value'])) {
             $value = $options['value'];
-        } else  if ($options['type'] == 'extra') {
+        } else if ($options['type'] == 'extra') {
             $value = $options['title'];
 
         } else {
-            $value = isset($this->item->$field) ? $this->item->$field : '';
+            $value = isset($this->item->$field) ? $this->item->$field : $options['default_value'];
         }
 
         $type = $options['type'];
@@ -130,7 +134,7 @@ class FieldFormatter
                     . 'title="Select image" value="'.$escapedValue.'">';
 
         } else if ($options['type'] == 'boolean') {
-            $checked = $value ? ' checked ' : '';
+            $checked = $value ? ' checked ' : (!$this->item->loaded() && $options['default_value'] ? ' checked ' : '');
             echo $label.' <input type="checkbox" '.$commonAttrs.$checked.' class="form-horizontal '.$options['class_names'].'" value="1" />';
 
         } else {
@@ -149,7 +153,7 @@ class FieldFormatter
             $enctype = 'multipart/form-data';
         }
         $operation = $this->item->id() ? '/edit/'.$this->item->id() : '/new';
-        echo '<form method="post" action="/admin/'.strtolower($this->item->model_name).$operation.'" '
+        echo '<form method="post" action="/admin/'.strtolower($this->controllerAlias).$operation.'" '
                 . 'enctype="'.$enctype.'" '
                 . ' class="model-form model-'.$this->item->model_name.'-form">';
     }
@@ -185,8 +189,10 @@ class FieldFormatter
     public function renderSubmitButtons()
     {
         if ($this->item->id()) {
+            echo '<a class="btn btn-primary" '
+                .'href="/admin/'.$this->controllerAlias.'/new/">Add new</a> ';
             echo '<a class="btn btn-danger js-delete-item" '
-                .'href="/admin/'.$this->item->model_name.'/delete/'.$this->item->id().'">Delete</a> ';
+                .'href="/admin/'.$this->controllerAlias.'/delete/'.$this->item->id().'">Delete</a> ';
         }
 
         $name = $this->item->id() ? 'Save' : 'Add';

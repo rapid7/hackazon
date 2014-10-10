@@ -8,14 +8,21 @@
 
 namespace AmfphpModule\Core;
 
+use App\Pixie;
+use App\Traits\Pixifiable;
+
 class Config extends \Amfphp_Core_Config
 {
-    public function __construct()
+    use Pixifiable;
+
+    public function __construct(Pixie $pixie)
     {
         parent::__construct();
         $this->pluginsConfig['AmfphpDiscovery']['restrictAccess'] = false;
         $this->serviceFolders = [
             [dirname(__FILE__) . '/../Services/', '\\AmfphpModule\\Services']
         ];
+        $this->pluginsFolders[] = dirname(__FILE__) . '/../Plugins/';
+        $this->pluginsConfig['Pixifier']['pixie'] = $pixie;
     }
 } 
