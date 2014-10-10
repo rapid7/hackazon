@@ -108,6 +108,10 @@ function bsEditWishList(wishList) {
     return deferred;
 }
 
+function getFlashMovie(movieName){
+    var isIE = navigator.appName.indexOf("Microsoft") != -1;
+    return (isIE) ? window[movieName] : document[movieName];
+}
 
 $(document).ready(function () {
 
@@ -485,7 +489,7 @@ $(document).ready(function () {
 
     $('.file-input').bootstrapFileInput();
 
-    // Voucher processing
+    // Coupon processing
     var slider = $('#slider2'),
         sliderControl = slider.next('.nivo-controlNav');
     slider.on('click', 'img', function (ev) {
@@ -496,11 +500,11 @@ $(document).ready(function () {
             image = slider.children('img').get(activeImageIndex),
             dayOfWeek = $(image).data('day-of-week');
 
-        amfphp.services.VoucherService.registerVoucher(function (res) {
-            alert('The Day of the week is ' + res.dayOfWeek + '\nYour discount is: ' + res.discount);
-        }, function () {
-
-        }, new Date(), dayOfWeek);
+//        amfphp.services.CouponService.registerVoucher(function (res) {
+//            alert('The Day of the week is ' + res.dayOfWeek + '\nYour discount is: ' + res.discount);
+//        }, function () {
+//
+//        }, new Date(), dayOfWeek);
     });
 });
 

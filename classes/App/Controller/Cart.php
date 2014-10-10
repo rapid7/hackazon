@@ -46,6 +46,7 @@ class Cart extends \App\Page {
      * show overview page
      */
     public function action_view() {
+        /** @var \App\Model\Cart $cart */
         $cart = $this->pixie->orm->get('Cart')->getCart();
         $items = $this->pixie->orm->get('CartItems')->getAllItems();
         $this->view->subview = 'cart/view';
@@ -53,6 +54,7 @@ class Cart extends \App\Page {
         $this->view->itemQty = $cart->items_qty;
         $this->view->totalPrice = $cart->total_price;
         $this->view->tab = 'overview';
+        $this->view->coupon = $cart->getCoupon();
         $this->view->step = $this->pixie->orm->get('Cart')->getStepLabel();//last step
     }
 

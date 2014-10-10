@@ -39,7 +39,7 @@ But to develop or maintain AMF functionality you have to complete several steps.
 3. Modify class Amfphp_BackOffice_Config. Set `$amfphpEntryPointPath` to your local VHost for hackazon (with path) and credentials: 
 ```php
 //...
-public $amfphpEntryPointPath = 'http://hackazon.dev/voucher';
+public $amfphpEntryPointPath = 'http://hackazon.dev/amf';
 //...
 
 public function __construct() {

@@ -12,7 +12,7 @@ namespace App\Controller;
 
 use App\Page;
 
-class Voucher extends Page
+class Amf extends Page
 {
     public function action_index()
     {

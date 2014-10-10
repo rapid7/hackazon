@@ -21,6 +21,9 @@ class CartItems extends BaseModel {
         $this->_cart = $this->pixie->orm->get('Cart')->getCart();
     }
 
+    /**
+     * @return Cart
+     */
     public function getCart()
     {
         if (empty($this->_cart)) {
@@ -65,6 +68,8 @@ class CartItems extends BaseModel {
             $this->getCart()->items_qty += $qty;
             $this->pixie->session->flash('added_product_name', $product->name);
         }
+
+        $this->getCart()->total_price = $this->getItemsTotal();
         $this->getCart()->save();
         
         return [
@@ -75,7 +80,7 @@ class CartItems extends BaseModel {
 
     public function getAllItems()
     {
-        return $this->where('cart_id',$this->getCart()->id)->order_by('created_at','asc')->find_all()->as_array();
+        return $this->pixie->orm->get('cartItems')->where('cart_id',$this->getCart()->id())->order_by('created_at','asc')->find_all()->as_array();
     }
 
     public function getProduct()
@@ -110,6 +115,7 @@ class CartItems extends BaseModel {
                 $this->getCart()->total_price += abs($item->price * $diffQty);
             }
         }
+
         $this->getCart()->save();
 
         if ($qty <= 0) {
@@ -118,15 +124,21 @@ class CartItems extends BaseModel {
         }
         $item->qty = $qty;
         $item->save();
+
+        $this->getCart()->total_price = $this->getItemsTotal();
+        $this->getCart()->save();
     }
 
     public function getItemsTotal()
     {
+        $cart = $this->getCart();
+        $coupon = $cart->getCoupon();
         $items = $this->getAllItems();
         $total = 0;
         foreach ($items as $item) {
             $total += $item->price * $item->qty;
         }
+        $total *= $coupon ? (1.0 - $coupon->discount / 100) : 1;
         return $total;
     }
 }

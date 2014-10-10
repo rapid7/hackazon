@@ -23,6 +23,7 @@ trait Pixifiable
 
     /**
      * @return Pixie
+     * @amfphpHide
      */
     public function getPixie()
     {
@@ -31,6 +32,7 @@ trait Pixifiable
 
     /**
      * @param Pixie $pixie
+     * @amfphpHide
      */
     public function setPixie(Pixie $pixie)
     {

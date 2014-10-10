@@ -70,7 +70,7 @@
                     <!-- START CONTENT ITEM -->
                     <div class="row">
                         <div class="col-xs-12">
-                            <?php include $common_path.'/_side_slider.php'; ?>
+                            <?php include $common_path.'/_side_slider_flash.php'; ?>
                         </div>
                     </div>
                     <!-- END CONTENT ITEM -->

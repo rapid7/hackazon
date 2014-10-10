@@ -28,7 +28,7 @@ class AmfphpModule
 
     public function run()
     {
-        $config = new Config();
+        $config = new Config($this->pixie);
         $gateway = \Amfphp_Core_HttpRequestGatewayFactory::createGateway($config);
         $gateway->service();
         $gateway->output();
