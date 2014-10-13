@@ -59,3 +59,13 @@ public function __construct() {
 
 8. For flash or any other format modifications are up to you.
 
+
+
+AMF Revised
+===========
+
+AMFPHP backend is integrated in Hackazon, and accessible via URL `<hackazon_url>/amf_back_office/index.php`.
+All inconsistencies have been fixed (ZIP generating, htaccecc, etc.), so it should work OK in Hackazon.
+Generated files reside in `$DOC_ROOT/web/amf_back_office/ClientGenerator/Generated`.
+Access to backend is left as in previous section: admin:admin.
+
