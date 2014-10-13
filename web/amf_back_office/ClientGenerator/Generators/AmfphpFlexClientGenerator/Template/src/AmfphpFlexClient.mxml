@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   backgroundColor="0"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" xmlns:local="*" 
+			   xmlns:ui="org.silexlabs.amfphp.clientgenerator.generated.ui.*" xmlns:amfphp="amfphp.*" >
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:VGroup paddingBottom="20" paddingLeft="20" paddingRight="20" paddingTop="20" width="100%" height="100%" gap="20">
+		<s:Image source="header-amfphp.jpg"/>
+		<mx:TabNavigator width="100%" height="100%">
+			<!--ACG_SERVICE-->
+			<s:NavigatorContent label="_SERVICE_">
+				<ui:_SERVICE_ClientUi />
+			</s:NavigatorContent>
+			<!--ACG_SERVICE-->
+		</mx:TabNavigator>
+		
+	</s:VGroup>
+</s:Application>

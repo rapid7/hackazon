@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <title>AmfPHP Back Office</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <LINK rel=stylesheet type="text/css" href="style.css">    
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery.dump.js"></script>
+        <script type="text/javascript" src="js/json2.js"></script>
+        <script type="text/javascript" src="js/services.js"></script>
+    </head>
+    <body>
+        <div class="static">
+            <a href="?" id="titleLink"><b>AmfPHP HTML Generated Client</b></a>
+            <ul>
+                <li><a href="http://www.silexlabs.org/amfphp/feedback/">Feedback</a></li>
+                <li><a href="http://www.silexlabs.org/groups/amfphp/amfphp-users/">Forum</a></li>
+                <li><a href="http://www.silexlabs.org/amfphp/documentation/">Documentation</a></li>
+                <li><a href="http://community.silexlabs.org/amfphp/reference/">Class Reference</a></li>
+                <li><a href="https://github.com/silexlabs/amfphp-2.0">Source Code</a></li>
+                <li><a href="http://www.silexlabs.org/amfphp/">AmfPHP Website</a></li>
+                <li><a href="http://www.silexlabs.org/">Silex Labs</a></li>
+                <li><a href="http://www.silexlabs.org/category/exchange/exchange-amfphp/">More Plugins</a></li>
+
+            </ul>
+        </div>
+        <div id="main">
+            <div id="left">
+                <div class='menu' id="services">
+                    <ul>
+                        <h1>_SERVICE_ Service UI</h1>
+                        <script type="text/javascript">
+                            <!--
+                            /*ACG_METHOD*/
+                            function _METHOD_ResultHandler(returned){
+                                $('#resultOutput').dump(returned);
+                            }
+
+                            function _METHOD_ServiceCall(){
+                                amfphp.services._SERVICE_._METHOD_(_METHOD_ResultHandler, onError/*ACG_PARAMETER*/,$('#_METHOD__PARAMETER_').val()/*ACG_PARAMETER*/);	
+                            }
+                            /*ACG_METHOD*/
+                            function onError(){
+                                alert("error");
+                            }
+                            //-->
+                        </script>
+                        <!--ACG_METHOD-->
+                        <li><b>_METHOD_
+                                <!--ACG_PARAMETER-->
+                                <input type="text" id="_METHOD__PARAMETER_"/>
+                                <!--ACG_PARAMETER-->
+                                <input type="submit" value="call _METHOD_" onclick="_METHOD_ServiceCall()"/>
+                            </b></li>		
+                        <!--ACG_METHOD-->
+                    </ul>
+                </div>                            
+            </div>                    
+            <div id="right" class="menu" >
+                <div id="resultOutput">
+                </div> 
+                
+            </div>        
+        <br/>
+        </div>
+    </body>	
+</html>

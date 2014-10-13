@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+	<services>
+		<service id="amfphp-flashremoting-service" class="flex.messaging.services.RemotingService" messageTypes="flex.messaging.messages.RemotingMessage">
+			<destination id="amfphp">
+				<channels>
+					<channel ref="amfphp"/>
+				</channels>
+				<properties>
+					<source>*</source>
+				</properties>
+			</destination>
+		</service>
+	</services>
+	<channels>
+		<channel-definition id="amfphp" class="mx.messaging.channels.AMFChannel">
+			<endpoint uri="/*ACG_AMFPHPURL*/" class="flex.messaging.endpoints.AMFEndpoint"/>
+		</channel-definition>
+	</channels>
+</services-config>

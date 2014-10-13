@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" gap="10" paddingBottom="10" paddingLeft="10" paddingRight="10"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"  width="100%" height="100%" creationComplete="creationCompleteHandler(event)" xmlns:layout="org.osmf.layout.*">
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<!--ACG_METHOD-->
+	<s:HGroup width="100%" paddingLeft="10" paddingRight="10" verticalAlign="middle">
+		<!--ACG_PARAMETER-->
+		<s:Label id="_METHOD___PARAMETER__Label" text="_PARAMETER_"/>
+		<s:TextInput id="_METHOD___PARAMETER__Input"/>
+		<!--ACG_PARAMETER-->
+		<s:Button id="call_METHOD_Button" label="Call _METHOD_" click="_METHOD__callButtonClickHandler(event)"/>
+	</s:HGroup>
+	<!--ACG_METHOD-->
+	
+	<s:Label text="Result"/>
+	<s:TextArea id="resultDisplay" width="100%" height="100%"/>
+	
+	<fx:Script>
+		<![CDATA[
+			import org.silexlabs.amfphp.clientgenerator.generated.service._SERVICE_Client;
+			import mx.events.FlexEvent;
+			import mx.rpc.AsyncToken;
+			import mx.rpc.Responder;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ObjectUtil;
+			
+			import org.silexlabs.amfphp.clientgenerator.generated.service._SERVICE_Client;
+			
+			private var _service:_SERVICE_Client;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				_service = new _SERVICE_Client();
+			}
+			
+			
+			
+			/*ACG_METHOD*/
+			private function _METHOD__callButtonClickHandler(event:MouseEvent):void{
+				var token:AsyncToken = _service._METHOD_(/*ACG_PARAMETER_COMMA*/_METHOD___PARAMETER__Input.text/*ACG_PARAMETER_COMMA*/);
+				token.addResponder(new mx.rpc.Responder(_METHOD_ResultHandler, faultHandler)); 
+			}
+			
+			private function _METHOD_ResultHandler(event:ResultEvent):void{
+				resultDisplay.text = "result : \n" + ObjectUtil.toString(event.result) + "\n";
+			}
+			/*ACG_METHOD*/
+			
+			private function faultHandler(event:FaultEvent):void{
+				resultDisplay.text = "error :  \n" +  ObjectUtil.toString(event.fault) + "\n";
+			}	
+			
+		]]>
+	</fx:Script>
+
+</s:VGroup>
