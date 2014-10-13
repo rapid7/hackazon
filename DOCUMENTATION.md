@@ -59,7 +59,20 @@ public function __construct() {
 
 8. For flash or any other format modifications are up to you.
 
+## Creating Services
 
+Services are plain PHP classes located at `/modules/amfphp/classes/AmfphpModule/Services`. 
+To use Pixie inside service just include `Pixifiable` trait into it.
+```php
+class CouponService
+{
+    use Pixifiable;
+   // ....
+}
+```
+Special plugin will automatically bind Pixie to your service.
+ 
+Also, it's recommended to add PHPDoc annotations to your services and their methods, as AMFPHP reads them.
 
 AMF Revised
 ===========
