@@ -30,6 +30,12 @@ public class SliderWidget extends Sprite {
     private var _host:String;
 
     public function SliderWidget() {
+        // Get flashVars to access current host value
+        var paramObj:Object = LoaderInfo(root.loaderInfo).parameters;
+        _host = paramObj.host || _config.host;
+
+        NetConnectionSingleton._host = _host;
+
         _service = new SliderServiceClient(NetConnectionSingleton.getNetConnection());
         addEventListener(Event.ADDED_TO_STAGE, function (ev:Event):void {
             SliderWidget(ev.target).init();
@@ -37,12 +43,6 @@ public class SliderWidget extends Sprite {
     }
 
     public function init():void {
-        // Get flashVars to access current host value
-        var paramObj:Object = LoaderInfo(root.loaderInfo).parameters;
-        _host = paramObj.host || _config.host;
-
-        NetConnectionSingleton._host = _host;
-
         // Add background
         var bg:Sprite = new Sprite();
         bg.width = stage.stageWidth;
