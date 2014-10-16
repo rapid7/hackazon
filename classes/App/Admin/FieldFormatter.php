@@ -12,13 +12,11 @@ namespace App\Admin;
 
 use App\Helpers\ArraysHelper;
 use App\Model\BaseModel;
-use App\Traits\Pixifiable;
+use App\Pixie;
 use PHPixie\ORM\Model;
 
 class FieldFormatter
 {
-    use Pixifiable;
-
     /**
      * @var BaseModel
      */
@@ -27,6 +25,11 @@ class FieldFormatter
     protected $renderedFields = [];
     protected $options = [];
     protected $controllerAlias;
+
+    /**
+     * @var Pixie
+     */
+    protected $pixie;
 
     public function __construct(Model $item, array $formatOptions, array $options = [])
     {
@@ -207,5 +210,15 @@ class FieldFormatter
         });
         $attrs = implode(" ", $attrs);
         return $attrs;
+    }
+
+    function getPixie()
+    {
+        return $this->pixie;
+    }
+
+    function setPixie(Pixie $pixie = null)
+    {
+        $this->pixie = $pixie;
     }
 } 

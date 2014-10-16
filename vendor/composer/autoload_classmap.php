@@ -125,7 +125,6 @@ return array(
     'App\\SearchFilters\\NameFilter' => $baseDir . '/classes/App/SearchFilters/NameFilter.php',
     'App\\SearchFilters\\PriceFilter' => $baseDir . '/classes/App/SearchFilters/PriceFilter.php',
     'App\\SearchFilters\\QualityFilter' => $baseDir . '/classes/App/SearchFilters/QualityFilter.php',
-    'App\\Traits\\Pixifiable' => $baseDir . '/classes/App/Traits/Pixifiable.php',
     'ApplicationData' => $baseDir . '/modules/gwtphp/gwtphp-maps/com/ntobjectives/hackazon/helpdesk/client/entity/ApplicationData.class.php',
     'ArrayList' => $vendorDir . '/gwtphp/gwtphp/src/maps/java/util/ArrayList.class.php',
     'Date' => $vendorDir . '/gwtphp/gwtphp/src/maps/java/util/Date.class.php',
