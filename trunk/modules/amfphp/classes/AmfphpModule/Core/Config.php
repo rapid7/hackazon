@@ -8,12 +8,15 @@
 
 namespace AmfphpModule\Core;
 
+use App\IPixifiable;
 use App\Pixie;
-use App\Traits\Pixifiable;
 
-class Config extends \Amfphp_Core_Config
+class Config extends \Amfphp_Core_Config implements IPixifiable
 {
-    use Pixifiable;
+    /**
+     * @var Pixie
+     */
+    protected $pixie;
 
     public function __construct(Pixie $pixie)
     {
@@ -24,5 +27,15 @@ class Config extends \Amfphp_Core_Config
         ];
         $this->pluginsFolders[] = dirname(__FILE__) . '/../Plugins/';
         $this->pluginsConfig['Pixifier']['pixie'] = $pixie;
+    }
+
+    function getPixie()
+    {
+        return $this->pixie;
+    }
+
+    function setPixie(Pixie $pixie = null)
+    {
+        $this->pixie = $pixie;
     }
 } 

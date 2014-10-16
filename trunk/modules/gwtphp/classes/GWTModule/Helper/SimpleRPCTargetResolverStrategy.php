@@ -9,27 +9,41 @@
 
 namespace GWTModule\Helper;
 
-
-use App\Traits\Pixifiable;
+use App\IPixifiable;
+use App\Pixie;
 use MappedClass;
 
-class SimpleRPCTargetResolverStrategy implements \RPCTargetResolverStrategy
+class SimpleRPCTargetResolverStrategy implements \RPCTargetResolverStrategy, IPixifiable
 {
-    use Pixifiable;
+    /**
+     * @var Pixie
+     */
+    protected $pixie;
 
     function resolveRPCTarget(MappedClass $interface)
     {
         $target = \GWTPHPContext::getInstance()->getClassLoader()->loadClass($interface->getMappedName().'Impl');
         $instance = $target->newInstance();
+        $interfaces = class_implements($instance);
 
-        if (in_array('App\\Traits\\Pixifiable', $target->getTraitNames())) {
+        if (in_array('App\\IPixifiable', $interfaces)) {
             $instance->setPixie($this->pixie);
         }
 
-        if (in_array('GWTModule\\Servletable', $target->getTraitNames())) {
+        if (in_array('GWTModule\\IServletable', $interfaces)) {
             $instance->setServlet($this->pixie->gwt->getServlet());
         }
 
         return $instance;
+    }
+
+    function getPixie()
+    {
+        return $this->pixie;
+    }
+
+    function setPixie(Pixie $pixie = null)
+    {
+        $this->pixie = $pixie;
     }
 } 

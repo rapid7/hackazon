@@ -13,7 +13,7 @@ use App\Exception\NotFoundException;
 use App\Model\Cart;
 use App\Model\Coupon;
 use App\Model\User;
-use App\Traits\Pixifiable;
+use App\Pixie;
 
 /**
  * Coupon service. Provides method for operating coupons
@@ -21,7 +21,10 @@ use App\Traits\Pixifiable;
  */
 class CouponService
 {
-    use Pixifiable;
+    /**
+     * @var Pixie
+     */
+    protected $pixie;
 
     /**
      * Set discount on cart if correct coupon code is entered
@@ -64,5 +67,15 @@ class CouponService
         $cart = $this->pixie->orm->get('cart');
         $cart = $cart->getCart();
         $cart->unsetCoupon();
+    }
+
+    function getPixie()
+    {
+        return $this->pixie;
+    }
+
+    function setPixie(Pixie $pixie = null)
+    {
+        $this->pixie = $pixie;
     }
 } 

@@ -1,18 +1,30 @@
 <?php
+use App\IPixifiable;
+use App\Pixie;
+use GWTModule\IServletable;
+use GWTModule\RemoteServiceServlet;
 
 /**
  * Class HelpdeskServiceImpl
  * Implementation of HelpdeskService interface.
  */
-class HelpdeskServiceImpl extends HelpdeskService {
-    use \App\Traits\Pixifiable;
-    use \GWTModule\Servletable;
+class HelpdeskServiceImpl extends HelpdeskService implements IPixifiable, IServletable {
 
     /**
      * @var User
      */
     protected $user;
     protected $initialized = false;
+
+    /**
+     * @var Pixie
+     */
+    protected $pixie;
+
+    /**
+     * @var RemoteServiceServlet
+     */
+    protected $servlet;
 
     protected function init()
     {
@@ -126,5 +138,25 @@ class HelpdeskServiceImpl extends HelpdeskService {
 
     public function getEnquiriesPage($page)
     {
+    }
+
+    function getPixie()
+    {
+        return $this->pixie;
+    }
+
+    function setPixie(Pixie $pixie = null)
+    {
+        $this->pixie = $pixie;
+    }
+
+    function getServlet()
+    {
+        return $this->servlet;
+    }
+
+    function setServlet(RemoteServiceServlet $servlet = null)
+    {
+        return $this->servlet = $servlet;
     }
 }

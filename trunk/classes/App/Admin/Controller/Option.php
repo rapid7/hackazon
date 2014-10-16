@@ -15,7 +15,7 @@ use App\Admin\CRUDController;
 class Option extends CRUDController
 {
     public $modelNamePlural = 'Product Options';
-    public $modelName = 'Product Option';
+    public $modelNameSingle = 'Product Option';
 
     protected function getListFields()
     {

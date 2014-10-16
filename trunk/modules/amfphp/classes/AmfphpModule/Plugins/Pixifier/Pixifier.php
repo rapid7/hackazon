@@ -5,6 +5,7 @@
  * Date: 10.10.2014
  * Time: 15:45
  */
+use App\Pixie;
 
 /**
  * Adds Pixie and other stuff to service object.
@@ -12,7 +13,10 @@
  */
 class Pixifier
 {
-    use \App\Traits\Pixifiable;
+    /**
+     * @var Pixie
+     */
+    protected $pixie;
 
     public function __construct(array $config = null)
     {
@@ -25,5 +29,15 @@ class Pixifier
         if (method_exists($serviceObject, 'setPixie')) {
             $serviceObject->setPixie($this->pixie);
         }
+    }
+
+    function getPixie()
+    {
+        return $this->pixie;
+    }
+
+    function setPixie(Pixie $pixie = null)
+    {
+        $this->pixie = $pixie;
     }
 } 
