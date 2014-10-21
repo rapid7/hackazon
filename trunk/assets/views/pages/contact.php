@@ -33,7 +33,7 @@
                 </div>
                 <div class="form-group col-lg-12 field-group">
                     <input type="hidden" name="save" value="contact">
-                    <?php echo $_token('contact'); ?>
+                    
                     <button id="form-submit" type="submit" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Submit</span></button>
                 </div>
 	        </form>

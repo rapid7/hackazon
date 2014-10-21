@@ -15,4 +15,9 @@ return array(
             'db_field' => 'contactMessages.message'
         ]
     ],
+    'vulnerabilities' => [
+        'csrf' => [
+            'enabled' => false
+        ]
+    ]    
 );
