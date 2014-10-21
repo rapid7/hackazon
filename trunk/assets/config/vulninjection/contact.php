@@ -17,7 +17,7 @@ return array(
     ],
     'vulnerabilities' => [
         'csrf' => [
-            'enabled' => false
+            'enabled' => true
         ]
     ]    
 );
