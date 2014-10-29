@@ -13,6 +13,7 @@ use RelationTest\Model\Role;
  * @property string $username
  * @property string $password
  * @property string $photo
+ * @property string $rest_token
  *
  * @property Role $roles
  * @property WishListFollowers $wishlistFollowers

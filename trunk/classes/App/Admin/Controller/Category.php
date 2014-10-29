@@ -52,7 +52,7 @@ class Category extends CRUDController
 
     public function fieldFormatter($value, $item = null, array $format = [])
     {
-        if ($format['original_field_name'] == 'parentCategory.name' && $value === '0_ROOT') {
+        if ($format['original_field_name'] == 'parentCategory.name' && $value == '0_ROOT') {
             $value = '';
         }
         return parent::fieldFormatter($value, $item, $format);
