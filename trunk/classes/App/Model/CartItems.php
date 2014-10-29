@@ -16,18 +16,19 @@ class CartItems extends BaseModel {
     );
 
 
-    public function setCart()
+    public function setCart($uid = null)
     {
-        $this->_cart = $this->pixie->orm->get('Cart')->getCart();
+        $this->_cart = $this->pixie->orm->get('Cart')->getCart($uid);
     }
 
     /**
+     * @param null $uid
      * @return Cart
      */
-    public function getCart()
+    public function getCart($uid = null)
     {
         if (empty($this->_cart)) {
-            $this->setCart();
+            $this->setCart($uid);
         }
         return $this->_cart;
     }

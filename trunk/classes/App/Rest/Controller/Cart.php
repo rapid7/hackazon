@@ -25,8 +25,10 @@ class Cart extends Controller
     {
         if ($this->request->param('id') == 'my') {
             //$this->item->orderItems->with('product');
+            $cartItems = $this->item->getCartItemsModel();
+            $cartItems->getCart($this->request->get("uid"));
             $data = $this->asArrayWith(parent::action_get(), ['items']);
-            // $data['total_price'] = $this->item->getCartItemsModel()->getItemsTotal();
+            $data['total_price'] = $cartItems->getItemsTotal();
             return $data;
         } else {
             throw new NotFoundException();
@@ -106,7 +108,7 @@ class Cart extends Controller
             if ($id == 'my') {
                 /** @var \App\Model\Cart $cart */
                 $cart = $this->pixie->orm->get('cart');
-                $model = $cart->getCart();
+                $model = $cart->getCart($this->request->get('uid'));
 
             } else {
                 $model = $this->model
