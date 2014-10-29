@@ -11,5 +11,6 @@
 !/web/out/.gitkeep
 /web/user_pictures
 /Hackazon
+*.iml
 
 

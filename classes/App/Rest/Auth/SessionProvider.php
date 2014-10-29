@@ -10,6 +10,7 @@
 namespace App\Rest\Auth;
 
 
+use App\Exception\UnauthorizedException;
 use App\Model\User;
 
 /**
@@ -22,6 +23,7 @@ class SessionProvider extends Provider
     {
         /** @var User $user */
         $user = $this->pixie->auth->user();
+        $logged = false;
 
         if ($user) {
             $this->controller->setUser($user);
@@ -30,13 +32,13 @@ class SessionProvider extends Provider
 
         if ($this->controller->request->param('controller') == 'auth') {
             list($user, $logged) = $this->requireBasicCredentials();
-
-            if ($logged) {
-                $this->controller->setUser($user);
-                return;
-            }
         }
 
-        $this->askForBasicCredentials();
+        if ($logged) {
+            $this->controller->setUser($user);
+            return;
+        }
+
+        //throw new UnauthorizedException();
     }
 } 

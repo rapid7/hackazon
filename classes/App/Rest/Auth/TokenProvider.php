@@ -35,11 +35,11 @@ class TokenProvider extends Provider
             $token = $this->controller->request->get('_token');
         }
 
+        //error_log("Rest Token: " . $token);
         // If token is correct, just proceed request.
         if ($token) {
             /** @var User $user */
             $user = $this->pixie->orm->get('User')->where('rest_token', $token)->find();
-
             if(!$user->loaded()) {
                 throw new UnauthorizedException();
             }
@@ -59,14 +59,19 @@ class TokenProvider extends Provider
 
             if ($logged) {
                 $this->controller->setUser($user);
-                $token = sha1($user->username . time() . self::SALT);
-                $user->rest_token = $token;
-                $user->save();
+                if (!$user->rest_token || $this->controller->request->get('refresh')) {
+                    $token = sha1($user->username . time() . self::SALT);
+                    $user->rest_token = $token;
+                    $user->save();
+                } else {
+                    $token = $user->rest_token;
+                }
                 $responseException = new HttpException('Your token is established.', 200, null, 'OK');
                 $responseException->setParameter('token', $token);
                 throw $responseException;
             }
         }
+
         $this->askForBasicCredentials("Please provide your credentials using url /api/auth");
     }
 } 

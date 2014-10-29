@@ -189,6 +189,8 @@ class Controller extends BaseController
             $this->response->body = (string) $this->response->body;
         }
 
+        //file_put_contents(__DIR__.'/../../../rest.log', date('Y-m-d H:i:s') . "\n" . $this->response->body . "\n\n\n", FILE_APPEND);
+
         if (!($this instanceof ErrorController)) {
             parent::after();
         }
@@ -507,6 +509,7 @@ class Controller extends BaseController
         }
 
         if ($this->execute) {
+            //error_log("Action: " . $action);
             $result = call_user_func_array([$this, $action], $params);
             if (empty($this->response->body) && !is_numeric($this->response->body) && $result !== null) {
                 $this->response->body = $result;
@@ -542,6 +545,7 @@ class Controller extends BaseController
         }
         $this->meta['total_items'] = (int)$pager->num_items;
         $this->meta['pages'] = (int)$pager->num_pages;
+        $this->meta['per_page'] = (int)$pager->page_size;
     }
 
     /**

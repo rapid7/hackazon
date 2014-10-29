@@ -252,8 +252,8 @@ class Product extends CRUDController
         $result = [];
         $productOptions = $product->productOptions
             ->with('optionVariant.parentOption')
-            ->order_by('optionVariant_parentOption.name')
-            ->order_by('optionVariant.name')
+            ->order_by('optionVariant_parentOption.name', 'asc')
+            ->order_by('optionVariant.name', 'asc')
             ->find_all()->as_array();
 
         /** @var ProductOptionValue[] $productOptions */

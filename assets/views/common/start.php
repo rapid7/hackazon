@@ -24,7 +24,7 @@
     <link href="/css/nivo-themes/light/light.css" rel="stylesheet">
     <link href="/css/bootstrapValidator.css" rel="stylesheet">
     <link href="/css/modern-business.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/ladda-themeless.min.css">
+    <link href="/css/ladda-themeless.min.css" rel="stylesheet">
 
     <!-- Add custom CSS here -->
     <link href="/css/subcategory.css" rel="stylesheet">

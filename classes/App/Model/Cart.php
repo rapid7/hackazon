@@ -6,6 +6,21 @@ namespace App\Model;
  * Class Cart
  * @package App\Model
  * @property Product $products Products residing in cart.
+ * @property int $id
+ * @property string created_at
+ * @property string updated_at
+ * @property int $items_count
+ * @property int $items_qty
+ * @property double $total_price
+ * @property string $uid
+ * @property int $customer_id
+ * @property string $customer_email
+ * @property int $customer_is_guest
+ * @property string $payment_method
+ * @property string $shipping_method
+ * @property int $shipping_address_id
+ * @property int $billing_address_id
+ * @property int $last_step
  */
 class Cart extends BaseModel {
 
@@ -35,7 +50,12 @@ class Cart extends BaseModel {
             'through' => 'tbl_cart_items',
             'foreign_key' => 'product_id',
             'key' => 'cart_id'
-        )
+        ),
+
+        'items' => array(
+            'model' => 'CartItems',
+            'key' => 'cart_id'
+        ),
     );
 
     /**

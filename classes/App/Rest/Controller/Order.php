@@ -65,7 +65,10 @@ class Order extends Controller
     {
         $page = $this->request->get('page', 1);
         $perPage = $this->request->get('per_page', $this->perPage);
-        $this->model->where('customer_id', $this->user->id());
+        // TODO: Remove this check to run "where" condition always.
+        if ($this->user) {
+            $this->model->where('customer_id', $this->user->id());
+        }
         $this->adjustOrder();
         $pager = $this->pixie->paginate->orm($this->model, $page, $perPage);
         $currentItems = $this->asArrayWith($pager->current_items());
@@ -108,7 +111,15 @@ class Order extends Controller
             if ($model->loaded()) {
                 $this->item = $model;
             } else {
-                throw new NotFoundException();
+                $this->model = $this->pixie->orm->get($this->modelName);
+                $model = $this->model
+                    ->where($this->model->id_field, $this->request->param('id'))
+                    ->find();
+                if ($model->loaded()) {
+                    $this->item = $model;
+                } else {
+                    throw new NotFoundException();
+                }
             }
         }
     }

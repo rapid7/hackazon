@@ -29,8 +29,11 @@ class Account extends Page
             $this->redirect('/user/login?return_url=' . rawurlencode($this->request->server('REQUEST_URI')));
         }
         parent::before();
+        if (!$this->execute) {
+            return;
+        }
 
-        $this->useRest = $this->pixie->getParameter('parameters.rest_in_profile');
+        $this->useRest = $this->pixie->getParameter('parameters.rest_in_profile', false);
         $this->view->useRest = $this->useRest;
     }
 
