@@ -60,20 +60,23 @@ class Cart extends BaseModel {
 
     /**
      * get current cart
+     * @param null $uid
      * @return Cart
      */
-    public function getCart(){
+    public function getCart($uid = null) {
         if (empty($this->_cart)) {
-            $this->setCart();
+            $this->setCart($uid);
         }
         return $this->_cart;
     }
 
-    private function setCart()
+    private function setCart($uid = null)
     {
         if (!session_id())
             session_start();
-        $uid = session_id();
+        if (!$uid) {
+            $uid = session_id();
+        }
         $cart = $this->getCartByUID($uid);
         if (!$cart) {
             $cart = $this->createNewCart($uid);
