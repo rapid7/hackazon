@@ -24,7 +24,6 @@ class Cart extends Controller
     public function action_get()
     {
         if ($this->request->param('id') == 'my') {
-            //$this->item->orderItems->with('product');
             $cartItems = $this->item->getCartItemsModel();
             $cartItems->getCart($this->request->get("uid"));
             $data = $this->asArrayWith(parent::action_get(), ['items']);

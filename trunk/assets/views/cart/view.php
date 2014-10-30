@@ -79,7 +79,6 @@
                 url:'/cart/setMethods',
                 type:"POST",
                 data: $("#methods, #methods2").serialize(),
-                dataType:"json",
                 timeout: 10000,
                 success: function(data) {
                     <?php if (is_null($this->pixie->auth->user())): ?>

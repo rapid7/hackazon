@@ -108,7 +108,6 @@
             $.ajax({
                 url:'/checkout/shipping',
                 type:"POST",
-                dataType:"json",
                 data: {address_id: $(this).attr('data-id'), _csrf_checkout_step2: $(this).data('token') },
                 timeout: 10000,
                 success: function(){
