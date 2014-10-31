@@ -40,6 +40,11 @@ class Order extends Controller
             $data = $this->request->post();
         }
         $data['customer_id'] = $this->user->id();
+        unset($data['total_price']);
+        unset($data['id']);
+        if (!$data['coupon_id']) {
+            $data['coupon_id'] = null;
+        }
         return parent::action_post($data);
     }
 

@@ -30,7 +30,6 @@
             $.ajax({
                 url:'/checkout/shipping',
                 type:"POST",
-                dataType:"json",
                 data: $("#shippingForm").serialize(),
                 success: function(data){
                     window.location.href="/checkout/billing";
