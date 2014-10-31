@@ -13,6 +13,7 @@ namespace App\Rest\Controller;
 use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
 use App\Rest\Controller;
+use PHPixie\ORM\Model;
 
 /**
  * Class User
@@ -46,5 +47,24 @@ class User extends Controller
         $data['password'] = '';
         parent::checkUpdateData($data);
         unset($data['password']);
+    }
+
+    protected function preloadModel()
+    {
+        if ($this->model && $this->request->param('id')) {
+            $id = $this->request->param('id');
+            if ($id == 'me') {
+                $id = $this->user->id();
+            }
+            /** @var Model $model */
+            $model = $this->model
+                ->where($this->model->id_field, $id)
+                ->find();
+            if ($model->loaded()) {
+                $this->item = $model;
+            } else {
+                throw new NotFoundException();
+            }
+        }
     }
 } 

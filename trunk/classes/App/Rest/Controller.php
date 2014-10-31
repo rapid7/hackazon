@@ -219,6 +219,7 @@ class Controller extends BaseController
         if ($data === null) {
             $data = $this->request->post();
         }
+        unset($data[$this->model->id_field]);
         $this->prepareData($data);
         $this->checkUpdateData($data);
 
