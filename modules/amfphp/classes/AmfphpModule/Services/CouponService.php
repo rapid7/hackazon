@@ -38,17 +38,13 @@ class CouponService
             throw new HttpException('Please provide coupon code');
         }
 
-        /** @var Cart $cart */
-        $cart = $this->pixie->orm->get('cart');
-        $cart = $cart->getCart();
-
         /** @var Coupon $coupon */
         $coupon = $this->pixie->orm->get('coupon')->where('coupon', $couponCode)->find();
         if (!$coupon->loaded() || $coupon->coupon != $couponCode) {
             throw new NotFoundException('Wrong coupon.');
         }
 
-        $cart->useCoupon($coupon->id());
+        $this->pixie->cart->useCoupon($coupon->id());
 
         $result = array_intersect_key($coupon->as_array(true), array_flip(['coupon', 'discount']));
         /** @var User|null $user */
@@ -63,10 +59,7 @@ class CouponService
      */
     public function unsetCoupon()
     {
-        /** @var Cart $cart */
-        $cart = $this->pixie->orm->get('cart');
-        $cart = $cart->getCart();
-        $cart->unsetCoupon();
+        $this->pixie->cart->unsetCoupon();
     }
 
     function getPixie()

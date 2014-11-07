@@ -136,12 +136,20 @@ class Cart extends BaseModel {
 
     /**
      * return label by last step
+     * @param Cart|null $cart
+     * @param null $step
      * @return string
      */
-    public function getStepLabel()
+    public function getStepLabel(Cart $cart = null, $step = null)
     {
-        $cart = $this->getCart();
-        $step = $cart->last_step;
+        if (!$cart) {
+            $cart = $this->getCart();
+        }
+
+        if (!$step) {
+            $step = $cart->last_step;
+        }
+
         switch ($step) {
             case self::STEP_OVERVIEW :
                 return 'overview';

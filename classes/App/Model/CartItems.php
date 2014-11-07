@@ -2,6 +2,19 @@
 
 namespace App\Model;
 
+/**
+ * Class CartItems
+ * @package App\Model
+ * @property int $id
+ * @property int $cart_id
+ * @property string $created_at
+ * @property string $updated_at
+ * @property int $product_id
+ * @property string $name
+ * @property int $qty
+ * @property number $price
+ * @property Product $product
+ */
 class CartItems extends BaseModel {
 
     public $table = 'tbl_cart_items';
@@ -141,5 +154,19 @@ class CartItems extends BaseModel {
         }
         $total *= $coupon ? (1.0 - $coupon->discount / 100) : 1;
         return $total;
+    }
+
+    public function __wakeup()
+    {
+        parent::__wakeup();
+    }
+
+    public function getItemProduct()
+    {
+        if ($this->loaded()) {
+            return $this->product;
+        } else {
+            return $this->pixie->orm->get('Product')->where('productID', $this->product_id)->find();
+        }
     }
 }

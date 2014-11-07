@@ -1,18 +1,19 @@
 <?php
 namespace App\Controller;
+
+use App\Exception\RedirectException;
 use App\Model\Cart as CartModel;
 use App\Model\Cart;
+use App\Model\CustomerAddress;
+use App\Page;
 
-class Checkout extends \App\Page {
+class Checkout extends Page {
 
     /**
      * require auth
      */
     public function before()
     {
-        if (is_null($this->pixie->auth->user())) {
-            $this->redirect('/user/login?return_url=' . rawurlencode($this->request->server('REQUEST_URI')));
-        }
         parent::before();
     }
 
@@ -22,10 +23,12 @@ class Checkout extends \App\Page {
      */
     protected function restrictActions($actionStep)
     {
-        $lastStep = $this->pixie->orm->get('Cart')->getCart()->last_step;
+        $lastStep = $this->pixie->cart->getLastStep();
+
         if ($lastStep == CartModel::STEP_ORDER && $actionStep != CartModel::STEP_ORDER) {
             $this->redirect('/checkout/order');
         }
+
         if ($actionStep > $lastStep) {
             if ($this->request->is_ajax()) {
                 $this->jsonResponse(['success' => 1]);
@@ -42,14 +45,8 @@ class Checkout extends \App\Page {
      */
     public function action_shipping() {
         $this->restrictActions(CartModel::STEP_SHIPPING);
-        $customerAddresses = $this->pixie->orm->get('CustomerAddress')->getAll();
-        /** @var Cart $cartModel */
-        $cartModel = $this->pixie->orm->get('Cart');
-        $cart = $cartModel->getCart();
-
-        if (!$cart->customer_id) {
-            $cartModel->setCustomer();
-        }
+        $service = $this->pixie->cart;
+        $customerAddresses = $service->getAddresses();
 
         if ($this->request->is_ajax()) {
             $this->checkCsrfToken('checkout_step2', null, false);
@@ -57,16 +54,23 @@ class Checkout extends \App\Page {
             $post = $this->request->post();
             $addressId = isset($post['address_id']) ? $post['address_id'] : 0;
             if (!$addressId) {
-                $addressId = $this->pixie->orm->get('CustomerAddress')->create($post);
+                /** @var CustomerAddress $address */
+                $address = $this->pixie->orm->get('CustomerAddress');
+                $address->createFromArray($post);
+                $addressId = $service->addAddress($address);
             }
-            $this->pixie->orm->get('Cart')->updateAddress($addressId, 'shipping');
+
+            $service->setShippingAddressUid($addressId);
+            $service->updateLastStep(Cart::STEP_BILLING);
             $this->execute = false;
+
         } else {
+
             $this->view->subview = 'cart/shipping';
             $this->view->tab = 'shipping';//active tab
-            $this->view->step = $this->pixie->orm->get('Cart')->getStepLabel();//last step
-            $currentAddress = $cart->getShippingAddress() ;
-            $this->view->shippingAddress = is_array($currentAddress) ? [] : $currentAddress->as_array();
+            $this->view->step = $service->getStepLabel();//last step
+            $currentAddress = $service->getShippingAddress();
+            $this->view->shippingAddress = !$currentAddress ? [] : $currentAddress->as_array();
             $this->view->customerAddresses = $customerAddresses;
         }
     }
@@ -77,7 +81,8 @@ class Checkout extends \App\Page {
      */
     public function action_billing() {
         $this->restrictActions(CartModel::STEP_BILLING);
-        $customerAddresses = $this->pixie->orm->get('CustomerAddress')->getAll();
+        $service = $this->pixie->cart;
+        $customerAddresses = $service->getAddresses();
 
         if ($this->request->is_ajax()) {
             $this->checkCsrfToken('checkout_step3', null, false);
@@ -85,21 +90,22 @@ class Checkout extends \App\Page {
             $post = $this->request->post();
             $addressId = isset($post['address_id']) ? $post['address_id'] : 0;
             if (!$addressId) {
-                $addressId = $this->pixie->orm->get('CustomerAddress')->create($post);
+                /** @var CustomerAddress $address */
+                $address = $this->pixie->orm->get('CustomerAddress');
+                $address->createFromArray($post);
+                $addressId = $service->addAddress($address);
             }
-            $this->pixie->orm->get('Cart')->updateAddress($addressId, 'billing');
+            $service->setBillingAddressUid($addressId);
+            $service->updateLastStep(Cart::STEP_CONFIRM);
             $this->execute = false;
 
         } else {
-            /** @var Cart $cartModel */
-            $cartModel = $this->pixie->orm->get('Cart');
-            $cart = $cartModel->getCart();
-
             $this->view->subview = 'cart/billing';
             $this->view->tab = 'billing';
-            $this->view->step = $this->pixie->orm->get('Cart')->getStepLabel();//last step
-            $currentAddress = $cart->getBillingAddress();
-            $this->view->billingAddress = is_array($currentAddress) ? [] : $currentAddress->as_array();
+
+            $this->view->step = $service->getStepLabel();//last step
+            $currentAddress = $service->getBillingAddress();
+            $this->view->billingAddress = !$currentAddress ? [] : $currentAddress->as_array();
             $this->view->customerAddresses = $customerAddresses;
         }
     }
@@ -109,10 +115,11 @@ class Checkout extends \App\Page {
      */
     public function action_getAddress()
     {
+        $service = $this->pixie->cart;
         $post = $this->request->post();
         $addressId = $post['address_id'];
-        $address = $this->pixie->orm->get('CustomerAddress')->getById($addressId);
-        $this->jsonResponse($address);
+        $address = $service->getAddress($addressId);
+        $this->jsonResponse($address->as_array());
     }
 
     /**
@@ -120,9 +127,10 @@ class Checkout extends \App\Page {
      */
     public function action_deleteAddress()
     {
+        $service = $this->pixie->cart;
         $post = $this->request->post();
         $addressId = $post['address_id'];
-        $this->pixie->orm->get('CustomerAddress')->deleteById($addressId);
+        $service->removeAddress($addressId);
         $this->execute = false;
     }
 
@@ -132,10 +140,19 @@ class Checkout extends \App\Page {
     public function action_confirmation()
     {
         $this->restrictActions(CartModel::STEP_CONFIRM);
+        $this->checkCart();
+
+        $service = $this->pixie->cart;
+
         $this->view->subview = 'cart/confirmation';
         $this->view->tab = 'confirmation';
-        $this->view->step = $this->pixie->orm->get('Cart')->getStepLabel();//last step
-        $this->view->cart = $this->pixie->orm->get('Cart')->getCart();
+        $this->view->step = $service->getStepLabel();//last step
+        $this->view->cart = $service->getCart();
+        $this->view->items = $service->getItems();
+        $this->view->shippingAddress = $service->getShippingAddress();
+        $this->view->billingAddress = $service->getBillingAddress();
+        $this->view->totalPrice = $service->getTotalPrice();
+        $this->view->discount = $service->getDiscount();
     }
 
     /**
@@ -143,9 +160,22 @@ class Checkout extends \App\Page {
      */
     public function action_placeOrder()
     {
+        if (is_null($this->pixie->auth->user())) {
+            $location = '/user/login?return_url=' . rawurlencode('/checkout/confirmation');
+            if ($this->request->is_ajax()) {
+                $this->jsonResponse(['location' => $location]);
+            } else {
+                $this->redirect($location);
+            }
+            $this->execute = false;
+            return;
+        }
         $this->checkCsrfToken('checkout_step4', null, false);
         $this->restrictActions(CartModel::STEP_ORDER);
-        $this->pixie->orm->get('Cart')->placeOrder();
+
+        $service = $this->pixie->cart;
+        $this->checkCart();
+        $service->placeOrder();
         $this->execute = false;
     }
 
@@ -155,10 +185,23 @@ class Checkout extends \App\Page {
     public function action_order()
     {
         $this->restrictActions(CartModel::STEP_ORDER);
+        $service = $this->pixie->cart;
         $this->view->subview = 'cart/order';
         $this->view->tab = 'order';
-        $this->view->step = $this->pixie->orm->get('Cart')->getStepLabel();//last step
-        $this->view->cart = $this->pixie->orm->get('Cart')->getCart();
-        $this->pixie->orm->get('Cart')->getCart()->delete();
+        $this->view->step = $service->getStepLabel();//last step
+        $service->reset();
+    }
+
+    public function checkCart()
+    {
+        try {
+            $service = $this->pixie->cart;
+            $service->checkCart();
+
+        } catch (RedirectException $e) {
+            if ($e->getLocation()) {
+                $this->redirect($e->getLocation());
+            }
+        }
     }
 }

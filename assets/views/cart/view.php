@@ -1,18 +1,18 @@
 <script>
-    function update_qty(itemId, qty)
+    function update_qty(productId, qty)
     {
-        var priceItem = parseInt($("#row_span_item_" + itemId).html());
+        var priceItem = parseInt($("#row_span_item_" + productId).html());
         var priceTotal = priceItem * qty;
-        $("#row_span_total_" + itemId).empty().append(priceTotal);
+        $("#row_span_total_" + productId).empty().append(priceTotal);
 
         $.ajax({
             url:'/cart/update',
             type:"POST",
-            data: {qty: qty, itemId: itemId},
+            data: {qty: qty, productId: productId},
             dataType:"json",
             success: function(data){
                 if (qty <= 0) {
-                    $("#tr_item_" + itemId).remove();
+                    $("#tr_item_" + productId).remove();
                 }
                 $("#items_qty").html(data.items_qty);
                 $("#total_price").html(data.total_price);
@@ -27,6 +27,23 @@
     }
 
     $(function () {
+        var cardBlock = $('.js-credit-card-block'),
+            paymentMethodField = $('select[name="payment_method"]');
+        cardBlock.hzBootstrapValidator();
+
+        var toggleCreditCardBlock = function () {
+            if (paymentMethodField.val() == 'creditcard') {
+                cardBlock.show();
+                cardBlock.find('input, select, textarea').removeAttr('disabled');
+            } else {
+                cardBlock.hide();
+                cardBlock.find('input, select, textarea').attr('disabled', 'disabled');
+            }
+        };
+
+        toggleCreditCardBlock();
+        paymentMethodField.on('change', toggleCreditCardBlock);
+
         $("#empty_cart").click(function(){
             var el = $(this),
                 l = el.ladda();
@@ -69,23 +86,36 @@
             $('#input_' + $(this).attr('data-id')).val(qty);
             update_qty($(this).attr('data-id'), qty);
         });
-        $("#step1_next").click(function() {
+        $("#step1_next").click(function(ev) {
+            if (cardBlock.is(':visible')) {
+                cardBlock.hzBootstrapValidator('validate');
+                var validator = cardBlock.data('bootstrapValidator');
+                if (!validator.isValid()) {
+                    ev.preventDefault();
+                    return;
+                }
+            }
+
             var el = $(this),
                 l = el.ladda();
             el.attr('disabled', 'disabled');
             l.ladda('start');
+            var dataFields = $("#methods, #methods2");
+            if (cardBlock.is(':visible')) {
+                dataFields = dataFields.add(cardBlock.find('input, select, textarea'));
+            }
 
             $.ajax({
                 url:'/cart/setMethods',
                 type:"POST",
-                data: $("#methods, #methods2").serialize(),
+                data: dataFields.serialize(),
                 timeout: 10000,
                 success: function(data) {
-                    <?php if (is_null($this->pixie->auth->user())): ?>
+                    <?php /* if (is_null($this->pixie->auth->user())): ?>
                         window.location.href = "<?php echo '/user/login?return_url=' . rawurlencode('/checkout/shipping');?>"
-                    <?php else : ?>
+                    <?php else :*/ ?>
                         window.location.href = "/checkout/shipping";
-                    <?php endif;?>
+                    <?php //endif;?>
                 },
                 fail: function() {
                     alert( "error" );
@@ -163,11 +193,13 @@ if (count($items) == 0) :?>
                     </thead>
                     <tbody>
                     <?php
+                    /** @var \App\Model\CartItems $item */
                     foreach ($items as $item):?>
                     <?php
                     $product = $item->getProduct();
+                    $itemProduct = $item->getItemProduct();
                     ?>
-                    <tr class="tr_items" id="tr_item_<?php echo $item->id?>">
+                    <tr class="tr_items" id="tr_item_<?php echo $itemProduct->id()?>">
 						<td class="hidden-xs text-center">
 							<div class="img-thumbnail-wrapper">
 								<img class="img-responsive img-home-portfolio " src="/products_pictures/<?=$product['picture']?>" alt="photo <?=$product['name']?>"></td>
@@ -179,13 +211,13 @@ if (count($items) == 0) :?>
 
                             <div class="input-group hw-count-control">
 								<span class="input-group-btn">
-									<button data-id="<?php echo $item->id?>" class="btn btn-default minus_btn" type="button">
+									<button data-id="<?php echo $itemProduct->id()?>" class="btn btn-default minus_btn" type="button">
 									<span class="glyphicon glyphicon-minus">
 									</span></button>
 									</span>
-									<input type="text" id="input_<?php echo $item->id?>" onchange="update_qty(<?php echo $item->id?>, this.value)" class=" form-control" value="<?php echo $item->qty?>">
+									<input type="text" id="input_<?php echo $itemProduct->id()?>" onchange="update_qty(<?php echo $itemProduct->id()?>, this.value)" class=" form-control" value="<?php echo $item->qty; ?>">
 								<span class="input-group-btn">
-									<button data-id="<?php echo $item->id?>" class="btn btn-default plus_btn" type="button">
+									<button data-id="<?php echo $itemProduct->id()?>" class="btn btn-default plus_btn" type="button">
 										<span class="glyphicon glyphicon-plus">
 									</span></button>
 								</span>
@@ -193,10 +225,10 @@ if (count($items) == 0) :?>
 
                         </td>
                         <td class="text-left">
-                            <span class="hw-total">$ <span id="row_span_item_<?php echo $item->id?>"><?php echo $item->price?></span>,- </span>
+                            <span class="hw-total">$ <span id="row_span_item_<?php echo $itemProduct->id()?>"><?php echo $item->price?></span>,- </span>
                         </td>
                         <td align="right">
-                            <span class="hw-total">$ <span id="row_span_total_<?php echo $item->id?>"><?php echo $item->price*$item->qty?></span>,- </span>
+                            <span class="hw-total">$ <span id="row_span_total_<?php echo $itemProduct->id()?>"><?php echo $item->price*$item->qty?></span>,- </span>
                         </td>
                     </tr>
                     <?php endforeach;?>
@@ -211,9 +243,15 @@ if (count($items) == 0) :?>
                                         <label class="col-xs-4 col-xs-offset-4 control-label">Shipping: </label>
                                         <div class="col-xs-4">
                                             <select class="form-control" name="shipping_method">
-                                                <option value="mail">Mail</option>
-                                                <option value="collect">Collect</option>
-                                                <option value="express">Express</option>
+                                                <?php $shippingMethods = [
+                                                    'mail' => 'Mail',
+                                                    'collect' => 'Collect',
+                                                    'express' => 'Express'
+                                                ]; ?>
+                                                <?php foreach($shippingMethods as $sMethod => $sMethodName): ?>
+                                                    <option value="<?php $_($sMethod); ?>" <?php if ($shippingMethod == $sMethod):
+                                                        ?>selected<?php endif; ?>><?php $_($sMethodName); ?></option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                     </div>
@@ -232,9 +270,15 @@ if (count($items) == 0) :?>
                                         <label class="col-xs-4 col-xs-offset-4 control-label">Payment: </label>
                                         <div class="col-xs-4">
                                             <select class="form-control" name="payment_method">
-                                                <option value="wire transfer">Wire Transfer</option>
-                                                <option value="paypal">Paypal</option>
-                                                <option value="creditcard">Credit Card</option>
+                                                <?php $paymentMethods = [
+                                                    'wire transfer' => 'Wire Transfer',
+                                                    'paypal' => 'Paypal',
+                                                    'creditcard' => 'Credit Card'
+                                                ]; ?>
+                                                <?php foreach($paymentMethods as $pMethod => $pMethodName): ?>
+                                                    <option value="<?php $_($pMethod); ?>" <?php if ($paymentMethod == $pMethod):
+                                                        ?>selected<?php endif; ?>><?php $_($pMethodName); ?></option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                     </div>
@@ -245,6 +289,59 @@ if (count($items) == 0) :?>
                             <span class="label label-success">FREE</span>
                         </td>
                     </tr>
+
+                    <tr class="info">
+                        <td class="text-right" colspan="3">
+                            <div class="js-credit-card-block credit-card-block">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-xs-4 col-xs-offset-4 control-label">Card number: </label>
+                                        <div class="col-xs-4">
+                                            <input type="text" name="credit_card_number" id="creditCardField"
+                                                   value="<?php $_($creditCardNumber); ?>" class="form-control"
+                                                   required pattern="^[\d-]+$" /> <!--data-bv-creditcard="true"-->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-xs-4 col-xs-offset-4 control-label">Expires: </label>
+                                        <div class="col-xs-4 form-horizontal expires-fields">
+                                            <select name="credit_card_month" id="creditCardMonthField" class="form-control" required>
+                                                <?php for ($month = 1; $month <= 12; $month++): ?>
+                                                    <option value="<?php $_($month); ?>"
+                                                        <?php if ($month == $creditCardMonth): ?>selected="selected" <?php endif; ?>
+                                                        ><?php $_(sprintf("%02d", $month)); ?></option>
+                                                <?php endfor; ?>
+                                            </select>
+
+                                            <select name="credit_card_year" id="creditCardYearField" class="form-control" required >
+                                                <?php for ($year = (int) date('Y'), $lastYear = $year + 10; $year <= $lastYear; $year++): ?>
+                                                    <option value="<?php $_($year); ?>"
+                                                        <?php if ($year == $creditCardYear): ?>selected="selected" <?php endif; ?>
+                                                        ><?php $_($year); ?></option>
+                                                <?php endfor; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-xs-4 col-xs-offset-4 control-label">CVV: </label>
+                                        <div class="col-xs-4">
+                                            <input type="text" name="credit_card_cvv" id="creditCardCVVField"
+                                                   value="<?php $_($creditCardCVV); ?>" class="form-control"
+                                                   required data-bv-cvv="true" /> <!--data-bv-cvv-ccfield="credit_card_number"-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2" class="text-center"></td>
+                    </tr>
+
                     <tr class="info">
                         <td class="text-right" colspan="3">
                             <div class="form-horizontal">

@@ -9,6 +9,13 @@ namespace App\Model;
  * @property OrderAddress $orderAddress
  * @property OrderItems $orderItems
  * @property int $customer_id
+ * @property string $customer_firstname
+ * @property string $customer_email
+ * @property string $created_at
+ * @property string $payment_method
+ * @property string $shipping_method
+ * @property string $status
+ * @property int $discount
  */
 class Order extends BaseModel
 {
