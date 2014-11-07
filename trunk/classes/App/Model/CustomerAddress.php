@@ -2,37 +2,61 @@
 
 namespace App\Model;
 
-class CustomerAddress extends \PHPixie\ORM\Model {
+/**
+ * Class CustomerAddress
+ * @package App\Model
+ * @property string $full_name
+ * @property string $address_line_1
+ * @property string $address_line_2
+ * @property string $city
+ * @property string $region
+ * @property string $zip
+ * @property int $country_id
+ * @property string $phone
+ * @property int $customer_id
+ */
+class CustomerAddress extends BaseModel {
 
     public $table = 'tbl_customer_address';
     public $id_field = 'id';
 
+    protected $uid;
+
     public function create($post)
     {
-        $this->full_name = $post['fullName'];
-        $this->address_line_1 = $post['addressLine1'];
-        $this->address_line_2 = $post['addressLine2'];
-        $this->city = $post['city'];
-        $this->region = $post['region'];
-        $this->zip = $post['zip'];
-        $this->country_id = $post['country_id'];
-        $this->phone = $post['phone'];
-        $this->customer_id = $this->pixie->auth->user()->id;
+        $this->createFromArray($post);
         $this->save();
-        return $this->id;
+        return $this->id();
     }
 
+    public function createFromArray($data = [])
+    {
+        $this->full_name = $data['fullName'];
+        $this->address_line_1 = $data['addressLine1'];
+        $this->address_line_2 = $data['addressLine2'];
+        $this->city = $data['city'];
+        $this->region = $data['region'];
+        $this->zip = $data['zip'];
+        $this->country_id = $data['country_id'];
+        $this->phone = $data['phone'];
+        $this->customer_id = $this->pixie->auth->user() ? $this->pixie->auth->user()->id() : null;
+    }
+
+    /**
+     * @return array|CustomerAddress|CustomerAddress[]
+     */
     public function getAll()
     {
-        return $this->where('customer_id', $this->pixie->auth->user()->id)->find_all()->as_array();
+        return $this->where('customer_id', $this->pixie->auth->user()->id())->find_all()->as_array();
     }
 
     public function getById($addressId)
     {
+        /** @var CustomerAddress $address */
         $address = $this->where(
             'and', array(
             array('id', '=', $addressId),
-            array('customer_id', '=', $this->pixie->auth->user()->id)
+            array('customer_id', '=', $this->pixie->auth->user()->id())
         ))->find();
         if ($address->loaded()) {
             return $address->as_array();
@@ -43,13 +67,37 @@ class CustomerAddress extends \PHPixie\ORM\Model {
 
     public function deleteById($addressId)
     {
+        /** @var CustomerAddress $address */
         $address = $this->where(
             'and', array(
             array('id', '=', $addressId),
-            array('customer_id', '=', $this->pixie->auth->user()->id)
+            array('customer_id', '=', $this->pixie->auth->user()->id())
         ))->find();
         if ($address->loaded()) {
             $address->delete();
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
+     * @param mixed $uid
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+    }
+
+    public function as_array()
+    {
+        $res = parent::as_array();
+        $res['uid'] = $this->getUid();
+        return $res;
     }
 }

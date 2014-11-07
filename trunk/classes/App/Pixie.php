@@ -4,6 +4,8 @@ namespace App;
 
 
 use AmfphpModule\AmfphpModule;
+use App\Cart\CartService;
+use App\Cart\CheckoutService;
 use App\Core\Config;
 use App\Core\Request;
 use App\Core\Response;
@@ -45,6 +47,8 @@ use VulnModule\VulnInjection;
  * @property-read AmfphpModule $amf
  * @property-read Config $config
  * @property-read Installer $installer
+ * @property-read CartService $cart
+ * @property-read CheckoutService $checkout
  * @method Controller|Rest\Controller controller
  */
 class Pixie extends \PHPixie\Pixie {
@@ -80,6 +84,9 @@ class Pixie extends \PHPixie\Pixie {
         $this->instance_classes['restRouteMatcher'] = '\\App\\Rest\\RouteMatcher';
         $this->instance_classes['restService'] = '\\App\\Rest\\RestService';
         $this->instance_classes['installer'] = '\\App\\Installation\\Installer';
+        $this->instance_classes['cart'] = '\\App\\Cart\\CartService';
+        $this->instance_classes['checkout'] = '\\App\\Cart\\CheckoutService';
+        Pixifier::getInstance()->setPixie($this);
     }
 
     /**

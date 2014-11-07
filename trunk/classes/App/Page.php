@@ -95,8 +95,7 @@ class Page extends BaseController
      * @return Product
      */
     protected function getProductsInCart() {
-        $cart = $this->getCart();
-        return $cart->products->find_all();
+        return $this->pixie->cart->getProducts();
     }
 
     protected function getCart() {
@@ -106,8 +105,12 @@ class Page extends BaseController
     }
 
     public function getProductsInCartIds() {
-        $items = $this->getProductsInCart()->as_array();
+        $items = $this->getProductsInCart();
+        if (!is_array($items)) {
+            $items = $items->as_array();
+        }
         $ids = [];
+        /** @var Product $item  */
         foreach ($items as $item) {
             $ids[] = $item->id();
         }

@@ -86,10 +86,9 @@
             $.ajax({
                 url:'/checkout/deleteAddress',
                 type:"POST",
-                dataType:"json",
                 data: {address_id: $(this).attr('data-id')},
                 success: function(){
-                    $(el).parent('div').remove();
+                    $(el).closest('.blockShadow').remove();
                 },
                 fail: function() {
                     alert( "error" );
@@ -193,7 +192,7 @@
                     </div>
                 </fieldset>
                 <?php $_token('checkout_step2', false); ?>
-                <input type="hidden" id="address_id" name="address_id" value="<?php $_($shippingAddress['id'], 'address_id'); ?>"/>
+                <input type="hidden" id="address_id" name="address_id" value="<?php $_($shippingAddress['uid'], 'address_id'); ?>"/>
             </form>
         </div>
 		<div class="col-xs-4">
@@ -207,15 +206,15 @@
 				<?php echo $_($address->phone, 'phone') ?><br />
 				<div class="row">
 					<div class="col-xs-12" style="margin-bottom: 10px;">
-						<button data-id="<?php echo $address->id?>" class="btn btn-primary btn-block confirm-address ladda-button" data-token="<?php echo $this->getToken('checkout_step2'); ?>" data-style="expand-right" data-spinner-size="20"><span class="ladda-label">Ship to this address</span></button>
+						<button data-id="<?php echo $address->getUid()?>" class="btn btn-primary btn-block confirm-address ladda-button" data-token="<?php echo $this->getToken('checkout_step2'); ?>" data-style="expand-right" data-spinner-size="20"><span class="ladda-label">Ship to this address</span></button>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-6">
-						<button data-id="<?php echo $address->id?>" class="btn btn-success btn-block edit-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Edit</span></button>
+						<button data-id="<?php echo $address->getUid()?>" class="btn btn-success btn-block edit-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Edit</span></button>
 					</div>
 					<div class="col-xs-6">
-						<button data-id="<?php echo $address->id?>" style="" class="btn btn-danger btn-block delete-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Delete</span></button>
+						<button data-id="<?php echo $address->getUid()?>" style="" class="btn btn-danger btn-block delete-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Delete</span></button>
 					</div>
 				</div>
 			</div>

@@ -12,7 +12,9 @@
                 type:"POST",
                 dataType:"json",
                 success: function(data) {
-                    if (data.success) {
+                    if (data.location) {
+                        window.location.href = data.location;
+                    } else if (data.success) {
                         window.location.href = "/checkout/order";
                     } else {
                         alert( "error" );
@@ -44,7 +46,7 @@
                     <tr>
                         <td>
                             <div class="blockShadow bg-info">
-                            <?php $shippingAddress = $cart->getShippingAddress()?>
+                            <?php //$shippingAddress = $cart->getShippingAddress()?>
                                 <h3>Shipping Address</h3>
                                 <b><?php echo $_($shippingAddress->full_name, 'full_name'); ?></b><br />
                                 <?php echo $_($shippingAddress->address_line_1, 'address_line_1'); ?><br />
@@ -54,7 +56,7 @@
                                 <?php echo $_($shippingAddress->phone, 'phone'); ?><br />
                             </div>
                             <div class="blockShadow bg-info">
-                                <?php $billingAddress = $cart->getBillingAddress()?>
+                                <?php //$billingAddress = $cart->getBillingAddress()?>
                                 <h3>Billing Address</h3>
                                 <b><?php echo $_($billingAddress->full_name, 'full_name'); ?></b><br />
                             <?php echo $_($billingAddress->address_line_1, 'address_line_1'); ?><br />
@@ -82,11 +84,11 @@
                 </thead>
                 <tbody>
                 <?php
-                $items = $cart->getCartItemsModel()->getAllItems();
+                /** @var \App\Model\CartItems $item */
                 foreach ($items as $item) :?>
-                    <?php $item->product->find(); ?>
+                    <?php $product = $item->getItemProduct(); ?>
 	<tr>
-                    <td class="product-image"><a href="/product/view?id=<?php echo $item->product->id();?>"><img class="img-thumbnail img-rounded" src="/products_pictures/<?php $_($item->product->picture); ?>" alt=""/></a></td>
+                    <td class="product-image"><a href="/product/view?id=<?php echo $product->id();?>"><img class="img-thumbnail img-rounded" src="/products_pictures/<?php $_($product->picture); ?>" alt=""/></a></td>
                     <td><?php echo $item->name ?></td>
                     <td class="text-center"><?php echo $item->qty ?></td>
                     <td class="text-right">$<?php echo $item->price * $item->qty ?></td>
@@ -103,8 +105,14 @@
                     <td colspan="2">Payment: <?php echo $cart->payment_method;?></td>
                     <td align="right" colspan="2">$0</td>
                 </tr>
+                <?php if ($discount): ?>
+                    <tr class="info">
+                        <td colspan="2">Discount: </td>
+                        <td align="right" colspan="2"><?php echo $discount; ?>%</td>
+                    </tr>
+                <?php endif; ?>
                 <tr class="danger">
-                    <td align="right" colspan="4"><strong>$<?php echo $cart->getCartItemsModel()->getItemsTotal();?></strong></td>
+                    <td align="right" colspan="4"><strong>$<?php echo $totalPrice;?></strong></td>
                 </tr>
                 <tfoot>
             </table>

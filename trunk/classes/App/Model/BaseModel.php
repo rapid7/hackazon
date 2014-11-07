@@ -12,6 +12,7 @@ namespace App\Model;
 
 use App\Pixie;
 use PHPixie\ORM\Model;
+use App\Pixifier;
 
 /**
  * Class BaseModel.
@@ -140,7 +141,7 @@ class BaseModel extends Model
     public function getFields(array $fields)
     {
         if (!$this->loaded()) {
-            return [];
+            //return [];
         }
 
         $result = [];
@@ -220,5 +221,32 @@ class BaseModel extends Model
     public function getModelMeta()
     {
         return [];
+    }
+
+    public function __sleep()
+    {
+        $vars = get_object_vars($this);
+        unset($vars['query']);
+        unset($vars['conn']);
+        unset($vars['pixie']);
+        unset($vars['cached']);
+
+        return array_keys($vars);
+    }
+
+    public function __wakeup()
+    {
+        $pixie = Pixifier::getInstance()->getPixie();
+        $this->pixie = $pixie;
+        $this->conn = $pixie->db->get($this->connection);
+        $this->query = $this->conn->query('select');
+        $this->query->table($this->table);
+        $this->cached = [];
+        if ($this->_row[$this->id_field]) {
+            $this->_loaded = true;
+        } else {
+            $this->_loaded = false;
+        }
+       // $this->prepare_relations();
     }
 } 

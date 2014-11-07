@@ -1262,3 +1262,20 @@ img.btn_close {
         margin-left: 0;
     }
 }
+
+.credit-card-block {
+    display: block;
+}
+
+.credit-card-block .form-horizontal {
+    margin-bottom: 10px;
+}
+
+.credit-card-block .form-horizontal select {
+    width: auto;
+    display: inline-block;
+}
+
+.credit-card-block .expires-fields {
+    text-align: left;
+}

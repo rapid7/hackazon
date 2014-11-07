@@ -12,8 +12,12 @@ use RelationTest\Model\Role;
  * @property Pixie $pixie
  * @property string $username
  * @property string $password
+ * @property string $email
  * @property string $photo
  * @property string $rest_token
+ * @property string $credit_card
+ * @property string $credit_card_expires
+ * @property string $credit_card_cvv
  *
  * @property Role $roles
  * @property WishListFollowers $wishlistFollowers
