@@ -183,7 +183,7 @@ class SessionCartStorage implements ICartStorage
         $_SESSION['cart_service']['shipping_address'] = null;
         $_SESSION['cart_service']['billing_address'] = null;
 
-        $cart = $this->getCart();
+        $cart = new Cart($this->pixie);
         $cart->billing_address_id = 0;
         $cart->shipping_address_id = 0;
         $cart->created_at = date('Y-m-d H:i:s');
@@ -229,6 +229,9 @@ class SessionCartStorage implements ICartStorage
      */
     public  function getCart()
     {
+        if (!$_SESSION['cart_service']['cart']) {
+            $this->reset();
+        }
         return $_SESSION['cart_service']['cart'];
     }
 
