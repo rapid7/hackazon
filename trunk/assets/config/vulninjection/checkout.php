@@ -56,15 +56,20 @@ return [
                     'db_field' => 'customerAddress.id'
                 ],
             ]
-        ]
+        ],
+        'placeOrder' => [
+            'fields' => [
+                'address_line_1' => [
+                    'sql',
+                    'db_field' => 'orderAddress.address_line_1'
+                ],
+            ]
+        ]        
     ],
 
     'vulnerabilities' => [
         'xss' => [
             'stored' => true
         ],
-        'sql' => [
-            'blind' => true
-        ]
     ]
 ];
