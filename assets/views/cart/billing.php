@@ -176,8 +176,8 @@
                         <label required class="col-xs-4 required control-label" for="country_id">Country:</label>
                         <div class="col-xs-8">
                             <select class="form-control" id="country_id" data-validation="required" name="country_id">
-                                <option value="RU" <?php echo $billingAddress['country_id'] == 'RU' ? 'selected' : ''; ?>>Russia</option>
                                 <option value="EN" <?php echo $billingAddress['country_id'] == 'EN' ? 'selected' : ''; ?>>United States</option>
+                                <option value="RU" <?php echo $billingAddress['country_id'] == 'RU' ? 'selected' : ''; ?>>Russia</option>
                             </select>
                         </div>
                     </div>
