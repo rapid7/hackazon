@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:id="@+id/profileLayout"
+              android:padding="@dimen/activity_vertical_margin">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_first_name"
+            android:id="@+id/firstNameLabel"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/firstName"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:inputType="textUri"
+            android:text=""
+            android:layout_below="@id/firstNameLabel"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_last_name"
+            android:id="@+id/lastNameLabel"
+            android:layout_below="@id/firstName"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lastName"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:inputType="text"
+            android:layout_below="@id/lastNameLabel"/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_save"
+            android:id="@+id/loginButton" android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"/>
+</RelativeLayout>

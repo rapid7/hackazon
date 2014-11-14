@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/settings" android:title="@string/activity_settings_label"
+        android:icon="@android:drawable/ic_menu_preferences" />
+    <item android:id="@+id/about" android:title="@string/activity_about_label"
+        android:icon="@android:drawable/ic_dialog_info" />
+    <item android:id="@+id/exit" android:title="@string/exit"
+          android:icon="@android:drawable/ic_menu_close_clear_cancel" />
+</menu>

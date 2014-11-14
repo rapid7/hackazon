@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="contentTypeEntries">
+        <item>JSON</item>
+        <item>XML</item>
+    </string-array>
+    <string-array name="contentTypeValues">
+        <item>json</item>
+        <item>xml</item>
+    </string-array>
+</resources>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:id="@+id/profileLayout"
+              android:padding="@dimen/activity_vertical_margin">
+
+    <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:layout_above="@+id/nextButton">
+        <RelativeLayout
+                android:id="@+id/fields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout.shipping_address.full_name"
+                    android:id="@+id/fullNameLabel"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fullName"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:inputType="textUri"
+                    android:text=""
+                    android:layout_below="@id/fullNameLabel"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout.shipping_address.line1"
+                    android:id="@+id/address1Label"
+                    android:layout_below="@id/fullName"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/address1"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:inputType="text"
+                    android:layout_below="@id/address1Label"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout.shipping_address.line2"
+                    android:id="@+id/address2Label"
+                    android:layout_below="@id/address1"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/address2"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:inputType="text"
+                    android:layout_below="@id/address2Label"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout.shipping_address.city"
+                    android:id="@+id/cityLabel"
+                    android:layout_below="@id/address2"/>
+
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/city"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:inputType="text"
+                    android:layout_below="@id/cityLabel"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout.shipping_address.region"
+                    android:id="@+id/regionLabel"
+                    android:layout_below="@id/city"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/region"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:inputType="text"
+                    android:layout_below="@id/regionLabel"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout.shipping_address.zip"
+                    android:id="@+id/zipLabel"
+                    android:layout_below="@id/region"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:id="@+id/zip"
+                    android:layout_below="@+id/zipLabel"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout.shipping_address.country"
+                    android:id="@+id/countryLabel"
+                    android:layout_below="@id/zip"/>
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout.shipping_address.select_country"
+                    android:id="@+id/country"
+                    android:layout_below="@id/countryLabel"
+                    android:padding="10dp"
+                    style="@android:style/TextAppearance.Large"
+                    />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout.shipping_address.phone"
+                    android:id="@+id/phoneLabel"
+                    android:layout_below="@id/country"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:id="@+id/phone"
+                    android:layout_below="@+id/phoneLabel"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkout_billing_address_button"
+            android:id="@+id/nextButton" android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/checkout_go_back_to_shipping_method_button" android:id="@+id/prevButton"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignTop="@+id/nextButton" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+</RelativeLayout>

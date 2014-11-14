@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:id="@+id/profileLayout"
+              android:padding="@dimen/activity_vertical_margin">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkout_shipping_method"
+            android:id="@+id/shippingMethodLabel"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/shippingMethod"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:text="@string/select_shipping_method"
+            android:layout_below="@id/shippingMethodLabel"
+            android:clickable="true"
+            android:padding="10dp"
+            style="@android:style/TextAppearance.Large"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkout_payment_method"
+            android:id="@+id/paymentMethodLabel"
+            android:layout_below="@id/shippingMethod"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/paymentMethod"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:clickable="true"
+            android:layout_below="@id/paymentMethodLabel"
+            android:text="@string/select_payment_method"
+            android:padding="10dp"
+            style="@android:style/TextAppearance.Large"
+            />
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkout_select_shipping_method_button"
+            android:id="@+id/shippingMethodButton" android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/checkout_go_to_cart" android:id="@+id/goToCartButton"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignTop="@+id/shippingMethodButton" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+</RelativeLayout>

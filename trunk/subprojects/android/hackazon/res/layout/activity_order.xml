@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+        >
+
+    <LinearLayout
+            android:id="@+id/loading_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:indeterminate="true" />
+        <TextView
+                style="@android:style/TextAppearance.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/loading_please_wait"
+                android:textColor="#222222"
+                android:textSize="20sp" />
+    </LinearLayout>
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
+            android:id="@+id/orderView" android:padding="@dimen/activity_horizontal_margin">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_num"
+                android:id="@+id/orderIdLabel"
+                android:width="100dp"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_num"
+                android:id="@+id/orderId"
+                android:layout_toRightOf="@id/orderIdLabel"
+                android:layout_toEndOf="@id/orderIdLabel"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status"
+                android:id="@+id/statusLabel"
+                android:width="100dp"
+                android:layout_below="@id/orderIdLabel"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status"
+                android:id="@+id/status"
+                android:layout_toRightOf="@id/statusLabel"
+                android:layout_toEndOf="@id/statusLabel"
+                android:layout_below="@id/orderId"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/created_at"
+                android:id="@+id/createdLabel"
+                android:width="100dp"
+                android:layout_below="@id/statusLabel"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/created_at"
+                android:id="@+id/createdAt"
+                android:layout_toRightOf="@id/createdLabel"
+                android:layout_toEndOf="@id/createdLabel"
+                android:layout_below="@id/status"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/item_number"
+                android:id="@+id/itemNumLabel"
+                android:width="100dp"
+                android:layout_below="@id/createdLabel"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/item_number"
+                android:id="@+id/itemNum"
+                android:layout_toRightOf="@id/itemNumLabel"
+                android:layout_toEndOf="@id/itemNumLabel"
+                android:layout_below="@id/createdAt"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@+id/itemNum"
+                android:background="#fff"
+                android:id="@+id/itemNumSpacer"
+                android:alpha="0" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total"
+                android:id="@+id/totalLabel"
+                android:width="100dp"
+                android:layout_below="@id/itemNumSpacer"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total"
+                android:id="@+id/total"
+                android:layout_toRightOf="@id/itemNumLabel"
+                android:layout_toEndOf="@id/itemNumLabel"
+                android:layout_below="@id/itemNumSpacer"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@+id/totalLabel"
+                android:background="#fff"
+                android:id="@+id/totalSpacer"
+                android:alpha="0" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_items_label"
+                android:id="@+id/itemsLabel"
+                android:layout_below="@id/totalSpacer"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+        <com.ntobjectives.hackazon.view.ExSpiceListView
+                android:id="@+id/listviewOrderItems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_below="@id/itemsLabel"
+                />
+    </RelativeLayout>
+</LinearLayout>
