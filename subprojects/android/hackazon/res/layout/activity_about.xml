@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:weightSum="1"
+              android:padding="10dp"
+              >
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/about_text"
+            android:id="@+id/aboutText"
+            android:layout_weight="0.78"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="Close"
+            android:id="@+id/exitButton" android:layout_gravity="center_horizontal" android:layout_weight="0.12"
+            android:paddingRight="30sp" android:paddingLeft="30sp"/>
+</LinearLayout>

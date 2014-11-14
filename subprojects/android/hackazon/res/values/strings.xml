@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hackazon</string>
+    <string name="about_text">Copyright © NTObjectives 2014</string>
+    <string name="activity_about_label">About</string>
+    <string name="settings_username">Username</string>
+    <string name="settings_username_summary">Username of the user on the website.</string>
+    <string name="settings_password_summary">Password of the user on the website.</string>
+    <string name="settings_password">Password</string>
+    <string name="settings_host">Host</string>
+    <string name="settings_host_summary">Backend host to which this app is connected to.</string>
+    <string name="activity_settings_label">Settings</string>
+    <string name="activity_profile_label">Profile</string>
+    <string name="exit">Exit</string>
+    <string-array name="drawer_items">
+        <item>Products</item>
+        <item>Orders</item>
+        <item>Cart</item>
+        <item>Profile</item>
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="settings_content_type_summary">Data format for exchange with REST server.</string>
+    <string name="settings_content_type">Content Type</string>
+    <string name="status">Status</string>
+    <string name="order_num">Order №</string>
+    <string name="created_at">Created At</string>
+    <string name="login_welcome_text">Welcome to Hackazon!
+        \nPlease provide the host and your credentials:</string>
+    <string name="activity_login_label">Authorization</string>
+    <string name="log_in">Log In</string>
+    <string name="default_host">http://hackazon.webscantest.com</string>
+    <string name="loading_please_wait">Loading....</string>
+    <string name="price">Price</string>
+    <string name="product_name">Name</string>
+    <string name="Description">Description</string>
+    <string name="loading_categories">Loading categories…</string>
+    <string name="select_category">Select category</string>
+    <string name="no_categories">No categories</string>
+    <string name="category_load_failed">Failed to load categories</string>
+    <string name="item_number">Item number</string>
+    <string name="total">Total</string>
+    <string name="order_items_label">Items:</string>
+    <string name="order_item_name">Name</string>
+    <string name="order_item_quantity">Quantity</string>
+    <string name="order_item_price">Price</string>
+    <string name="profile_first_name">First Name</string>
+    <string name="profile_last_name">Last Name</string>
+    <string name="profile_save">Save Profile</string>
+    <string name="checkout">Checkout</string>
+    <string name="cart_item_count">Item number</string>
+    <string name="cart_total_price">Total</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="proceed_to_checkout">Proceed to checkout</string>
+    <string name="empty_cart_label">Empty cart</string>
+    <string name="go_to_cart">Go to cart</string>
+    <string name="back_button_label"><![CDATA[< Back]]></string>
+    <string name="thumbnail">thumbnail</string>
+    <string name="checkout_shipping_method">Shipping Method:</string>
+    <string name="select_shipping_method">Select shipping method…</string>
+    <string name="select_payment_method">Select payment method…</string>
+    <string name="checkout_payment_method">Payment Method:</string>
+    <string name="checkout_select_shipping_method_button">Shipping Method ></string>
+    <string name="checkout_go_to_cart"><![CDATA[< Go to cart]]></string>
+    <string name="checkout_go_back_to_shipping_method_button"><![CDATA[< Methods]]></string>
+    <string name="checkout_billing_address_button"><![CDATA[Billing Address >]]></string>
+    <string name="checkout.shipping_address.full_name">Full Name</string>
+    <string name="checkout.shipping_address.line1">Address line 1</string>
+    <string name="checkout.shipping_address.line2">Address line 2</string>
+    <string name="checkout.shipping_address.city">City</string>
+    <string name="checkout.shipping_address.region">State/Province/Region</string>
+    <string name="checkout.shipping_address.zip">ZIP</string>
+    <string name="checkout.shipping_address.country">Country</string>
+    <string name="checkout.shipping_address.select_country">Select country…</string>
+    <string name="checkout.shipping_address.phone">Phone</string>
+    <string name="checkout_place_order_button">Place order</string>
+    <string name="checkout_go_to_billing_address"><![CDATA[< Bill. Addr.]]></string>
+    <string name="checkout.overview.shipping_address">Shipping Address</string>
+    <string name="checkout.overview.billing_address">Billing Address</string>
+    <string name="customer_address.name">Address name</string>
+    <string name="customer_address.full_name">Full Name</string>
+    <string name="customer_address.address_name">Address name</string>
+    <string name="customer_address.address1">Address line 1</string>
+    <string name="customer_address.address2">Address line 2</string>
+    <string name="customer_address.city">City</string>
+    <string name="customer_address.region">Region</string>
+    <string name="customer_address.country">Country</string>
+    <string name="customer_address.zip">ZIP</string>
+    <string name="customer_address.phone">Phone</string>
+    <string name="checkout.confirmation.payment_method">Payment</string>
+    <string name="checkout.confirmation.shipping_method">Shipping</string>
+    <string name="checkout.success.go_to_products_button">Go to Products</string>
+    <string name="checkout.success.go_to_orders_button">Go to Orders</string>
+    <string name="checkout.success.message">You have successfully placed\n the order!</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:key="host" android:title="@string/settings_host"
+                        android:summary="@string/settings_host_summary"
+                        android:hint="http://www.example.com" />
+    <EditTextPreference android:key="username" android:title="@string/settings_username"
+                        android:summary="@string/settings_username_summary" />
+    <EditTextPreference android:key="password" android:title="@string/settings_password"
+                        android:summary="@string/settings_password_summary" android:inputType="textPassword" />
+    <ListPreference android:key="format" android:title="@string/settings_content_type"
+                    android:entryValues="@array/contentTypeValues"
+                    android:entries="@array/contentTypeEntries"
+                    android:defaultValue="json"
+                    android:summary="@string/settings_content_type_summary"/>
+
+</PreferenceScreen>

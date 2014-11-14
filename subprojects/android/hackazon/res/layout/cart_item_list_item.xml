@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/list_item_content"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:descendantFocusability="blocksDescendants"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+        >
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_item_name"
+            android:id="@+id/nameLabel"
+            android:width="100dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_item_name"
+            android:id="@+id/name"
+            android:layout_toRightOf="@id/nameLabel"
+            android:layout_toEndOf="@id/nameLabel"/>
+
+    <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@+id/name"
+            android:id="@+id/nameSpacer"
+            android:alpha="0" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_item_quantity"
+            android:id="@+id/quantityLabel"
+            android:width="100dp"
+            android:layout_below="@id/nameSpacer"
+            android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_item_quantity"
+            android:id="@+id/quantity"
+            android:layout_toRightOf="@id/quantityLabel"
+            android:layout_toEndOf="@id/quantityLabel"
+            android:layout_below="@id/nameSpacer"
+            android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_item_price"
+            android:id="@+id/priceLabel"
+            android:width="100dp"
+            android:layout_below="@id/quantityLabel"
+            android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_item_price"
+            android:id="@+id/price"
+            android:layout_toRightOf="@id/priceLabel"
+            android:layout_toEndOf="@id/priceLabel"
+            android:layout_below="@id/quantity"
+            android:layout_marginTop="@dimen/activity_vertical_margin"/>
+    <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_below="@+id/priceLabel"
+            android:background="#000"
+            android:alpha="1"
+
+            />
+
+</RelativeLayout>

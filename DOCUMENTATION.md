@@ -103,4 +103,30 @@ For example, IDEA Ultimate allows to create module inside the top-level Hackazon
 6. By default all output files should go into `/web/out/<widget_name>` to be accessible via browser. It gives
     the opportunity to test JS to AS communication, because for local files it's denied.
     
-7. After building and testing you should copy swfs into /web/swf folder 
+7. After building and testing you should copy swfs into /web/swf folder
+
+
+
+Android
+=======
+
+## Prepare Environment
+
+It's better to use some tutorial for setting up the environment for Android either from the google website, or any other.
+But here are the most important steps:
+
+1. Install and set up Android SDK in your IDE (Or use Android build for Eclipse or Android Studio)
+
+2. Set the path `subprojects\android\hackazon` as a project root.
+
+3. Set up the AVR virtual device for testing purposes.
+
+4. Add jar's from `jars` folder to project build paths.
+
+5. Create run configuration in your IDE which runs the AVR and when it's ready, installs and runs the application on virtual device.
+
+6. When you feel that the app is ready, you can test it on your Android device by plugging it to the PC and configuring run configuration.
+
+7. Just take the hackazon.apk file from `\subprojects\android\hackazon\out\production\hackazon\com`. Profit!
+
+PS: To deploy the app to some kind of app store the app have to be signed. IDE helps with this task.
