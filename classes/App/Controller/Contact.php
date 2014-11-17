@@ -8,11 +8,13 @@ class Contact extends \App\Page {
         $this->view->pageTitle = "Contact us";
         if ($this->request->method == 'POST') {
             $this->checkCsrfToken('contact');
-            $post = $this->request->post();
+            $post = json_decode($this->request->post()['data']);
             $this->pixie->orm->get('ContactMessages')->create($post);
-            if ($this->request->is_ajax()) 
+            if ($this->request->is_ajax())
                 $this->execute = false;
         }
         $this->view->subview = 'pages/contact';
     }
+
 }
+
