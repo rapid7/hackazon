@@ -76,11 +76,13 @@
         form.hzBootstrapValidator().on('success.form.bv', function(e) {
             var l = Ladda.create(document.querySelector( '#form-submit' ));
             l.start();
+            var data = {};
+            $("#contactForm").serializeArray().map(function(x){data[x.name] = x.value;}); 
             $.ajax({
                 url: '/contact',
                 type: "POST",
                 dataType: "json",
-                data: $("#contactForm").serialize(),
+                data: "data=" + JSON.stringify(data),
                 success: function(data) {
                     $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
                     form.hide();
