@@ -29,7 +29,7 @@
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group col-lg-12 field-group">
-                    <textarea name="contact_message" required class="form-control" rows="6" id="input4" data-validation="length" data-validation-length="min10" placeholder="Message"></textarea>
+                    <textarea name="contact_message" required class="form-control" rows="6" id="input4" data-validation="length" data-validation-length="min10" placeholder="Message">Comment</textarea>
                 </div>
                 <div class="form-group col-lg-12 field-group">
                     <input type="hidden" name="save" value="contact">
