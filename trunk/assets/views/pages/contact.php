@@ -82,9 +82,10 @@
                 url: '/contact',
                 type: "POST",
                 dataType: "json",
-                contentType: "application/json",
+								//contentType: "application/json",
                 data: JSON.stringify(data),
-                success: function(data) {
+                //data: "data=" + JSON.stringify(data),
+               success: function(data) {
                     $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
                     form.hide();
                     repeatContactBlock.show();
