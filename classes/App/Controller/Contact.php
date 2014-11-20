@@ -8,7 +8,6 @@ class Contact extends \App\Page {
         $this->view->pageTitle = "Contact us";
         if ($this->request->method == 'POST') {
 					$this->checkCsrfToken('contact');
-            //$post = json_decode($this->request->rawRequestData(), true);
             $post = json_decode($this->request->rawRequestData());
             //$post = json_decode($this->request->post()['data']);
             $this->pixie->orm->get('ContactMessages')->create($post);
