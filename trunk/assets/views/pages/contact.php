@@ -82,7 +82,8 @@
                 url: '/contact',
                 type: "POST",
                 dataType: "json",
-                data: "data=" + JSON.stringify(data),
+                contentType: "application/json",
+                data: JSON.stringify(data),
                 success: function(data) {
                     $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
                     form.hide();
