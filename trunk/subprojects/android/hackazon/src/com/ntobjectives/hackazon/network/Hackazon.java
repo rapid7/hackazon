@@ -47,6 +47,9 @@ public interface Hackazon {
     @PUT("/api/cart/{id}")
     Cart updateCart(@Path("id") int id, @Body Cart cart);
 
+    @DELETE("/api/cart/{id}")
+    Void deleteCart(@Path("id") int id);
+
     @GET("/api/cart/my")
     Cart myCart(@Query("uid") String uid);
 
@@ -57,13 +60,22 @@ public interface Hackazon {
     @PUT("/api/cartItems/{id}")
     CartItem updateCartItem(@Path("id") int id, @Body CartItem item);
 
+    @DELETE("/api/cartItems/{id}")
+    Void deleteCartItem(@Path("id") int id);
+
     // USER
     @GET("/api/user/me")
     User me();
 
+    @PUT("/api/user/{id}")
+    User updateUser(@Path("id") int id, @Body User user);
+
     // CUSTOMER ADDRESS
     @GET("/api/customerAddress")
     CustomerAddress.CustomerAddressesResponse customerAddresses();
+
+    @GET("/api/customerAddress")
+    CustomerAddress.CustomerAddressesResponse customerAddresses(@Query("page") int page, @Query("per_page") int per_page);
 
     @GET("/api/customerAddress/{id}")
     CustomerAddress customerAddresses(@Path("id") int id);

@@ -263,6 +263,9 @@ public class ProductsFragment extends Fragment {
         @Override
         public void onFailure(SpiceException spiceException) {
             isLoading = false;
+            if (getActivity() == null) {
+                return;
+            }
             getActivity().setProgressBarIndeterminateVisibility(false);
             Toast.makeText(ProductsFragment.this.getActivity(), getActivity().getString(R.string.category_load_failed),
                     Toast.LENGTH_SHORT).show();

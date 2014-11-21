@@ -37,13 +37,18 @@ public class MainActivity extends AbstractRootActivity {
 
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
+            return;
+        }
+
+        if (!isConnected()) {
+            startActivity(new Intent(this, DisconnectedActivity.class));
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (prefs.getBoolean("first_time", true)) {
+        if (prefs.getBoolean("first_time", true) || prefs.getString("token", "").equals("")) {
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
-        //prefs.edit().putBoolean("first_time", true).apply();
 
         setContentView(R.layout.activity_main);
 

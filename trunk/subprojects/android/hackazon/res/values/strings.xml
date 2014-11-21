@@ -92,4 +92,11 @@
     <string name="checkout.success.go_to_products_button">Go to Products</string>
     <string name="checkout.success.go_to_orders_button">Go to Orders</string>
     <string name="checkout.success.message">You have successfully placed\n the order!</string>
+    <string name="reload">Reload</string>
+    <string name="act_disconnected_waiting_for_network">Waiting for network....</string>
+    <string name="act_disconnected_logo">Logo</string>
+    <string name="checkout_select_address">Select the address</string>
+    <string name="customer_address.item.location">Location</string>
+    <string name="customer_address.item.address">Location</string>
+    <string name="logout">Logout</string>
 </resources>

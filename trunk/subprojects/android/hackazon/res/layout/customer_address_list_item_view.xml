@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/customer_address.full_name"
+            android:id="@+id/fullName"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/customer_address.item.address"
+            android:id="@+id/address"/>
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/customer_address.item.location"
+              android:id="@+id/location"/>
+
+</LinearLayout>

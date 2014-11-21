@@ -10,15 +10,18 @@
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
               android:paddingTop="@dimen/activity_vertical_margin"
-        >
+              >
 
     <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp"
-            android:id="@+id/imageView" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:contentDescription="@string/thumbnail"/>
+            android:id="@+id/imageView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/thumbnail"
+            android:background="#00ff2449"/>
 
     <TextView
             android:layout_width="wrap_content"

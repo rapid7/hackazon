@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.ntobjectives.hackazon.R;
 import com.ntobjectives.hackazon.dialog.CountriesDialogFragment;
+import com.ntobjectives.hackazon.dialog.CustomerAddressDialogFragment;
 import com.ntobjectives.hackazon.model.Countries;
 import com.ntobjectives.hackazon.model.CustomerAddress;
 
@@ -24,8 +25,11 @@ import java.util.ArrayList;
  * Time: 14:50
  */
 public class CheckoutBillingAddressFragment extends CheckoutBaseFragment
-        implements CountriesDialogFragment.CountriesDialogListener {
+        implements CountriesDialogFragment.CountriesDialogListener,
+        CustomerAddressDialogFragment.CustomerAddressDialogListener {
     public static final String TAG = CheckoutBillingAddressFragment.class.getSimpleName();
+
+    protected TextView addressSelector;
 
     protected EditText fullNameField;
     protected EditText address1Field;
@@ -58,6 +62,8 @@ public class CheckoutBillingAddressFragment extends CheckoutBaseFragment
         phoneField = (EditText) getActivity().findViewById(R.id.phone);
         countryField = (TextView) getActivity().findViewById(R.id.country);
 
+        addressSelector = (TextView) getActivity().findViewById(R.id.existingAddressSelector);
+
         nextButton = (Button) getActivity().findViewById(R.id.nextButton);
         prevButton = (Button) getActivity().findViewById(R.id.prevButton);
         loadingView = getActivity().findViewById(R.id.loading_layout);
@@ -89,6 +95,24 @@ public class CheckoutBillingAddressFragment extends CheckoutBaseFragment
             public void onClick(View v) {
                 CountriesDialogFragment dialog = new CountriesDialogFragment();
                 dialog.setTargetFragment(CheckoutBillingAddressFragment.this, 0);
+                android.app.FragmentManager fm = getFragmentManager();
+                dialog.show(fm, TAG);
+            }
+        });
+
+        if (((CheckoutActivity)getActivity()).customerAddresses.size() == 0) {
+            addressSelector.setVisibility(View.GONE);
+        } else {
+            addressSelector.setVisibility(View.VISIBLE);
+        }
+
+        addressSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomerAddressDialogFragment dialog = new CustomerAddressDialogFragment();
+                dialog.setTargetFragment(CheckoutBillingAddressFragment.this, 0);
+                dialog.setCustomerAddresses(
+                        ((CheckoutActivity)CheckoutBillingAddressFragment.this.getActivity()).customerAddresses);
                 android.app.FragmentManager fm = getFragmentManager();
                 dialog.show(fm, TAG);
             }
@@ -140,6 +164,12 @@ public class CheckoutBillingAddressFragment extends CheckoutBaseFragment
         address.region = regionField.getText().toString();
         address.zip = zipField.getText().toString();
         address.phone = phoneField.getText().toString();
+
+        CustomerAddress.List addresses = ((CheckoutActivity)CheckoutBillingAddressFragment.this.getActivity()).customerAddresses;
+
+        if (!addresses.contains(address)) {
+            addresses.add(address);
+        }
     }
 
     @Override
@@ -165,6 +195,21 @@ public class CheckoutBillingAddressFragment extends CheckoutBaseFragment
             activity.setBillingAddress(address);
         }
 
+        populateFields(address);
+    }
+
+    @Override
+    public void onDialogSelect(CountriesDialogFragment dialog, String country) {
+        countryField.setText(Countries.getLabel(country));
+        activity.getBillingAddress().country_id = country;
+    }
+
+    @Override
+    public void onAddressDialogSelect(CustomerAddressDialogFragment dialog, CustomerAddress address) {
+        populateFields(address);
+    }
+
+    protected void populateFields(CustomerAddress address) {
         if (address.country_id == null || address.country_id.equals("")) {
             address.country_id = Countries.RU;
         }
@@ -198,11 +243,5 @@ public class CheckoutBillingAddressFragment extends CheckoutBaseFragment
         if (address.phone != null) {
             phoneField.setText(address.phone);
         }
-    }
-
-    @Override
-    public void onDialogSelect(CountriesDialogFragment dialog, String country) {
-        countryField.setText(Countries.getLabel(country));
-        activity.getBillingAddress().country_id = country;
     }
 }

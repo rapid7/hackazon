@@ -54,7 +54,6 @@ class HttpException extends \Exception
     /**
      * @param $name
      * @param $value
-     * @internal param array $data
      */
     public function setParameter($name, $value)
     {
