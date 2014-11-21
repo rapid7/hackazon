@@ -25,7 +25,10 @@ class ErrorController extends Controller
         $data = $this->error instanceof HttpException ? $this->error->getData() : [];
         $this->response->add_header('HTTP/1.1 '.$status);
         $this->response->body = array_merge(
-            ['message' => $this->error->getMessage(), 'code' => $this->error->getCode()], $data
+            ['message' => $this->error->getMessage(), 'code' => $this->error->getCode(),
+                'trace' => ($this->pixie->getParameter('parameters.display_errors', false)
+                && ($this->error->getCode() >= 400 || $this->error->getCode() < 100)
+                    ? $this->error->getTraceAsString() : "")], $data
         );
     }
 

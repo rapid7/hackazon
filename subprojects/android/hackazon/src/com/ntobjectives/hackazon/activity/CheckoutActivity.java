@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.ntobjectives.hackazon.R;
 import com.ntobjectives.hackazon.model.*;
 import com.ntobjectives.hackazon.network.CartRetrofitSpiceRequest;
+import com.ntobjectives.hackazon.network.CustomerAddressesRetrofitSpiceRequest;
 import com.ntobjectives.hackazon.network.MeRetrofitSpiceRequest;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 
@@ -29,15 +30,21 @@ public class CheckoutActivity extends AbstractRootActivity {
     protected User user;
     protected CustomerAddress shippingAddress;
     protected CustomerAddress billingAddress;
+    protected CustomerAddress.List customerAddresses;
 
     protected OrderAddress.List orderAddresses;
-    protected View contentFrame;
+    //protected View contentFrame;
     protected View loadingView;
     protected CartRetrofitSpiceRequest req;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+
         setContentView(R.layout.activity_checkout);
         loadingView = findViewById(R.id.loading_layout);
         loadingView.setVisibility(View.VISIBLE);
@@ -99,7 +106,7 @@ public class CheckoutActivity extends AbstractRootActivity {
     }
 
     public void startSteps() {
-        if (cart != null && user != null) {
+        if (cart != null && user != null && customerAddresses != null) {
             loadingView.setVisibility(View.GONE);
             selectStep(METHODS);
         }
@@ -149,6 +156,7 @@ public class CheckoutActivity extends AbstractRootActivity {
         req = new CartRetrofitSpiceRequest(uid);
         getSpiceManager().execute(req, new CartRequestListener(this));
         getSpiceManager().execute(new MeRetrofitSpiceRequest(), new MeRequestListener(this));
+        getSpiceManager().execute(new CustomerAddressesRetrofitSpiceRequest(), new CustomerAddressesRequestListener(this));
     }
 
     public final class CartRequestListener extends com.ntobjectives.hackazon.network.RequestListener<Cart> {
@@ -194,6 +202,28 @@ public class CheckoutActivity extends AbstractRootActivity {
         public void onSuccess(User user) {
             setProgressBarIndeterminateVisibility(false);
             CheckoutActivity.this.user = user;
+            startSteps();
+        }
+    }
+
+
+    public final class CustomerAddressesRequestListener
+            extends com.ntobjectives.hackazon.network.RequestListener<CustomerAddress.CustomerAddressesResponse> {
+
+        protected CustomerAddressesRequestListener(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onFailure(SpiceException spiceException) {
+            setProgressBarIndeterminateVisibility(false);
+            Toast.makeText(CheckoutActivity.this, "failure", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onSuccess(CustomerAddress.CustomerAddressesResponse response) {
+            setProgressBarIndeterminateVisibility(false);
+            CheckoutActivity.this.customerAddresses = response.data;
             startSteps();
         }
     }

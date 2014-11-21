@@ -46,8 +46,26 @@ class User extends Controller
     {
         $data['password'] = '';
         parent::checkUpdateData($data);
-        unset($data['password']);
     }
+
+    public function action_put($data = null)
+    {
+        if ($data === null) {
+            $data = $this->request->put();
+        }
+        unset($data['password']);
+        return parent::action_put($data);
+    }
+
+    public function action_post($data = null)
+    {
+        if ($data === null) {
+            $data = $this->request->post();
+        }
+        unset($data['password']);
+        return parent::action_post($data);
+    }
+
 
     protected function preloadModel()
     {

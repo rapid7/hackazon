@@ -24,6 +24,9 @@ public class User {
     public String recover_passw;
     public String rest_token;
     public String photo;
+    public String credit_card;
+    public String credit_card_expires;
+    public String credit_card_cvv;
 
     @SuppressWarnings("serial")
     public static class List extends ArrayList<User> {

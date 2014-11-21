@@ -30,6 +30,11 @@ public class OrderActivity extends AbstractRootActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+
         setContentView(R.layout.activity_order);
 
 

@@ -43,6 +43,11 @@ public class LoginActivity extends AbstractRootActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+
         setContentView(R.layout.activity_login);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -106,8 +111,6 @@ public class LoginActivity extends AbstractRootActivity {
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-
-
         super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -152,6 +155,7 @@ public class LoginActivity extends AbstractRootActivity {
                 Log.d(TAG, "Token: " + token);
                 //Toast.makeText(LoginActivity.this, "Successfully authenticated", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
 
             } catch (JsonSyntaxException ex) {
                 Toast.makeText(LoginActivity.this, "Service response is invalid.", Toast.LENGTH_SHORT).show();

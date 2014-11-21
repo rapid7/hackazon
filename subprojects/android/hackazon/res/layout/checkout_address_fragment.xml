@@ -6,11 +6,23 @@
               android:layout_height="match_parent" android:id="@+id/profileLayout"
               android:padding="@dimen/activity_vertical_margin">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/existingAddressSelector"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:text="@string/checkout_select_address"
+        android:clickable="true"
+        android:padding="10dp"
+        android:visibility="gone"
+        style="@android:style/TextAppearance.Large"/>
+
     <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/scrollView"
-            android:layout_above="@+id/nextButton">
+            android:layout_above="@+id/nextButton"
+            android:layout_below="@id/existingAddressSelector">
         <RelativeLayout
                 android:id="@+id/fields"
                 android:layout_width="match_parent"

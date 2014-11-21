@@ -42,9 +42,11 @@ class Order extends Controller
         $data['customer_id'] = $this->user->id();
         unset($data['total_price']);
         unset($data['id']);
+        unset($data['increment_id']);
         if (!$data['coupon_id']) {
             $data['coupon_id'] = null;
         }
+        error_log("Order to be added: " . serialize($data));
         return parent::action_post($data);
     }
 

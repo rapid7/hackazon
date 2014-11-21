@@ -39,6 +39,11 @@ public class ProductActivity extends AbstractRootActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+
         setContentView(R.layout.activity_product);
 
         id = getIntent().getExtras().getInt("id", 0);

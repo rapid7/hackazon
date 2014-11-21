@@ -32,23 +32,25 @@ abstract public class RequestListener<RESULT> implements com.octo.android.robosp
         RetrofitError ex = e.getCause() instanceof RetrofitError ? ((RetrofitError) e.getCause()) : null;
 
         if (ex != null) {
-            Log.d(TAG, "Caught the exception. Error code: " + ex.getResponse().getReason());
-            if (ex.getResponse().getStatus() == 401) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                //prefs.edit().putString("token", "").apply();
-                Intent intent = new Intent(context, LoginActivity.class);
-                if (!prefs.getString("token", "").equals("")) {
-                    intent.putExtra("refresh", true);
+            if (ex.getResponse() != null) {
+                Log.d(TAG, "Caught the exception. Error code: " + ex.getResponse().getReason());
+                if (ex.getResponse().getStatus() == 401) {
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                    //prefs.edit().putString("token", "").apply();
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    if (!prefs.getString("token", "").equals("")) {
+                        intent.putExtra("refresh", true);
+                    }
+                    context.startActivity(intent);
                 }
-                context.startActivity(intent);
-            }
 
-            byte[] buffer = new byte[32000];
-            try {
-                Log.d(TAG, "ERROR BODY:\n\n " + IOUtils.toString(ex.getResponse().getBody().in(), "UTF-8"));
+                byte[] buffer = new byte[32000];
+                try {
+                    Log.d(TAG, "ERROR BODY:\n\n " + IOUtils.toString(ex.getResponse().getBody().in(), "UTF-8"));
 
-            } catch (IOException e1) {
-                e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
         onFailure(e);

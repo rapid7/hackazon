@@ -1,8 +1,10 @@
 package com.ntobjectives.hackazon.network;
 
 import android.preference.PreferenceManager;
+import com.google.gson.GsonBuilder;
 import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
 import retrofit.RestAdapter;
+import retrofit.converter.GsonConverter;
 
 /**
  * Created with IntelliJ IDEA by Nick Chervyakov.
@@ -29,6 +31,12 @@ public class JsonSpiceService extends RetrofitGsonSpiceService {
     protected RestAdapter.Builder createRestAdapterBuilder() {
         RestAdapter.Builder builder =  super.createRestAdapterBuilder();
         builder.setRequestInterceptor(new RequestInterceptor(this.getApplicationContext()));
+
+        // Enforce Gson to encode nulls
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeNulls();
+        builder.setConverter(new GsonConverter(gsonBuilder.create()));
+
         return builder;
     }
 }

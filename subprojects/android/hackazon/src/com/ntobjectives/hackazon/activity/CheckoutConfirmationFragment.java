@@ -104,15 +104,38 @@ public class CheckoutConfirmationFragment extends CheckoutBaseFragment {
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);
 
+        shippingAddress = null;
+        billingAddress = null;
+
+        CustomerAddress.List caList = ((CheckoutActivity)CheckoutConfirmationFragment.this.getActivity()).customerAddresses;
+
         User u = activity.getUser();
         CustomerAddress sa = activity.getShippingAddress();
         sa.customer_id = u.id;
-        activity.getSpiceManager().execute(new CustomerAddressAddRetrofitSpiceRequest(activity.getShippingAddress()),
-                new AddCustomerAddressResponse(activity, "shipping"));
 
-        activity.getBillingAddress().customer_id = u.id;
-        activity.getSpiceManager().execute(new CustomerAddressAddRetrofitSpiceRequest(activity.getBillingAddress()),
-                new AddCustomerAddressResponse(activity, "billing"));
+        CustomerAddress ca;
+        ca = caList.findSimilar(sa);
+        if (ca == null) {
+            activity.getSpiceManager().execute(new CustomerAddressAddRetrofitSpiceRequest(activity.getShippingAddress()),
+                    new AddCustomerAddressResponse(activity, "shipping"));
+        } else {
+            sa.id = ca.id;
+            shippingAddress = sa;
+            saveCartTask();
+        }
+
+        CustomerAddress ba = activity.getBillingAddress();
+        ba.customer_id = u.id;
+        ca = caList.findSimilar(ba);
+
+        if (ca == null) {
+            activity.getSpiceManager().execute(new CustomerAddressAddRetrofitSpiceRequest(ba),
+                    new AddCustomerAddressResponse(activity, "billing"));
+        } else {
+            ba.id = ca.id;
+            billingAddress = ba;
+            saveCartTask();
+        }
     }
 
     private void saveCartTask() {
@@ -198,6 +221,9 @@ public class CheckoutConfirmationFragment extends CheckoutBaseFragment {
             Toast.makeText(activity, "Failed to add all order items", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        activity.getSpiceManager().execute(new CartDeleteRetrofitSpiceRequest(cart.id),
+                new DeleteCartResponse(activity, cart.id));
 
         // Clear the cart
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -361,6 +387,26 @@ public class CheckoutConfirmationFragment extends CheckoutBaseFragment {
             remainingOrderItemsRequests--;
             successfulOrderItemsRequests++;
             goToSuccessTask();
+        }
+    }
+
+
+    protected class DeleteCartResponse extends RequestListener<Void> {
+        protected int id;
+
+        public DeleteCartResponse(Context context, int id) {
+            super(context);
+            this.id = id;
+        }
+
+        @Override
+        public void onFailure(SpiceException e) {
+            Log.e(TAG, "Unable to remove the cart №" + id);
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+            Log.d(TAG, "Successfully removed the cart №" + id);
         }
     }
 }

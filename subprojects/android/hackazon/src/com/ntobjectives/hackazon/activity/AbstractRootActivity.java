@@ -1,8 +1,13 @@
 package com.ntobjectives.hackazon.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -45,6 +50,12 @@ public class AbstractRootActivity extends Activity {
             case R.id.about:
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
+            case R.id.logout:
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                prefs.edit().putString("token", "").commit();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+                return true;
             case  R.id.exit:
                 exit();
                 return true;
@@ -58,6 +69,7 @@ public class AbstractRootActivity extends Activity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXIT", true);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -77,5 +89,13 @@ public class AbstractRootActivity extends Activity {
     }
     public OkHttpBitmapSpiceManager getSpiceManagerBinary() {
         return spiceManagerBinary;
+    }
+
+    protected boolean isConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&activeNetwork.isConnectedOrConnecting();
     }
 }

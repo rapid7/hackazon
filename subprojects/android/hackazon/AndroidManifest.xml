@@ -15,6 +15,10 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity android:name=".activity.SettingsActivity" android:label="@string/activity_settings_label"/>
         <activity android:name=".activity.AboutActivity" android:label="@string/activity_about_label" />
@@ -22,6 +26,12 @@
         <activity android:name=".activity.ProductActivity"/>
         <activity android:name=".activity.OrderActivity"/>
         <activity android:name=".activity.CheckoutActivity" android:label="Checkout"/>
+        <activity android:name=".activity.DisconnectedActivity" android:label="Hackazon">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <category android:name="ANDROID.INTENT.CATEGORY.DEFAULT" />
+            </intent-filter>
+        </activity>
         <service android:name=".service.RESTService"/>
         <service android:name=".network.JsonSpiceService" />
         <service android:name="com.octo.android.robospice.spicelist.okhttp.OkHttpBitmapSpiceService" />
@@ -29,6 +39,7 @@
                 android:authorities="com.ntobjectives.hackazon.provider.UserProvider"
                 android:name=".provider.UserProvider"
                 android:exported="false" />
+
 
     </application>
 </manifest>

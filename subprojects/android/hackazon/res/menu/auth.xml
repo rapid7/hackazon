@@ -3,6 +3,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/about" android:title="@string/activity_about_label"
         android:icon="@android:drawable/ic_dialog_info" android:showAsAction="always" />
-    <item android:id="@+id/exit" android:title="@string/exit" android:showAsAction="always"
+    <item android:id="@+id/exit" android:title="@string/exit" android:showAsAction="ifRoom"
           android:icon="@android:drawable/ic_menu_close_clear_cancel" />
 </menu>

@@ -59,7 +59,7 @@ class Order extends BaseModel
     public function get($propertyName)
     {
         if ($propertyName == 'increment_id') {
-            return $this->id + self::INCREMENT_BASE;
+            return  $this->id() ? $this->id() + self::INCREMENT_BASE : $this->id();
         }
         return null;
     }

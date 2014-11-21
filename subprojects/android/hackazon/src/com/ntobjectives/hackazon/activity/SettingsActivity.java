@@ -14,6 +14,10 @@ public class SettingsActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+
         if (savedInstanceState == null) {
             SettingsFragment fragment = new SettingsFragment();
             getFragmentManager()

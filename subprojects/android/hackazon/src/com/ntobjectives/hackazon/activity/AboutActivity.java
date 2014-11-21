@@ -16,6 +16,11 @@ public class AboutActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+
         setContentView(R.layout.activity_about);
 
         Button button = (Button) findViewById(R.id.exitButton);
