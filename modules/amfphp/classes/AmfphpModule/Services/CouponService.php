@@ -62,11 +62,19 @@ class CouponService
         $this->pixie->cart->unsetCoupon();
     }
 
+    /**
+     * @return Pixie
+     * @amfphpHide
+     */
     function getPixie()
     {
         return $this->pixie;
     }
 
+    /**
+     * @param Pixie $pixie
+     * @amfphpHide
+     */
     function setPixie(Pixie $pixie = null)
     {
         $this->pixie = $pixie;

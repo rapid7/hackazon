@@ -67,15 +67,12 @@ class Request extends \PHPixie\Request
     public function rawRequestData()
     {
         if ($this->rawInputData === null) {
-            $rawInput = fopen('php://input', 'r');
-            $data = '';
+            if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
+                $this->rawInputData = $GLOBALS['HTTP_RAW_POST_DATA'];
 
-            while ($block = fread($rawInput, 1024)) {
-                $data .= $block;
+            } else {
+                $this->rawInputData = file_get_contents('php://input');
             }
-
-            fclose($rawInput);
-            $this->rawInputData = $data;
         }
 
         return $this->rawInputData;

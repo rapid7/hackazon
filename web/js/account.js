@@ -27,7 +27,7 @@ function js2xmlWalker(xw, obj, name) {
 
         } else {
             $.each(obj, function (key, value) {
-                js2xmlWalker(xw, value, key);
+                js2xmlWalker(xw, value === null || typeof value == 'undefined' ? '' : value, key);
             });
         }
 
