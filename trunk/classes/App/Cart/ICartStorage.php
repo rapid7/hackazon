@@ -11,6 +11,7 @@ namespace App\Cart;
 
 
 use App\Model\Cart;
+use App\Model\CustomerAddress;
 use App\Model\Product;
 
 /**
@@ -28,13 +29,22 @@ interface ICartStorage extends \Countable
 
     public function setProductCount($product, $quantity = 1);
 
+    /**
+     * @return array|CustomerAddress[]
+     */
     public function getAddresses();
 
+    /**
+     * @param $uid
+     * @return null|CustomerAddress
+     */
     public function getAddress($uid);
 
     public function addAddress($address);
 
     public function removeAddress($address);
+
+    public function getRemovedAddresses();
 
     public function getShippingAddressUid();
 
@@ -43,6 +53,14 @@ interface ICartStorage extends \Countable
     public function getBillingAddressUid();
 
     public function setBillingAddressUid($address);
+
+    public function getShippingAddress();
+
+    public function setShippingAddress($address);
+
+    public function getBillingAddress();
+
+    public function setBillingAddress($address);
 
     /**
      * @param Product|int $product
@@ -85,4 +103,11 @@ interface ICartStorage extends \Countable
     public function getLastStep();
 
     public function setLastStep($step);
+
+    /**
+     * Searches the address with similar fields (excluding id)
+     * @param CustomerAddress $address
+     * @return null|string
+     */
+    public function findSimilar($address);
 }

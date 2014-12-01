@@ -355,7 +355,7 @@ class CartService implements ICartStorage
      */
     public function getShippingAddress()
     {
-        return $this->getAddress($this->getShippingAddressUid());
+        return $this->storage->getShippingAddress();
     }
 
     /**
@@ -363,7 +363,7 @@ class CartService implements ICartStorage
      */
     public function getBillingAddress()
     {
-        return $this->getAddress($this->getBillingAddressUid());
+        return $this->storage->getBillingAddress();
     }
 
     public function setShippingAddressUid($address)
@@ -483,6 +483,35 @@ class CartService implements ICartStorage
         }
         $this->updateLastStep(Cart::STEP_ORDER);
         $this->unsetCoupon();
+
+        // Remove Addresses
+        foreach ($this->getRemovedAddresses() as $addrForRemove) {
+            $addrForRemove->delete();
+        }
+
         //$this->reset();
+    }
+
+    public function setShippingAddress($address)
+    {
+        $this->storage->setShippingAddress($address);
+    }
+
+    public function setBillingAddress($address)
+    {
+        $this->storage->setBillingAddress($address);
+    }
+
+    public function findSimilar($address)
+    {
+        return $this->storage->findSimilar($address);
+    }
+
+    /**
+     * @return array|CustomerAddress[]
+     */
+    public function getRemovedAddresses()
+    {
+        return $this->storage->getRemovedAddresses();
     }
 }

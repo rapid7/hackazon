@@ -35,7 +35,10 @@ class SessionCartStorage implements ICartStorage
                 'addresses' => [],
                 'shipping_address' => null,
                 'billing_address' => null,
+                'shipping_address_object' => null,
+                'billing_address_object' => null,
                 'params' => [],
+                'removed_addresses' => [],
                 'last_step' => Cart::STEP_OVERVIEW
             ];
 
@@ -178,10 +181,13 @@ class SessionCartStorage implements ICartStorage
     {
         $_SESSION['cart_service']['items'] = [];
         $_SESSION['cart_service']['addresses'] = [];
+        $_SESSION['cart_service']['removed_addresses'] = [];
         $_SESSION['cart_service']['params'] = [];
         $_SESSION['cart_service']['last_step'] = Cart::STEP_OVERVIEW;
         $_SESSION['cart_service']['shipping_address'] = null;
         $_SESSION['cart_service']['billing_address'] = null;
+        $_SESSION['cart_service']['shipping_address_object'] = null;
+        $_SESSION['cart_service']['billing_address_object'] = null;
 
         $cart = new Cart($this->pixie);
         $cart->billing_address_id = 0;
@@ -235,18 +241,18 @@ class SessionCartStorage implements ICartStorage
         return $_SESSION['cart_service']['cart'];
     }
 
-    public function getItemsTotal()
-    {
-        $cart = $this->getCart();
-        $coupon = $cart->getCoupon();
-        $items = $this->getAllItems();
-        $total = 0;
-        foreach ($items as $item) {
-            $total += $item->price * $item->qty;
-        }
-        $total *= $coupon ? (1.0 - $coupon->discount / 100) : 1;
-        return $total;
-    }
+//    public function getItemsTotal()
+//    {
+//        $cart = $this->getCart();
+//        $coupon = $cart->getCoupon();
+//        $items = $this->getAllItems();
+//        $total = 0;
+//        foreach ($items as $item) {
+//            $total += $item->price * $item->qty;
+//        }
+//        $total *= $coupon ? (1.0 - $coupon->discount / 100) : 1;
+//        return $total;
+//    }
 
     public function clear()
     {
@@ -278,7 +284,7 @@ class SessionCartStorage implements ICartStorage
     }
 
     /**
-     * @return CustomerAddress
+     * @return array|CustomerAddress[]
      */
     public function getAddresses()
     {
@@ -322,9 +328,12 @@ class SessionCartStorage implements ICartStorage
             return;
         }
 
+        $this->getRemovedAddresses();
+
         /** @var CustomerAddress $address */
         foreach ($this->getAddresses() as $key => $address) {
             if ($address->getUid() == $uid) {
+                $_SESSION['cart_service']['removed_addresses'][] = $_SESSION['cart_service']['addresses'][$key];
                 unset($_SESSION['cart_service']['addresses'][$key]);
                 break;
             }
@@ -346,9 +355,29 @@ class SessionCartStorage implements ICartStorage
         return $_SESSION['cart_service']['billing_address'];
     }
 
-    public function setBillingAddressUid($uid)
+    public function setBillingAddressUid($address)
     {
-        $_SESSION['cart_service']['billing_address'] = $uid;
+        $_SESSION['cart_service']['billing_address'] = $address;
+    }
+
+    public function getShippingAddress()
+    {
+        return $_SESSION['cart_service']['shipping_address_object'];
+    }
+
+    public function setShippingAddress($address)
+    {
+        $_SESSION['cart_service']['shipping_address_object'] = $address;
+    }
+
+    public function getBillingAddress()
+    {
+        return $_SESSION['cart_service']['billing_address_object'];
+    }
+
+    public function setBillingAddress($address)
+    {
+        $_SESSION['cart_service']['billing_address_object'] = $address;
     }
 
     public function getLastStep()
@@ -358,5 +387,28 @@ class SessionCartStorage implements ICartStorage
 
     public function setLastStep($step) {
         $_SESSION['cart_service']['last_step'] = $step;
+    }
+
+    public function findSimilar($address)
+    {
+        if (!is_array($_SESSION['cart_service']['addresses'])) {
+            return null;
+        }
+
+        foreach ($this->getAddresses() as $addr) {
+            if ($address->isSimilarTo($addr)) {
+                return $addr->getUid();
+            }
+        }
+
+        return null;
+    }
+
+    public function getRemovedAddresses()
+    {
+        if (!is_array($_SESSION['cart_service']['removed_addresses'])) {
+            $_SESSION['cart_service']['removed_addresses'] = [];
+        }
+        return $_SESSION['cart_service']['removed_addresses'];
     }
 }

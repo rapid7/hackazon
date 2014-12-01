@@ -100,4 +100,21 @@ class CustomerAddress extends BaseModel {
         $res['uid'] = $this->getUid();
         return $res;
     }
+
+    /**
+     * @param CustomerAddress $address
+     * @return bool
+     */
+    public function isSimilarTo($address)
+    {
+        return $this->full_name == $address->full_name
+            && $this->address_line_1 == $address->address_line_1
+            && $this->address_line_2 == $address->address_line_2
+            && $this->city == $address->city
+            && $this->region == $address->region
+            && $this->zip == $address->zip
+            && $this->country_id == $address->country_id
+            && $this->phone == $address->phone
+            && $this->customer_id == $address->customer_id;
+    }
 }
