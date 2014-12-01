@@ -190,6 +190,7 @@
                 </fieldset>
                 <?php $_token('checkout_step3', false); ?>
                 <input type="hidden" id="address_id" name="address_id" value="<?php $_($billingAddress['uid'], 'address_id'); ?>"/>
+                <input type="hidden" id="full_form" name="full_form" value="1"/>
             </form>
         </div>
 		<div class="col-xs-4">
@@ -206,14 +207,16 @@
 						<button data-id="<?php echo $address->getUid(); ?>" class="btn btn-primary btn-block confirm-address ladda-button" data-token="<?php echo $this->getToken('checkout_step3'); ?>" data-style="expand-right" data-spinner-size="20"><span class="ladda-label">Bill to this address</span></button>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-xs-6">
-						<button data-id="<?php echo $address->getUid(); ?>" class="btn btn-success btn-block edit-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Edit</span></button>
-						</div>
-						<div class="col-xs-6">
-						<button data-id="<?php echo $address->getUid(); ?>" class="btn btn-danger btn-block delete-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Delete</span></button>
-					</div>
-				</div>
+                <?php if ($address->id()): ?>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <button data-id="<?php echo $address->getUid(); ?>" class="btn btn-success btn-block edit-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Edit</span></button>
+                            </div>
+                            <div class="col-xs-6">
+                            <button data-id="<?php echo $address->getUid(); ?>" class="btn btn-danger btn-block delete-address ladda-button small-button" data-size="xs" data-spinner-size="16" data-spinner-color="#666666" data-style="expand-right"><span class="ladda-label">Delete</span></button>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
             <?php endforeach;?>
 		</div>

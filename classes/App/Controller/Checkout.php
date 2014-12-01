@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Cart\CartService;
+use App\Exception\NotFoundException;
 use App\Exception\RedirectException;
 use App\Model\Cart as CartModel;
 use App\Model\Cart;
@@ -53,18 +55,52 @@ class Checkout extends Page {
 
             $post = $this->request->post();
             $addressId = isset($post['address_id']) ? $post['address_id'] : 0;
-            if (!$addressId) {
+
+
+            if ($post['full_form']) {
                 /** @var CustomerAddress $address */
                 $address = $this->pixie->orm->get('CustomerAddress');
                 $address->createFromArray($post);
-                $addressId = $service->addAddress($address);
+
+                if ($addressId) {
+                    $existingAddress = $this->getAddressForUid($addressId);
+
+                    if ($existingAddress->isSimilarTo($address)) {
+                        $service->setShippingAddressUid($addressId);
+                        $service->setShippingAddress($existingAddress);
+
+                    } else {
+                        $service->setShippingAddressUid(null);
+                        $service->setShippingAddress($address);
+                    }
+
+                } else {
+                    $service->setShippingAddressUid(null);
+                    $service->setShippingAddress($address);
+                }
+
+            } else {
+                if ($addressId) {
+                    $existingAddress = $this->getAddressForUid($addressId);
+
+                    if ($existingAddress) {
+                        $service->setShippingAddressUid($addressId);
+                        $service->setShippingAddress($existingAddress);
+
+                    } else {
+                        throw new NotFoundException();
+                    }
+
+                } else {
+                    throw new NotFoundException();
+                }
             }
 
-            $service->setShippingAddressUid($addressId);
             $service->updateLastStep(Cart::STEP_BILLING);
             $this->execute = false;
 
         } else {
+            $this->prepareShippingAndBillingAddresses($service, $customerAddresses);
 
             $this->view->subview = 'cart/shipping';
             $this->view->tab = 'shipping';//active tab
@@ -83,23 +119,58 @@ class Checkout extends Page {
         $this->restrictActions(CartModel::STEP_BILLING);
         $service = $this->pixie->cart;
         $customerAddresses = $service->getAddresses();
-
+                //var_dump($customerAddresses);exit;
         if ($this->request->is_ajax()) {
             $this->checkCsrfToken('checkout_step3', null, false);
 
             $post = $this->request->post();
             $addressId = isset($post['address_id']) ? $post['address_id'] : 0;
-            if (!$addressId) {
+
+            if ($post['full_form']) {
                 /** @var CustomerAddress $address */
                 $address = $this->pixie->orm->get('CustomerAddress');
                 $address->createFromArray($post);
-                $addressId = $service->addAddress($address);
+
+                if ($addressId) {
+                    $existingAddress = $this->getAddressForUid($addressId);
+
+                    if ($existingAddress->isSimilarTo($address)) {
+                        $service->setBillingAddressUid($addressId);
+                        $service->setBillingAddress($existingAddress);
+
+                    } else {
+                        $service->setBillingAddressUid(null);
+                        $service->setBillingAddress($address);
+                    }
+
+                } else {
+                    $service->setBillingAddressUid(null);
+                    $service->setBillingAddress($address);
+                }
+
+            } else {
+                if ($addressId) {
+                    $existingAddress = $this->getAddressForUid($addressId);
+
+                    if ($existingAddress) {
+                        $service->setBillingAddressUid($addressId);
+                        $service->setBillingAddress($existingAddress);
+
+                    } else {
+                        throw new NotFoundException();
+                    }
+
+                } else {
+                    throw new NotFoundException();
+                }
             }
-            $service->setBillingAddressUid($addressId);
+
             $service->updateLastStep(Cart::STEP_CONFIRM);
             $this->execute = false;
 
         } else {
+            $this->prepareShippingAndBillingAddresses($service, $customerAddresses);
+
             $this->view->subview = 'cart/billing';
             $this->view->tab = 'billing';
 
@@ -108,6 +179,38 @@ class Checkout extends Page {
             $this->view->billingAddress = !$currentAddress ? [] : $currentAddress->as_array();
             $this->view->customerAddresses = $customerAddresses;
         }
+    }
+
+    protected function prepareShippingAndBillingAddresses(CartService $service, &$customerAddresses)
+    {
+        if ($service->getShippingAddress() && !$service->getShippingAddress()->id()) {
+            $service->getShippingAddress()->setUid('_shipping_');
+            array_unshift($customerAddresses, $service->getShippingAddress());
+        }
+
+        if ($service->getBillingAddress() && !$service->getBillingAddress()->id()
+            && !$service->getBillingAddress()->isSimilarTo($service->getShippingAddress())
+        ) {
+            $service->getBillingAddress()->setUid('_billing_');
+            array_unshift($customerAddresses, $service->getBillingAddress());
+        }
+    }
+
+    protected function getAddressForUid($addressId)
+    {
+        $service = $this->pixie->cart;
+
+        if ($addressId == '_shipping_') {
+            $existingAddress = $service->getShippingAddress();
+
+        } else if ($addressId == '_billing_') {
+            $existingAddress = $service->getBillingAddress();
+
+        } else {
+            $existingAddress = $service->getAddress($addressId);
+        }
+
+        return $existingAddress;
     }
 
     /**
