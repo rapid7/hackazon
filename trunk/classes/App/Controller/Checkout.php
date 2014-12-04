@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Cart\CartService;
+use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
 use App\Exception\RedirectException;
 use App\Model\Cart as CartModel;
@@ -22,6 +23,7 @@ class Checkout extends Page {
     /**
      * validate restrict for actions by last step checkout
      * @param int $actionStep
+     * @throws ForbiddenException
      */
     protected function restrictActions($actionStep)
     {
@@ -33,7 +35,7 @@ class Checkout extends Page {
 
         if ($actionStep > $lastStep) {
             if ($this->request->is_ajax()) {
-                $this->jsonResponse(['success' => 1]);
+                throw new ForbiddenException();
             } else {
                 $this->redirect('/cart/view');
             }
@@ -274,11 +276,17 @@ class Checkout extends Page {
             return;
         }
         $this->checkCsrfToken('checkout_step4', null, false);
-        $this->restrictActions(CartModel::STEP_ORDER);
+        $this->restrictActions(CartModel::STEP_CONFIRM);
 
         $service = $this->pixie->cart;
         $this->checkCart();
         $service->placeOrder();
+
+        if ($this->request->is_ajax()) {
+            $this->jsonResponse(['success' => 1]);
+        } else {
+            $this->redirect('/checkout/order');
+        }
         $this->execute = false;
     }
 

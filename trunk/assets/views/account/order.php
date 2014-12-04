@@ -43,8 +43,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($items) : ?>
-                        <?php foreach ($items as $item) : ?>
+                    <?php if ($orderItems) : ?>
+                        <?php foreach ($orderItems as $item) : ?>
                             <?php $item->product->find(); ?>
                             <tr>
                                 <td class="product-image">
