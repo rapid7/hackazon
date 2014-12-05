@@ -44,7 +44,6 @@ abstract public class RequestListener<RESULT> implements com.octo.android.robosp
                     context.startActivity(intent);
                 }
 
-                byte[] buffer = new byte[32000];
                 try {
                     Log.d(TAG, "ERROR BODY:\n\n " + IOUtils.toString(ex.getResponse().getBody().in(), "UTF-8"));
 
@@ -58,7 +57,12 @@ abstract public class RequestListener<RESULT> implements com.octo.android.robosp
 
     @Override
     public void onRequestSuccess(RESULT result) {
-        onSuccess(result);
+        if (result == null) {
+            Log.d(TAG, "Invalid response parsing. For some reason the returned result is null.");
+            onFailure(new EmptyResultException("Invalid response parsing"));
+        } else {
+            onSuccess(result);
+        }
     }
 
     abstract public void onFailure(SpiceException e);
