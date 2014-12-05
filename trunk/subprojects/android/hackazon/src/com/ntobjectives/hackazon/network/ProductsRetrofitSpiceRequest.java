@@ -52,7 +52,7 @@ public class ProductsRetrofitSpiceRequest extends RetrofitSpiceRequest<Product.P
     }
 
     public String createCacheKey() {
-        return "hackazon.products.category." + categoryId + "page." + page;
+        return "hackazon.products.category." + categoryId + ".page." + page;
     }
 
     public boolean isNeedAuth() {

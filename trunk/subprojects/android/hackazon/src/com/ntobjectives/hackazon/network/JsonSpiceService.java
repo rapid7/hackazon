@@ -31,6 +31,8 @@ public class JsonSpiceService extends RetrofitGsonSpiceService {
     protected RestAdapter.Builder createRestAdapterBuilder() {
         RestAdapter.Builder builder =  super.createRestAdapterBuilder();
         builder.setRequestInterceptor(new RequestInterceptor(this.getApplicationContext()));
+        // Uncomment to enable Http request and response logging
+        builder.setLogLevel(RestAdapter.LogLevel.FULL);
 
         // Enforce Gson to encode nulls
         GsonBuilder gsonBuilder = new GsonBuilder();
