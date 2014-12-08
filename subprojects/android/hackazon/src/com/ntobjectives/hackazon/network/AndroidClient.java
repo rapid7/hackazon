@@ -2,8 +2,11 @@ package com.ntobjectives.hackazon.network;
 
 import android.net.http.AndroidHttpClient;
 import android.util.Log;
-import org.apache.http.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.*;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import retrofit.client.Client;
@@ -13,6 +16,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedInput;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +121,21 @@ public class AndroidClient implements Client {
 
         for (Header h : source.getHeaders()) {
             result.addHeader(new BasicHeader(h.getName(), h.getValue()));
+        }
+
+        if (result instanceof HttpPost && source.getBody() != null) {
+            HttpEntity entity;
+
+            try {
+                ByteArrayOutputStream bodyOut = new ByteArrayOutputStream();
+                source.getBody().writeTo(bodyOut);
+                entity = new ByteArrayEntity(bodyOut.toByteArray());
+
+            } catch (IOException e) {
+                entity = new ByteArrayEntity(new byte[0]);
+            }
+
+            //((HttpPost) result).setEntity(entity);
         }
 
         return result;
