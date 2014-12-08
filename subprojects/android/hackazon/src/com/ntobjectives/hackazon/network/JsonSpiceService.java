@@ -34,6 +34,19 @@ public class JsonSpiceService extends RetrofitGsonSpiceService {
         // Uncomment to enable Http request and response logging
         builder.setLogLevel(RestAdapter.LogLevel.FULL);
 
+//        OkHttpClient client = new OkHttpClient();
+//        client.setConnectTimeout(3, TimeUnit.MINUTES);
+//        client.setReadTimeout(10, TimeUnit.MINUTES);
+//        OkClient clientProvider = new OkClient(client);
+//        builder.setClient(clientProvider);
+
+//        UrlConnectionClient client = new UrlConnectionClient();
+//        builder.setClient(client);
+
+//        AndroidClient client = new AndroidClient();
+//        builder.setClient(client);
+
+
         // Enforce Gson to encode nulls
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeNulls();
