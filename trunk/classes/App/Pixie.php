@@ -122,6 +122,7 @@ class Pixie extends \PHPixie\Pixie {
         try {
             $request =  $this->http_request();
             $response = $request->execute();
+            $response->add_header("Content-Length: " . strlen($response->body));
             $response->send_headers()->send_body();
 
         } catch (PageNotFound $e) {

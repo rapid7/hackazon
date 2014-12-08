@@ -2,29 +2,32 @@ Nested Set
 ==========
 
 Using PHPPixies Nested Set requires being careful.
- 
+
 1. You can only add new (not "loaded()") categories into set.
     For this reason I've added `setIsLoaded` method to the `BaseModel` class to be able to temporarily mark model as new.
-    `Category` in turn is also derived from `BaseModel`
+    `Category` in turn is also derived from `BaseModel` .
     
-```php
-// $category - existing category in DB
-$category->setIsLoaded(false);
-$category->nested->prepare_append($parent);
-$category->setIsLoaded(true);
-$category->save();
-```
+    ```php
 
-2. If you operate on many categories, always refresh them before processing, because `lpos`, `rpos` and `depth` fields can be obsolete. 
-    PHPixie doesn't provides this capability, so the `refresh()` method was added. 
-    
-```php
-// ... Do something with other categories ....
+        // $category - existing category in DB
+        $category->setIsLoaded(false);
+        $category->nested->prepare_append($parent);
+        $category->setIsLoaded(true);
+        $category->save();
+    ```
 
-$rootCategory->refresh(); // !!! Important !!!
-$rootCategory->parent = 0;
-$rootCategory->save();
-```
+2. If you operate on many categories, always refresh them before processing, because `lpos`, `rpos` and `depth` fields can be obsolete.
+    PHPixie doesn't provides this capability, so the `refresh()` method was added.
+
+    ```php
+
+        // ... Do something with other categories ....
+
+        $rootCategory->refresh(); // !!! Important !!!
+        $rootCategory->parent = 0;
+        $rootCategory->save();
+
+    ```
 
 AMF
 ===
@@ -36,18 +39,20 @@ But to develop or maintain AMF functionality you have to complete several steps.
 
 2. Create VirtualHost (e.g. backoffice.dev) pointing to the amfphp-2.0/BackOffice as a web root.
 
-3. Modify class Amfphp_BackOffice_Config. Set `$amfphpEntryPointPath` to your local VHost for hackazon (with path) and credentials: 
-```php
-//...
-public $amfphpEntryPointPath = 'http://hackazon.dev/amf';
-//...
+3. Modify class Amfphp_BackOffice_Config. Set `$amfphpEntryPointPath` to your local VHost for hackazon (with path) and credentials:
 
-public function __construct() {
-    // ...
-    $this->backOfficeCredentials['admin'] = 'admin';
-    // ...
-}
-```
+    ```php
+
+        //...
+        public $amfphpEntryPointPath = 'http://hackazon.dev/amf';
+        //...
+
+        public function __construct() {
+            // ...
+            $this->backOfficeCredentials['admin'] = 'admin';
+            // ...
+        }
+    ```
 
 4. Run backoffice.dev (or whatever you named it) in browser.
 
@@ -63,13 +68,16 @@ public function __construct() {
 
 Services are plain PHP classes located at `/modules/amfphp/classes/AmfphpModule/Services`. 
 To use Pixie inside service just include `Pixifiable` trait into it.
+
 ```php
-class CouponService
-{
-    use Pixifiable;
-   // ....
-}
+
+    class CouponService
+    {
+        use Pixifiable;
+       // ....
+    }
 ```
+
 Special plugin will automatically bind Pixie to your service.
  
 Also, it's recommended to add PHPDoc annotations to your services and their methods, as AMFPHP reads them.
@@ -91,7 +99,7 @@ Access to backend is left as in previous section: admin:admin.
 2. Uninstall flash player and install its debuggable version, browser plugin and separate player:
 `https://www.adobe.com/support/flashplayer/downloads.html#fp15`
 
-3. Create flash/flex project in your IDE of choice, based on downloaded  
+3. Create flash/flex project in your IDE of choice, based on downloaded
 For example, IDEA Ultimate allows to create module inside the top-level Hackazon module.
   
 4. Add dependencies:
