@@ -32,13 +32,13 @@ class Category extends Page
 
         $category = $this->model->loadCategory($categoryID);
 
-        if ($category instanceof \App\Model\Category) {
+        if ($category instanceof \App\Model\Category && $category->parent) {
             $this->view->pageTitle = $category->name;
             $filterFabric = new FilterFabric($this->pixie, $this->request, $category->products);
             $this->view->filterFabric = $filterFabric;
             $children = $category->nested->children()->find_all()->as_array();
             $this->view->subCategories = $children;
-            $page = $this->request->get('page', 1);
+            $page = $this->request->getWrap('page', 1);
             $pager = $filterFabric->getResultsPager($page, 12);
             $this->view->products = $pager->current_items()->as_array();
             $this->view->pager = $pager;

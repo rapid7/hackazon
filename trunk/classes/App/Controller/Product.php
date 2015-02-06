@@ -29,7 +29,7 @@ class Product extends Page
         $product = $this->model->where('productID', '=', $productID)->find();
 
         if (!$product || !$product->loaded()) {
-            throw new NotFoundException("Invalid product id: " . $productID->escapeXSS());
+            throw new NotFoundException("Invalid product id"); //: " . $productID->escapeXSS());
         }
 
         $this->view->product = $product;

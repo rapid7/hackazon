@@ -102,9 +102,7 @@ class Account extends Page
             }
 
             $composedPage = $page->copy(ucwords(preg_replace('/\.html$/i', '', $page->raw())));
-            /** @var XSS $vuln */
-            $vuln = $composedPage->getVulnerability('XSS');
-            $this->view->pageTitle = $vuln->escape($composedPage);
+            $this->view->pageTitle = $composedPage->escapeXSS();
             $this->view->pageContent = implode("\n", $content);
             $this->view->subview = 'account/document';
 

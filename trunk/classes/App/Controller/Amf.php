@@ -20,7 +20,7 @@ class Amf extends Page
         $this->vulninjection->loadAndAddChildContext('amf');
         $this->vulninjection->goDown('amf');
 
-        header("Access-Control-Allow-Origin: *");
+        //header("Access-Control-Allow-Origin: *");
         $this->pixie->amf->run();
         exit;
     }

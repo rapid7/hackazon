@@ -55,6 +55,12 @@ class BaseController extends Controller
 
     protected $vulnConfigDir;
 
+    /**
+     * Whether to check the session id to prevent session id overflow.
+     * @var bool
+     */
+    protected $checkSessionId = true;
+
     public function __construct($pixie)
     {
         parent::__construct($pixie);
@@ -81,7 +87,7 @@ class BaseController extends Controller
         // Switch vulnerability config to the controller level
         $this->vulninjection->goDown($controllerName);
 
-        if (!($this instanceof Error || $this instanceof \App\Admin\Controller\Error || $this instanceof ErrorController)) {
+        if ($this->mustCheckSessionId()) {
             $actionContext = $this->vulninjection->getCurrentContext()->getOrCreateChildByName($this->request->param('action'));
             /** @var PHPSessionIdOverflow $sessVuln */
             $sessVuln = $actionContext->getVulnerability('PHPSessionIdOverflow');
@@ -329,5 +335,13 @@ class BaseController extends Controller
         if ($this->execute) {
             $service->goUp();
         }
+    }
+
+    /**
+     * @return boolean
+     */
+    public function mustCheckSessionId()
+    {
+        return $this->checkSessionId;
     }
 } 
