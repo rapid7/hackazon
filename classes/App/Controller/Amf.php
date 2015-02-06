@@ -14,6 +14,8 @@ use App\Page;
 
 class Amf extends Page
 {
+
+
     public function action_index()
     {
         $this->vulninjection->goUp()->goUp();
