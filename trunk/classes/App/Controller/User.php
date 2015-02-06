@@ -5,26 +5,32 @@ namespace App\Controller;
 use App\Exception\NotFoundException;
 use App\Page;
 use PHPixie\View;
+use VulnModule\VulnerableField;
+use VulnModule\Config\Annotations as Vuln;
 
 /**
  * Class User
  * @package App\Controller
  * @property \App\Model\User model
  */
-class User extends Page {
-
+class User extends Page
+{
+    /**
+     * @Vuln\Description("View: user/login.")
+     */
     public function action_login() {
         $this->view->pageTitle = "Login";
         if (!is_null($this->pixie->auth->user())) {
             $this->redirect('/account');
         }
 
-        $this->view->returnUrl = $this->request->get('return_url', '');
+        $returnUrl = $this->request->getWrap('return_url', '');
+        $this->view->returnUrl = $returnUrl;
 
         if ($this->request->method == 'POST') {
 
-            $login = $this->model->checkLoginUser($this->request->post('username'));
-            $password = $this->request->post('password');
+            $login = $this->model->checkLoginUser($this->request->postWrap('username'));
+            $password = $this->request->postWrap('password');
 
             $user = $this->model->loadUserModel($login);
 
@@ -42,8 +48,8 @@ class User extends Page {
 
                     //On successful login redirect the user to
                     //our protected page, or return_url, if specified
-                    if ($this->view->returnUrl) {
-                        $this->redirect($this->view->returnUrl);
+                    if ($returnUrl->raw()) {
+                        $this->redirect($returnUrl->escapeXSS());
                         return;
                     }
 
@@ -51,11 +57,11 @@ class User extends Page {
                     return;
                 }
             }
-            $this->view->username = $this->request->post('username');
+            $this->view->username = $this->request->postWrap('username');
             $this->view->errorMessage = "Username or password are incorrect.";
         }
-        //Include 'login.php' subview
 
+        //Include 'login.php' subview
         $this->view->subview = 'user/login';
     }
     
@@ -66,12 +72,15 @@ class User extends Page {
         $this->redirect('/');
     }
 
+    /**
+     * @Vuln\Description("View: user/password.")
+     */
     public function action_password() {
         $this->view->pageTitle = "Restore password";
         if ($this->request->method == 'POST') {
-            $email = $this->request->post('email');
+            $email = $this->request->postWrap('email');
 
-            if(!empty($email)){
+            if($email->raw()){
                 $emailData = $this->model->getEmailData($email);
                 if(!empty($emailData)){
                     $this->pixie->email->send($emailData['to'], $emailData['from'],$emailData['subject'],$emailData['text']);
@@ -85,7 +94,9 @@ class User extends Page {
         $this->view->subview = 'user/password';
     }
 
-
+    /**
+     * @Vuln\Description("View: user/register.")
+     */
     public function action_register() {
         $this->view->pageTitle = "Registration";
         if (!is_null($this->pixie->auth->user())) {
@@ -104,17 +115,17 @@ class User extends Page {
             }
 
             if ($valid) {
-                if (!$dataUser['username']) {
+                if (!$dataUser['username']->raw()) {
                     $valid = false;
                     $errors[] = 'Please enter your username.';
                 }
 
-                if (!$dataUser['email']) {
+                if (!$dataUser['email']->raw()) {
                     $valid = false;
                     $errors[] = 'Please enter your email.';
                 }
 
-                if (!$dataUser['password'] || $dataUser['password'] != $dataUser['password_confirmation']) {
+                if (!$dataUser['password']->raw() || $dataUser['password']->raw() != $dataUser['password_confirmation']->raw()) {
                     $valid = false;
                     $errors[] = 'Passwords are missing or not equal.';
                 }
@@ -123,7 +134,7 @@ class User extends Page {
                     $this->model->RegisterUser($dataUser);
                     $this->pixie->auth
                         ->provider('password')
-                        ->login($dataUser['username'], $dataUser['password']);
+                        ->login($dataUser['username'], $dataUser['password']->raw());
 
                     $emailView = $this->pixie->view('user/register_email');
                     $emailView->data = $dataUser;
@@ -150,14 +161,18 @@ class User extends Page {
         $this->view->subview = 'user/register';
     }
 
+    /**
+     * @throws NotFoundException
+     * @Vuln\Description("View: user/recover.")
+     */
     public function action_recover(){
         if ($this->request->method == 'GET') {
-            $recover_passw = $this->request->get('recover');
-            if (!$recover_passw) {
+            $recover_passw = $this->request->getWrap('recover');
+            if (!$recover_passw->raw()) {
                 throw new NotFoundException;
             }
 
-            $user = $this->model->getUserByRecoveryPass($recover_passw);
+            $user = $this->model->getUserByRecoveryPass($recover_passw->raw());
 
             if($user){
                 $this->view->username = $user->username;
@@ -172,19 +187,24 @@ class User extends Page {
         }
     }
 
+    /**
+     * @throws NotFoundException
+     * @Vuln\Description("View: user/recover.")
+     */
     public function action_newpassw(){
         if ($this->request->method == 'POST'){
-            $username = $this->request->post('username');
-            $recover_passw = $this->request->post('recover');
-            $new_passw = $this->request->post('password');
-            $confirm_passw = $this->request->post('cpassword');
-            if(!empty($username) && !empty($recover_passw) && !empty($new_passw) && !empty($confirm_passw)){
-                if($confirm_passw === $new_passw && $this->model->checkRecoverPass($username, $recover_passw)){
-                    if($this->model->changeUserPassword($username, $new_passw)) {
+            $username = $this->request->postWrap('username');
+            $recover_passw = $this->request->postWrap('recover');
+            $new_passw = $this->request->postWrap('password');
+            $confirm_passw = $this->request->postWrap('cpassword');
+
+            if($username->raw() && $recover_passw->raw() && $new_passw->raw() && $confirm_passw->raw()) {
+                if($confirm_passw->raw() === $new_passw->raw() && $this->model->checkRecoverPass($username, $recover_passw->raw())){
+                    if($this->model->changeUserPassword($username, $new_passw->raw())) {
                         $this->view->successMessage = "The password has been changed successfully";
                         $this->pixie->auth
                             ->provider('password')
-                            ->login($username, $new_passw);
+                            ->login($username, $new_passw->raw());
                     }
                     $this->view->subview = 'user/recover';
                     return;
@@ -195,20 +215,25 @@ class User extends Page {
         }
     }
 
+    /**
+     * @Vuln\Description("View: user/terms.")
+     */
     public function action_terms()
     {
         $this->view->subview = 'user/terms';
-        
     }
 
+    /**
+     * @return array|VulnerableField[]
+     */
     private function getDataUser(){
         return array(
-            'first_name' => $this->request->post('first_name'),
-            'last_name' => $this->request->post('last_name'),
-            'email' => $this->request->post('email'),
-            'username' => $this->request->post('username'),
-            'password' =>  $this->request->post('password'),
-            'password_confirmation' =>  $this->request->post('password_confirmation'),
+            'first_name' => $this->request->postWrap('first_name'),
+            'last_name' => $this->request->postWrap('last_name'),
+            'email' => $this->request->postWrap('email'),
+            'username' => $this->request->postWrap('username'),
+            'password' =>  $this->request->postWrap('password'),
+            'password_confirmation' =>  $this->request->postWrap('password_confirmation'),
         );
     }
 }

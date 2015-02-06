@@ -11,14 +11,18 @@ namespace App\Model;
 
 
 use App\Pixie;
+use PHPixie\DB\PDOV\Connection;
+use PHPixie\DB\PDOV\Query;
 use PHPixie\ORM\Model;
 use App\Pixifier;
+use VulnModule\VulnerableField;
 
 /**
  * Class BaseModel.
  * Extends PHPixie model with helper methods.
  *
  * @property Pixie $pixie
+ * @property Connection $conn
  * @package App\Model
  */
 class BaseModel extends Model
@@ -27,6 +31,13 @@ class BaseModel extends Model
      * @var array Cached field names of the model.
      */
     protected static $fieldNames = [];
+
+    /**
+     * @var array Wrapped vulnerable values
+     */
+    protected $wrappers = [];
+
+    protected $returnWrappers = false;
 
 	/**
 	 * Checks if the collection contains strictly given instance of model.
@@ -185,7 +196,7 @@ class BaseModel extends Model
             ) {
                 $result[$key] = $value;
 
-                if ($meta[$key]['is_key'] && !$value) {
+                if ($meta[$key]['is_key'] && !($value instanceof VulnerableField ? $value->raw() : $value)) {
                     $result[$key] = null;
                 }
             }
@@ -249,4 +260,113 @@ class BaseModel extends Model
         }
        // $this->prepare_relations();
     }
-} 
+
+    /**
+     * @inheritdoc
+     */
+    public function __get($column)
+    {
+        if ($this->returnWrappers && in_array($column, $this->wrappers)) {
+            return $this->wrappers[$column];
+        }
+
+        return parent::__get($column);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function __set($column, $val)
+    {
+        $relations = array_merge($this->has_one, $this->has_many, $this->belongs_to);
+
+        if (array_key_exists($column, $relations)) {
+            $this->add($column, $val);
+
+        } else {
+            if ($val instanceof VulnerableField) {
+                $this->wrappers[$column] = $val;
+                $this->_row[$column] = $val->raw();
+
+            } else {
+                $this->_row[$column] = $val;
+                unset($this->wrappers[$column]);
+            }
+        }
+
+        $this->cached = [];
+    }
+
+    /**
+     * @param $column
+     * @return mixed
+     */
+    public function getWrapperOrValue($column)
+    {
+        return array_key_exists($column, $this->wrappers) ? $this->wrappers[$column] : $this->$column;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function save()
+    {
+        if ($this->loaded()) {
+            $query = $this->conn->query('update')
+                ->table($this->table)
+                ->where($this->id_field, $this->_row[$this->id_field]);
+
+        } else {
+            $query = $this->conn->query('insert')
+                ->table($this->table);
+        }
+
+        $data = [];
+        foreach ($this->_row as $key => $value) {
+            if (isset($this->wrappers[$key])) {
+                $data[$key] = $this->wrappers[$key];
+            } else {
+                $data[$key] = $value;
+            }
+        }
+
+        /** @var Query $query */
+        $query->data($data);
+        $query->execute();
+
+        if ($this->loaded()) {
+            $id = $this->_row[$this->id_field];
+
+        } else {
+            $id = $this->conn->insert_id();
+        }
+
+        $row = (array)$this->conn->query('select')
+            ->table($this->table)
+            ->where($this->id_field, $id)->execute()->current();
+        $this->values($row, true);
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isReturnWrappers()
+    {
+        return $this->returnWrappers;
+    }
+
+    /**
+     * @param boolean $returnWrappers
+     */
+    public function setReturnWrappers($returnWrappers)
+    {
+        $this->returnWrappers = !!$returnWrappers;
+    }
+
+    public function as_array()
+    {
+        return array_merge($this->_row, $this->wrappers);
+    }
+}

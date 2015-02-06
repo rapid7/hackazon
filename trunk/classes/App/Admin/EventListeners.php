@@ -61,7 +61,7 @@ class EventListeners
             $pixie->session->flash('error', 'You don\'t have permissions to access this resource.');
         }
         $response = new Response($pixie);
-        $response->redirect('/admin/user/login');
+        $response->redirect('/admin/user/login?return_url=' . rawurlencode($_SERVER['REQUEST_URI']));
         $event->setResponse($response);
     }
 } 

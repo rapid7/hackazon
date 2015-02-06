@@ -1,26 +1,37 @@
 <?php
 
 namespace App\Controller;
+
+
 use App\Exception\NotFoundException;
 use App\Page;
 use App\SearchFilters\FilterFabric;
+use VulnModule\Config\Annotations as Vuln;
 
 /**
  * Class Category
  * @package App\Controller
  * @property \App\Model\Category $model
+ * @Vuln\Description("Controller for category handling.")
+ * @Vuln\Description("Controller for category handling 21.")
  */
 class Category extends Page
 {
-
+    /**
+     * @throws NotFoundException
+     * @throws \Exception
+     * @Vuln\Description("View: category/category.")
+     */
     public function action_view()
     {
-        $categoryID = $this->request->get('id');//$this->request->param('id');
-        if (!$categoryID) {
+        $categoryID = $this->request->getWrap('id');
+
+        if (!$categoryID->raw()) {
             throw new NotFoundException();
         }
 
         $category = $this->model->loadCategory($categoryID);
+
         if ($category instanceof \App\Model\Category) {
             $this->view->pageTitle = $category->name;
             $filterFabric = new FilterFabric($this->pixie, $this->request, $category->products);
@@ -34,9 +45,16 @@ class Category extends Page
             $this->view->subview = 'category/category';
             $this->view->breadcrumbs = $this->getBreadcrumbs($category);
             $this->view->categoryID = $categoryID;
+
+        } else {
+            throw new NotFoundException("No such category");
         }
     }
 
+    /**
+     * @param \App\Model\Category $category
+     * @return array
+     */
     private function getBreadcrumbs(&$category)
     {
         $breadcrumbs = [];

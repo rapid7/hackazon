@@ -5,6 +5,11 @@
     </div>
 
     <div class="form-group">
+        <label>Port:</label>
+        <input class="form-control" type="text" name="port" value="<?php $_(isset($port) ? $port : ''); ?>" placeholder="Port" required />
+    </div>
+
+    <div class="form-group">
         <label>User:</label>
         <input class="form-control" type="text" name="user" value="<?php $_(isset($user) ? $user : ''); ?>" placeholder="User" required />
     </div>

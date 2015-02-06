@@ -29,6 +29,10 @@ class Pixifier
         if (method_exists($serviceObject, 'setPixie')) {
             $serviceObject->setPixie($this->pixie);
         }
+
+        if (method_exists($serviceObject, 'setContext')) {
+            $serviceObject->setContext($this->pixie->vulnService->getConfig()->getCurrentContext());
+        }
     }
 
     function getPixie()

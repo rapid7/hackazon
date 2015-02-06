@@ -6,9 +6,9 @@ use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
 use App\Exception\RedirectException;
 use App\Model\Cart as CartModel;
-use App\Model\Cart;
 use App\Model\CustomerAddress;
 use App\Page;
+use VulnModule\Config\Annotations as Vuln;
 
 class Checkout extends Page {
 
@@ -46,29 +46,30 @@ class Checkout extends Page {
      * 1. Set cart customer
      * 2. if ajax create/update customer addresses
      * 3. default show shipping step
+     * @Vuln\Description("View: cart/shipping. Or AJAX request.")
      */
     public function action_shipping() {
         $this->restrictActions(CartModel::STEP_SHIPPING);
+
         $service = $this->pixie->cart;
         $customerAddresses = $service->getAddresses();
 
         if ($this->request->is_ajax()) {
             $this->checkCsrfToken('checkout_step2', null, false);
 
-            $post = $this->request->post();
-            $addressId = isset($post['address_id']) ? $post['address_id'] : 0;
+            $post = $this->request->postWrap();
+            $addressId = $post['address_id']->raw() ? $post['address_id'] : $post['address_id']->copy(0);
 
-
-            if ($post['full_form']) {
+            if ($post['full_form'] && $post['full_form']->raw()) {
                 /** @var CustomerAddress $address */
                 $address = $this->pixie->orm->get('CustomerAddress');
                 $address->createFromArray($post);
 
-                if ($addressId) {
-                    $existingAddress = $this->getAddressForUid($addressId);
+                if ($addressId->raw()) {
+                    $existingAddress = $this->getAddressForUid($addressId->raw());
 
                     if ($existingAddress->isSimilarTo($address)) {
-                        $service->setShippingAddressUid($addressId);
+                        $service->setShippingAddressUid($addressId->raw());
                         $service->setShippingAddress($existingAddress);
 
                     } else {
@@ -82,11 +83,11 @@ class Checkout extends Page {
                 }
 
             } else {
-                if ($addressId) {
-                    $existingAddress = $this->getAddressForUid($addressId);
+                if ($addressId->raw()) {
+                    $existingAddress = $this->getAddressForUid($addressId->raw());
 
                     if ($existingAddress) {
-                        $service->setShippingAddressUid($addressId);
+                        $service->setShippingAddressUid($addressId->raw());
                         $service->setShippingAddress($existingAddress);
 
                     } else {
@@ -98,7 +99,7 @@ class Checkout extends Page {
                 }
             }
 
-            $service->updateLastStep(Cart::STEP_BILLING);
+            $service->updateLastStep(CartModel::STEP_BILLING);
             $this->execute = false;
 
         } else {
@@ -116,6 +117,7 @@ class Checkout extends Page {
     /**
      * if ajax create/update customer addresses
      * default show billing step
+     * @Vuln\Description("View: cart/billing. Or AJAX request.")
      */
     public function action_billing() {
         $this->restrictActions(CartModel::STEP_BILLING);
@@ -125,19 +127,19 @@ class Checkout extends Page {
         if ($this->request->is_ajax()) {
             $this->checkCsrfToken('checkout_step3', null, false);
 
-            $post = $this->request->post();
-            $addressId = isset($post['address_id']) ? $post['address_id'] : 0;
+            $post = $this->request->postWrap();
+            $addressId = $post['address_id']->raw() ? $post['address_id'] : $post['address_id']->copy(0);
 
-            if ($post['full_form']) {
+            if ($post['full_form'] && $post['full_form']->raw()) {
                 /** @var CustomerAddress $address */
                 $address = $this->pixie->orm->get('CustomerAddress');
                 $address->createFromArray($post);
 
                 if ($addressId) {
-                    $existingAddress = $this->getAddressForUid($addressId);
+                    $existingAddress = $this->getAddressForUid($addressId->raw());
 
                     if ($existingAddress->isSimilarTo($address)) {
-                        $service->setBillingAddressUid($addressId);
+                        $service->setBillingAddressUid($addressId->raw());
                         $service->setBillingAddress($existingAddress);
 
                     } else {
@@ -151,11 +153,11 @@ class Checkout extends Page {
                 }
 
             } else {
-                if ($addressId) {
-                    $existingAddress = $this->getAddressForUid($addressId);
+                if ($addressId->raw()) {
+                    $existingAddress = $this->getAddressForUid($addressId->raw());
 
                     if ($existingAddress) {
-                        $service->setBillingAddressUid($addressId);
+                        $service->setBillingAddressUid($addressId->raw());
                         $service->setBillingAddress($existingAddress);
 
                     } else {
@@ -167,7 +169,7 @@ class Checkout extends Page {
                 }
             }
 
-            $service->updateLastStep(Cart::STEP_CONFIRM);
+            $service->updateLastStep(CartModel::STEP_CONFIRM);
             $this->execute = false;
 
         } else {
@@ -216,31 +218,34 @@ class Checkout extends Page {
     }
 
     /**
-     * ajax action return CustomerAddress json by address id
+     * AJAX action return CustomerAddress json by address id
+     * @Vuln\Description("No view. AJAX request for address.")
      */
     public function action_getAddress()
     {
         $service = $this->pixie->cart;
-        $post = $this->request->post();
+        $post = $this->request->postWrap();
         $addressId = $post['address_id'];
-        $address = $service->getAddress($addressId);
+        $address = $service->getAddress($addressId->raw());
         $this->jsonResponse($address->as_array());
     }
 
     /**
-     * delete address by id
+     * Delete address by id
+     * @Vuln\Description("No view. AJAX request to delete address.")
      */
     public function action_deleteAddress()
     {
         $service = $this->pixie->cart;
-        $post = $this->request->post();
+        $post = $this->request->postWrap();
         $addressId = $post['address_id'];
-        $service->removeAddress($addressId);
+        $service->removeAddress($addressId->raw());
         $this->execute = false;
     }
 
     /**
-     * show confirmation step
+     * Show confirmation step
+     * @Vuln\Description("View: cart/confirmation.")
      */
     public function action_confirmation()
     {
@@ -261,7 +266,8 @@ class Checkout extends Page {
     }
 
     /**
-     * ajax action which create order
+     * AJAX action which create order.
+     * @Vuln\Description("No view.")
      */
     public function action_placeOrder()
     {
@@ -291,7 +297,8 @@ class Checkout extends Page {
     }
 
     /**
-     * show order step success
+     * Show order step success.
+     * @Vuln\Description("View: cart/order")
      */
     public function action_order()
     {

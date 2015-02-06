@@ -12,6 +12,7 @@ namespace App\Core;
 
 use App\Helpers\FSHelper;
 use App\Pixie;
+use VulnModule\VulnerableField;
 
 class UploadedFile
 {
@@ -59,6 +60,8 @@ class UploadedFile
 
     protected $errors = [];
 
+    protected $requestField;
+
 
     public function __construct(Pixie $pixie, $name, array $params = [])
     {
@@ -69,7 +72,9 @@ class UploadedFile
             'types' => []
         ], $params);
 
-        $fileData = $_FILES[$name];
+        $fileData = $_FILES[$name instanceof VulnerableField ? $name->getName() : $name];
+
+        $this->requestField = $name;
 
         if ($fileData) {
 
@@ -175,8 +180,7 @@ class UploadedFile
             return false;
         }
 
-        $vuln = $this->pixie->getVulnService()->getField('photo');
-        if (is_array($vuln) && in_array('ArbitraryFileUpload', $vuln)) {
+        if ($this->requestField instanceof VulnerableField && $this->requestField->isVulnerableTo('ArbitraryFileUpload')) {
             return true;
         }
 
@@ -262,7 +266,7 @@ class UploadedFile
 
         $curlFile = $this->getCurlValue($this->tmpName, $this->type, $fileName ?: $this->name);
 
-        //NOTE: The top level key in the array is important, as some apis will insist that it is 'file'.
+        //NOTE: The top level key in the array is important, as some APIs will insist that it is 'file'.
         $data = ['file' => $curlFile];
 
         $ch = curl_init();
@@ -273,7 +277,7 @@ class UploadedFile
             CURLOPT_RETURNTRANSFER => true,
             CURLINFO_HEADER_OUT => true, //Request header
             CURLOPT_HEADER => true, //Return header
-            CURLOPT_SSL_VERIFYPEER => false, //Don't veryify server certificate
+            CURLOPT_SSL_VERIFYPEER => false, //Don't verify server certificate
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $data,
             CURLOPT_COOKIE => "SESSIONID_VULN_SITE=" . session_id(),
@@ -285,9 +289,7 @@ class UploadedFile
         $header = array('Content-Type: multipart/form-data');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         $result = curl_exec($ch);
-        //$header_info = curl_getinfo($ch,CURLINFO_HEADER_OUT);
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        //$header = substr($result, 0, $header_size);
         $body = substr($result, $header_size);
         curl_close($ch);
 
@@ -332,8 +334,8 @@ class UploadedFile
     public function generateFileName($prefix = '')
     {
         $ext = FSHelper::cleanFileName($this->getExtension());
-        $photoName = ($prefix ?  $prefix.'_' : '') . substr(sha1(time() . $this->getName()), 0, 6) . '_'
-            . FSHelper::cleanFileName($this->getBaseName(), 32) . ($ext ? '.' . $ext : '');
+        $photoName = ($prefix ?  $prefix.'_' : '')
+            . FSHelper::cleanFileName($this->getBaseName()) . ($ext ? '.' . $ext : '');
         return $photoName;
     }
 }

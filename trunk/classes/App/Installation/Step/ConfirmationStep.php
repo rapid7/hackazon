@@ -10,6 +10,9 @@
 namespace App\Installation\Step;
 
 
+use App\Model\User;
+use PHPixie\DB;
+
 class ConfirmationStep extends AbstractStep
 {
     protected $template = 'installation/confirmation';
@@ -110,8 +113,10 @@ class ConfirmationStep extends AbstractStep
     {
         $this->pixie->config->load_inherited_group('db');
 
+        /** @var DB\Mysql\Connection $db */
+        $db = $this->pixie->db->get();
         /** @var \PDO $conn */
-        $conn = $this->pixie->db->get()->conn;
+        $conn = $db->conn;
         $conn->setAttribute(\PDO::ATTR_TIMEOUT, 300);
 
         $this->pixie->db->get()->execute("SET foreign_key_checks = 0;");
@@ -187,6 +192,12 @@ class ConfirmationStep extends AbstractStep
             }
         }
         $this->pixie->db->get()->execute("SET foreign_key_checks = 1;");
+
+        //$params = $this->pixie->config->get('parameters');
+        $adminCredentials = $this->previousSteps['admin_credentials']->getViewData();
+        /** @var User $userModel */
+        $userModel = $this->pixie->orm->get('User');
+        $userModel->changeUserPassword('admin', $adminCredentials['password']);
     }
 
     /**
@@ -209,7 +220,17 @@ class ConfirmationStep extends AbstractStep
             $this->canWrite = false;
         }
 
-        $this->createOverriddenConfig('parameters');
+        if (isset($this->previousSteps['admin_credentials'])) {
+            $adminCredSettings = $this->previousSteps['admin_credentials']->getViewData();
+            $this->pixie->config->load_inherited_group('parameters');
+            $paramsConfig = $this->pixie->config->get_group('parameters');
+            $paramsConfig['installer_password'] = $adminCredSettings['password'];
+            $this->writeConfigFile($this->configDir . "/parameters.php", $paramsConfig);
+
+        } else {
+            $this->createOverriddenConfig('parameters');
+        }
+
         $this->createOverriddenConfig('rest');
 
         // Update DB settings
@@ -221,8 +242,9 @@ class ConfirmationStep extends AbstractStep
         $dbConfig['default']['password'] = $dbSettings['password'];
         $dbConfig['default']['db'] = $dbSettings['db'];
         $dbConfig['default']['host'] = $dbSettings['host'];
+        $dbConfig['default']['port'] = $dbSettings['port'];
         $dbConfig['default']['driver'] = 'PDOV';
-        $dbConfig['default']['connection'] = 'mysql:host='.$dbSettings['host'].';dbname='.$dbSettings['db'];
+        $dbConfig['default']['connection'] = 'mysql:host='.$dbSettings['host'].';port='.$dbSettings['port'].';dbname='.$dbSettings['db'];
         $this->writeConfigFile($configDir.'/db.php', $dbConfig);
 
         // Update email settings
@@ -240,6 +262,29 @@ class ConfirmationStep extends AbstractStep
         $dbConfig['default']['encryption'] = $dbSettings['encryption'];
         $dbConfig['default']['timeout'] = $dbSettings['timeout'];
         $this->writeConfigFile($configDir.'/email.php', $dbConfig);
+
+        // Vuln configs
+        $vulnSampleDir = $this->configDir . '/vuln.sample';
+        $vulnTargetDir = $this->configDir . '/vuln';
+
+        foreach (new \DirectoryIterator($vulnSampleDir) as $fileInfo) {
+            if ($fileInfo->isDot() || $fileInfo->getExtension() != 'php') {
+                continue;
+            }
+
+            $configName = $fileInfo->getBasename();
+            $targetFileName = $vulnTargetDir . '/' . $configName;
+            if (file_exists($targetFileName) && is_file($targetFileName)) {
+                continue;
+            }
+
+            try {
+                copy($fileInfo->getPathname(), $targetFileName);
+
+            } catch (\Exception $e) {
+                $this->configsToAdd[$targetFileName] = file_get_contents($fileInfo->getPathname());
+            }
+        }
     }
 
     /**

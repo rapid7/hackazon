@@ -1,29 +1,35 @@
 <?php
 namespace App\Controller;
 
-class Auth extends \App\Page {
+use App\Exception\NotFoundException;
+use App\Page;
 
+class Auth extends Page {
 
+    public function before()
+    {
+        throw new NotFoundException;
+    }
 
     public function action_login() {
         if ($this->request->method == 'POST') {
             $login = $this->request->post('username');
             $password = $this->request->post('password');
 
-            
             //Attempt to login the user using his
             //username and password
             $logged = $this->pixie->auth
                     ->provider('password')
-                    ->login($login, $password);
+                    ->login($login, $password->raw());
 
             //On successful login redirect the user to
             //our protected page
-            if ($logged)
-                return $this->redirect('/account');
+            if ($logged) {
+                $this->redirect('/account');
+            }
         }
         //Include 'login.php' subview
-        $this->view->breadcrumbs = "Вход в личный кабинет";
+        $this->view->breadcrumbs = "Account Entrance";
         $this->view->subview = 'auth/login';
     }
     
@@ -90,7 +96,4 @@ class Auth extends \App\Page {
         //And redirect him back.
         $this->return_to_url($display_mode, $return_url);
     }
-
-
-
 }

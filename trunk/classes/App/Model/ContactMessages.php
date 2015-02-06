@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-class ContactMessages extends \PHPixie\ORM\Model {
+class ContactMessages extends BaseModel {
     public $table = 'tbl_contact_messages';
     public $id_field = 'id';
 
@@ -13,7 +13,7 @@ class ContactMessages extends \PHPixie\ORM\Model {
         $this->phone = $post->contact_phone;
         $this->message = $post->contact_message;
         if (!is_null($this->pixie->auth->user())) {
-            $this->customer_id = $this->pixie->auth->user()->id;
+            $this->customer_id = $this->pixie->auth->user()->id();
         }
         $this->save();
     }

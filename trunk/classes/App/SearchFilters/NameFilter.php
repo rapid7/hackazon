@@ -3,7 +3,6 @@
 namespace App\SearchFilters;
 
 use App\Model\BaseModel;
-use App\Model\Model;
 
 class NameFilter implements BaseFilter {
 

@@ -15,7 +15,12 @@
         $currentCwd = getcwd();
         chdir(__DIR__ . '/../content_pages/help_articles');
         $path = preg_split("/[\\n\\r\\0]/", $page . '.php');
-        include trim($path[0]);
+        try {
+            include trim($path[0]);
+        } catch (\Exception $e) {
+            while(ob_get_clean()) {};
+            throw new \App\Exception\NotFoundException();
+        }
         chdir($currentCwd);
         ?>
     </div>

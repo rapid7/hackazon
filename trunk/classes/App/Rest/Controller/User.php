@@ -12,8 +12,10 @@ namespace App\Rest\Controller;
 
 use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
+use App\Model\File;
 use App\Rest\Controller;
 use PHPixie\ORM\Model;
+use VulnModule\Config\FieldDescriptor;
 
 /**
  * Class User
@@ -25,7 +27,10 @@ class User extends Controller
     public function action_get()
     {
         if ($this->item->id() == $this->user->id()) {
-            return parent::action_get();
+            $result = parent::action_get();
+            $result->photoUrl = $this->item->getPhotoPath();
+            return $result;
+
         } else {
             throw new NotFoundException();
         }
@@ -39,12 +44,14 @@ class User extends Controller
     public function exposedFields()
     {
         $fields = parent::exposedFields();
-        return $this->removeValues($fields, ['password']);
+        $fields[] = 'photoUrl';
+        return $this->removeValues($fields, ['password', 'credit_card', 'credit_card_expires', 'credit_card_cvv', 'rest_token', 'recover_passw']);
     }
 
     protected function checkUpdateData(array $data)
     {
         $data['password'] = '';
+        unset($data['photoUrl']);
         parent::checkUpdateData($data);
     }
 
@@ -54,7 +61,26 @@ class User extends Controller
             $data = $this->request->put();
         }
         unset($data['password']);
-        return parent::action_put($data);
+        unset($data['photoUrl']);
+        unset($data[$this->model->id_field]);
+
+        $this->prepareData($data);
+        $this->checkUpdateData($data);
+
+        if ($this->item->photo && !$data['photo']) {
+            if (is_numeric($this->item->photo)) {
+                /** @var File $photo */
+                $photo = $this->pixie->orm->get('file', $this->item->photo);
+                if ($photo->loaded() && $photo->user_id == $this->user->id()) {
+                    $photo->delete();
+                }
+            }
+        }
+
+        $this->item->values($this->request->wrapArray($data, FieldDescriptor::SOURCE_BODY));
+        $this->item->save();
+
+        return $this->item;
     }
 
     public function action_post($data = null)
@@ -63,6 +89,7 @@ class User extends Controller
             $data = $this->request->post();
         }
         unset($data['password']);
+        unset($data['photoUrl']);
         return parent::action_post($data);
     }
 

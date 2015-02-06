@@ -137,71 +137,72 @@
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="fullName">Full name:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="fullName" name="fullName" required type="text" value="<?php $_($billingAddress['full_name'], 'fullName'); ?>">
+                            <input class="form-control" id="fullName" name="fullName" required type="text" value="<?php $_($billingAddress['full_name']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="addressLine1">Address line 1:</label>
                         <div class="col-xs-8">
                             <input class="form-control" required id="addressLine1" name="addressLine1" type="text" placeholder="Street address, P.O. box, company name, c/o"
-                                   value="<?php $_($billingAddress['address_line_1'], 'addressLine1'); ?>">
+                                   value="<?php $_($billingAddress['address_line_1']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="addressLine2">Address line 2:</label>
                         <div class="col-xs-8">
                             <input class="form-control" id="addressLine2" name="addressLine2" type="text" placeholder="Apartment, suite, unit, building, floor, etc. "
-                                   value="<?php $_($billingAddress['address_line_2'], 'addressLine2'); ?>">
+                                   value="<?php $_($billingAddress['address_line_2']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="city">City:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="city" name="city" type="text" value="<?php $_($billingAddress['city'], 'city'); ?>">
+                            <input class="form-control" required id="city" name="city" type="text" value="<?php $_($billingAddress['city']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="region">State/Province/Region:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="region" name="region" type="text" value="<?php $_($billingAddress['region'], 'region'); ?>">
+                            <input class="form-control" required id="region" name="region" type="text" value="<?php $_($billingAddress['region']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="zip">ZIP:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="zip" name="zip" type="text" value="<?php $_($billingAddress['zip'], 'zip'); ?>">
+                            <input class="form-control" required id="zip" name="zip" type="text" value="<?php $_($billingAddress['zip']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 required control-label" for="country_id">Country:</label>
                         <div class="col-xs-8">
                             <select class="form-control" id="country_id" data-validation="required" name="country_id">
-                                <option value="EN" <?php echo $billingAddress['country_id'] == 'EN' ? 'selected' : ''; ?>>United States</option>
-                                <option value="RU" <?php echo $billingAddress['country_id'] == 'RU' ? 'selected' : ''; ?>>Russia</option>
+                                <option value="EN" <?php echo ''.$billingAddress['country_id'] == 'EN' ? 'selected' : ''; ?>>United States</option>
+                                <option value="RU" <?php echo ''.$billingAddress['country_id'] == 'RU' ? 'selected' : ''; ?>>Russia</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" data-validation="required" for="phone">Phone number:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="phone" name="phone" type="text" value="<?php $_($billingAddress['phone'], 'phone'); ?>">
+                            <input class="form-control" id="phone" name="phone" type="text" value="<?php $_($billingAddress['phone']); ?>">
                         </div>
                     </div>
                 </fieldset>
                 <?php $_token('checkout_step3', false); ?>
-                <input type="hidden" id="address_id" name="address_id" value="<?php $_($billingAddress['uid'], 'address_id'); ?>"/>
+                <input type="hidden" id="address_id" name="address_id" value="<?php $_($billingAddress['uid']); ?>"/>
                 <input type="hidden" id="full_form" name="full_form" value="1"/>
             </form>
         </div>
 		<div class="col-xs-4">
 		<?php foreach ($this->customerAddresses as $address) :?>
 			<div class="blockShadow bg-info">
-				<b><?php echo $_($address->full_name, 'full_name'); ?></b><br />
-				<?php echo $_($address->address_line_1, 'address_line_1'); ?><br />
-				<?php echo $_($address->address_line_2, 'address_line_2'); ?><br />
-				<?php echo $_($address->city, 'city')  . ' ' .  $_($address->region, 'region')  . ' ' .  $_($address->zip, 'zip') ?><br />
-				<?php echo $_($address->country_id, 'country_id'); ?><br />
-				<?php echo $_($address->phone, 'phone'); ?><br />
+				<b><?php echo $_($address->getWrapperOrValue('full_name')); ?></b><br />
+				<?php echo $_($address->getWrapperOrValue('address_line_1')); ?><br />
+				<?php echo $_($address->getWrapperOrValue('address_line_2')); ?><br />
+				<?php echo $_($address->getWrapperOrValue('city'))  . ' ' .  $_($address->getWrapperOrValue('region'))
+                    . ' ' .  $_($address->getWrapperOrValue('zip')) ?><br />
+				<?php echo $_($address->getWrapperOrValue('country_id')); ?><br />
+				<?php echo $_($address->getWrapperOrValue('phone')); ?><br />
 				<div class="row">
 					<div class="col-xs-12" style="margin-bottom: 10px;">
 						<button data-id="<?php echo $address->getUid(); ?>" class="btn btn-primary btn-block confirm-address ladda-button" data-token="<?php echo $this->getToken('checkout_step3'); ?>" data-style="expand-right" data-spinner-size="20"><span class="ladda-label">Bill to this address</span></button>

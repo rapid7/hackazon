@@ -1,8 +1,16 @@
 <?php
 namespace App\Controller;
-use App\Model\Cart as CartModel;
 
-class Cart extends \App\Page {
+use App\Model\Cart as CartModel;
+use App\Page;
+use VulnModule\Config\Annotations as Vuln;
+
+/**
+ * Class Cart
+ * @package App\Controller
+ * @Vuln\Description("Cart operations.")
+ */
+class Cart extends Page {
 
     /**
      * show overview page
@@ -13,6 +21,7 @@ class Cart extends \App\Page {
 
     /**
      * Add product to cart
+     * @Vuln\Description("No views used. It's AJAX method.")
      */
     public function action_add() {
         $ids = [];
@@ -20,15 +29,15 @@ class Cart extends \App\Page {
             $ids = $this->getProductsInCartIds();
         }
 
-        $qty = $this->request->post('qty', 1);
-        $productId = $this->request->post('product_id');
+        $qty = $this->request->postWrap('qty', 1);
+        $productId = $this->request->postWrap('product_id');
         $result = $this->pixie->cart->addProductWithResult($productId, $qty);
 
         if ($this->request->is_ajax()) {
             $this->jsonResponse([
                 'success' => 1,
-                'productId' => $productId,
-                'newProduct' => !in_array($productId, $ids),
+                'productId' => $productId->raw(),
+                'newProduct' => !in_array($productId->raw(), $ids),
                 'product' => $result['product']->getFields([
                     'productID', 'name', 'Price'
                 ]),
@@ -44,6 +53,7 @@ class Cart extends \App\Page {
 
     /**
      * show overview page
+     * @Vuln\Description("View: cart/view")
      */
     public function action_view() {
         $cartService = $this->pixie->cart;
@@ -67,10 +77,11 @@ class Cart extends \App\Page {
 
     /**
      * update cart items qty
+     * @Vuln\Description("No view. It's AJAX method.")
      */
     public function action_update() {
-        $quantity = $this->request->post('qty');
-        $productId = $this->request->post('productId');
+        $quantity = $this->request->postWrap('qty');
+        $productId = $this->request->postWrap('productId');
         $service = $this->pixie->cart;
         $service->setProductCount($productId, $quantity);
 
@@ -80,6 +91,7 @@ class Cart extends \App\Page {
 
     /**
      * clean cart
+     * @Vuln\Description("No view. It's AJAX method.")
      */
     public function action_empty() {
         $this->pixie->cart->clear();
@@ -88,19 +100,20 @@ class Cart extends \App\Page {
 
     /**
      * set shipping & payment methods
+     * @Vuln\Description("No view.")
      */
     public function action_setMethods() {
         $this->checkCsrfToken('checkout_step_1', null, !$this->request->is_ajax());
         $service = $this->pixie->cart;
         $cart = $service->getCart();
-        $cart->shipping_method = $this->request->post('shipping_method');
-        $cart->payment_method = $this->request->post('payment_method');
+        $cart->shipping_method = $this->request->postWrap('shipping_method');
+        $cart->payment_method = $this->request->postWrap('payment_method');
 
         if ($cart->payment_method == 'creditcard') {
-            $service->setParam('credit_card_number', $this->request->post('credit_card_number'));
-            $service->setParam('credit_card_year', $this->request->post('credit_card_year'));
-            $service->setParam('credit_card_month', $this->request->post('credit_card_month'));
-            $service->setParam('credit_card_cvv', $this->request->post('credit_card_cvv'));
+            $service->setParam('credit_card_number', $this->request->postWrap('credit_card_number'));
+            $service->setParam('credit_card_year', $this->request->postWrap('credit_card_year'));
+            $service->setParam('credit_card_month', $this->request->postWrap('credit_card_month'));
+            $service->setParam('credit_card_cvv', $this->request->postWrap('credit_card_cvv'));
         }
 
         $this->execute = false;

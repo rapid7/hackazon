@@ -55,7 +55,7 @@ return array(
         ),
         'POST'
     ),
-    'search' => array('/search(/page)', array(
+    'search' => array('/search', array(
         'controller' => 'Search',
         'action' => 'index',
         'page'   =>  1
@@ -107,6 +107,20 @@ return array(
             'namespace' => 'App\\Admin\\',
             'controller' => 'home',
             'action' => 'index'
+        )
+    ),
+
+    'install_login' => array('/install/login',
+        array(
+            'controller' => 'install',
+            'action' => 'login'
+        )
+    ),
+
+    'install_finish' => array('/install/finish',
+        array(
+            'controller' => 'install',
+            'action' => 'finish'
         )
     ),
 

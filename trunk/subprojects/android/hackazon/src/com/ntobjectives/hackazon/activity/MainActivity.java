@@ -7,14 +7,16 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.ntobjectives.hackazon.*;
+import com.ntobjectives.hackazon.R;
 
 /**
  * Created with IntelliJ IDEA by Nick Chervyakov.
@@ -31,9 +33,15 @@ public class MainActivity extends AbstractRootActivity {
 
     private String[] drawerMenuItemTitles;
 
+    protected Bundle savedInstanceState;
+
+    protected String page;
+    protected int menuPosition;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
 
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
@@ -45,6 +53,9 @@ public class MainActivity extends AbstractRootActivity {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d(TAG, "Host: " + prefs.getString("host", ""));
+        Log.d(TAG, "Token: " + prefs.getString("token", ""));
+
         if (prefs.getBoolean("first_time", true) || prefs.getString("token", "").equals("")) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -88,15 +99,64 @@ public class MainActivity extends AbstractRootActivity {
 
         drawerLayout.setDrawerListener(drawerToggle);
 
-        if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            String page = intent.getStringExtra("page");
-            if (page == null || page.equals("")) {
-                selectItem(0);
-            } else {
-                selectItem(page);
-            }
+        Intent intent = getIntent();
+
+        String intentPage = intent.getStringExtra("page");
+
+        if (intentPage != null && !intentPage.equals("")) {
+            page = intentPage;
+        } else if (savedInstanceState != null){
+            menuPosition = savedInstanceState.getInt("menuPosition");
+
+        } else {
+            page = null;
+            menuPosition = 0;
         }
+
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+
+        //service.setHost(prefs.getString("host", "http://hackazon.webscantest.com"));
+
+        Log.d(TAG, "page: " + String.valueOf(page));
+        Log.d(TAG, "menuPosition: " + String.valueOf(menuPosition));
+
+        if (page == null || page.equals("")) {
+            selectItem(menuPosition);
+
+        } else {
+            selectItem(page);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState. menuPosition: " + String.valueOf(menuPosition));
+        outState.putInt("menuPosition", menuPosition);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+        Log.d(TAG, "ServiceManager is started: " + String.valueOf(getSpiceManager().isStarted()));
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
     }
 
     @Override
@@ -116,6 +176,7 @@ public class MainActivity extends AbstractRootActivity {
         for (int pos = 0; pos < drawerMenuItemTitles.length; pos++) {
             String item = drawerMenuItemTitles[pos];
             if (item.toLowerCase().equals(section)) {
+                page = section;
                 selectItem(pos);
                 break;
             }
@@ -123,6 +184,7 @@ public class MainActivity extends AbstractRootActivity {
     }
 
     private void selectItem(int position) {
+        menuPosition = position;
         // update the main content by replacing fragments
         Fragment fragment;
         Bundle args = new Bundle();

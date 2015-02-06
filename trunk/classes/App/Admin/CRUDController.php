@@ -55,6 +55,10 @@ class CRUDController extends Controller
     public function before()
     {
         parent::before();
+        
+        if (!$this->execute) {
+            return;
+        }
 
         if (!$this->modelName) {
             $this->modelName = $this->get_real_class($this);;

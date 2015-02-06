@@ -2,16 +2,16 @@
 
 namespace App\Controller;
 
-use App\Core\UploadedFile;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
-use App\Helpers\FSHelper;
 use App\Helpers\UserPictureUploader;
 use App\Model\File;
 use App\Model\Order;
 use App\Model\User;
 use App\Page;
 use PHPixie\Paginate\Pager\ORM as ORMPager;
+use VulnModule\Config\Annotations as Vuln;
+use VulnModule\Vulnerability\XSS;
 
 /**
  * Class Account
@@ -37,6 +37,9 @@ class Account extends Page
         $this->view->useRest = $this->useRest;
     }
 
+    /**
+     * @Vuln\Description("Used view: account/account")
+     */
     public function action_index() {
         if (!$this->useRest) {
             /** @var ORMPager $ordersPager */
@@ -48,6 +51,11 @@ class Account extends Page
         $this->view->subview = 'account/account';
     }
 
+    /**
+     * @throws NotFoundException
+     * @Vuln\Route(params={"id" : "[id]"})
+     * @Vuln\Description("Used views: account/orders, account/order, depending on the presence of the parameter 'id'.")
+     */
     public function action_orders()
     {
         /** @var Order $orderModel */
@@ -64,9 +72,9 @@ class Account extends Page
             $this->view->subview = 'account/order';
 
         } else { // List orders
-            $page = $this->request->get('page', 1);
+            $page = $this->request->getWrap('page', 1);
             /** @var ORMPager $ordersPager */
-            $ordersPager = $orderModel->order_by('created_at', 'DESC')->getMyOrdersPager($page, 5);
+            $ordersPager = $orderModel->order_by('created_at', 'DESC')->getMyOrdersPager($page, 10);
             $myOrders = $ordersPager->current_items()->as_array();
             $this->view->pager = $ordersPager;
             $this->view->myOrders = $myOrders;
@@ -74,14 +82,15 @@ class Account extends Page
         }
     }
 
+    /**
+     * @Vuln\Description("Views: account/document, account/documents")
+     */
     public function action_documents() {
         if ($this->request->get('page')) {
-            $page = $this->request->get('page');
-            $path = realpath($this->common_path . "../content_pages/documents/") . DIRECTORY_SEPARATOR . $page;
-            $service = $this->pixie->getVulnService();
-            $vuln = $service->getVulnerability('os_command');
+            $page = $this->request->getWrap('page');
+            $path = realpath($this->common_path . "../content_pages/documents/") . DIRECTORY_SEPARATOR . $page->raw();
 
-            if (!$vuln['enabled']) {
+            if (!$page->isVulnerableTo('OSCommand')) {
                 $path = escapeshellarg($path);
             }
 
@@ -92,7 +101,10 @@ class Account extends Page
                 exec('cat ' . $path, $content);
             }
 
-            $this->view->pageTitle = ucwords(preg_replace('/\.html$/i', '', $page));
+            $composedPage = $page->copy(ucwords(preg_replace('/\.html$/i', '', $page->raw())));
+            /** @var XSS $vuln */
+            $vuln = $composedPage->getVulnerability('XSS');
+            $this->view->pageTitle = $vuln->escape($composedPage);
             $this->view->pageContent = implode("\n", $content);
             $this->view->subview = 'account/document';
 
@@ -114,21 +126,22 @@ class Account extends Page
         }
     }
 
+    /**
+     * @throws NotFoundException
+     * @Vuln\Description("Views: account/help_article, account/help_articles")
+     */
     public function action_help_articles() {
         if ($this->request->get('page')) {
-            $page = $this->request->get('page');
+            $page = $this->request->getWrap('page');
 
-            $service = $this->pixie->getVulnService();
-            $vulnField = $service->getField('page');
-
-            if (!is_array($vulnField) || !in_array('RemoteFileInclude', $vulnField)) {
+            if (!$page->isVulnerableTo('RemoteFileInclude')) {
                 $files = $this->getHelpArticlesFiles();
-                if (!in_array($page, $files)) {
+                if (!in_array($page->raw(), $files)) {
                     throw new NotFoundException();
                 }
             }
 
-            $this->view->pageTitle = ucwords(str_replace('_', ' ', $page));
+            $this->view->pageTitle = $page->copy(ucwords(str_replace('_', ' ', $page->raw())));
             $this->view->page = $page;
             $this->view->subview = 'account/help_article';
 
@@ -154,6 +167,12 @@ class Account extends Page
         return $files;
     }
 
+    /**
+     * @throws HttpException
+     * @throws NotFoundException
+     * @Vuln\Route(name="profile_edit")
+     * @Vuln\Description("View: account/edit_profile")
+     */
     public function action_edit_profile()
     {
         if ($this->useRest) {
@@ -167,7 +186,7 @@ class Account extends Page
         if ($this->request->method == 'POST') {
             $this->checkCsrfToken('profile');
 
-            $photo = $this->request->uploadedFile('photo', [
+            $photo = $this->request->uploadedFile($this->request->postWrap('photo'), [
                 'extensions' => ['jpeg', 'jpg', 'gif', 'png'],
                 'types' => ['image']
             ]);
@@ -176,19 +195,18 @@ class Account extends Page
                 $errors[] = 'Incorrect avatar file';
             }
 
-            $data = $user->filterValues($this->request->post(), $fields);
+            $data = $user->filterValues($this->request->postWrap(), $fields);
 
             if (!count($errors)) {
                 UserPictureUploader::create($this->pixie, $user, $photo, $this->request->post('remove_photo'))
                     ->execute();
 
                 $user->values($data);
-
                 $user->save();
 
                 $this->pixie->session->flash('success', 'You have successfully updated your profile.');
 
-                if ($this->request->post('_submit') == 'Save and Exit') {
+                if ($this->request->post('_submit_save_and_exit')) {
                     $this->redirect('/account#profile');
 
                 } else {
@@ -208,12 +226,29 @@ class Account extends Page
         foreach ($data as $key => $value) {
             $this->view->$key = $value;
         }
+
+        if ($data['photo']) {
+            $this->view->photoUrl = $data['photo'];
+        }
+
+        if (isset($data['photo']) && is_numeric($data['photo'])) {
+            /** @var File $photoObj */
+            $photoObj = $this->pixie->orm->get('file', $data['photo']);
+            if ($photoObj->loaded() && $photoObj->user_id == $user->id()) {
+                $this->view->photoUrl = preg_replace('#.*?([^\\\\/]{2}[\\\\/][^\\\\/]+)$#', '$1', $photoObj->path);
+            }
+        }
+
         $this->view->success = $this->pixie->session->flash('success') ?: '';
         $this->view->errorMessage = implode('<br>', $errors);
         $this->view->user = $user;
         $this->view->subview = 'account/edit_profile';
     }
 
+    /**
+     * @throws HttpException
+     * @Vuln\Description("No views are used. Only processing action.")
+     */
     public function action_add_photo()
     {
         $user = $this->getUser();
@@ -222,7 +257,7 @@ class Account extends Page
 
         if ($this->request->method == 'POST') {
 
-            $photo = $this->request->uploadedFile('photo', [
+            $photo = $this->request->uploadedFile($this->request->postWrap('photo'), [
                 'extensions' => ['jpeg', 'jpg', 'gif', 'png'],
                 'types' => ['image']
             ]);
@@ -235,7 +270,15 @@ class Account extends Page
                 $uploader = UserPictureUploader::create($this->pixie, $user, $photo, $this->request->post('remove_photo'));
                 $uploader->setModifyUser(false);
                 $uploader->execute();
-                $this->jsonResponse(['photo' => $uploader->getResult()]);
+                $photoUrl = null;
+                if ($uploader->getResult() && is_numeric($uploader->getResult())) {
+                    /** @var File $photoObj */
+                    $photoObj = $this->pixie->orm->get('file', $uploader->getResult());
+                    if ($photoObj->loaded() && $photoObj->user_id == $user->id()) {
+                        $photoUrl = preg_replace('#.*?([^\\\\/]{2}[\\\\/][^\\\\/]+)$#', '$1', $photoObj->path);
+                    }
+                }
+                $this->jsonResponse(['photo' => $uploader->getResult(), 'photoUrl' => $photoUrl]);
 
             } else {
                 $this->jsonResponse(['errors' => $errors]);

@@ -2,6 +2,8 @@
 
 namespace PHPixie\DB\PDOV;
 use PHPixie\DB;
+use VulnModule\DataType\ArrayObject;
+use VulnModule\VulnerableField;
 
 
 /**
@@ -47,6 +49,11 @@ class Query extends DB\Query
     protected $parent = null;
 
     /**
+     * @var \SplObjectStorage
+     */
+    protected $vulnFields;
+
+    /**
      * Creates a new query object, checks which driver we are using and set the character used for quoting
      *
      * @param \PHPixie\DB $db Database connection
@@ -58,6 +65,7 @@ class Query extends DB\Query
         parent::__construct($db, $type);
         $this->_db_type = $this->_db->db_type;
         $this->_quote = $this->_db_type == 'mysql' ? '`' : '"';
+        $this->vulnFields = new \SplObjectStorage();
     }
 
     /**
@@ -118,10 +126,9 @@ class Query extends DB\Query
      * @param mixed $val Value to be escaped or an \PHPixie\DB\Expression object
      *                       if the value must not be escaped
      * @param array &$params Reference to parameters array
-     * @param string|null $columnName Name of the column
      * @return string  Escaped value representation
      */
-    public function escape_value($val, &$params, $columnName = null) {
+    public function escape_value($val, &$params/*, $columnName = null*/) {
         if ($val instanceof DB\Expression) {
             return $val->value;
         }
@@ -129,19 +136,25 @@ class Query extends DB\Query
             return $this->subquery($val, $params);
         }
 
-        if ($service = $this->getVulnService()) {
-            // Filter stored XSS if this vulnerability isn't enabled in config.
-            $val = $service->filterStoredXSSIfNeeded($columnName, $val, $this->_table);
+        if ($val instanceof VulnerableField) {
+            $this->vulnFields->attach($val);
+            if (!($params['vuln_fields'] instanceof ArrayObject)) {
+                $params['vuln_fields'] = new ArrayObject(is_array($params['vuln_fields']) ? $params['vuln_fields'] : []);
+            }
+            if (!$params['vuln_fields']->contains($val)) {
+                $params['vuln_fields'][] = $val;
+            }
 
-            // Filter SQL Injections
-            $sqlInjectionParams = $service->getSqlInjectionParams($columnName, $this->_table);
-            if ($sqlInjectionParams['is_vulnerable']) {
-                return "'" . $val ."'";
+            if ($val->isVulnerableTo('SQL')) {
+                return "'" . $val->getFilteredValue() . "'";
+
+            } else {
+                $params[] = $val->getFilteredValue();
+                return '?';
             }
         }
 
         $params[] = $val;
-
         return '?';
     }
 

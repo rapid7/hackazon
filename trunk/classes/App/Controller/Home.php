@@ -7,7 +7,13 @@ use App\Model\Review;
 use \App\Model\SpecialOffers as SpecialOffers;
 use App\DataImport\BestBuyReviewImporter;
 use App\Page;
+use VulnModule\Config\Annotations as Vuln;
 
+/**
+ * Class Home
+ * @package App\Controller
+ * @Vuln\Description(description="This is a homepage controller.")
+ */
 class Home extends Page {
 
     const COUNT_RND_PRODUCTS = 3; //count products for rnd block of main page
@@ -33,6 +39,9 @@ class Home extends Page {
      */
     protected $reviewsCount = 2;
 
+    /**
+     * @Vuln\Description("View used: home/home")
+     */
     public function action_index() {
         $mostPopularProductsCount = 3;
         $bestSellingProductsCount = 3;
@@ -50,8 +59,10 @@ class Home extends Page {
         $review = new Review($this->pixie);
         //$this->view->topViewedProducts = $product->getRandomProducts($this->topViewedCount);
 
+        $visitedProductIds = $this->request->cookieWrap('visited_products');
+
         $this->view->rnd_products = $product->getRndProduct(self::COUNT_RND_PRODUCTS);
-        $this->view->relatedToVisitedProducts = $product->getVisitedProducts(); //$product->getRandomProducts($this->relatedToVisitedCount);
+        $this->view->relatedToVisitedProducts = $product->getVisitedProducts($visitedProductIds); //$product->getRandomProducts($this->relatedToVisitedCount);
         $this->view->bestChoiceProducts = $product->getRandomProducts($this->bestChoiceCount);
         $this->view->mostPopularProducts = $product->getRandomProducts($mostPopularProductsCount);
         $this->view->bestSellingProducts = $product->getRandomProducts($bestSellingProductsCount);

@@ -152,7 +152,7 @@ class CartService implements ICartStorage
             'product' => null
         ];
 
-        if (!is_numeric($quantity)) {
+        if (!is_numeric((string) $quantity)) {
             return $result;
         }
 
@@ -168,7 +168,7 @@ class CartService implements ICartStorage
 
         $productItem = null;
         foreach ($items as $item) {
-            if ($item->product_id == $productId) {
+            if ($item->product_id == (string) $productId) {
                 $productItem = $item;
                 break;
             }
@@ -236,11 +236,11 @@ class CartService implements ICartStorage
 
     public function setProductCount($product, $quantity = 1)
     {
-        if (!is_numeric($quantity)) {
+        if (!is_numeric((string) $quantity)) {
             return;
         }
 
-        if (is_numeric($product)) {
+        if (is_numeric((string) $product)) {
             $product = $this->pixie->orm->get('Product')->where('productID', $product)->find();
         }
 
@@ -394,10 +394,10 @@ class CartService implements ICartStorage
         }
 
         if ($cart->payment_method == 'creditcard' && (
-            !$this->getParam('credit_card_number')
-            || !$this->getParam('credit_card_year')
-            || !$this->getParam('credit_card_month')
-            || !$this->getParam('credit_card_cvv')
+            !$this->getParam('credit_card_number') || !$this->getParam('credit_card_number')->raw()
+            || !$this->getParam('credit_card_year') || !$this->getParam('credit_card_year')->raw()
+            || !$this->getParam('credit_card_month') || !$this->getParam('credit_card_month')->raw()
+            || !$this->getParam('credit_card_cvv') || !$this->getParam('credit_card_cvv')->raw()
             )
         ) {
             throw new RedirectException('/cart/view');

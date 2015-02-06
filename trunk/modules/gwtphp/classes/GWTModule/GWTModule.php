@@ -1,6 +1,7 @@
 <?php
 
 namespace GWTModule;
+use App\Core\Request;
 use App\Pixie;
 
 /**

@@ -2,9 +2,11 @@
 
 namespace App\Model;
 
+use App\Core\Request;
 use App\Helpers\ArraysHelper;
 use App\Pixie;
 use PHPixie\ORM;
+use VulnModule\VulnerableField;
 
 /**
  * Class Product.
@@ -16,6 +18,7 @@ use PHPixie\ORM;
  * @property float customers_rating
  * @property string picture
  * @property int categoryID
+ * @property mixed $customer_votes
  * @property Pixie pixie
  * @property SpecialOffers $special_offers
  * @property Review $reviews
@@ -84,6 +87,7 @@ class Product extends BaseModel {
 
     public function getProduct($productID){
         $productData = array();
+        /** @var Product $product */
         $product = $this->pixie->orm->get('Product')->where('productID',$productID)->find();
         if($product->loaded()){
             $productData = array(
@@ -101,9 +105,14 @@ class Product extends BaseModel {
     }
 
     public  function getPageTitle($productID){
+        /** @var Product $product */
         $product = $this->pixie->orm->get('Product')->where('productID',$productID)->find();
-        if($product->loaded())
+        if ($product->loaded()) {
             return $product->name;
+
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -213,6 +222,9 @@ class Product extends BaseModel {
 
     public function checkProductInCookie($productId)
     {
+        if ($productId instanceof VulnerableField) {
+            $productId = $productId->raw();
+        }
         $productIds = $this->pixie->cookie->get('visited_products');
         if (!$productIds) {
             $productIds = ',';
@@ -224,14 +236,18 @@ class Product extends BaseModel {
 
     /**
      * Fetches no more than $count visited products based on cookies.
+     * @param string $productIds
      * @param int $count
      * @return array
      */
-    public function getVisitedProducts($count = 4)
+    public function getVisitedProducts($productIds, $count = 4)
     {
-        $productIds = $this->pixie->cookie->get('visited_products');
-        $ids = preg_split('/,/', $productIds, -1, PREG_SPLIT_NO_EMPTY);
+        $rawIds = $productIds instanceof VulnerableField ? $productIds->raw() : $productIds;
+        $ids = preg_split('/,/', $rawIds, -1, PREG_SPLIT_NO_EMPTY);
+
+        $ids = array_filter($ids, function ($val) { return trim($val); });
         $idsCount = count($ids);
+
         // Return empty array if there is no ids in cookies.
         if (!$idsCount) {
             return [];
@@ -240,8 +256,9 @@ class Product extends BaseModel {
         // Select no more then $count product ids
         $slicedIdsKeys = array_rand($ids, $count > $idsCount ? $idsCount : ($count < 1 ? 1 : $count));
         if (!is_array($slicedIdsKeys)) {
-            $slicedIdsKeys = array($slicedIdsKeys);
+            $slicedIdsKeys = [$slicedIdsKeys];
         }
+
         shuffle($slicedIdsKeys);
         $idsToSelect = array();
         foreach ($slicedIdsKeys as $key) {
@@ -251,8 +268,25 @@ class Product extends BaseModel {
         // Select needed products by their ids
         /** @var Product $product */
         $product = $this->pixie->orm->get('product');
-        return $product->where('productID', 'IN',
-            $this->pixie->db->expr('(' . implode(',', $idsToSelect) . ')'))->find_all()->as_array();
+        if ($productIds instanceof VulnerableField) {
+            $isSQLVuln = $productIds->isVulnerableTo('SQL');
+            if (!$isSQLVuln) {
+                foreach ($idsToSelect as $k => $id) {
+                    $idsToSelect[$k] = (int) $id;
+                }
+            }
+        }
+
+        $idsExpr = '(' . implode(',', $idsToSelect) . ')';
+
+        /** @var Product $query */
+        $query = $product->where('productID', 'IN', $this->pixie->db->expr($idsExpr));
+
+        $query->conn->startBlindness($productIds);
+        $result = $query->find_all()->as_array();
+        $query->conn->stopBlindness();
+
+        return $result;
     }
 
     /**

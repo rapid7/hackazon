@@ -16,6 +16,8 @@ class DBSettingsStep extends AbstractStep
 
     protected $host;
 
+    protected $port = 3306;
+
     protected $user;
 
     protected $password;
@@ -34,21 +36,26 @@ class DBSettingsStep extends AbstractStep
 
         $this->useExistingPassword = (boolean) $data['use_existing_password'];
         $this->host = $data['host'];
+        $this->port = $data['port'];
         $this->user = $data['user'];
         $this->password = $this->useExistingPassword ? $this->defaultPassword : $data['password'];
         $this->db = $data['db'];
         $this->createIfNotExists = $data['create_if_not_exists'];
 
         if (!$data['host']) {
-            $this->errors[] = 'Please enter host name.';
+            $this->errors[] = 'Please enter the host name.';
+        }
+
+        if (!$data['port']) {
+            $this->errors[] = 'Please enter the port.';
         }
 
         if (!$data['user']) {
-            $this->errors[] = 'Please enter username.';
+            $this->errors[] = 'Please enter the username.';
         }
 
         if (!$data['db']) {
-            $this->errors[] = 'Please enter DB name.';
+            $this->errors[] = 'Please enter the DB name.';
         }
 
         if (count($this->errors)) {
@@ -56,7 +63,7 @@ class DBSettingsStep extends AbstractStep
         }
 
         try {
-            $dsn = "mysql:host={$this->host}";
+            $dsn = "mysql:host={$this->host};port={$this->port}";
             // Try to connect
             $conn = new \PDO($dsn, $this->user, $this->password);
 
@@ -86,7 +93,7 @@ class DBSettingsStep extends AbstractStep
 
     protected function persistFields()
     {
-        return ['host', 'user', 'password', 'db', 'createIfNotExists', 'useExistingPassword', 'defaultPassword'];
+        return ['host', 'port', 'user', 'password', 'db', 'createIfNotExists', 'useExistingPassword', 'defaultPassword'];
     }
 
     public function init()
@@ -95,6 +102,7 @@ class DBSettingsStep extends AbstractStep
         $config = $this->pixie->config->get_group('db');
 
         $this->host = $config['default']['host'];
+        $this->port = $config['default']['port'];
         $this->user = $config['default']['user'];
         $this->password = $config['default']['password'];
         $this->db = $config['default']['db'];
@@ -106,6 +114,7 @@ class DBSettingsStep extends AbstractStep
     {
         return [
             'host' => $this->host,
+            'port' => $this->port,
             'user' => $this->user,
             'password' => $this->password,
             'db' => $this->db,

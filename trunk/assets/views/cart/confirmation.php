@@ -48,22 +48,22 @@
                             <div class="blockShadow bg-info">
                             <?php //$shippingAddress = $cart->getShippingAddress()?>
                                 <h3>Shipping Address</h3>
-                                <b><?php echo $_($shippingAddress->full_name, 'full_name'); ?></b><br />
-                                <?php echo $_($shippingAddress->address_line_1, 'address_line_1'); ?><br />
-                                <?php echo $_($shippingAddress->address_line_2, 'address_line_2'); ?><br />
-                                <?php echo $_($shippingAddress->city, 'city') . ' ' . $_($shippingAddress->region, 'region') . ' ' . $_($shippingAddress->zip, 'zip'); ?><br />
-                                <?php echo $_($shippingAddress->country_id, 'country_id'); ?><br />
-                                <?php echo $_($shippingAddress->phone, 'phone'); ?><br />
+                                <b><?php echo $_($shippingAddress->getWrapperOrValue('full_name')); ?></b><br />
+                                <?php echo $_($shippingAddress->getWrapperOrValue('address_line_1')); ?><br />
+                                <?php echo $_($shippingAddress->getWrapperOrValue('address_line_2')); ?><br />
+                                <?php echo $_($shippingAddress->getWrapperOrValue('city')) . ' ' . $_($shippingAddress->getWrapperOrValue('region')) . ' ' . $_($shippingAddress->getWrapperOrValue('zip')); ?><br />
+                                <?php echo $_($shippingAddress->getWrapperOrValue('country_id')); ?><br />
+                                <?php echo $_($shippingAddress->getWrapperOrValue('phone')); ?><br />
                             </div>
                             <div class="blockShadow bg-info">
                                 <?php //$billingAddress = $cart->getBillingAddress()?>
                                 <h3>Billing Address</h3>
-                                <b><?php echo $_($billingAddress->full_name, 'full_name'); ?></b><br />
-                            <?php echo $_($billingAddress->address_line_1, 'address_line_1'); ?><br />
-                            <?php echo $_($billingAddress->address_line_2, 'address_line_2'); ?><br />
-                            <?php echo $_($billingAddress->city, 'city') . ' ' . $_($billingAddress->region, 'region') . ' ' . $_($billingAddress->zip, 'zip'); ?><br />
-                            <?php echo $_($billingAddress->country_id, 'country_id'); ?><br />
-                            <?php echo $_($billingAddress->phone, 'phone'); ?><br />
+                                <b><?php echo $_($billingAddress->getWrapperOrValue('full_name')); ?></b><br />
+                            <?php echo $_($billingAddress->getWrapperOrValue('address_line_1')); ?><br />
+                            <?php echo $_($billingAddress->getWrapperOrValue('address_line_2')); ?><br />
+                            <?php echo $_($billingAddress->getWrapperOrValue('city')) . ' ' . $_($billingAddress->getWrapperOrValue('region')) . ' ' . $_($billingAddress->getWrapperOrValue('zip')); ?><br />
+                            <?php echo $_($billingAddress->getWrapperOrValue('country_id')); ?><br />
+                            <?php echo $_($billingAddress->getWrapperOrValue('phone')); ?><br />
                                 </div>
                         </td>
                     </tr>
@@ -98,11 +98,11 @@
 				
                 <tfoot>
                 <tr class="info">
-                    <td colspan="2">Shipping: <?php echo $cart->shipping_method;?></td>
+                    <td colspan="2">Shipping: <?php $_($cart->getWrapperOrValue('shipping_method')); ?></td>
                     <td align="right" colspan="2">$0</td>
                 </tr>
                 <tr class="info">
-                    <td colspan="2">Payment: <?php echo $cart->payment_method;?></td>
+                    <td colspan="2">Payment: <?php $_($cart->getWrapperOrValue('payment_method'));?></td>
                     <td align="right" colspan="2">$0</td>
                 </tr>
                 <?php if ($discount): ?>

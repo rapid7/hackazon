@@ -23,6 +23,7 @@ use PHPixie\ORM\Extension\Nested;
  * @property int hidden
  * @property Category parentCategory
  * @property Category children
+ * @property Product|Product[] $products
  * @property Nested $nested
  * @package App\Model
  */

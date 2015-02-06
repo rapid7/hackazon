@@ -9,8 +9,10 @@
 
 namespace GWTModule\Helper;
 
+use App\Core\Request;
 use App\IPixifiable;
 use App\Pixie;
+use GWTModule\IGWTService;
 use MappedClass;
 
 class SimpleRPCTargetResolverStrategy implements \RPCTargetResolverStrategy, IPixifiable
@@ -19,6 +21,16 @@ class SimpleRPCTargetResolverStrategy implements \RPCTargetResolverStrategy, IPi
      * @var Pixie
      */
     protected $pixie;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
     function resolveRPCTarget(MappedClass $interface)
     {
@@ -30,8 +42,10 @@ class SimpleRPCTargetResolverStrategy implements \RPCTargetResolverStrategy, IPi
             $instance->setPixie($this->pixie);
         }
 
-        if (in_array('GWTModule\\IServletable', $interfaces)) {
+        if (in_array('GWTModule\\IGWTService', $interfaces)) {
+            /** @var IGWTService $instance */
             $instance->setServlet($this->pixie->gwt->getServlet());
+            $instance->setRequest($this->request);
         }
 
         return $instance;

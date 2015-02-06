@@ -22,7 +22,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $obj->faqID; ?>" >
-                                        <?php $_($obj->question, 'userQuestion'); ?>
+                                        <?php $_($obj->question); ?>
                                     </a>
                                 </h4>
                             </div>

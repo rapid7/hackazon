@@ -8,39 +8,40 @@
 
 
 namespace AmfphpModule\Services;
+
+
+use AmfphpModule\Service;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
-use App\Model\Cart;
 use App\Model\Coupon;
 use App\Model\User;
-use App\Pixie;
+use VulnModule\Config\Annotations as Vuln;
 
 /**
- * Coupon service. Provides method for operating coupons
+ * Coupon service. Provides method for operating coupons.
  * @package AmfphpModule\Services
+ * @Vuln\Description("Service used to operate coupons.")
  */
-class CouponService
+class CouponService  extends Service
 {
-    /**
-     * @var Pixie
-     */
-    protected $pixie;
-
     /**
      * Set discount on cart if correct coupon code is entered
      * @param string $couponCode
      * @throws \App\Exception\NotFoundException
      * @throws \App\Exception\HttpException
      * @return array Coupon code and respective discount
+     * @Vuln\Description("Sets the coupon for current cart.")
      */
     public function useCoupon($couponCode) {
         if (!trim($couponCode)) {
             throw new HttpException('Please provide coupon code');
         }
 
+        $couponCode = $this->wrap('couponCode', $couponCode);
+
         /** @var Coupon $coupon */
         $coupon = $this->pixie->orm->get('coupon')->where('coupon', $couponCode)->find();
-        if (!$coupon->loaded() || $coupon->coupon != $couponCode) {
+        if (!$coupon->loaded() || $coupon->coupon != $couponCode->getFilteredValue()) {
             throw new NotFoundException('Wrong coupon.');
         }
 
@@ -60,23 +61,5 @@ class CouponService
     public function unsetCoupon()
     {
         $this->pixie->cart->unsetCoupon();
-    }
-
-    /**
-     * @return Pixie
-     * @amfphpHide
-     */
-    function getPixie()
-    {
-        return $this->pixie;
-    }
-
-    /**
-     * @param Pixie $pixie
-     * @amfphpHide
-     */
-    function setPixie(Pixie $pixie = null)
-    {
-        $this->pixie = $pixie;
     }
 } 

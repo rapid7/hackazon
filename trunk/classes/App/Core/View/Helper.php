@@ -12,6 +12,7 @@ use App\Core\BaseController;
 use App\Page;
 use App\Pixie;
 use PHPixie\Paginate\Pager\ORM as ORMPager;
+use VulnModule\VulnerableField;
 use VulnModule\VulnInjection;
 
 
@@ -54,22 +55,10 @@ class Helper extends \PHPixie\View\Helper
     /**
      * @inheritdoc
      */
-    public function escape($str, $fieldName = null)
+    public function escape($str/*, $fieldName = null*/)
     {
-        $service = $this->pixie->getVulnService();
-
-        if (!$fieldName || !$service) {
-            return htmlspecialchars($str, ENT_COMPAT, 'UTF-8');
-        }
-
-        $vulns = $service->getConfig()->getVulnerabilities();
-
-        $xss = $vulns['xss'];
-        $fields = $service->getConfig()->getFields();
-        $field = $fields[$fieldName];
-
-        if ((!isset($xss['enabled']) || $xss['enabled'] == true) && is_array($field) && in_array('xss', $field)) {
-            return $str;
+        if ($str instanceof VulnerableField) {
+            return $str->escapeXSS();
         }
 
         return htmlspecialchars($str, ENT_COMPAT, 'UTF-8');

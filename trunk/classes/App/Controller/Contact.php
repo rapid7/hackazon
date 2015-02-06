@@ -2,22 +2,36 @@
 
 namespace App\Controller;
 
-class Contact extends \App\Page {
+use App\Page;
+use VulnModule\Config\FieldDescriptor;
+use VulnModule\Config\Annotations as Vuln;
 
+class Contact extends Page
+{
+    /**
+     * @throws \App\Exception\HttpException
+     * @Vuln\Description("View: pages/contact.")
+     */
     public function action_index() {
-        $this->view->pageTitle = "Contact us";
+        $this->view->pageTitle = "Contact Us";
+
         if ($this->request->method == 'POST') {
-					$this->checkCsrfToken('contact');
+            $this->checkCsrfToken('contact');
+
             //$post = json_decode($this->request->rawRequestData());
-            $post = json_decode($this->request->post()['data']);
-            $this->pixie->orm->get('ContactMessages')->create($post);
-						if ($this->request->is_ajax()) {
+            $postData = $this->request->post();
+            $post = json_decode($postData['data']);
+            $postWrapped = $this->request->wrapObject($post, FieldDescriptor::SOURCE_BODY);
+
+            $this->pixie->orm->get('ContactMessages')->create($postWrapped);
+
+            if ($this->request->is_ajax()) {
                 //$this->jsonResponse(null);
-								$this->execute = false;
-						}
+                $this->execute = false;
+                return;
+            }
         }
         $this->view->subview = 'pages/contact';
     }
-
 }
 

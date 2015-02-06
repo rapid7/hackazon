@@ -1,6 +1,8 @@
 #!/usr/bin/perl -P
 
 use strict;
+use Digest::SHA1 qw(sha1_hex);
+
 my $sessiondir = "/lib/init/rw";
 my $sessionname = "SESSIONID_VULN_SITE";
 
@@ -10,7 +12,9 @@ my $cgi  = new CGI;
 my $sid  = $cgi->cookie($sessionname);
 my $file = $cgi->param('file');
 my $filename = "$file";
+my $uniqsubdir = substr(sha1_hex(localtime . $filename), 0, 2);
 my $sessionfile = $sessiondir."/sess_".$sid."_uploadto";
+my $uniqueDir = $sessionfile . "/" . $uniqsubdir;
 
 # debugging lines
 #print $cgi->header();
@@ -28,7 +32,7 @@ $filename =~ s/\*//g;
 #print "origfile: $origfile<br>\n\r";
 #print "file: $file<br>\n\r";
 
-unless (-e "$sessionfile") {
+unless (-e "$uniqueDir") {
 	print $cgi->header();
 	print "Invalid Session.\n";
 	print "Session ID: $sid\n\r";
@@ -36,7 +40,7 @@ unless (-e "$sessionfile") {
 	exit;
 }
 
-open SESSFILE, "<$sessionfile";
+open SESSFILE, "<$uniqueDir";
 my $uploaddir = do { local $/; <SESSFILE> };
 my $fullpath = "$uploaddir/$filename";
 
@@ -66,4 +70,4 @@ while(<$file>) {
 }
 
 #print "Status: 302 Moved\nLocation: upload.php\n\n";
-print "Status: 302 Moved\nLocation: /upload/download.php?image=\nX-Created-Filename: $fullpath\n\n";
+print "Status: 302 Moved\nLocation: /upload/download.php?image=$uniqsubdir/$filename\nX-Created-Filename: $fullpath\n\n";

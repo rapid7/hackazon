@@ -14,6 +14,8 @@ use App\Events\GetResponseEvent;
 use App\Exception\HttpException;
 use App\Helpers\HttpHelper;
 use App\Pixie;
+use VulnModule\Config\FieldDescriptor;
+use VulnModule\VulnerableField;
 
 /**
  * Class Request
@@ -23,8 +25,27 @@ use App\Pixie;
  */
 class Request extends \PHPixie\Request
 {
+    const METHOD_GET = 'GET';
+    const METHOD_POST = 'POST';
+    const METHOD_PUT = 'PUT';
+    const METHOD_DELETE = 'DELETE';
+    const METHOD_PATCH = 'PATCH';
+    const METHOD_HEAD = 'HEAD';
+    const METHOD_OPTIONS = 'OPTIONS';
+
     protected $rawInputData = null;
     protected $adjustedRawInputData = null;
+
+    /**
+     * @var Request headers
+     */
+    protected $_headers;
+
+    public function __construct($pixie, $route, $method = "GET", $post = [], $get = [], $param = [], $server = [], $cookie = [], $headers = [])
+    {
+        parent::__construct($pixie, $route, $method, $post, $get, $param, $server, $cookie);
+        $this->_headers = $headers;
+    }
 
     /**
      * @inheritdoc
@@ -48,6 +69,144 @@ class Request extends \PHPixie\Request
     public function param($key = null, $default = null, $filter_xss = false)
     {
         return parent::param($key, $default, $filter_xss);
+    }
+
+    /**
+     * @param null $key
+     * @param null $default
+     * @param bool $filter_xss
+     * @return mixed
+     */
+    public function put($key = null, $default = null, $filter_xss = false)
+    {
+        return $this->get_filtered_value($this->getAdjustedRawInputData(), $key, $default, $filter_xss);
+    }
+
+    public function header($key = null, $default = null, $filter_xss = false) {
+        return $this->get_filtered_value($this->_headers, $key, $default, $filter_xss);
+    }
+
+    public function getWrap($key = null, $default = null)
+    {
+        return $this->getWrappedValueOrArray(FieldDescriptor::SOURCE_QUERY, $key, $default);
+    }
+
+    public function postWrap($key = null, $default = null)
+    {
+        return $this->getWrappedValueOrArray(FieldDescriptor::SOURCE_BODY, $key, $default);
+    }
+
+    public function putWrap($key = null, $default = null)
+    {
+        return $this->getWrappedValueOrArray(FieldDescriptor::SOURCE_BODY, $key, $default);
+    }
+
+    public function patchWrap($key = null, $default = null)
+    {
+        return $this->getWrappedValueOrArray(FieldDescriptor::SOURCE_BODY, $key, $default);
+    }
+
+    public function cookieWrap($key = null, $default = null)
+    {
+        return $this->getWrappedValueOrArray(FieldDescriptor::SOURCE_COOKIE, $key, $default);
+    }
+
+    public function headerWrap($key = null, $default = null)
+    {
+        return $this->getWrappedValueOrArray(FieldDescriptor::SOURCE_HEADER, $key, $default);
+    }
+
+    /**
+     * @param $source
+     * @param null $key
+     * @param null $default
+     * @param null $arr
+     * @return array|mixed|null|VulnerableField|VulnerableField[]
+     */
+    public function getWrappedValueOrArray($source, $key = null, $default = null, $arr = null)
+    {
+        if ($key !== null) {
+            return $this->getWrappedValue($source, $key, $default, $arr);
+
+        } else {
+            $result = [];
+            $rawData = $this->getRawValue($source, null, []);
+            foreach ($rawData as $k => $value) {
+                $result[$k] = $this->getWrappedValue($source, $k, $value, $rawData);
+            }
+            return $result;
+        }
+    }
+
+    /**
+     * @param $source
+     * @param null $key
+     * @param null $default
+     * @param null|array $arr
+     * @return mixed|null|VulnerableField
+     */
+    public function getWrappedValue($source, $key = null, $default = null, $arr = null)
+    {
+        $raw = $this->getRawValue($source, $key, $default, $arr);
+
+        if (!is_scalar($raw) && !is_null($raw)) {
+            return $raw;
+        }
+
+        $context = $this->getCurrentContext();
+        $descriptor = new FieldDescriptor($key, $source);
+        $field = $context->getOrCreateMatchingField($descriptor);
+        $field->setRequest($this);
+        $vulnElement = $field->getMatchedVulnerabilityElement();
+
+        return new VulnerableField($descriptor, $raw, $vulnElement);
+    }
+
+    /**
+     * @param $source
+     * @param $key
+     * @param null $default
+     * @param array|null $arr
+     * @return mixed|null
+     */
+    public function getRawValue($source, $key = null, $default = null, $arr = null)
+    {
+        if (is_array($arr)) {
+            return $this->get_filtered_value($arr, $key, $default, false);
+        }
+
+        if ($source == FieldDescriptor::SOURCE_QUERY) {
+            $raw = $this->get($key, $default);
+
+        } else if ($source == FieldDescriptor::SOURCE_BODY) {
+            if (in_array($this->method, [self::METHOD_POST])) {
+                $raw = $this->post($key, $default);
+
+            } else if (in_array($this->method, [self::METHOD_PUT, self::METHOD_PATCH])) {
+                $raw = $this->put($key, $default);
+
+            } else {
+                $raw = $default;
+            }
+
+        } else if ($source == FieldDescriptor::SOURCE_COOKIE) {
+            $raw = $this->cookie($key, $default);
+
+        } else if ($source == FieldDescriptor::SOURCE_HEADER) {
+            $raw = $this->header($key, $default);
+
+        } else {
+            $raw = $default;
+        }
+
+        return $raw;
+    }
+
+    /**
+     * @return \VulnModule\Config\Context
+     */
+    protected function getCurrentContext() {
+        return $this->pixie->vulnService->getConfig()->getCurrentContext();
     }
 
     /**
@@ -92,11 +251,12 @@ class Request extends \PHPixie\Request
         return $this->adjustedRawInputData;
     }
 
-    public function put($key = null, $default = null, $filter_xss = false)
-    {
-        return $this->get_filtered_value($this->getAdjustedRawInputData(), $key, $default, $filter_xss);
-    }
-
+    /**
+     * @param null $key
+     * @param null $default
+     * @param bool $filter_xss
+     * @return mixed
+     */
     public function getRequestData($key = null, $default = null, $filter_xss = false)
     {
         switch ($this->method) {
@@ -130,7 +290,7 @@ class Request extends \PHPixie\Request
 
         if ($contentType == 'application/json') {
             $this->$fieldName = json_decode($this->rawRequestData(), true);
-            if ($this->rawRequestData() && strpos(trim($this->rawRequestData()), '{') === 0 && !$this->$fieldName) {
+            if ($this->$fieldName === null) {
                 throw new HttpException('Request data are malformed. Please check it.', 400, null, 'Bad Request');
             }
 
@@ -138,15 +298,13 @@ class Request extends \PHPixie\Request
             $requestBody = $this->rawRequestData();
 
             // Inject XMLExternalEntity vulnerability
-            $vuln = $this->pixie->vulnService->getVulnerability('XMLExternalEntity');
-            $protected = $vuln !== true && !$vuln['enabled'];
-
-            if ($protected) {
+            if ($protected = !$this->pixie->vulnService->isVulnerableTo('XMLExternalEntity')) {
                 libxml_disable_entity_loader(true);
             }
 
             try {
                 $xml = simplexml_load_string($requestBody);
+
             } catch (\Exception $e) {
                 if ($protected) {
                     throw new HttpException('Invalid XML Body.', 400, $e, 'Bad Request');
@@ -168,11 +326,20 @@ class Request extends \PHPixie\Request
         $this->$fieldName = is_array($this->$fieldName) ? $this->$fieldName : [];
     }
 
-    public function getCookie()
+    /**
+     * @param null $key
+     * @param null $default
+     * @param bool $filter_xss
+     * @return mixed
+     */
+    public function cookie($key = null, $default = null, $filter_xss = false)
     {
-        return $this->_cookie;
+        return $this->get_filtered_value($this->_cookie, $key, $default, $filter_xss);
     }
 
+    /**
+     * @return bool
+     */
     public function isAdminPath()
     {
         return $this->param('namespace') == 'App\\Admin\\';
@@ -242,5 +409,65 @@ class Request extends \PHPixie\Request
         }
 
         return $aData;
+    }
+
+    public function getHeaders()
+    {
+        return $this->_headers;
+    }
+
+    /**
+     * @return array All possible request methods
+     */
+    public static function getMethods()
+    {
+        return [
+            self::METHOD_GET,
+            self::METHOD_POST,
+            self::METHOD_PUT,
+            self::METHOD_DELETE,
+            self::METHOD_PATCH,
+            self::METHOD_HEAD,
+            self::METHOD_OPTIONS
+        ];
+    }
+
+    /**
+     * @param array $arr
+     * @param $source
+     * @return array
+     */
+    public function wrapArray($arr, $source)
+    {
+        if (!is_array($arr) || !count($arr)) {
+            return [];
+        }
+        $result = [];
+
+        foreach ($arr as $key => $value) {
+            $result[$key] = $this->getWrappedValue($source, $key, $value, $arr);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param object $obj
+     * @param $source
+     * @return object
+     */
+    public function wrapObject($obj, $source)
+    {
+        if (!is_object($obj) || !count(get_object_vars($obj))) {
+            return new \stdClass();
+        }
+        $result = new \stdClass();
+
+        $arr = (array)$obj;
+        foreach ($arr as $key => $value) {
+            $result->$key = $this->getWrappedValue($source, $key, $value, $arr);
+        }
+
+        return $result;
     }
 }

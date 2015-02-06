@@ -14,6 +14,8 @@ use App\Core\BaseController;
 use App\Core\View;
 use App\Exception\HttpException;
 use App\Model\User;
+use PHPixie\DB\PDOV\Connection;
+use Symfony\Component\Form\FormFactory;
 
 
 class Controller extends BaseController
@@ -51,6 +53,15 @@ class Controller extends BaseController
         $this->view->user = $user;
         $this->view->pageHeader = 'Dashboard';
 
+        try {
+            /** @var Connection $pdov */
+            $this->pixie->db->get();
+            
+        } catch (\Exception $e) {
+            $this->redirect('/install');
+            return;
+        }
+        
         $classModel = "App\\Model\\" . $className;
         if (class_exists($classModel)) {
             $this->model = new $classModel($this->pixie);
@@ -94,6 +105,17 @@ class Controller extends BaseController
             $this->root.'/coupon' => ['label' => 'Coupons', 'link_class' => 'fa fa-percent fa-fw'],
             $this->root.'/enquiry' => ['label' => 'Enquiries', 'link_class' => 'fa fa-life-saver fa-fw'],
             $this->root.'/faq' => ['label' => 'Faq', 'link_class' => 'fa fa-question-circle fa-fw'],
+            $this->root.'/vulnerability' => ['label' => 'Vulnerability Config', 'link_class' => 'fa fa-question-circle fa-fw'],
+            //$this->root.'/vulnerability/test' => ['label' => 'Vulnerability Calculator', 'link_class' => 'fa fa-question-circle fa-fw'],
+            //$this->root.'/vulnerability/matrix' => ['label' => 'Vulnerability Matrix', 'link_class' => 'fa fa-th fa-fw'],
         ];
+    }
+
+    /**
+     * @return FormFactory
+     */
+    public function getFormFactory()
+    {
+        return $this->pixie->container['form.factory'];
     }
 }

@@ -10,11 +10,15 @@
 namespace App\Controller;
 
 
-use App\Exception\HttpException;
+use VulnModule\Config\Annotations as Vuln;
 use App\Page;
 
 class Error extends Page
 {
+    /**
+     * @Vuln\Route(name = "error", params={"id": "<id>"})
+     * @Vuln\Description("View: error/view.")
+     */
     public function action_view()
     {
         $exception = $this->request->param('exception', null, false);

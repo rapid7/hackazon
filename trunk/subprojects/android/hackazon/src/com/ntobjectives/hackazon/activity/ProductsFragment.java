@@ -139,7 +139,7 @@ public class ProductsFragment extends Fragment {
         getActivity().setProgressBarIndeterminateVisibility(true);
 
         SpiceManager spiceManager = ((AbstractRootActivity) getActivity()).getSpiceManager();
-        spiceManager.execute(catReq, lastRequestCacheKey, DurationInMillis.ONE_HOUR, new CategoriesRequestListener(getActivity()));
+        spiceManager.execute(catReq, lastRequestCacheKey, DurationInMillis.ONE_MINUTE, new CategoriesRequestListener(getActivity()));
     }
 
     /**
@@ -203,14 +203,18 @@ public class ProductsFragment extends Fragment {
         @Override
         public void onFailure(SpiceException spiceException) {
             isLoading = false;
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            Toast.makeText(ProductsFragment.this.getActivity(), "failure", Toast.LENGTH_SHORT).show();
+            if (getActivity() != null) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                Toast.makeText(ProductsFragment.this.getActivity(), "failure", Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
         public void onSuccess(Product.ProductsResponse response) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            updateListViewContent(response);
+            if (getActivity() != null) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                updateListViewContent(response);
+            }
             isLoading = false;
             if (response.data.size() == 0) {
                 listIsFull = true;
@@ -273,10 +277,14 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void onSuccess(Category.CategoriesResponse response) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            Log.d(TAG, "Loaded categories. Count: " + response.data.size());
             isLoading = false;
             categories = response.data;
+
+            if (getActivity() == null) {
+                return;
+            }
+            getActivity().setProgressBarIndeterminateVisibility(false);
+            Log.d(TAG, "Loaded categories. Count: " + response.data.size());
 
             if (categories == null) {
                 categories = new Category.List();

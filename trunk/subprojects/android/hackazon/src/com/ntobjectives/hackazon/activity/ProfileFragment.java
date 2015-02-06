@@ -121,17 +121,21 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public void onFailure(SpiceException spiceException) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            Toast.makeText(ProfileFragment.this.getActivity(), "failure", Toast.LENGTH_SHORT).show();
-            reloadButton.setVisibility(View.VISIBLE);
-            progressBarView.setVisibility(View.GONE);
+            if (getActivity() != null) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                Toast.makeText(ProfileFragment.this.getActivity(), "failure", Toast.LENGTH_SHORT).show();
+                reloadButton.setVisibility(View.VISIBLE);
+                progressBarView.setVisibility(View.GONE);
+            }
         }
 
         @Override
         public void onSuccess(User user) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            ProfileFragment.this.user = user;
-            showProfile();
+            if (getActivity() != null) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                ProfileFragment.this.user = user;
+                showProfile();
+            }
         }
     }
 
@@ -143,16 +147,20 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public void onFailure(SpiceException spiceException) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            Toast.makeText(ProfileFragment.this.getActivity(), "Error. Please try again.", Toast.LENGTH_SHORT).show();
-            saveButton.setEnabled(true);
+            if (getActivity() != null) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                Toast.makeText(ProfileFragment.this.getActivity(), "Error. Please try again.", Toast.LENGTH_SHORT).show();
+                saveButton.setEnabled(true);
+            }
         }
 
         @Override
         public void onSuccess(User user) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            saveButton.setEnabled(true);
-            Toast.makeText(ProfileFragment.this.getActivity(), "Profile is successfully saved.", Toast.LENGTH_SHORT).show();
+            if (getActivity() != null) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                saveButton.setEnabled(true);
+                Toast.makeText(ProfileFragment.this.getActivity(), "Profile is successfully saved.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

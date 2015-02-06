@@ -12,6 +12,5 @@ class Bestprice extends Page
 {
     public function action_index() {   
         $this->view->subview = 'pages/bestprice';
-
     }
 }

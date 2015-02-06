@@ -39,7 +39,8 @@ abstract public class RequestListener<RESULT> implements com.octo.android.robosp
                     //prefs.edit().putString("token", "").apply();
                     Intent intent = new Intent(context, LoginActivity.class);
                     if (!prefs.getString("token", "").equals("")) {
-                        intent.putExtra("refresh", true);
+                        //intent.putExtra("refresh", true);
+                        prefs.edit().putString("token", "").apply();
                     }
                     context.startActivity(intent);
                 }

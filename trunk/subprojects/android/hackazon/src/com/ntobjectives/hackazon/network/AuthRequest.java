@@ -30,7 +30,7 @@ public class AuthRequest extends OkHttpSpiceRequest<String>{
 
     public AuthRequest(Context context, String host, String username, String password) {
         super(String.class);
-        this.host = host.equals("") ? PreferenceManager.getDefaultSharedPreferences(context).getString("host", "") : host;
+        this.host = host.trim().equals("") ? PreferenceManager.getDefaultSharedPreferences(context).getString("host", "") : host;
         this.username = username;
         this.password = password;
     }

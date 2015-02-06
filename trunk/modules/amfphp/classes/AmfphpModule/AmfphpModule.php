@@ -8,6 +8,7 @@
 namespace AmfphpModule;
 
 
+use AmfphpModule\Core\HttpRequestGatewayFactory;
 use App\Pixie;
 use AmfphpModule\Core\Config;
 
@@ -29,7 +30,7 @@ class AmfphpModule
     public function run()
     {
         $config = new Config($this->pixie);
-        $gateway = \Amfphp_Core_HttpRequestGatewayFactory::createGateway($config);
+        $gateway = HttpRequestGatewayFactory::createGatewayEx($this->pixie, $config);
         $gateway->service();
         $gateway->output();
     }

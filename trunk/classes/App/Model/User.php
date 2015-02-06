@@ -4,12 +4,14 @@ namespace App\Model;
 
 use App\Pixie;
 use RelationTest\Model\Role;
+use VulnModule\VulnerableField;
 
 /**
  * Class User.
- * @property WishList|WishList[] wishlists
- * @property WishList[] lists
+ *
  * @property Pixie $pixie
+ *
+ * @property int $id
  * @property string $username
  * @property string $password
  * @property string $email
@@ -18,9 +20,18 @@ use RelationTest\Model\Role;
  * @property string $credit_card
  * @property string $credit_card_expires
  * @property string $credit_card_cvv
+ * @property string $last_login
+ * @property int $active
+ * @property string $recover_passw
+ * @property string $oauth_provider
+ * @property string $oauth_uid
+ * @property string $created_on
  *
- * @property Role $roles
+ * @property WishList|WishList[] wishlists
+ * @property WishList[] lists
+ * @property Role|Role[] $roles
  * @property WishListFollowers $wishlistFollowers
+ *
  * @package App\Model
  */
 class User extends BaseModel {
@@ -54,6 +65,7 @@ class User extends BaseModel {
         if (strlen($dataUser['username']) && iterator_count($this->getUserByUsername($dataUser['username'])) > 0 ||
                 strlen($dataUser['email']) && iterator_count($this->getUserByEmail($dataUser['email'])) > 0) {
             return true;
+
         } else {
             return false;
         }
@@ -74,7 +86,7 @@ class User extends BaseModel {
     }
 
     public function RegisterUser($dataUser) {
-        $dataUser['password'] = $this->pixie->auth->provider('password')->hash_password($dataUser['password']);
+        $dataUser['password'] = $this->pixie->auth->provider('password')->hash_password((string) $dataUser['password']);
         $dataUser['created_on'] = $dataUser['last_login'] = date('Y-m-d H:i:s');
         $allowed = ['first_name', 'last_name', 'email', 'password', 'username', 'created_on', 'last_login'];
         $allowedData = [];
@@ -88,15 +100,22 @@ class User extends BaseModel {
     }
 
     public function checkLoginUser($login) {
-        if (preg_match("/[a-z0-9_-]+(\\.[a-z0-9_-]+)*@([0-9a-z][0-9a-z-]*[0-9a-z]\\.)+([a-z]{2,4})/i", $login)) {
+
+        if (preg_match("/[a-z0-9_-]+(\\.[a-z0-9_-]+)*@([0-9a-z][0-9a-z-]*[0-9a-z]\\.)+([a-z]{2,4})/i", (string) $login)) {
             /** @var User $user */
             $user = $this->pixie->orm->get('User')->where('email', $login)->find();
-            if ($user->loaded())
+            if ($user->loaded()) {
                 $login = $user->username;
+            }
         }
+
         return $login;
     }
 
+    /**
+     * @param $login
+     * @return User|null
+     */
     public function loadUserModel($login) {
         /** @var User $user */
         $user = $this->pixie->orm->get('User')->where('username', $login)->find();
@@ -106,6 +125,7 @@ class User extends BaseModel {
     }
 
     public function saveOAuthUser($username, $oauth_uid, $oauth_provider) {
+        /** @var User $user */
         $user = $this->pixie->orm->get('User');
         $user->username = $username;
         $user->oauth_provider = $oauth_provider;
@@ -124,7 +144,7 @@ class User extends BaseModel {
             $host = $host ?: 'http://hackazon.com';
 
             return array(
-                'to' => $email,
+                'to' => $email instanceof VulnerableField ? $email->raw() : $email,
                 'from' => 'RobotHackazon@hackazon.com',
                 'subject' => 'recovering password',
                 'text' => 'Hello, ' . $user->username . ".\nRecovering link is here "
@@ -245,10 +265,33 @@ class User extends BaseModel {
 
     public function getPublicData()
     {
+        if (!$this->loaded()) {
+            return null;
+        }
+
         $allowedUserFields = [
             'id', 'username', 'first_name', 'last_name', 'email', 'photo', 'user_phone', 'created_on'
         ];
 
-        return array_intersect_key($this->as_array(true), array_flip($allowedUserFields));
+        $result = array_intersect_key($this->as_array(true), array_flip($allowedUserFields));
+        $result['photoUrl'] = $this->getPhotoPath();
+        return $result;
+    }
+
+    public function getPhotoPath()
+    {
+        if (!$this->loaded()) {
+            return null;
+        }
+
+        if (isset($this->photo) && is_numeric($this->photo)) {
+            /** @var File $photoObj */
+            $photoObj = $this->pixie->orm->get('file', $this->photo);
+            if ($photoObj->loaded() && $photoObj->user_id == $this->id()) {
+                return preg_replace('#.*?([^\\\\/]{2}[\\\\/][^\\\\/]+)$#', '$1', $photoObj->path);
+            }
+        }
+
+        return $this->photo;
     }
 }

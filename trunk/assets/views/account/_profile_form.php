@@ -18,9 +18,9 @@
         <input type="text" name="user_phone" id="user_phone" class="form-control input-lg" placeholder="Phone" tabindex="3" value="<?php $_($user_phone, 'user_phone'); ?>">
     </div>
 
-    <?php if (isset($photo) && $photo): ?>
+    <?php if (isset($photoUrl) && $photoUrl): ?>
         <div class="form-group">
-            <img src="<?php echo $baseImgPath; $_($photo); ?>" alt="" class="profile-picture" /> <br>
+            <img src="<?php echo $baseImgPath; $_($photoUrl); ?>" alt="" class="profile-picture" /> <br>
             <label><input type="checkbox" name="remove_photo" /> Remove photo</label>
         </div>
     <?php endif; ?>
@@ -32,10 +32,10 @@
     <hr class="colorgraph">
     <div class="row">
         <div class="col-xs-6 col-md-6">
-            <input type="submit" name="_submit" value="Save" class="btn btn-block btn-lg" tabindex="7">
+            <input type="submit" name="_submit_save" value="Save" class="btn btn-block btn-lg" tabindex="7">
         </div>
         <div class="col-xs-6 col-md-6">
-            <input type="submit" name="_submit" value="Save and Exit" class="btn btn-primary btn-block btn-lg" tabindex="8">
+            <input type="submit" name="_submit_save_and_exit" value="Save and Exit" class="btn btn-primary btn-block btn-lg" tabindex="8">
         </div>
     </div>
 </form>

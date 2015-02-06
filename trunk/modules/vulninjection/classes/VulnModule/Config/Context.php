@@ -2,135 +2,210 @@
 /**
  * Created by IntelliJ IDEA.
  * User: Nikolay Chervyakov 
- * Date: 07.08.2014
- * Time: 11:50
+ * Date: 30.11.2014
+ * Time: 16:34
  */
 
 
 namespace VulnModule\Config;
 
-use App\Helpers\ArraysHelper;
+
 use App\Pixie;
+use App\Pixifier;
+use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use VulnModule\Config\URL\URL;
 use VulnModule\DataType\ArrayObject;
+use VulnModule\Exception\MissingContextVulnerabilityException;
+use VulnModule\Exception\MissingFieldVulnerabilityException;
+use VulnModule\Exception\MissingVulnerabilityInTreeException;
+use VulnModule\Config\Annotations as Vuln;
 
 /**
- * Class Context
- * Holds the config for certain level
- * @package PHPixie\Config
+ * Represents the context for vulnerabilities
+ * @package VulnModule\Config
  */
-class Context
+class Context extends VulnerabilityHost
 {
-    const TYPE_DEFAULT = 0;     // Usual context
-    const TYPE_FORM = 1;        // Form context
+    // Context types
+    const TYPE_STANDARD = 'standard';   // Any intermediary context
+    // Top-level context (although there may be nested app-level contexts, but above the controller)
+    const TYPE_APPLICATION = 'application';
+    const TYPE_CONTROLLER = 'controller';
+    const TYPE_ACTION = 'action';
 
-    /** @var array Different props */
-    protected $params = [];
+    // Types of storage role
+    const STORAGE_ROLE_ROOT = 'root';
+    const STORAGE_ROLE_CHILD = 'child';
 
-    public static $contextTypes = [
-        self::TYPE_DEFAULT,
-        self::TYPE_FORM
-    ];
+    const TECH_GENERIC = 'generic';
+    const TECH_WEB = 'web';
+    const TECH_GWT = 'gwt';
+    const TECH_AMF = 'amf';
+    const TECH_REST = 'rest';
 
     /**
-     * Type of this context. It influences on some functionality.
+     * @var Context[]|ArrayObject<Context2>
      */
-    protected $type;
+    protected $children;
 
     /**
-     * Name of the context
-     * @var string
+     * @var Field[]|ArrayObject<Field>
      */
-    protected $name;
+    protected $fields;
 
     /**
      * @var Context
      */
-    protected $parent = null;
+    protected $parent;
 
     /**
-     * Single fields in the request.
-     * For example, "q" for search request.
-     * @var array|ArrayObject
+     * @var string
      */
-    protected $fields = null;
+    protected $type = self::TYPE_STANDARD;
 
     /**
-     * @var array|ArrayObject
+     * @var string
      */
-    protected $vulnerabilities = null;
+    protected $storageRole = self::STORAGE_ROLE_CHILD;
 
     /**
-     * Child contexts, including controller, form and custom contexts.
-     * @var null|Context[]
+     * @var string
      */
-    protected $children = null;
+    protected $technology = self::TECH_GENERIC;
 
     /**
-     * @var null|Pixie
+     * @var string
      */
-    protected $pixie = null;
+    protected $routeDescription = '';
 
     /**
-     * Constructs context.
+     * @var string Name of the controller, if differs from context name
+     */
+    protected $mappedTo;
+
+    /**
+     * @var Pixie
+     */
+    protected $pixie;
+
+    /**
      * @param string $name
-     * @param array $children
-     * @param int $type
-     * @param null $pixie
+     * @param VulnerableElement $vulnTree
+     * @param string $type
+     * @param string $storageRole
      */
-    public function __construct($name = '', array $children = [], $type = self::TYPE_DEFAULT, $pixie = null)
+    function __construct($name = null, VulnerableElement $vulnTree = null, $type = self::TYPE_STANDARD, $storageRole = self::STORAGE_ROLE_CHILD)
     {
-        $this->children = $children;
-        $this->pixie = $pixie;
-        $this->setName($name);
-        $this->setType($type);
-        $this->params['db_fields'] = array();
+        parent::__construct($name, $vulnTree);
+        $this->children = new ArrayObject();
+        $this->fields = new ArrayObject();
+        $this->type = $type;
+        $this->storageRole = $storageRole;
+        $this->pixie = Pixifier::getInstance()->getPixie();
+    }
+
+    public static function getRoutes()
+    {
+        static $routeNames = null;
+
+        if (!$routeNames) {
+            $routeNames = array_keys(Pixifier::getInstance()->getPixie()->router->getRoutes());
+        }
+
+        return $routeNames;
     }
 
     /**
-     * Factory method to create context tree from config array.
-     * @param $name
-     * @param array $data
-     * @param $parent
-     * @param int $type
-     * @param null|Pixie $pixie
+     * @param Context $child
+     * @throws \Exception
+     */
+    public function addChild(Context $child)
+    {
+        if (!$child || $this->children->contains($child)) {
+            return;
+        }
+
+        // Ensure we add only allowed sub-contexts
+        if (!$this->canContainSubtree($child)) {
+            throw new \Exception('Invalid context hierarchy structure.');
+        }
+
+        if ($child->getParent()) {
+            $child->getParent()->removeChild($child);
+        }
+
+        $this->children->append($child);
+        $child->setParent($this);
+
+        if ($this->technology != Context::TECH_GENERIC && $this->technology != $child->technology) {
+            $child->setTechnology($this->technology);
+        }
+    }
+
+    /**
+     * @param Context $child
      * @return Context
      */
-    public static function createFromData($name, array $data = [], $parent = null, $type = self::TYPE_DEFAULT, $pixie = null)
+    public function removeChild(Context $child)
     {
-        $context = new Context($name, [], $type, $pixie);
-        $context->setParent($parent);
-        if ($parent) {
-            $context->setParams($parent->getParams());
-        }
-        $context->setFields(array_key_exists('fields', $data) ? $data['fields'] : array());
-        $context->setVulnerabilities(array_key_exists('vulnerabilities', $data) ? $data['vulnerabilities'] : array());
 
-        // Add contexts forms contexts
-        if (array_key_exists('forms', $data) && is_array($data['forms'])) {
-            foreach ($data['forms'] as $formName => $formData) {
-                self::checkValidName($formName);
-                $formContext = self::createFromData($formName, $formData, $context, self::TYPE_FORM, $pixie);
-                $context->addContext($formContext);
-            }
-        }
-
-        // Add contexts sub-contexts
-        $blocks = ['contexts', 'actions'];
-        foreach ($blocks as $block) {
-            if (array_key_exists($block, $data) && is_array($data[$block])) {
-                foreach ($data[$block] as $subContextName => $subContextData) {
-                    self::checkValidName($subContextName);
-                    $subContext = self::createFromData($subContextName, $subContextData, $context, self::TYPE_DEFAULT, $pixie);
-                    $context->addContext($subContext);
-                }
-            }
-        }
-
-        return $context;
+        $this->children->removeElement($child);
+        $child->setParent(null);
+        return $child;
     }
 
     /**
-     * Returns parent of this context.
+     * @param Context $child
+     * @return bool
+     */
+    public function hasChild(Context $child)
+    {
+        if (!$child) {
+            return false;
+        }
+
+        return $this->children->contains($child);
+    }
+
+    /**
+     * @param string $childName
+     * @return bool
+     */
+    public function hasChildByName($childName)
+    {
+        if (!$childName || !is_string($childName)) {
+            return false;
+        }
+
+        return $this->getChildByName($childName) !== null;
+    }
+
+    /**
+     * @param Field $field
+     * @return bool
+     */
+    public function hasField(Field $field)
+    {
+        if (!$field) {
+            return false;
+        }
+
+        return $this->fields->contains($field);
+    }
+
+    /**
+     * @param Field $field
+     * @return Field
+     */
+    public function removeField(Field $field)
+    {
+        $this->fields->removeElement($field);
+        $field->setParent(null);
+        return $field;
+    }
+
+    /**
      * @return Context
      */
     public function getParent()
@@ -139,243 +214,627 @@ class Context
     }
 
     /**
-     * Returns children of this context.
-     * @return null|Context[]
+     * @param VulnerabilityHost $parent
      */
-    public function getChildren()
+    public function setParent(VulnerabilityHost $parent)
     {
-        return $this->children;
-    }
-
-
-    /**
-     * Sets parent of this context.
-     * @param Context $context
-     * @return $this
-     */
-    public function setParent(Context $context = null)
-    {
-        $this->parent = $context;
-        return $this;
-    }
-
-    /**
-     * Sets fields which are to be filtered on vulnerabilities.
-     * @param array $fields
-     * @return $this
-     */
-    public function setFields($fields = [])
-    {
-        $parentFields = $this->parent ? $this->parent->getFields() : [];
-        $this->fields = ArraysHelper::arrayMergeRecursiveDistinct($parentFields, $fields);
-        $repo = $this->pixie->modelInfoRepository;
-
-        if (!$repo) {
-            return $this;
+        if ($this->parent === $parent) {
+            return;
         }
 
-        if (!is_array($this->params['db_fields'])) {
-            $this->params['db_fields'] = array();
+        if (!($parent instanceof Context)) {
+            throw new \InvalidArgumentException("Context can only be a child of other context.");
         }
 
-        foreach ($this->fields as $field => $data) {
-            if ($data['db_field']) {
-                $parts = preg_split('/\./', $data['db_field'], -1, PREG_SPLIT_NO_EMPTY);
-                if (count($parts) < 2) {
-                    continue;
-                }
 
-                $info = $repo->getModelInfo($parts[0]);
-                if ($info === false) {
-                    continue;
-                }
 
-                $this->fields[$field]['db_table'] = $info['table'];
-                $this->fields[$field]['db_field_name'] = $parts[1];
-
-                $fieldName = $info['table'].'.'.$parts[1];
-                $this->params['db_fields'][$fieldName] = $field;
-            }
+        if ($this->parent && $this->parent->hasChild($this)) {
+            $this->parent->removeChild($this);
         }
 
-        return $this;
+        $this->parent = $parent;
     }
 
     /**
-     * Sets vulnerabilities of this context.
-     * @param array $vulnerabilities
-     * @return $this
-     * @throws \InvalidArgumentException
+     * @return Context[]|ArrayObject<Context2>
      */
-    public function setVulnerabilities($vulnerabilities = [])
+    public function getChildrenArray()
     {
-        // Clear current vulnerabilities
-        $this->vulnerabilities = [];
+        return $this->children->getArrayCopy();
+    }
 
-        if (!is_array($vulnerabilities)) {
-            $vulnerabilities = (array) $vulnerabilities;
+    /**
+     * @return Context[]|\ArrayIterator<Context2>
+     */
+    public function getChildrenIterator()
+    {
+        return $this->children->getIterator();
+    }
+
+    /**
+     * @param Field $field
+     */
+    public function addField(Field $field)
+    {
+        if (!$field || $this->fields->contains($field)) {
+            return;
         }
 
-        foreach ($vulnerabilities as $type => $vulnerability) {
-            $this->checkValidType($type);
-            $this->vulnerabilities[$type] = $vulnerability;
+        if ($field->getParent()) {
+            $field->getParent()->removeField($field);
         }
 
-        $parentVulns = $this->parent ? $this->parent->getVulnerabilities() : [];
-        $this->vulnerabilities = ArraysHelper::arrayMergeRecursiveDistinct($parentVulns, $this->vulnerabilities);
-
-        return $this;
+        $this->fields->append($field);
+        $field->setParent($this);
     }
 
-    /**
-     * Adds context to the collection.
-     * @param Context $context
-     */
-    public function addContext(Context $context)
+    public function getRequest()
     {
-        $this->children[$context->getName()] = $context;
-        $context->parent = $this;
-    }
-
-    /**
-     * Returns name of the context.
-     * @return string
-     */
-    private function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Sets context name.
-     * @param $name
-     * @return $this
-     * @throws \InvalidArgumentException
-     */
-    private function setName($name)
-    {
-        self::checkValidName($name);
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * Set type of the context.
-     * @param $type
-     * @return $this
-     */
-    private function setType($type)
-    {
-        $this->checkValidType($type);
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * Check that given $type is correct.
-     * @param $type
-     * @throws \InvalidArgumentException
-     */
-    public static function checkValidType($type)
-    {
-        if (!in_array((int)$type, self::$contextTypes)) {
-            throw new \InvalidArgumentException('Invalid vulnerability type "' . $type
-                . '". Valid types are: ' . implode(', ', self::$contextTypes));
-        }
-    }
-
-    /**
-     * Checks that context names does not contain dots.
-     * @param $name
-     * @throws \InvalidArgumentException
-     */
-    public static function checkValidName($name)
-    {
-        if (preg_match('/\./', $name)) {
-            throw new \InvalidArgumentException(
-                'Vulnerability context name must not contain dots, as it serves as name separator.');
-        }
-    }
-
-    /**
-     * Finds given context in all tree.
-     * @param Context $context
-     * @return bool
-     */
-    public function findInTree(Context $context)
-    {
-        if (!is_array($this->children) || !count($this->children)) {
-            return false;
-        }
-
-        foreach ($this->children as $child) {
-            if ($child === $context || $child->findInTree($context)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Search context in tree by given path.
-     *
-     * @param $path
-     * @return null
-     */
-    public function findByPath($path)
-    {
-        if (!is_array($path)) {
-            $pathParts = preg_split('/\./', $path, -1, PREG_SPLIT_NO_EMPTY);
+        if ($this->request) {
+            return $this->request;
         } else {
-            $pathParts = $path;
+            if ($this->parent) {
+                return $this->parent->getRequest();
+            } else {
+                return Pixifier::getInstance()->getPixie()->http_request();
+            }
         }
+    }
 
-        if (!count($pathParts)) {
+    /**
+     * @param $name
+     * @param VulnerabilityHost $startNode
+     * @param FieldDescriptor $descriptor
+     * @param bool $onlyRoot
+     * @return null|\VulnModule\Vulnerability
+     * @throws MissingContextVulnerabilityException
+     * @throws MissingFieldVulnerabilityException
+     */
+    public function _getParentVulnerabilityFromParentNode(
+        $name, VulnerabilityHost $startNode = null, FieldDescriptor $descriptor = null,
+        $onlyRoot = false)
+    {
+        if ($descriptor) {
+            foreach ($this->fields as $field) {
+                if ($field->matchesToDescriptor($descriptor)) {
+                    if ($field->hasOwnVulnerability($name, $onlyRoot)) {
+                        return $field->getVulnerability($name, $onlyRoot);
+                    }
+                }
+            }
+
+            if ($this->getParent()) {
+                return $this->getParent()->getParentVulnerability($name, $startNode, $descriptor, $onlyRoot);
+            } else {
+                throw new MissingFieldVulnerabilityException();
+            }
+
+        } else {
+            try {
+                return parent::_getParentVulnerabilityFromParentNode($name, $startNode, null, $onlyRoot);
+
+            } catch (MissingVulnerabilityInTreeException $e) {
+                throw new MissingContextVulnerabilityException("", 0, $e);
+            }
+        }
+    }
+
+    /**
+     * @param FieldDescriptor $descriptor
+     * @return null|Field
+     */
+    public function getMatchingField(FieldDescriptor $descriptor)
+    {
+        if ($descriptor === null) {
             return null;
         }
 
-        $firstPart = array_shift($pathParts);
-
-        if (array_key_exists($firstPart, $this->children)) {
-            $context = $this->children[$firstPart];
-
-            if (!count($pathParts)) {
-                return $context;
+        foreach ($this->fields as $field) {
+            if ($field->matchesToDescriptor($descriptor)) {
+                return $field;
             }
-
-            return $context->findByPath($path);
         }
 
         return null;
     }
 
     /**
-     * @return array|ArrayObject
+     * @param FieldDescriptor $descriptor
+     * @return bool
      */
-    public function getVulnerabilities()
+    public function hasMatchingField(FieldDescriptor $descriptor)
     {
-        return $this->vulnerabilities;
+        return $this->getMatchingField($descriptor) !== null;
+    }
+
+    public function getOrCreateMatchingField(FieldDescriptor $descriptor)
+    {
+        $field = $this->getMatchingField($descriptor);
+        if (!$field) {
+            $field = new Field($descriptor->getName(), null, $descriptor->getSource());
+            $this->addField($field);
+        }
+
+        return $field;
     }
 
     /**
-     * @return array|ArrayObject
+     * Get a set of context types from all children and the element itself
+     * @return array
+     */
+    public function getContextTypesFromTree()
+    {
+        $types = [$this->type];
+
+        foreach ($this->children as $child) {
+            $types = array_merge($types, $child->getContextTypesFromTree());
+        }
+
+        return array_unique($types);
+    }
+
+    /**
+     * @param array $childrenTypes
+     * @return bool
+     */
+    public function canContainChildrenOfTypes(array $childrenTypes)
+    {
+        $parentTypes = $this->getSelfAndAllParentTypes();
+
+        if (in_array(self::TYPE_ACTION, $childrenTypes) && in_array(self::TYPE_ACTION, $parentTypes)) {
+            return false;
+
+        } else if (count(array_intersect([self::TYPE_APPLICATION, self::TYPE_CONTROLLER], $childrenTypes))
+            && count(array_intersect([self::TYPE_ACTION, self::TYPE_CONTROLLER], $parentTypes))
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function canContainSubtree(Context $child)
+    {
+        $types = $child->getContextTypesFromTree();
+        return $this->canContainChildrenOfTypes($types);
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelfAndAllParentTypes()
+    {
+        $types = [$this->type];
+        if ($this->parent) {
+            $types = array_merge($types, [$this->parent->getType()]);
+        }
+        return array_unique($types);
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStorageRole()
+    {
+        return $this->storageRole;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @param string $storageRole
+     */
+    public function setStorageRole($storageRole)
+    {
+        $this->storageRole = $storageRole;
+    }
+
+    /**
+     * @return Context[]|ArrayObject
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * @return Field[]|ArrayObject
      */
     public function getFields()
     {
         return $this->fields;
     }
 
-    public function getParams()
+    public function hasChildren()
     {
-        return $this->params;
+        return count($this->children) > 0;
+    }
+
+    public function hasFields()
+    {
+        return count($this->fields) > 0;
     }
 
     /**
-     * @param array $params
+     * @param $name
+     * @return null|Context
      */
-    public function setParams($params)
+    public function getChildByName($name)
     {
-        $this->params = $params;
+        foreach ($this->children as $child) {
+            if ($child->getName() === $name) {
+                return $child;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $name
+     * @return Context
+     * @throws \Exception
+     */
+    public function getOrCreateChildByName($name)
+    {
+        $child = $this->getChildByName($name);
+        if (!$child) {
+            $child = new Context($name);
+            $this->addChild($child);
+        }
+
+        return $child;
+    }
+
+    /**
+     * Returns first matching field or null
+     * @param $name
+     * @param string $source
+     * @return null|Field
+     */
+    public function getField($name, $source = FieldDescriptor::SOURCE_ANY)
+    {
+        foreach ($this->fields as $field) {
+            if ($field->getName() === $name
+                && ($source === FieldDescriptor::SOURCE_ANY || $source === $field->getSource())
+            ) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns all fields that match arguments.
+     * @param null $name
+     * @param string $source
+     * @return array|Field[]
+     */
+    public function getMatchingFields($name = null, $source = FieldDescriptor::SOURCE_ANY)
+    {
+        $result = [];
+
+        foreach ($this->fields as $field) {
+            if (($name === null || $field->getName() === $name)
+                && ($source === FieldDescriptor::SOURCE_ANY || $source === $field->getSource())
+            ) {
+                $result[] = $field;
+            }
+        }
+
+        return $result;
+    }
+
+    public static function getStorageRoles()
+    {
+        return [
+            self::STORAGE_ROLE_CHILD,
+            self::STORAGE_ROLE_ROOT
+        ];
+    }
+
+    public static function getTypes()
+    {
+        return [
+            self::TYPE_APPLICATION,
+            self::TYPE_CONTROLLER,
+            self::TYPE_ACTION,
+            self::TYPE_STANDARD
+        ];
+    }
+
+    public static function getTechnologies()
+    {
+        return [
+            self::TECH_GENERIC,
+            self::TECH_AMF,
+            self::TECH_GWT,
+            self::TECH_WEB,
+            self::TECH_REST
+        ];
+    }
+
+    public static function getTechnologiesLabels()
+    {
+        return [
+            self::TECH_GENERIC => 'Generic',
+            self::TECH_AMF => 'AMF',
+            self::TECH_GWT => 'GWT',
+            self::TECH_WEB => 'Web',
+            self::TECH_REST => 'REST'
+        ];
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        parent::loadValidatorMetadata($metadata);
+
+        $metadata->addPropertyConstraints('storageRole', [
+            new Constraints\NotBlank(['message' => 'Storage role cannot be blank.']),
+            new Constraints\Choice([
+                'choices' => self::getStorageRoles(),
+                'multiple' => false
+            ])
+        ]);
+
+        $metadata->addPropertyConstraints('type', [
+            new Constraints\NotBlank(['message' => 'Context type cannot be blank.']),
+            new Constraints\Choice([
+                'choices' => self::getTypes(),
+                'multiple' => false
+            ])
+        ]);
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param $path
+     * @param bool $createOnMissing
+     * @return null|Context|Field
+     */
+    public function getElementByPath($path, $createOnMissing = true)
+    {
+        //var_dump($path);exit;
+
+        $parts = preg_split('/\|/', $path);
+        $contextPart = $parts[0];
+        $fieldPart = $parts[1];
+        $vulnPart = $parts[2];
+
+        if ($contextPart) {
+            $contextParts = preg_split('/->/', $contextPart);
+            /** @var Context|null $context */
+            $context = null;
+
+            if ($this->hasChildByName($contextParts[0]) || $createOnMissing) {
+                if (!($context = $this->getChildByName($contextParts[0]))) {
+                    $context = new Context($contextParts[0]);
+                    $this->addChild($context);
+                }
+
+                unset($contextParts[0]);
+                unset($parts[0]);
+
+                if ($context) {
+                    if (count($contextParts) || $vulnPart || $fieldPart) {
+                        array_unshift($parts, implode('->', $contextParts));
+                        return $context->getElementByPath(implode('|', $parts), $createOnMissing);
+
+                    } else {
+                        return $context;
+                    }
+
+                } else {
+                    return null;
+                }
+
+            } else {
+                return null;
+            }
+
+        } else if ($fieldPart) {
+            $fieldParts = preg_split('/:/', $fieldPart);
+            $name = $fieldParts[0];
+            $source = $fieldParts[1] ?: FieldDescriptor::SOURCE_ANY;
+            $descriptor = new FieldDescriptor($name, $source);
+
+            if ($this->hasMatchingField($descriptor) || $createOnMissing) {
+                if (!($field = $this->getMatchingField($descriptor))) {
+                    $field = new Field($name, null, $source);
+                    $this->addField($field);
+                }
+
+                if ($vulnPart || $vulnPart === '0' || $vulnPart === 0) {
+                    return $field->getVulnElementByPath($vulnPart, $createOnMissing);
+
+                } else {
+                    return $field;
+                }
+
+            } else {
+                return null;
+            }
+
+        } else if ($vulnPart) {
+            return $this->getVulnElementByPath($path, $createOnMissing);
+
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getTechnology()
+    {
+        return $this->technology;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTechnologyLabel()
+    {
+        $labels = self::getTechnologiesLabels();
+        return $labels[$this->technology];
+    }
+
+    /**
+     * @param string $technology
+     */
+    public function setTechnology($technology)
+    {
+        $this->technology = $technology;
+
+        if ($this->technology != Context::TECH_GENERIC && $this->hasChildren()) {
+            foreach ($this->children as $child) {
+                $child->setTechnology($this->technology);
+            }
+        }
+    }
+
+    public function getURL()
+    {
+        $routeName = null;
+        $params = [];
+        $metadata = null;
+
+        /** @var ContextMetadataFactory $metadataFactory */
+        $metadataFactory = $this->pixie->container['vulnerability.context_metadata_factory'];
+
+        if ($this->type == self::TYPE_CONTROLLER) {
+            $metadata = $metadataFactory->getMetadata($this->getMappedTo(), null, $this->technology);
+            $params = ['controller' => $this->getMappedTo()];
+
+        } else if ($this->type == self::TYPE_ACTION && $this->getParent()) {
+            $metadata = $metadataFactory->getMetadata($this->getParent()->getMappedTo(), $this->getMappedTo(), $this->technology);
+            $params = [
+                'controller' => $this->getParent() ? $this->getParent()->getMappedTo() : false,
+                'action' => $this->getMappedTo()
+            ];
+        }
+
+        if ($this->technology == self::TECH_REST) {
+            if (!$metadata) {
+                $metadata = new ContextMetadata();
+            }
+
+            if (!$metadata->getRoute()) {
+                $metadata->setRoute('rest');
+            }
+        }
+
+        /** @var Vuln\Route $annotation */
+        if ($metadata) {
+            if ($metadata->getRoute()) {
+                $routeName = $metadata->getRoute();
+
+            } else {
+                $routeName = 'default';
+            }
+
+            if (count($metadata->getRouteParams())) {
+                $params = array_merge($params, $metadata->getRouteParams());
+            }
+
+            if ($metadata->getDescription()) {
+                $this->routeDescription = $metadata->getDescription();
+            }
+        }
+
+        if ($this->technology == self::TECH_REST) {
+            if (!$params['controller']) {
+                $params['controller'] = false;
+            }
+        }
+
+        if ($routeName && in_array($this->technology, [self::TECH_GENERIC, self::TECH_WEB, self::TECH_REST])) {
+            $url = $this->pixie->router->generateUrl($routeName, $params, false, 'http', false);
+            if ($this->technology == self::TECH_REST && $params['action']) {
+                $url .= ' [ ' . strtoupper($params['action']) . ' ]';
+            }
+            return $url;
+        }
+
+        $url = $this->getParent() ? $this->getParent()->getURL() : new URL();
+        if (!is_object($url)) {
+            $parentUrl = $url;
+            $url = new URL();
+            $url->addSegment($parentUrl);
+        }
+
+        $url->setTechnology($this->getTechnology());
+
+        if ($this->getMappedTo() == 'default' && !$this->parent) {
+            $url->addSegment('/');
+
+        } else {
+             if ($this->type == self::TYPE_CONTROLLER) {
+                 $url->setService($this->getMappedTo());
+
+             } else if ($this->type == self::TYPE_ACTION) {
+                 $url->setMethod($this->getMappedTo());
+
+             } else {
+                 $url->addSegment($this->getMappedTo());
+             }
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteDescription()
+    {
+        return $this->routeDescription;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMappedTo()
+    {
+        return $this->mappedTo ?: $this->name;
+    }
+
+    /**
+     * @param string $mappedTo
+     */
+    public function setMappedTo($mappedTo)
+    {
+        $this->mappedTo = $mappedTo;
     }
 }

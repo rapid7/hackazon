@@ -36,8 +36,6 @@ public class OrdersFragment extends Fragment {
     //private SimpleCursorAdapter adapter;
     private View view;
 
-    protected OrdersRetrofitSpiceRequest req;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -66,7 +64,6 @@ public class OrdersFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
-        req = new OrdersRetrofitSpiceRequest();
 
         ordersListView = (ListView) getActivity().findViewById(R.id.listview_orders);
         loadingView = getActivity().findViewById(R.id.loading_layout);
@@ -79,6 +76,9 @@ public class OrdersFragment extends Fragment {
     public void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
+
+        OrdersRetrofitSpiceRequest req = new OrdersRetrofitSpiceRequest();
+
         String lastRequestCacheKey = req.createCacheKey();
         getActivity().setProgressBarIndeterminateVisibility(true);
         ((AbstractRootActivity) getActivity()).getSpiceManager().execute(req, lastRequestCacheKey, DurationInMillis.ONE_MINUTE,
@@ -104,15 +104,19 @@ public class OrdersFragment extends Fragment {
 
         @Override
         public void onFailure(SpiceException spiceException) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            Toast.makeText(OrdersFragment.this.getActivity(), "failure", Toast.LENGTH_SHORT).show();
+            if (getActivity() != null) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                Toast.makeText(OrdersFragment.this.getActivity(), "failure", Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
         public void onSuccess(Order.OrdersResponse response) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            updateListViewContent(response);
-            //Toast.makeText(OrdersFragment.this.getActivity(), "success", Toast.LENGTH_SHORT).show();
+            if (getActivity() != null) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                updateListViewContent(response);
+                //Toast.makeText(OrdersFragment.this.getActivity(), "success", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
