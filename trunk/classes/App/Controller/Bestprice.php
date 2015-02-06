@@ -12,6 +12,8 @@ class Bestprice extends Page
 {
     public function action_index() {
         if ($this->request->method == 'POST') {
+            $this->checkCsrfToken($this->request->post('bestprice'));
+
             if ($this->request->is_ajax()) {
                 $this->jsonResponse([]);
 
