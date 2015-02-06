@@ -2,6 +2,7 @@
 
 namespace App\Model;
 use PHPixie\ORM\Extension\Nested;
+use VulnModule\VulnerableField;
 
 /**
  * Class Category
@@ -55,7 +56,7 @@ class Category extends BaseModel {
     );
 
     public  function getPageTitle($categoryID){
-        if (!$categoryID) {
+        if (!($categoryID instanceof VulnerableField && $categoryID->getFilteredValue()) && !$categoryID) {
             return '';
         }
         $category = $this->loadCategory($categoryID);

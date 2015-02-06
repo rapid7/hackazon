@@ -66,6 +66,12 @@ class Service implements IAMFService
         $this->context = $context;
     }
 
+    /**
+     * @param $key
+     * @param $rawValue
+     * @return \VulnModule\VulnerableField
+     * @amfphpHide
+     */
     public function wrap($key, $rawValue)
     {
         return $this->pixie->vulnService->wrapValue($key, $rawValue, FieldDescriptor::SOURCE_BODY);

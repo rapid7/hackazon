@@ -67,9 +67,9 @@ class Page extends BaseController
                 $value = $this->request->param('id');
                 break;
             case 'Search':
-                $value = $this->request->get("id");
+                $value = $this->request->getWrap("id");
                 $category = new Category($this->pixie);
-                $search_category = $category->getPageTitle($this->request->get('id'));
+                $search_category = $category->getPageTitle($this->request->getWrap('id'));
 				$search_category = ($search_category == "") ? "All" : $search_category;
                 break;
             default:

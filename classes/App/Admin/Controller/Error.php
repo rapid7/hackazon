@@ -14,6 +14,8 @@ use App\Admin\Controller;
 
 class Error extends Controller
 {
+    protected $checkSessionId = false;
+
     public function action_view()
     {
         $exception = $this->request->param('exception', null, false);

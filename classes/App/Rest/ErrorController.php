@@ -15,6 +15,8 @@ use App\Exception\SQLException;
 
 class ErrorController extends Controller
 {
+    protected $checkSessionId = false;
+
     /**
      * @var \Exception|HttpException
      */

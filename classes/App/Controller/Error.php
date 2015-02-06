@@ -15,6 +15,8 @@ use App\Page;
 
 class Error extends Page
 {
+    protected $checkSessionId = false;
+
     /**
      * @Vuln\Route(name = "error", params={"id": "<id>"})
      * @Vuln\Description("View: error/view.")
