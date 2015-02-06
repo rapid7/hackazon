@@ -34,7 +34,7 @@
 	</div>
 	<div class="col-xs-4">
 		<?php if (isset($user->photo) && $user->photo): ?>
-			<img src="<?php echo $baseImgPath; $_($user->photo); ?>" alt="" class="profile-picture img-responsive img-bordered img-thumbnail" />
+			<img src="<?php echo $baseImgPath; $_($user->getPhotoPath()); ?>" alt="" class="profile-picture img-responsive img-bordered img-thumbnail" />
 		<?php endif; ?>
 	</div>
 </div>

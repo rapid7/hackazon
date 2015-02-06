@@ -322,14 +322,20 @@ ProfileEditController = can.Control('ProfileEditController', {}, {
         });
     },
 
-    '#photo change': function (el, ev) {
+    '#photo change': function (/*el, ev*/) {
         var form = $('#uploadProfilePhotoForm');
         var control = this;
         form.ajaxSubmit({
             url: '/account/add_photo',
             success: function (res) {
-                control.data.attr('userForm').attr('photo', res.photo);
-                this.element.find('[name="remove_photo"]').removeAttr('checked');
+                if (res.photo) {
+                    control.data.attr('userForm').attr('photo', res.photo);
+                    control.data.attr('userForm').attr('photoUrl', res.photoUrl || res.photo);
+                    control.element.find('[name="remove_photo"]').removeAttr('checked');
+
+                } else if (res.errors) {
+                    bsModalWindow(res.errors, 'Error');
+                }
             }
         });
     },

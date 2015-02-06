@@ -78,7 +78,7 @@ class UserPictureUploader
                 $uploadDir = $this->pixie->getParameter('parameters.user_pictures_external_dir');
                 $uploadPath = $uploadDir . "/sess_".session_id()."_uploadto";
                 if (!file_exists($uploadPath) || !is_dir($uploadPath)) {
-                    mkdir($uploadPath);
+                    mkdir($uploadPath, 0777, true);
                 }
                 $photoName = $this->generatePhotoName($this->picture);
 
@@ -100,7 +100,11 @@ class UserPictureUploader
                     }
 
                 } else {
-                    $newPhotoPath = $uploadPath.'/'.$photoName;
+                    $uniqueUploadPath = $uploadPath . '/' . substr(sha1(time() . $this->picture->getName()), 0, 2);
+                    if (!file_exists($uniqueUploadPath) || !is_dir($uniqueUploadPath)) {
+                        mkdir($uniqueUploadPath, 0777, true);
+                    }
+                    $newPhotoPath = $uniqueUploadPath.'/'.$photoName;
                     $this->picture->move($newPhotoPath);
                     /** @var File $newFile */
                     $newFile = $this->pixie->orm->get('file');
@@ -132,10 +136,16 @@ class UserPictureUploader
                 }
 
                 $photoName = $this->generatePhotoName($this->picture);
-                $this->picture->move($photoPath . $photoName);
-                $this->result = $photoName;
+                $uniquePhotoDirName = substr(sha1(time() . $this->picture->getName()), 0, 2);
+                $uniquePhotoDir = $photoPath . $uniquePhotoDirName;
+                if (!file_exists($uniquePhotoDir) || !is_dir($uniquePhotoDir)) {
+                    mkdir($uniquePhotoDir, 0777, true);
+                }
+                $this->picture->move($uniquePhotoDir . '/' . $photoName);
+                $uniquePhotoName = $uniquePhotoDirName . '/' . $photoName;
+                $this->result = $uniquePhotoName;
                 if ($this->modifyUser) {
-                    $this->user->photo = $photoName;
+                    $this->user->photo = $uniquePhotoName;
                 }
             }
         }
@@ -144,7 +154,7 @@ class UserPictureUploader
 
     protected function generatePhotoName(UploadedFile $photo)
     {
-        return $photo->generateFileName($this->user->id());
+        return $photo->generateFileName();
     }
 
     public function getResultFileName()

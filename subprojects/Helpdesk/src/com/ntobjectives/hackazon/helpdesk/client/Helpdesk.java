@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 public class Helpdesk implements EntryPoint, ValueChangeHandler<String> {
     String startingToken = "";
-    private Boolean isAuthenticated = null;
+    protected Boolean isAuthenticated = null;
 
     private VerticalPanel mainPanel = new VerticalPanel();
     private FlexTable enquiriesTable = new FlexTable();
@@ -71,15 +71,15 @@ public class Helpdesk implements EntryPoint, ValueChangeHandler<String> {
 
     @Override
     public void onValueChange(ValueChangeEvent<String> event) {
-        executeInPanel(rootPanel, event.getValue());
+        executeInPanel(/*rootPanel, */event.getValue());
     }
 
-    public void executeInPanel(Panel myPanel, String token) {
-        String args = "";
+    public void executeInPanel(/*Panel myPanel, */String token) {
+        //String args = "";
         token = token == null ? "" : token;
         int question = token.indexOf("?");
         if (question != -1) {
-            args = token.substring(question + 1);
+            //args = token.substring(question + 1);
             token = token.substring(0, question);
         }
 
@@ -101,7 +101,7 @@ public class Helpdesk implements EntryPoint, ValueChangeHandler<String> {
         } else if (token.equals("add-enquiry")) {
             showAddEnquiryFormAction();
         } else if (token.matches("enquiry/\\d+")) {
-            showEnquiryAction(new Integer(parts[1]));
+            showEnquiryAction(Integer.valueOf(parts[1]));
 
         } else {
             showNotFoundAction();
@@ -174,11 +174,19 @@ public class Helpdesk implements EntryPoint, ValueChangeHandler<String> {
 
     public void showEnquiryAction(Enquiry enquiry) {
         VerticalPanel enquiryPanel = new VerticalPanel();
-        HTML enqDescription = new HTML(
-              "<h3>" + SafeHtmlUtils.htmlEscape(enquiry.getTitle()) + " <span class=\"label label-"
-                    + SafeHtmlUtils.htmlEscape(enquiry.getStatus()) + "\">"
-                    + SafeHtmlUtils.htmlEscape(enquiry.getStatus()) + "</span></h3>"
-            + "<p>" + SafeHtmlUtils.htmlEscape(enquiry.getDescription()).replace("\n", "<br>") + "</p><hr>"
+//        HTML enqDescription = new HTML(
+//              "<h3>" + SafeHtmlUtils.htmlEscape(enquiry.getTitle()) + " <span class=\"label label-"
+//                    + SafeHtmlUtils.htmlEscape(enquiry.getStatus()) + "\">"
+//                    + SafeHtmlUtils.htmlEscape(enquiry.getStatus()) + "</span></h3>"
+//            + "<p>" + SafeHtmlUtils.htmlEscape(enquiry.getDescription()).replace("\n", "<br>") + "</p><hr>"
+//            + "<h4>Messages:</h4>"
+//        );
+
+         HTML enqDescription = new HTML(
+              "<h3>" + enquiry.getTitle() + " <span class=\"label label-"
+                    + enquiry.getStatus() + "\">"
+                    + enquiry.getStatus() + "</span></h3>"
+            + "<p>" + enquiry.getDescription().replace("\n", "<br>") + "</p><hr>"
             + "<h4>Messages:</h4>"
         );
 
@@ -215,20 +223,21 @@ public class Helpdesk implements EntryPoint, ValueChangeHandler<String> {
                 String color = side.equals("left") ? "55C1E7" : "FA6F57";
                 sb.append("<li class=\"").append(side).append(" clearfix\">")
                         .append("<span class=\"chat-img pull-").append(side).append("\">\n")
-                            .append("<img class=\"img-circle\" alt=\"User Avatar\" src=\"http://placehold.it/50/").append(color).append("/fff\">\n")
+                        .append("<img class=\"img-circle\" alt=\"User Avatar\" src=\"http://placehold.it/50/").append(color).append("/fff\">\n")
                         .append("</span>")
                         .append("<div class=\"chat-body clearfix\">\n")
-                            .append("<div class=\"header\">\n")
-                                .append("<strong class=\"").append(side.equals("left") ? "" : "pull-right").append(" primary-font\">").append(msg.getAuthorName()).append("</strong>\n" +
+                        .append("<div class=\"header\">\n")
+                        .append("<strong class=\"").append(side.equals("left") ? "" : "pull-right").append(" primary-font\">").append(msg.getAuthorName()).append("</strong>\n" +
                                         "<small class=\"").append(side.equals("left") ? "pull-right" : "").append(" text-muted\">\n<i class=\"fa fa-clock-o fa-fw\"></i> ")
-                                            .append(msg.getCreatedOn() != null ? dateFormat.format(msg.getCreatedOn()) : "")
-                                        .append("\n</small>\n")
-                            .append("</div>\n")
-                            .append("<p>\n")
-                                .append(SafeHtmlUtils.htmlEscape(msg.getMessage()).replace("\n", "<br>"))
-                            .append("</p>\n")
+                        .append(msg.getCreatedOn() != null ? dateFormat.format(msg.getCreatedOn()) : "")
+                        .append("\n</small>\n")
+                        .append("</div>\n")
+                        .append("<p>\n")
+                            //.append(SafeHtmlUtils.htmlEscape(msg.getMessage()).replace("\n", "<br>"))
+                        .append(msg.getMessage().replace("\n", "<br>"))
+                        .append("</p>\n")
                         .append("</div>")
-                    .append("</li>");
+                        .append("</li>");
             }
             sb.append("</ul>");
             panel.add(new HTML(sb.toString()));
@@ -445,9 +454,9 @@ public class Helpdesk implements EntryPoint, ValueChangeHandler<String> {
         }
     }
 
-    public boolean isAuthenticated() {
-        return isAuthenticated;
-    }
+//    public boolean isAuthenticated() {
+//        return isAuthenticated;
+//    }
 
     public void setAuthenticated(boolean value) {
         isAuthenticated = value;

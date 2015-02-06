@@ -51,8 +51,6 @@ class RestService
             $this->excludeModels($this->config['excluded_models']);
         }
 
-        $this->pixie->addInstanceClass('restAuthFactory', '\\App\\Rest\\Auth\\AuthFactory');
-
         // Hang REST event listeners
         $pixie->dispatcher->addListener(Events::PRE_PROCESS_ACTION, [$this, 'authenticationListener'], 100);
         $pixie->dispatcher->addListener(Events::PRE_PROCESS_ACTION, [$this, 'checkAllowedMethodsListener'], 10);
@@ -96,7 +94,7 @@ class RestService
         $this->pixie->dispatcher->dispatch(Events::PRE_PROCESS_ACTION, new PreActionEvent($request, $controller));
 
         $action = strtolower($request->method);
-        $action = $action == 'head' ? 'get' : $action;
+
         if (!($controller instanceof NoneController)) {
             if (!$request->param('id')) {
                 if (in_array($this->request->method, ['GET', 'HEAD'])) {
@@ -131,6 +129,8 @@ class RestService
 
     /**
      * Checks that user is authenticated.
+     * @param PreActionEvent $event
+     * @throws \Exception
      */
     public function authenticationListener(PreActionEvent $event)
     {

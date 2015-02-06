@@ -14,15 +14,20 @@ $loader->add('', $root.'/classes/');
 $pixie = new \App\Pixie();
 $pixie->bootstrap($root);
 
-if (!$pixie->getParameter('parameters.use_external_dir') || !is_numeric($_GET['image'])) {
+if (!$pixie->getParameter('parameters.use_external_dir')) {
     header('HTTP/1.1 404 Not Found');
     exit;
 }
 
 $fileName = $_GET['image'];
-$file = $pixie->orm->get('file', $fileName);
+/** @var \App\Model\File $file */
+if (is_numeric($fileName)) {
+    $file = $pixie->orm->get('file', $fileName);
+} else {
+    $file = $pixie->orm->get('file')->where('path', 'LIKE',  '%'.$fileName)->find();
+}
 
-if (!file_exists($file->path) || !is_file($file->path)) {
+if (!$file->loaded() || !file_exists($file->path) || !is_file($file->path)) {
     header('HTTP/1.1 404 Not Found');
     exit;
 }

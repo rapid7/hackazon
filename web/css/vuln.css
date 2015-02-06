@@ -1,0 +1,37 @@
+main.container {
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #f0f0f0;
+    border-radius: 5px;
+    width: auto;
+    display: block;
+}
+
+.context-subsection {
+    padding-left: 3em;
+}
+.context.panel > .panel-heading {
+    font-size: 2em;
+}
+
+.field.panel > .panel-heading {
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+.context .table {
+    width: auto;
+    min-width: 50%;
+}
+
+.computed-vulns {
+    display: none;
+}
+
+.table tr.even td {
+    background-color: #f6f6f6;
+}
+
+.table tr.enabled td {
+    background-color: #aeeda8;
+}

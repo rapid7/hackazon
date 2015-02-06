@@ -34,6 +34,7 @@ return [
                 'address_id' => [
                     'db_field' => 'cart.shipping_address_id'
                 ],
+                'full_name' => []
             ]
         ],
         'billing' => [
@@ -60,7 +61,7 @@ return [
         'placeOrder' => [
             'fields' => [
                 'address_line_1' => [
-                    'sql',
+                    'sql' => ['blind' =>true],
                     'db_field' => 'orderAddress.address_line_1'
                 ],
             ]

@@ -144,10 +144,12 @@ public class CartFragment extends Fragment {
 
         @Override
         public void onSuccess(Cart response) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-            CartFragment.this.cart = response;
-            updateListViewContent(response);
-            //Toast.makeText(OrdersFragment.this.getActivity(), "success", Toast.LENGTH_SHORT).show();
+            if (getActivity() != null) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                CartFragment.this.cart = response;
+                updateListViewContent(response);
+                //Toast.makeText(OrdersFragment.this.getActivity(), "success", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

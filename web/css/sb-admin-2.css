@@ -450,3 +450,164 @@ table.dataTable thead .sorting:after {
 .fa-percent:before {
     content: "%";
 }
+
+.context-panel {
+    background-color: #f6f6f6;
+}
+
+.context-panel .context-fields {
+    background-color: #ddffd2;
+}
+
+.context-panel .context-panel .context-panel {
+    background-color: #eeeeee;
+}
+
+.context-panel .panel-heading input,
+.context-panel .panel-heading select {
+    color: #000;
+}
+
+.context-panel .vulnerability-block {
+    background-color: #fff8d0;
+}
+.context-panel .vulnerability-conditions-block {
+    background-color: #fffce1;
+}
+
+.vuln-config-page .panel-danger {
+    background-color: #ffa9af;
+}
+
+.vuln-config-page .panel-warning {
+    background-color: #fff6d6;
+}
+
+.vuln-config-page > .panel-info {
+    background-color: #deffff;
+}
+
+.vuln-config-page .panel-danger ul {
+    margin-bottom: 0;
+}
+
+.input-miniature,
+.form-horizontal .form-group-miniature .form-control {
+    line-height: 1.5em;
+    font-size: 14px;
+    height: 30px;
+}
+
+.field-props {
+    /*margin-bottom: 15px;*/
+}
+
+.context-panel .panel:last-child {
+    margin-bottom: 0;
+}
+
+.field-props button,
+.field-props input,
+.field-props select {
+    margin-right: 15px;
+}
+
+.context-page-controls {
+    margin-bottom: 20px;
+}
+
+.vuln-config-page .vulnerability-block > .panel-body,
+.vuln-config-page .context-panel > .panel-body {
+    padding-left: 50px;
+}
+
+.context-panel .name-field {
+    font-weight: bold;
+}
+
+.context-panel .vulns-block {
+    padding-top: 15px;
+}
+
+.context-panel > .panel-body > .vulns-block {
+    margin-bottom: 15px;
+}
+
+.context-panel .vuln-attr {
+    padding-left: 20px;
+}
+
+.context-panel .vuln-attr label {
+    font-weight: normal;
+}
+
+.context-panel .vulnerability:hover {
+    background-color: #fbf2b7;
+}
+
+.context-panel .condition-widget  {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.table-vuln-matrix .table-row:nth-child(2n) .vuln-cell,
+.table-vuln-matrix .table-row:nth-child(2n) .field-cell {
+    background-color: #f6f6f6;
+}
+
+/*.table-vuln-matrix .context-row:nth-child(n) .vuln-cell,*/
+/*.table-vuln-matrix .context-row:nth-child(n) .field-cell {*/
+    /*background-color: #fff0e0;*/
+/*}*/
+
+.table-vuln-matrix .table-row .vuln-cell.enabled {
+    background-color: #b5ffbd;
+}
+
+.table-vuln-matrix th {
+    background-color: #f0f0f0;
+}
+
+.context-panel .condition-operations-block,
+.context-panel .vuln-operations-block,
+.context-panel .field-operations-block {
+    display: none;
+}
+
+.context-panel .condition-row:hover .condition-operations-block,
+.context-panel .field-block:hover .field-operations-block,
+.context-panel .vulnerability:hover .vuln-operations-block {
+    display: block;
+}
+
+.context-panel .vulnerability-block > .panel-heading > a {
+    color: antiquewhite;
+}
+
+.table-vuln-matrix .vuln-cell .vuln-enabled {
+    color: #059927;
+}
+
+.table-vuln-matrix .vuln-cell .vuln-disabled {
+    color: #ba2103;
+}
+
+.table-vuln-matrix .vuln-block {
+    margin-left: 15px;
+}
+.vuln-attrs {
+    display: inline;
+}
+
+.vuln-details-popup .modal-header {
+    font-size: 1.5em;
+}
+
+.table-vuln-matrix .vuln-tips {
+    color: #a2a2a2;
+}
+
+.collapsible-field-placeholder {
+    font-style: italic;
+    cursor: pointer;
+}

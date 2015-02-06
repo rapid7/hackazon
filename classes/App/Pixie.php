@@ -5,23 +5,31 @@ namespace App;
 
 use AmfphpModule\AmfphpModule;
 use App\Cart\CartService;
-use App\Cart\CheckoutService;
+use App\Core\Auth;
 use App\Core\Config;
 use App\Core\Request;
 use App\Core\Response;
+use App\Core\Route;
+use App\Core\Router;
+use App\Core\Session;
 use App\Core\View;
+use App\DependencyInjection\Container;
 use App\EventDispatcher\EventDispatcher;
 use App\EventDispatcher\Events;
 use App\Events\GetResponseEvent;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
+use App\Helpers\ContainerHelper;
 use App\Installation\Installer;
+use App\Paginate\PaginateEx;
+use App\Rest\Auth\AuthFactory;
 use App\Rest\RestService;
 use GWTModule\GWTModule;
 use PHPixie\Controller;
 use PHPixie\Cookie;
 use PHPixie\Exception\PageNotFound;
 use PHPixie\ORM;
+use VulnModule\AnnotationReader;
 use VulnModule\Config\ModelInfoRepository;
 use VulnModule\VulnInjection;
 
@@ -30,24 +38,31 @@ use VulnModule\VulnInjection;
  *
  * @method Pixie bootstrap
  * @property-read \PHPixie\DB $db Database module
- * @property-read \PHPixie\ORM $orm ORM module
- * @property-read \PHPixie\Auth $auth Auth module
+ * @property-read \App\Core\ORM $orm ORM module
+ * @property-read Auth $auth Auth module
  * @property-read VulnInjection $vulninjection Vulninjection module
  * @property-read \PHPixie\Email $email Email module
  * @property-read Request $request Request instance
  * @property-read Response $response Request instance
+ * @property-read Router $router Router instance
+ * @property-read Session $session Session instance
  * @property-read Debug $debug Debug object
  * @property-read VulnInjection\Service $vulnService Debug object
  * @property-read ModelInfoRepository $modelInfoRepository
  * @property-read EventDispatcher $dispatcher
  * @property-read Cookie $cookie
  * @property-read RestService $restService
- * @property-read \PHPixie\Paginate $paginate
+ * @property-read AuthFactory $restAuthFactory
+ * @property-read PaginateEx $paginate
  * @property-read GWTModule $gwt
  * @property-read AmfphpModule $amf
  * @property-read Config $config
  * @property-read Installer $installer
  * @property-read CartService $cart
+ * @property-read Container $container
+ * @property-read ContainerHelper $containerHelper
+ * @property-read Paginate\Paginate $paginateDB
+ * @property-read AnnotationReader $annotationReader
  * @method Controller|Rest\Controller controller
  */
 class Pixie extends \PHPixie\Pixie {
@@ -60,11 +75,12 @@ class Pixie extends \PHPixie\Pixie {
     protected $modules = array(
         'config'  => '\App\Core\Config',
         'db' => '\PHPixie\DB',
-        'orm' => '\PHPixie\ORM',
-        'auth' => '\PHPixie\Auth',
+        'orm' => '\App\Core\ORM',
+        'auth' => '\App\Core\Auth',
+        'session' => '\App\Core\Session',
         'vulninjection' => '\VulnModule\VulnInjection',
 		'email' => '\PHPixie\Email',
-		'paginate' => '\PHPixie\Paginate',
+		'paginate' => 'App\\Paginate\\PaginateEx',
 		'paginateDB' => '\App\Paginate\Paginate',
 		'gwt' => 'GWTModule\GWTModule',
 		'amf' => 'AmfphpModule\AmfphpModule',
@@ -78,12 +94,16 @@ class Pixie extends \PHPixie\Pixie {
         $this->instance_classes['debug'] = '\\App\\Debug';
         $this->instance_classes['request'] = '\\App\\Core\\Request';
         $this->instance_classes['response'] = '\\App\\Core\\Response';
+        $this->instance_classes['router'] = '\\App\\Core\\Router';
         $this->instance_classes['modelInfoRepository'] = '\\VulnModule\\Config\\ModelInfoRepository';
         $this->instance_classes['dispatcher'] = '\\App\\EventDispatcher\\EventDispatcher';
         $this->instance_classes['restRouteMatcher'] = '\\App\\Rest\\RouteMatcher';
         $this->instance_classes['restService'] = '\\App\\Rest\\RestService';
+        $this->instance_classes['restAuthFactory'] = '\\App\\Rest\\Auth\\AuthFactory';
         $this->instance_classes['installer'] = '\\App\\Installation\\Installer';
         $this->instance_classes['cart'] = '\\App\\Cart\\CartService';
+        $this->instance_classes['container'] = '\\App\\DependencyInjection\\Container';
+        $this->instance_classes['containerHelper'] = '\\App\\Helpers\\ContainerHelper';
         Pixifier::getInstance()->setPixie($this);
     }
 
@@ -155,6 +175,16 @@ class Pixie extends \PHPixie\Pixie {
         }
     }
 
+    public function http_request()
+    {
+        $uri = $_SERVER['REQUEST_URI'];
+        $uri = preg_replace("#^{$this->basepath}(?:index\\.php/?)#i", '/', $uri);
+        $url_parts = parse_url($uri);
+        $route_data = $this->router->match($url_parts['path'], $_SERVER['REQUEST_METHOD']);
+        return $this->request($route_data['route'], $_SERVER['REQUEST_METHOD'],
+            $_POST, $_GET, $route_data['params'], $_SERVER, $_COOKIE, apache_request_headers());
+    }
+
     /**
      * Shows caught exception in a nice view.
      * @param \App\Exception\HttpException|\Exception $exception
@@ -168,7 +198,7 @@ class Pixie extends \PHPixie\Pixie {
                 $request = $exception->getParameter('request');
             }
 
-            $event = new GetResponseEvent($request, $request ? $request->getCookie() : []);
+            $event = new GetResponseEvent($request, $request ? $request->cookie() : []);
             $event->setException($exception);
             $this->dispatcher->dispatch(Events::KERNEL_PRE_HANDLE_EXCEPTION, $event);
 
@@ -190,7 +220,8 @@ class Pixie extends \PHPixie\Pixie {
                 $route_data['params'] = array_merge($route_data['params'], [
                     'exception' => $exception
                 ]);
-                $request = $this->request($route_data['route'], $_SERVER['REQUEST_METHOD'], $_POST, $_GET, $route_data['params'], $_SERVER, $_COOKIE);
+                $request = $this->request($route_data['route'], $_SERVER['REQUEST_METHOD'],
+                    $_POST, $_GET, $route_data['params'], $_SERVER, $_COOKIE, apache_request_headers());
                 $response = $request->execute();
             }
             $response->send_headers()->send_body();
@@ -219,9 +250,9 @@ class Pixie extends \PHPixie\Pixie {
      * Creates custom implementation of Request.
      * @inheritdoc
      */
-    public function request($route, $method = "GET", $post = array(), $get = array(), $param = array(), $server = array(), $cookie = array())
+    public function request($route, $method = "GET", $post = [], $get = [], $param = [], $server = [], $cookie = [], $headers = [])
     {
-        return new Request($this, $route, $method, $post, $get, $param, $server, $cookie);
+        return new Request($this, $route, $method, $post, $get, $param, $server, $cookie, $headers);
     }
 
     /**
@@ -287,5 +318,20 @@ class Pixie extends \PHPixie\Pixie {
         }
 
         return false;
+    }
+
+    /**
+     * Constructs a route
+     *
+     * @param string $name Name of the route
+     * @param mixed $rule Rule for this route
+     * @param array $defaults Default parameters for the route
+     * @param mixed $methods Methods to restrict this route to.
+     *                       Either a single method or an array of them.
+     * @return Route
+     */
+    public function route($name, $rule, $defaults, $methods = null)
+    {
+        return new Route($this->basepath, $name, $rule, $defaults, $methods);
     }
 }

@@ -2,15 +2,22 @@
 
 namespace VulnModule\VulnInjection;
 
-use App\Exception\ForbiddenException;
+use App\Core\Request;
 use App\Page;
 use App\Pixie;
 use PHPixie\Auth\Login\Provider;
 use PHPixie\Auth\Role\Driver;
 use PHPixie\ORM\Model;
-use VulnModule\Config;
+use VulnModule\Config\Config;
 use VulnModule\Config\Context;
+use VulnModule\Config\FieldDescriptor;
+use VulnModule\Config\ModelInfoRepository;
+use VulnModule\Config\VulnerableElement;
 use VulnModule\Csrf\CsrfTokenManager;
+use VulnModule\Storage\IReader;
+use VulnModule\Storage\PHPFileReader;
+use VulnModule\Vulnerability;
+use VulnModule\VulnerableField;
 
 /**
  * Authorization Service.
@@ -77,60 +84,42 @@ class Service {
     protected $csrfTokenManager;
 
     /**
-     * @var SQLInjectionFiltrator
-     */
-    protected $sqlFiltrator;
-
-    /**
-     * @var Config\ModelInfoRepository
+     * @var ModelInfoRepository
      */
     protected $modelInfoRepository;
 
     /**
+     * @var IReader
+     */
+    protected $reader;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    /**
      * Constructs an Auth instance for the specified configuration
      *
-     * @param \PHPixie\Pixie $pixie Pixie dependency container
-     * @param string $rootConfig Name of the configuration.
+     * @param Pixie $pixie Pixie dependency container
+     * @param string $rootConfigName Name of the configuration.
      * @param null|string $controllerConfigName
      * @throw \Exception If no login providers were configured
      */
-    public function __construct($pixie, $rootConfig = 'default', $controllerConfigName = null) {
+    public function __construct($pixie, $rootConfigName = 'default', $controllerConfigName = null) {
         $this->pixie = $pixie;
-        $this->settings = $pixie->config->get("vulninjection/{$rootConfig}");
-        $this->config = new Config($this->pixie);
-        $this->config->createFromData($this->settings);
 
-        if ($controllerConfigName !== null) {
-            $this->addControllerContext($controllerConfigName);
+        $vulnConfigDir = __DIR__.'/../../../../../assets/config/vuln';
+        $this->reader = new PHPFileReader($vulnConfigDir);
+        $rootContext = $this->reader->read($rootConfigName);
+        if (!$rootContext) {
+            $rootContext = new Context($rootConfigName, null, Context::TYPE_APPLICATION, Context::STORAGE_ROLE_ROOT);
         }
-    }
+        $this->config = new Config($pixie, $rootContext);
 
-    /**
-     * Add controller context as a child of root.
-     * @param $name
-     * @return $this
-     */
-    public function addControllerContext($name) {
-        $this->controllerSettings = $this->pixie->config->get("vulninjection/{$name}");
-        if (!is_array($this->controllerSettings)) {
-            $this->controllerSettings = array();
+        if ($controllerConfigName) {
+            $this->loadAndAddChildContext($controllerConfigName);
         }
-        $controllerContext = Context::createFromData($name, $this->controllerSettings, $this->config->getRootContext(), Context::TYPE_DEFAULT, $this->pixie);
-        $this->config->addControllerContext($controllerContext);
-
-        return $this;
-    }
-
-    /**
-     * Returns the required section
-     *
-     * @param $sectionName
-     * @return array
-     */
-    public function getSection($sectionName) {
-        if (isset($this->settings[$sectionName]))
-            return $this->settings[$sectionName];
-        return array();
     }
 
     /**
@@ -205,11 +194,11 @@ class Service {
 
     /**
      * @param $contextName
+     * @param bool $createIfNotExists
      * @return $this
      */
-    public function goDown($contextName) {
-        $this->config->goDown($contextName);
-        //$this->checkReferrer();
+    public function goDown($contextName, $createIfNotExists = true) {
+        $this->config->goDown($contextName, $createIfNotExists);
         return $this;
     }
 
@@ -230,29 +219,38 @@ class Service {
     }
 
     /**
-     * @return array
+     * @return array|\VulnModule\DataType\ArrayObject
      */
-    public function getVulnerabilities() {
-        return $this->config ? $this->config->getVulnerabilities() : array();
+    public function getContextVulnerabilities() {
+        return $this->getConfig()->getContextVulnerabilities();
     }
 
     /**
-     * @param string $type xss, sql and so on
-     * @return array
+     * @param string $name XSS, SQL and so on
+     * @return Vulnerability|null
      */
-    public function getVulnerability($type) {
-        $vulns = $this->getVulnerabilities();
-        return $vulns[$type] ? $vulns[$type] : array();
+    public function getContextVulnerability($name) {
+        return $this->getConfig()->getVulnerability($name);
     }
 
     /**
+     * Fetches current context fields
      * @return array
      */
     public function getFields() {
-        return $this->config ? $this->config->getFields() : array();
+        return $this->getCurrentContext()->getFields();
     }
 
     /**
+     * @return Context
+     */
+    public function getCurrentContext()
+    {
+        return $this->getConfig()->getCurrentContext();
+    }
+
+    /**
+     * Fetches a field from current context (or null)
      * @param $field
      * @return mixed
      */
@@ -260,73 +258,6 @@ class Service {
     {
         $fields = $this->getFields();
         return $fields[$field];
-    }
-
-    /**
-     * Removes script tags and tag attributes JS from string.
-     * @param $value String to filter
-     * @return mixed
-     */
-    public function filterXSS($value) {
-        return $value === null ? null : preg_replace(self::PATTERN_XSS, '', $value);
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     * @param $table
-     * @return mixed
-     */
-    public function filterStoredXSSIfNeeded($key, $value, $table = null) {
-        $fields = $this->getFields();
-
-        if (!($key = $this->getCanonicalKey($key, $table))) {
-            return $this->filterXSS($value);
-        }
-
-        if (in_array('xss', $fields[$key])) {
-            $vuln = $this->getVulnerability('xss');
-
-            if ($vuln['stored'] && !is_numeric($value)) {
-                return $value;
-            }
-        }
-
-        return $this->filterXSS($value);
-    }
-
-    /**
-     * @return SQLInjectionFiltrator
-     */
-    public function getSqlFiltrator() {
-        if (!$this->sqlFiltrator) {
-            $this->sqlFiltrator = new SQLInjectionFiltrator();
-        }
-
-        return $this->sqlFiltrator;
-    }
-
-    /**
-     * Retrieves parameters for sql injection for given column
-     * @param $key
-     * @param $table
-     * @return mixed
-     */
-    public function getSqlInjectionParams($key, $table) {
-        $params = $this->getVulnerability('sql');
-
-        if (!($key = $this->getCanonicalKey($key, $table))) {
-            return $params;
-        }
-
-        $fields = $this->getFields();
-
-        // And if field contains SQL Injection, enable it.
-        if (in_array('sql', $fields[$key])) {
-            $params['is_vulnerable'] = true;
-        }
-
-        return $params;
     }
 
     /**
@@ -360,7 +291,7 @@ class Service {
      * @return bool
      */
     public function csrfIsEnabled() {
-        $csrf = $this->getVulnerability('csrf');
+        $csrf = $this->getContextVulnerability('csrf');
         return is_array($csrf) && $csrf['enabled'];
     }
 
@@ -368,57 +299,29 @@ class Service {
      * Checks current referrer to be allowed
      */
     public function checkReferrer() {
-        $vuln = $this->getVulnerability('referrer');
-        if ($vuln['enabled']) {
+        /** @var Vulnerability\Referer $vuln */
+        $vuln = $this->getContextVulnerability('Referer');
+
+        if ($vuln->isEnabled()) {
             return;
         }
 
-        $referrer = $_SERVER['HTTP_REFERER'];
-        $parts = parse_url($referrer);
-
-        $host = $parts['host'];
-        $method = $_SERVER['REQUEST_METHOD'];
-        $proto = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
-        $path = $parts['path'];
-
-        $isFilterable = $this->checkIsIn($method, $vuln['methods']) && $this->checkIsIn(strtolower($proto), $vuln['protocols']);
-
-        if ($isFilterable
-            && ((!$path || !$this->referrerPathIsAllowed($path, $vuln['paths']))
-                || (!$host || !$this->checkIsIn($host, $vuln['hosts'])))
-        ) {
-            throw new ForbiddenException();
-        }
-    }
-
-    /**
-     * Checks that given value is really in array.
-     * @param $value
-     * @param $array
-     * @return bool
-     */
-    private function checkIsIn($value, $array) {
-        return is_array($array) && count($array) && in_array($value, $array);
-    }
-
-    /**
-     * Check that referrer is allowed for given paths.
-     * @param $path
-     * @param $paths
-     * @return bool
-     */
-    private function referrerPathIsAllowed($path, $paths) {
-        if (!is_array($paths) || !count($paths)) {
-            return true;
-        }
-
-        foreach ($paths as $item) {
-            if (strpos($path, $item) !== false) {
-                return true;
-            }
-        }
-
-        return false;
+//        $referer = $_SERVER['HTTP_REFERER'];
+//        $parts = parse_url($referer);
+//
+//        $host = $parts['host'];
+//        $method = $_SERVER['REQUEST_METHOD'];
+//        $proto = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+//        $path = $parts['path'];
+//
+//        $isFilterable = $this->checkIsIn($method, $vuln['methods']) && $this->checkIsIn(strtolower($proto), $vuln['protocols']);
+//
+//        if ($isFilterable
+//            && ((!$path || !$this->referrerPathIsAllowed($path, $vuln['paths']))
+//                || (!$host || !$this->checkIsIn($host, $vuln['hosts'])))
+//        ) {
+//            throw new ForbiddenException();
+//        }
     }
 
     /**
@@ -442,64 +345,122 @@ class Service {
     }
 
     /**
-     * Get DB fields which map on vulnerability fields in current context.
-     * @return array
+     * @param $name
+     * @return bool
      */
-    private function getDbFields() {
-        return $this->getContextParams('db_fields');
+    public function isVulnerableTo($name)
+    {
+        return $this->getConfig()->getCurrentContext()->isVulnerableTo($name);
     }
 
-    /**
-     * Get all context params, or single one.
-     * @param null $name
-     * @return array
-     */
-    public function getContextParams($name = null) {
-        $params = $this->config ? $this->config->getContextParams() : array();
-        if (!$name) {
-            return $params;
+    public function loadAndAddChildContext($name)
+    {
+        $root = $this->config->getRootContext();
+        if ($root->hasChildByName($name)) {
+            return;
         }
 
-        if (array_key_exists($name, $params)) {
-            return $params[$name];
+        $context = $this->reader->read($name);
+        if (!$context) {
+            $context = new Context($name);
         }
-
-        return [];
+        $root->addChild($context);
     }
 
-    /**
-     * Get canonical key name from vulnerability fields config
-     * @param $key
-     * @param $table
-     * @return null
-     */
-    public function getCanonicalKey($key, $table) {
-        $fields = $this->getFields();
-        $dbFields = $this->getDbFields();
+    public function getElementByPath($path, $createOnMissing = true)
+    {
+        $parts = preg_split('/\|/', $path);
+        $contextPart = $parts[0];
 
-        $dbKey = trim(preg_replace('/`/', '', $key));
+        $contextParts = preg_split('/->/', $contextPart);
 
-        $fieldExistsInConfig = false;
+        /** @var Context|null $context */
+        $context = null;
 
-        if (array_key_exists($key, $fields)) {
-            $fieldExistsInConfig = true;
-        } else if (array_key_exists($dbKey, $dbFields)) {
-            $fieldExistsInConfig = true;
-            $key = $dbFields[$dbKey];
-        } else if ($table) {
-            if (is_array($table)) {
-                $dbKey = $table[0] . '.' . $dbKey;
+        if (!$contextParts[0]) {
+            return null;
+
+        } else if ($contextParts[0] == 'default') {
+            $context = $this->config->getRootContext();
+            if ($contextParts[1]) {
+                $this->loadAndAddChildContext($contextParts[1]);
+            }
+
+        } else {
+            $this->loadAndAddChildContext($contextParts[0]);
+            $context = $this->config->getRootContext()->getChildByName($contextParts[0]);
+        }
+
+        unset($contextParts[0]);
+        unset($parts[0]);
+
+        if ($contextParts[1]) {
+            $context = $context->getChildByName($contextParts[1]);
+            unset($contextParts[1]);
+
+            if ($context) {
+                array_unshift($parts, implode('->', $contextParts));
+                return $context->getElementByPath(implode('|', $parts), $createOnMissing);
+
             } else {
-                $dbKey = $table . '.' . $dbKey;
+                return null;
             }
 
-            if (array_key_exists($dbKey, $dbFields)) {
-                $fieldExistsInConfig = true;
-                $key = $dbFields[$dbKey];
+        } else {
+            if ($parts[1] || $parts[2]) {
+                return $context->getElementByPath(implode('|', $parts), $createOnMissing);
+
+            } else {
+                return $context;
             }
         }
-
-        return $fieldExistsInConfig ? $key : null;
     }
 
+    public function wrapValueByPath($value, $path)
+    {
+        $parts = preg_split('/\|/', $path);
+        if (!$parts[0] || !$parts[1] || (!$parts[2] && $parts[2] != 0)) {
+            throw new \InvalidArgumentException();
+        }
+        $element = $this->getElementByPath($path) ?: new VulnerableElement();
+        $fieldParts = preg_split('/:/', $parts[1]);
+        $name = $fieldParts[0];
+        $source = $fieldParts[1] ?: FieldDescriptor::SOURCE_ANY;
+        $result = new VulnerableField(new FieldDescriptor($name, $source), $value, $element);
+        return $result;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $rawValue
+     * @param string $source
+     * @return VulnerableField
+     */
+    public function wrapValue($key, $rawValue, $source = FieldDescriptor::SOURCE_ANY)
+    {
+        $context = $this->pixie->vulnService->getConfig()->getCurrentContext();
+        $descriptor = new FieldDescriptor($key, $source);
+        $field = $context->getOrCreateMatchingField($descriptor);
+        if ($this->request) {
+            $field->setRequest($this->request);
+        }
+        $vulnElement = $field->getMatchedVulnerabilityElement();
+        return new VulnerableField($descriptor, $rawValue, $vulnElement);
+    }
+
+    /**
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+    }
 }

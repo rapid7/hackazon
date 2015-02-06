@@ -12,8 +12,8 @@
     <link href="/css/bootstrap.css" rel="stylesheet">
 
     <!-- Fonts -->
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=McLaren">
-    <link href='//fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+    <!--link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=McLaren">
+    <link href='//fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'-->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Libraries -->
@@ -93,13 +93,15 @@
 
         $(function () {
             if ($('#flashBanner').length) {
-                swfobject.embedSWF(
-                    "/swf/SliderBanner.swf", "flashBanner",
-                    "360", "290",
-                    swfVersionStr, xiSwfUrlStr,
-                    flashvars, params, attributes);
-                // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
-                swfobject.createCSS("#flashBanner", "display:block;text-align:left;");
+                setTimeout(function () {
+                    swfobject.embedSWF(
+                        "/swf/SliderBanner.swf", "flashBanner",
+                        "360", "290",
+                        swfVersionStr, xiSwfUrlStr,
+                        flashvars, params, attributes);
+                    // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
+                    swfobject.createCSS("#flashBanner", "display:block;text-align:left;");
+                }, 300);
             }
         });
     </script>

@@ -11,7 +11,8 @@ return array(
 		
 		// 'db' and 'host' are required if you use Mysql driver
 		'db' => 'hackazon',
-		'host'=>'localhost'
+		'host' => 'localhost',
+        'port' => 3306
 	)
 );
 

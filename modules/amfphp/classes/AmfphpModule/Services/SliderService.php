@@ -10,15 +10,26 @@
 namespace AmfphpModule\Services;
 
 
-class SliderService 
+use AmfphpModule\Service;
+use VulnModule\Config\Annotations as Vuln;
+
+/**
+ * Processes slides functionality.
+ * @package AmfphpModule\Services
+ * @Vuln\Description("Service used to operate slides in flash banner.")
+ */
+class SliderService extends Service
 {
     /**
      * @param int $num
      * @return array
      * @throws \InvalidArgumentException
+     * @Vuln\Description("Fetches the given number of slides to show in banner.")
      */
     public function getSlides($num = 0)
     {
+        $num = $this->wrap('num', $num)->getFilteredValue();
+
         $slides = [
             '/images/banner_01-v3.jpg',
             '/images/banner_02-v3.jpg',
@@ -33,4 +44,4 @@ class SliderService
         $num = (int)$num;
         return array_slice($slides, 0, $num);
     }
-} 
+}

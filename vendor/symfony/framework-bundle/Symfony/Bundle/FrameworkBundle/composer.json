@@ -1,0 +1,64 @@
+{
+    "name": "symfony/framework-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony FrameworkBundle",
+    "keywords": [],
+    "homepage": "http://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "http://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/dependency-injection" : "~2.2",
+        "symfony/config" : "~2.4",
+        "symfony/event-dispatcher": "~2.5",
+        "symfony/http-foundation": "~2.4",
+        "symfony/http-kernel": "~2.6",
+        "symfony/filesystem": "~2.3",
+        "symfony/routing": "~2.2",
+        "symfony/security-core": "~2.4",
+        "symfony/security-csrf": "~2.4",
+        "symfony/stopwatch": "~2.3",
+        "symfony/templating": "~2.1",
+        "symfony/translation": "~2.3",
+        "doctrine/annotations": "~1.0"
+    },
+    "require-dev": {
+        "symfony/browser-kit": "~2.3",
+        "symfony/console": "~2.0",
+        "symfony/finder": "~2.0",
+        "symfony/security": "~2.4",
+        "symfony/form": "~2.6",
+        "symfony/class-loader": "~2.1",
+        "symfony/expression-language": "~2.4",
+        "symfony/process": "~2.0",
+        "symfony/validator": "~2.5",
+        "symfony/yaml": "~2.0"
+    },
+    "suggest": {
+        "symfony/console": "For using the console commands",
+        "symfony/finder": "For using the translation loader and cache warmer",
+        "symfony/form": "For using forms",
+        "symfony/validator": "For using validation",
+        "symfony/yaml": "For using the config:debug and yaml:lint commands",
+        "doctrine/cache": "For using alternative cache drivers"
+    },
+    "autoload": {
+        "psr-0": { "Symfony\\Bundle\\FrameworkBundle\\": "" }
+    },
+    "target-dir": "Symfony/Bundle/FrameworkBundle",
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.6-dev"
+        }
+    }
+}

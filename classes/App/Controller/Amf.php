@@ -16,6 +16,10 @@ class Amf extends Page
 {
     public function action_index()
     {
+        $this->vulninjection->goUp()->goUp();
+        $this->vulninjection->loadAndAddChildContext('amf');
+        $this->vulninjection->goDown('amf');
+
         header("Access-Control-Allow-Origin: *");
         $this->pixie->amf->run();
         exit;

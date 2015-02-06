@@ -1,7 +1,9 @@
 <?php
 namespace App\Controller;
 
-class Blog extends \App\Page {
+use App\Page;
+
+class Blog extends Page {
 
 	public function action_index(){
 		$this->view->subview = 'blog';

@@ -3,7 +3,9 @@
 namespace PHPixie\DB\PDOV;
 
 
+use App\Exception\SQLException;
 use App\Pixie;
+use VulnModule\VulnerableField;
 
 /**
  * PDO Database implementation.
@@ -40,6 +42,10 @@ class Connection extends \PHPixie\DB\Connection {
      * @var string
      */
     private $_settings;
+
+    protected $isBlinded = null;
+
+    protected $vulnerable = null;
 
     /**
      * Initializes database connection
@@ -138,7 +144,13 @@ class Connection extends \PHPixie\DB\Connection {
     public function execute($query, $params = array()) {
         //return $this->pixie->db->result_driver('PDOV', $this->conn->query($query));
 
-        $this->startBlindness();
+        $vulnFields = null;
+        if (array_key_exists('vuln_fields', $params)) {
+            $vulnFields = $params['vuln_fields'];
+            unset($params['vuln_fields']);
+        }
+
+        $this->startBlindness($vulnFields);
 
         $stmt = $this->conn->prepare($query);
         try {
@@ -147,42 +159,61 @@ class Connection extends \PHPixie\DB\Connection {
                 throw new \Exception("Database error:\n" . $error[2] . " \n in query:\n{$query}");
             }
             $result = $this->pixie->db->result_driver('PDOV', $stmt);
+
         } catch (\Exception $e) {
-            throw new \Exception("Database error:\n" . $error[2] . " \n in query:\n{$query}", 0, $e);
+            $isVulnerable = $this->vulnerable;
+            $isBlind = $this->isBlinded;
+            $this->stopBlindness($vulnFields);
+            $error = $stmt->errorInfo();
+            throw new SQLException("Database error:\n" . $error[2] . " \n in query:\n{$query}", 0, $e, $isVulnerable, $isBlind);
         }
 
-        $this->stopBlindness();
+        $this->stopBlindness($vulnFields);
 
         return $result;
     }
 
-    public function startBlindness()
+    /**
+     * @param mixed|VulnerableField|VulnerableField[] $vulnFields
+     */
+    public function startBlindness($vulnFields)
     {
-        $vulns = $this->getVulns();
-
-        if ($vulns['sql'] && $vulns['sql']['blind']) {
-            $this->dispErrorStates[] = $this->pixie->debug->display_errors;
-            $this->pixie->debug->display_errors = false;
+        if (!$vulnFields || $this->vulnerable) {
+            return;
         }
-    }
 
+        if (!is_array($vulnFields) && !($vulnFields instanceof \ArrayObject)) {
+            $vulnFields = [$vulnFields];
+        }
+
+        $this->vulnerable = false;
+
+        foreach ($vulnFields as $field) {
+            if (!($field instanceof VulnerableField)) {
+                continue;
+            }
+
+            if ($field->isVulnerableTo('SQL')) {
+                $this->vulnerable = true;
+                if ($field->getVulnerability('SQL')->isBlind()) {
+                    $this->dispErrorStates[] = $this->pixie->debug->display_errors;
+                    $this->pixie->debug->display_errors = false;
+                    $this->isBlinded = true;
+                    return;
+                }
+            }
+        }
+
+        $this->isBlinded = false;
+    }
 
     public function stopBlindness()
     {
-        $vulns = $this->getVulns();
-
-        if ($vulns['sql'] && $vulns['sql']['blind'] && count($this->dispErrorStates)) {
+        if ($this->isBlinded === true) {
             $this->dispErrorStates[] = $this->pixie->debug->display_errors;
             $this->pixie->debug->display_errors = array_pop($this->dispErrorStates);
         }
-    }
-
-    protected function getVulns()
-    {
-        $service = $this->pixie->getVulnService();
-        if (!$service) {
-            return [];
-        }
-        return $service->getVulnerabilities();
+        $this->isBlinded = null;
+        $this->vulnerable = null;
     }
 }

@@ -66,7 +66,7 @@
                             $itemClass = $itemClass == 'light' ? 'dark' : 'light';
                         } ?>
                     </div>
-                    <?php $_pager($pager, '/category/view?id=' . $categoryID . '&page=#page#'); ?>
+                    <?php $_pager($pager, '/category/view?id=' . $_($categoryID) . '&page=#page#'); ?>
                     <!--END CONTENT ITEM-->
                 </div>
             </div>

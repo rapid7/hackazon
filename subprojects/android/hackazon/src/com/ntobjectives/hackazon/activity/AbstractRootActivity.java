@@ -52,7 +52,7 @@ public class AbstractRootActivity extends Activity {
                 return true;
             case R.id.logout:
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                prefs.edit().putString("token", "").commit();
+                prefs.edit().putString("token", "").apply();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
                 return true;
@@ -96,6 +96,6 @@ public class AbstractRootActivity extends Activity {
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null &&activeNetwork.isConnectedOrConnecting();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

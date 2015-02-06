@@ -12,10 +12,11 @@ namespace App\Controller;
 use App\Exception\ForbiddenException;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
-use App\Model\Product;
-use App\Model\User;
-use App\Model\WishListFollowers;
+use App\Model\Product as ProductModel;
+use App\Model\User as UserModel;
+use App\Model\WishListFollowers as WishListFollowersModel;
 use App\Page;
+use VulnModule\Config\Annotations as Vuln;
 
 
 /**
@@ -26,12 +27,13 @@ use App\Page;
 class Wishlist extends Page {
 
     /**
-     * @var User Current logged in user.
+     * @var UserModel Current logged in user.
      */
     private $user;
 
     /**
      * Either shows empty page if user has no lists, or shows the default list.
+     * @Vuln\Description("View: wishlist/no_list.")
      */
     public function action_index() {
         $this->prepare();
@@ -55,6 +57,8 @@ class Wishlist extends Page {
     /**
      * View wish list.
      * @throws NotFoundException
+     * @Vuln\Route(params={"id": "_id_"})
+     * @Vuln\Description("View: wishlist/show.")
      */
     public function action_view() {
         $this->prepare();
@@ -78,6 +82,8 @@ class Wishlist extends Page {
     /**
      * Create new wish list.
      * @throws \App\Exception\ForbiddenException
+     * @Vuln\Route(name="wishlist_new")
+     * @Vuln\Description("No view.")
      */
     public function action_new() {
         $this->prepare();
@@ -86,13 +92,14 @@ class Wishlist extends Page {
             throw new ForbiddenException();
         }
 
-        $name = $this->request->post('name', 'New Wish List');
-        $type = $this->request->post('type', \App\Model\WishList::TYPE_PRIVATE);
+        $name = $this->request->postWrap('name', 'New Wish List');
+        $type = $this->request->postWrap('type', \App\Model\WishList::TYPE_PRIVATE);
 
-        if (!$name || !$type) {
+        if (!$name->raw() || !$type->raw()) {
             if ($this->request->is_ajax()) {
                 $this->jsonResponse(['error' => 1]);
                 return;
+
             } else {
                 throw new HttpException('Invalid request', 400, 'Bad Request');
             }
@@ -117,6 +124,8 @@ class Wishlist extends Page {
 
     /**
      * @throws \App\Exception\ForbiddenException
+     * @Vuln\Route(params={"id": "_id_"})
+     * @Vuln\Description("No view.")
      */
     public function action_edit() {
         $this->prepare();
@@ -130,8 +139,8 @@ class Wishlist extends Page {
         }
 
         $id = $this->request->param('id');
-        $name = $this->request->post('name', 'New Wish List');
-        $type = $this->request->post('type', \App\Model\WishList::TYPE_PRIVATE);
+        $name = $this->request->postWrap('name', 'New Wish List');
+        $type = $this->request->postWrap('type', \App\Model\WishList::TYPE_PRIVATE);
 
         $wishList = $this->getWishList($id);
 
@@ -139,16 +148,16 @@ class Wishlist extends Page {
             throw new NotFoundException();
         }
 
-        if (!$wishList->isValidType($type)) {
+        if (!$wishList->isValidType($type->raw())) {
             if ($this->request->is_ajax()) {
                 $this->jsonResponse(['error' => 1, 'message' => 'Invalid "type" parameter.']);
                 return;
             } else {
-                throw new \Exception;
+                throw new HttpException("Invalid wishlist type");
             }
         }
 
-        $wishList->name = $name ? : $wishList->name;
+        $wishList->name = $name->raw() ? $name : $wishList->name;
         $wishList->type = $type;
         $wishList->save();
 
@@ -166,6 +175,7 @@ class Wishlist extends Page {
      * Sets given wish list as default for user.
      * @throws \App\Exception\ForbiddenException
      * @throws \Exception
+     * @Vuln\Description("No view.")
      */
     public function action_set_default() {
         $this->prepare();
@@ -177,15 +187,15 @@ class Wishlist extends Page {
             throw new ForbiddenException();
         }
 
-        $id = $this->request->post('id');
+        $id = $this->request->postWrap('id');
 
         if (!$id) {
-            throw new \Exception();
+            throw new NotFoundException("Missing wishlist id.");
         }
         $wishList = $this->getWishList($id);
 
         if ($wishList->owner->id() != $this->user->id()) {
-            throw new ForbiddenException();
+            throw new NotFoundException("Missing wishlist");
         }
 
         $wishList->setAsUserDefaultWishList($this->user);
@@ -206,11 +216,13 @@ class Wishlist extends Page {
      * Add product to the list.
      * @throws \App\Exception\ForbiddenException
      * @throws \Exception
+     * @Vuln\Route(name = "wishlist_add_product", params={"id" : "_id_"})
+     * @Vuln\Description("No view.")
      */
     public function action_add_product() {
         $this->prepare();
         if ($this->request->method != 'POST') {
-            throw new \Exception();
+            throw new HttpException("Invalid method: " . $this->request->method, 405, null, "Method Not Allowed");
         }
 
         if (!$this->user) {
@@ -218,9 +230,9 @@ class Wishlist extends Page {
         }
 
         $productId = $this->request->param('id');
-        $wishlistId = $this->request->post('wishlist_id');
+        $wishlistId = $this->request->postWrap('wishlist_id');
 
-        /** @var Product $product */
+        /** @var ProductModel $product */
         $product = $this->pixie->orm->get('product', $productId);
 
         if (!$product->loaded()) {
@@ -236,7 +248,7 @@ class Wishlist extends Page {
             return;
         }
 
-        if ($wishlistId) {
+        if ($wishlistId->raw()) {
             $wishList = $this->pixie->orm->get('wishList', $wishlistId);
 
         } else {
@@ -264,11 +276,13 @@ class Wishlist extends Page {
      * Removes product from list
      * @throws \App\Exception\ForbiddenException
      * @throws \Exception
+     * @Vuln\Route(name = "wishlist_delete_product", params={"id": "_id_"})
+     * @Vuln\Description("No view.")
      */
     public function action_delete_product() {
         $this->prepare();
         if ($this->request->method != 'POST') {
-            throw new \Exception();
+            throw new HttpException("Invalid method: " . $this->request->method, 405, null, "Method Not Allowed");
         }
 
         if (!$this->user) {
@@ -277,7 +291,7 @@ class Wishlist extends Page {
 
         $productId = $this->request->param('id');
 
-        /** @var Product $product */
+        /** @var ProductModel $product */
         $product = $this->pixie->orm->get('product', $productId);
 
         if (!$product->loaded()) {
@@ -294,11 +308,13 @@ class Wishlist extends Page {
      * Removes given wish list.
      * @throws \App\Exception\ForbiddenException
      * @throws \Exception
+     * @Vuln\Route(params={"id": "_id_"})
+     * @Vuln\Description("No view.")
      */
     public function action_delete() {
         $this->prepare();
         if ($this->request->method != 'POST') {
-            throw new \Exception();
+            throw new HttpException("Invalid method: " . $this->request->method, 405, null, "Method Not Allowed");
         }
 
         if (!$this->user) {
@@ -308,12 +324,12 @@ class Wishlist extends Page {
         $id = $this->request->param('id');
 
         if (!$id) {
-            throw new \Exception();
+            throw new HttpException("Missing wishlist id.");
         }
         $wishList = $this->getWishList($id);
 
         if ($wishList->owner->id() != $this->user->id()) {
-            throw new ForbiddenException();
+            throw new NotFoundException();
         }
 
         $this->checkCsrfToken('wishlist', $this->request->post('token'), !$this->request->is_ajax());
@@ -368,38 +384,48 @@ class Wishlist extends Page {
      * @param \App\Model\WishList $wishList
      */
     private function showWishList(\App\Model\WishList $wishList) {
-        $page = $this->request->get('page', 1);
+        $page = $this->request->getWrap('page', 1);
         $perPage = 9;
         $this->view->page = $page;
         $this->view->perPage = $perPage;
         $this->view->wishList = $wishList;
-        $this->view->products = $wishList->products->offset($perPage * ($page - 1))->limit($perPage)->find_all()->as_array();
+        $this->view->products = $wishList->products->offset($perPage * ($page->raw() - 1))->limit($perPage)->find_all()->as_array();
         $this->view->productCount = $wishList->products->count_all();
         $this->view->subview = 'wishlist/show';
     }
 
     /**
-     * Search users and wishLists by username or email
+     * Search users and wishLists by username or email.
+     * @Vuln\Description("No view.")
      */
     public function action_search() {
-        $searchQuery = $this->request->post('search');
+        $searchQuery = $this->request->postWrap('search');
         $result = $this->model->searchWishLists($searchQuery);
         $this->jsonResponse($result);
     }
 
+    /**
+     * @Vuln\Description("No view.")
+     */
     public function action_remember() {
-        $userId = $this->request->post('user_id');
+        $userId = $this->request->postWrap('user_id');
         $result = $this->model->remember($userId);
         if ($result) {
             $this->jsonResponse(['success' => 1]);
+        } else {
+            $this->jsonResponse([]);
         }
     }
 
+    /**
+     * @throws \Exception
+     * @Vuln\Description("No view.")
+     */
     public function action_remove_follower() {
-        /** @var WishListFollowers $item */
+        /** @var WishListFollowersModel $item */
         $item = $this->pixie->orm->get('WishListFollowers')
-                ->where(
-                        array('user_id', '=', $this->pixie->auth->user()->id), array('and', array('follower_id', '=', $this->request->post('follower_id'))))
+                ->where(array('user_id', '=', $this->pixie->auth->user()->id()),
+                        array('and', array('follower_id', '=', $this->request->postWrap('follower_id'))))
                 ->find();
         if ($item->loaded()) {
             $item->delete();

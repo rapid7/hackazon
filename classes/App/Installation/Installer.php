@@ -10,11 +10,15 @@
 namespace App\Installation;
 use App\Core\Request;
 use App\Core\View;
+use App\Exception\ForbiddenException;
+use App\Exception\RedirectException;
 use App\Helpers\ArraysHelper;
 use App\Installation\Step\AbstractStep;
+use App\Installation\Step\AdminCredentialsStep;
 use App\Installation\Step\ConfirmationStep;
 use App\Installation\Step\DBSettingsStep;
 use App\Installation\Step\EmailSettingsStep;
+use PHPixie\DB\PDOV\Connection;
 use PHPixie\Pixie;
 
 /**
@@ -64,9 +68,32 @@ class Installer
      */
     protected $stepsData = [];
 
+    /**
+     * @var bool
+     */
+    protected $isReinstallation = false;
+
+    protected $forceFreshInstall = false;
+
     public function __construct(Pixie $pixie)
     {
         $this->pixie = $pixie;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isForceFreshInstall()
+    {
+        return $this->forceFreshInstall;
+    }
+
+    /**
+     * @param boolean $forceFreshInstall
+     */
+    public function setForceFreshInstall($forceFreshInstall)
+    {
+        $this->forceFreshInstall = $forceFreshInstall;
     }
 
     /**
@@ -142,20 +169,35 @@ class Installer
     {
         $this->checkSessionStarted();
 
-        if ($_SESSION[self::SESSION_KEY]['steps'] instanceof AbstractStep) {
+        if (!$this->forceFreshInstall && $_SESSION[self::SESSION_KEY]['steps'] instanceof AbstractStep) {
             $this->firstStep = $_SESSION[self::SESSION_KEY]['steps'];
             $this->firstStep->propagateSettings($this->pixie, $this->view, false);
 
         } else {
+            $adminStep = new AdminCredentialsStep();
             $this
+                ->addStep($adminStep)
                 ->addStep(new DBSettingsStep())
                 ->addStep(new EmailSettingsStep())
                 ->addStep(new ConfirmationStep());
 
             $this->firstStep->start();
             $this->firstStep->propagateSettings($this->pixie, $this->view);
+            $nextStep = null;
+
+            if ($this->isReinstallation) {
+                $params = $this->pixie->config->get('parameters');
+                $pass = $params['installer_password'];
+                $adminStep->execute('POST', ['password' => $pass, 'password_confirmation' => $pass]);
+                $nextStep = $adminStep->getNextStep();
+                $nextStep->start();
+            }
 
             $_SESSION[self::SESSION_KEY]['steps'] = $this->firstStep;
+
+            if ($this->isReinstallation) {
+                throw new RedirectException('/install/' . $nextStep->getName());
+            }
         }
     }
 
@@ -168,6 +210,8 @@ class Installer
         if (!$this->firstStep) {
             $this->firstStep = $step;
             $this->lastStep = $step;
+            $step->setPixie($this->pixie);
+            $step->setView($this->view);
 
         } else {
             $this->lastStep->chainNextStep($step);
@@ -179,12 +223,17 @@ class Installer
     /**
      * @param View $view
      * @return $this
+     * @throws ForbiddenException
+     * @throws RedirectException
      */
     public function init(View $view)
     {
-        if ($this->initialized) {
+        if ($this->initialized && !$this->forceFreshInstall) {
             return $this;
         }
+
+        $this->checkSessionStarted();
+        $this->checkIsAuthorized();
 
         $this->view = $view;
         $this->buildStepChain();
@@ -235,5 +284,41 @@ class Installer
     public function finish()
     {
         unset($_SESSION[self::SESSION_KEY]);
+    }
+
+    protected function checkIsAuthorized()
+    {
+        if (!$this->forceFreshInstall && $_SESSION[self::SESSION_KEY]['can_install']) {
+            return;
+        }
+        
+        try {
+            /** @var Connection $pdov */
+            $pdov = $this->pixie->db->get();
+            /** @var \PDO $conn */
+            $conn = $pdov->conn;
+            $res = $conn->query("SHOW TABLES");
+            $dbTables = $res->fetchAll();
+
+            // If it is the first install
+            if (count($dbTables) < 20) {
+                $_SESSION[self::SESSION_KEY]['can_install'] = true;
+                return;
+            }
+
+        } catch (\Exception $e) {
+        }
+
+        $params = $this->pixie->config->get('parameters');
+
+        if (!$_SESSION[self::SESSION_KEY]['authorized'] && $params['installer_password']) {
+            throw new ForbiddenException();
+        }
+
+        if ($params['installer_password']) {
+            $this->isReinstallation = true;
+        }
+
+        $_SESSION[self::SESSION_KEY]['can_install'] = true;
     }
 }

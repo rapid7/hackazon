@@ -1,14 +1,32 @@
 <?php
 namespace App\Controller;
 
-class Install extends \App\Page {
+use App\Exception\ForbiddenException;
+use App\Exception\RedirectException;
+use App\Installation\Installer;
+use App\Page;
+
+class Install extends Page {
 
     /**
      * show overview page
      */
     public function action_index() {
         $this->initView('installation');
-        $result = $this->pixie->installer->init($this->view)->runWizard($this->request);
+
+        try {
+            $installer = $this->pixie->installer;
+            $installer->setForceFreshInstall(!!$this->request->get('force', false));
+            $result = $installer->init($this->view)->runWizard($this->request);
+
+        } catch (RedirectException $e) {
+            $this->redirect($e->getLocation());
+            return;
+
+        } catch (ForbiddenException $e) {
+            $this->redirect('/install/login');
+            return;
+        }
 
         // If wizard successfully passed, install entered data.
         if ($result->isCompleted()) {
@@ -48,23 +66,37 @@ class Install extends \App\Page {
         }
     }
 
-    /**
-     * Step 1
-     */
-	public function action_step1() {
-		$this->view->subview = 'install/step1';
-		$this->view->tab = 'step1';
-		$this->view->step = 'Step 1';
+    public function action_login()
+    {
+        $this->initView('installation');
+        $this->pixie->session->get();
+
+        $params = $this->pixie->config->get('parameters') ?: [];
+        $storedPassword = trim($params['installer_password']);
+
+        if (!$storedPassword) {
+            $this->redirect('/install');
+            return;
+        }
+
+        if ($this->request->method == 'POST') {
+            $password = $this->request->post('password');
+
+            if ($password && $password == $storedPassword) {
+                $_SESSION[Installer::SESSION_KEY]['authorized'] = true;
+                $this->redirect('/install');
+            } else {
+                $this->view->errors = "Incorrect password.";
+            }
+        }
+
+        $this->view->subview = 'installation/login';
     }
 
-    /**
-     * Step 2
-     */
-	public function action_step2() {
-		$this->view->subview = 'install/step2';
-		$this->view->tab = 'step2';
-		$this->view->step = 'Step 2';
+    public function action_finish()
+    {
+        $this->pixie->session->get();
+        unset($_SESSION[Installer::SESSION_KEY]);
+        $this->redirect('/install');
     }
-
-
 }

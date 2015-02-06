@@ -11,13 +11,21 @@ namespace App\Admin\Controller;
 
 
 use App\Admin\Controller;
+use VulnModule\Storage\PHPFileReader;
+use VulnModule\VulnerabilityMatrixRenderer;
 
 class Home extends Controller
 {
     public function action_index()
     {
-        $this->view->newEnquiryCount = $this->pixie->orm->get('enquiry')->getNewEnquiriesCount();
-        $this->view->subview = 'home/dashboard';
+        $reader = new PHPFileReader($this->vulnConfigDir);
+
+        $matrixRenderer = new VulnerabilityMatrixRenderer($reader);
+        $matrix = $matrixRenderer->render();
+
+        $this->view->matrix = $matrix['html'];
+        $this->view->subview = 'vulnerability/matrix2';
         $this->view->message = "Index page";
+        $this->view->pageTitle = "Vulnerability Matrix";
     }
 } 

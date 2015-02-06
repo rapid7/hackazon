@@ -162,8 +162,12 @@
                 </table>
             </div>
             <div class="col-xs-4">
-                {{#if user.photo }}
-                    <img src="{{ baseImgPath }}{{ user.photo}}" alt="" class="profile-picture img-responsive img-bordered img-thumbnail" />
+                {{#if user.photoUrl }}
+                    <img src="{{ baseImgPath }}{{ user.photoUrl}}" alt="" class="profile-picture img-responsive img-bordered img-thumbnail" />
+                {{else}}
+                    {{#if user.photo }}
+                        <img src="{{ baseImgPath }}{{ user.photo}}" alt="" class="profile-picture img-responsive img-bordered img-thumbnail" />
+                    {{/if}}
                 {{/if}}
             </div>
         </div>
@@ -273,7 +277,11 @@
                     <form role="form" method="post" class="upload-profile-photo-form" action="#" id="uploadProfilePhotoForm" enctype="multipart/form-data">
                         {{#if userForm.photo }}
                         <div class="form-group">
-                            <img src="{{ baseImgPath }}{{ userForm.photo }}" alt="" class="profile-picture" /> <br>
+                            {{#if userForm.photoUrl }}
+                                <img src="{{ baseImgPath }}{{ userForm.photoUrl }}" alt="" class="profile-picture" /> <br>
+                            {{else}}
+                                <img src="{{ baseImgPath }}{{ userForm.photo }}" alt="" class="profile-picture" /> <br>
+                            {{/if}}
                             <label><input type="checkbox" name="remove_photo" /> Remove photo</label>
                         </div>
                         {{/if}}

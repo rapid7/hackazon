@@ -30,6 +30,8 @@
     <!-- Custom Fonts -->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+    <?php if (isset($headCSS)) { echo $headCSS; } ?>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -60,6 +62,8 @@
     <!-- Custom Theme JavaScript -->
     <script src="/js/tools.js"></script>
     <script src="/js/sb-admin-2.js"></script>
+
+    <?php if (isset($headScripts)) { echo $headScripts; } ?>
 </head>
 
 <body>

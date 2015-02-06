@@ -2,6 +2,7 @@
 
 namespace VulnModule;
 
+use App\Pixie;
 use VulnModule\VulnInjection\Service;
 
 /**
@@ -25,7 +26,7 @@ class VulnInjection {
 
     /**
      * Pixie Dependency Container
-     * @var \PHPixie\Pixie
+     * @var Pixie
      */
     public $pixie;
 
@@ -39,12 +40,13 @@ class VulnInjection {
     /**
      * Constructs an VulnInjection instance for the specified configuration
      *
-     * @param \PHPixie\Pixie $pixie Pixie dependency container
+     * @param Pixie $pixie Pixie dependency container
      * @return VulnInjection
      */
     public function __construct($pixie) {
         $this->pixie = $pixie;
         $pixie->assets_dirs[] = dirname(dirname(dirname(__FILE__))) . '/assets/';
+        $pixie->addInstance('annotationReader', new AnnotationReader($pixie));
     }
 
     /**
@@ -61,11 +63,6 @@ class VulnInjection {
         }
 
         return $this->service;
-
-//		if (!isset($this->_services[$config]))
-//			$this->_services[$config] = $this->build_service($config);
-//
-//		return $this->_services[$config];
     }
 
     /**

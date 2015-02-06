@@ -173,6 +173,7 @@ class PHPixieORMRepository
         $model = $this->pixie->orm->get($className);
         $columns = $model->columns();
         $values = (array) $object;
+
         foreach ($values as $key => $value) {
             if (!in_array($key, $columns)) {
                 unset($values[$key]);

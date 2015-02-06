@@ -11,6 +11,7 @@ namespace App\Rest;
 
 
 use App\Exception\HttpException;
+use App\Exception\SQLException;
 
 class ErrorController extends Controller
 {
@@ -23,13 +24,35 @@ class ErrorController extends Controller
     {
         $status = $this->error instanceof HttpException ? $this->error->getStatus() : '500 Internal Server Error';
         $data = $this->error instanceof HttpException ? $this->error->getData() : [];
-        $this->response->add_header('HTTP/1.1 '.$status);
-        $this->response->body = array_merge(
-            ['message' => $this->error->getMessage(), 'code' => $this->error->getCode(),
-                'trace' => ($this->pixie->getParameter('parameters.display_errors', false)
-                && ($this->error->getCode() >= 400 || $this->error->getCode() < 100)
-                    ? $this->error->getTraceAsString() : "")], $data
-        );
+        $this->response->add_header('HTTP/1.1 ' . $status);
+
+        $displayErrors = $this->pixie->getParameter('parameters.display_errors', false);
+        $showErrors = false;
+
+        if ($this->error instanceof HttpException) {
+            $message = $this->error->getMessage();
+            if  ($this->error->getCode() >= 400 || $this->error->getCode() < 100) {
+                $showErrors = $displayErrors;
+            }
+
+        } else if ($this->error instanceof SQLException) {
+            if ($this->error->isVulnerable() && !$this->error->isBlind()) {
+                $showErrors = true;
+                $message = $this->error->getMessage();
+            } else {
+                $message = "Error";
+            }
+
+        } else {
+            $message = $this->error->getMessage();
+            $showErrors = $displayErrors;
+        }
+
+        $this->response->body = array_merge([
+            'message' => $message,
+            'code' => $this->error->getCode(),
+            'trace' => ($showErrors ? $this->error->getTraceAsString() : "")
+        ], $data);
     }
 
     /**

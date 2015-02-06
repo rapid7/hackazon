@@ -82,6 +82,8 @@ public class LoginActivity extends AbstractRootActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                button.setEnabled(false);
+
                 host = hostField.getText().toString();
                 username = usernameField.getText().toString();
                 password = passwordField.getText().toString();
@@ -133,16 +135,19 @@ public class LoginActivity extends AbstractRootActivity {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             Toast.makeText(LoginActivity.this, "Incorrect request.", Toast.LENGTH_SHORT).show();
+            button.setEnabled(true);
         }
 
         @Override
         public void onRequestSuccess(String response) {
             Log.d(TAG, response);
+            button.setEnabled(true);
+
             Gson gson = new Gson();
             try {
                 Auth auth = gson.fromJson(response, Auth.class);
                 token = auth.token;
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this.getApplicationContext());
                 prefs
                     .edit()
                         .putString("host", host)
@@ -153,7 +158,8 @@ public class LoginActivity extends AbstractRootActivity {
                     .apply();
 
                 Log.d(TAG, "Token: " + token);
-                //Toast.makeText(LoginActivity.this, "Successfully authenticated", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Host: " + host);
+
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
 

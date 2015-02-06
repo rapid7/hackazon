@@ -24,7 +24,7 @@
                     </ul>
                 </div>
                 <!-- /btn-group -->
-                <input type="text" class="form-control" placeholder="Search products..." maxlength="100" name="searchString" value="<?= $searchString ?>">
+                <input type="text" class="form-control" placeholder="Search products..." maxlength="100" name="searchString" value="<?php $_($searchString); ?>">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="submit">Search!</button>
                 </span>

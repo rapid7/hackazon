@@ -4,29 +4,36 @@ namespace App\Controller;
 
 use App\Page;
 use App\SearchFilters\FilterFabric;
-use App\Model\Product as Product;
+use App\Model\Product as ProductModel;
 use App\Paginate;
+use VulnModule\Config\Annotations as Vuln;
 
 class Search extends Page {
 
     protected $_products;
 
+    /**
+     * @Vuln\Route(name="search")
+     * @Vuln\Description("View: search/main.")
+     */
     public function action_index() {
-        $catId = $this->request->get('id');
-        $name = $this->request->get('searchString');
-        $brand = $this->request->get('brands');
-        $price = $this->request->get('price');
-        $quality = $this->request->get('quality');
-        $current_page = $this->request->get('page');//$this->request->param('page');
-        if(empty($current_page)) $current_page = 1;
-        $model = new Product($this->pixie);
+        $catId = $this->request->getWrap('id');
+        $name = $this->request->getWrap('searchString');
+        $brand = $this->request->getWrap('brands');
+        $price = $this->request->getWrap('price');
+        $quality = $this->request->getWrap('quality');
+        $current_page = $this->request->getWrap('page');//$this->request->param('page');
+        if(!$current_page->raw()) {
+            $current_page->setRaw(1);
+        }
+        $model = new ProductModel($this->pixie);
 
         $filterFabric = new FilterFabric($this->pixie, $this->request, $model);
         $filterFabric->addFilter('nameFilter', 'App\SearchFilters\NameFilter', 'searchString');
 
         $this->_products = $this->pixie->db->query('select')->table('tbl_products');
 
-        if (!empty($catId)) {
+        if ($catId->raw()) {
             $category = $this->pixie->orm->get('Category')->loadCategory($catId);
 			$subCategoriesIds = $category ? $category->getChildrenIDs() : [];
 			if(sizeof($subCategoriesIds) > 0) {
@@ -39,44 +46,49 @@ class Search extends Page {
 					->where("tbl_category_product.categoryID", $catId);
 			}
         }
-        if (!empty($name)) {
+        if ($name->raw()) {
             $this->_products
-                    ->where('name', 'LIKE', '%' . $name . '%');
+                    ->where('name', 'LIKE', $name->copy('%' . $name->raw() . '%'));
         }
+
         if (!empty($price)) {
             $pricesVariants = $filterFabric->getFilter("Price")->getVariants();
             $this->_products
-                    ->where('Price', '>=', $pricesVariants[$price][0])->where('Price', '<=', $pricesVariants[$price][1]);
+                    ->where('Price', '>=', $pricesVariants[$price->raw()][0])->where('Price', '<=', $pricesVariants[$price->raw()][1]);
         }
-        if (!empty($brand) && !empty($quality)) {
+
+        if ($brand->raw() && $quality->raw()) {
             $this->_products
                     ->join('tbl_product_options_values', array('tbl_product_options_values.productID', 'tbl_products.productID'), 'left')
                     ->where(array(
                         array("tbl_product_options_values.variantID", $brand),
                         array("tbl_product_options_values.variantID", $quality)
             ));
-        } else if (!empty($brand)) {
+
+        } else if ($brand->raw()) {
             $this->_products
                     ->join('tbl_product_options_values', array('tbl_product_options_values.productID', 'tbl_products.productID'), 'left')
                     ->where("tbl_product_options_values.variantID", $brand);
-        } else if (!empty($quality)) {
+
+        } else if ($quality->raw()) {
             $this->_products
                     ->join('tbl_product_options_values', array('tbl_product_options_values.productID', 'tbl_products.productID'), 'left')
                     ->where("tbl_product_options_values.variantID", $quality);
         }
-        /** @var Paginate\Paginate\Pager\DB $pager */
+
+
         $pager = $this->pixie->paginateDB->db($this->_products, $current_page, 12);
 
         $pager->set_url_callback(function($page) {
-            $catId = $this->request->get("id");
-            $name = $this->request->get("searchString");
-            $brands = $this->request->get('brands');
-            $price = $this->request->get('price');
-            $quality = $this->request->get('quality');
+            $catId = $this->request->getWrap("id")->escapeXSS();
+            $name = $this->request->getWrap("searchString")->escapeXSS();
+            $brands = $this->request->getWrap('brands')->escapeXSS();
+            $price = $this->request->getWrap('price')->escapeXSS();
+            $quality = $this->request->getWrap('quality')->escapeXSS();
             return "/search/page/?page=$page&id=$catId&searchString=$name&brands=$brands&price=$price&quality=$quality";
         });
 
-        $label = $filterFabric->getFilter('nameFilter')->getValue();
+        //$label = $filterFabric->getFilter('nameFilter')->getValue();
 
         if ($this->request->is_ajax()) {
             $view = $this->pixie->view('search/main');
@@ -88,13 +100,14 @@ class Search extends Page {
             $view->brand = $brand;
             $view->quality = $quality;
 
-            $view->searchString = is_null($name) ? '' : $name;
-            $view->pageTitle = 'Search by &laquo;' . $name . '&raquo;';
+            $view->searchString = $name;
+            $view->pageTitle = 'Search by &laquo;' . $name->escapeXSS() . '&raquo;';
             $view->pager = $pager;
             $view->currentItems = $pager->current_items();
 
             $this->response->body = $view->render();
             $this->execute = false;
+
         } else {
             $this->view->filterFabric = $filterFabric;
             $this->view->searchString = $name;
@@ -103,39 +116,12 @@ class Search extends Page {
             $this->view->brand = $brand;
             $this->view->quality = $quality;
 
-            $this->view->searchString = is_null($name) ? '' : $name;
-            $this->view->pageTitle = 'Search by &laquo;' . $name . '&raquo;';
+            $this->view->searchString = $name;
+            $this->view->pageTitle = 'Search by &laquo;' . $name->escapeXSS() . '&raquo;';
             $this->view->pager = $pager;
             $this->view->currentItems = $pager->current_items();
 
             $this->view->subview = 'search/main';
         }
-        
     }
-
-    /* public function action_index() {
-      $catId = $this->request->get('id');
-      $brandIds = $this->request->get('brands');
-      $priceIds = $this->request->get('brands');
-      $qualityIds = $this->request->get('brands');
-      if (!empty($catId)) {
-      $cat = $this->pixie->orm->get('Category')->loadCategory($catId);
-      $model = $cat->products;
-      } else {
-      $model = new Product($this->pixie);
-      }
-
-      $this->view->filterFabric = new FilterFabric($this->pixie, $this->request, $model);
-      $this->view->filterFabric->addFilter('nameFilter', 'App\SearchFilters\NameFilter', 'searchString');
-      $this->view->filterFabric->addFilter('brandFilter', 'App\SearchFilters\BrandFilter', 'brands');
-      $this->view->filterFabric->addFilter('priceFilter', 'App\SearchFilters\PriceFilter', 'price');
-      $this->view->filterFabric->addFilter('qualityFilter', 'App\SearchFilters\QualityFilter', 'quality');
-
-      $this->view->products = $this->view->filterFabric->getResults();
-      $label = $this->view->filterFabric->getFilter('nameFilter')->getValue();
-
-      $this->view->searchString = is_null($label) ? '' : $label;
-      $this->view->pageTitle = 'Search by %' . $this->view->searchString . '%';
-      $this->view->subview = 'search/main';
-      } */
 }

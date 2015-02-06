@@ -15,8 +15,11 @@ public class RequestInterceptor implements retrofit.RequestInterceptor {
     private static final String TAG = RequestInterceptor.class.getSimpleName();
 
     protected Context context;
-    public RequestInterceptor(Context context) {
+    protected JsonSpiceService service;
+
+    public RequestInterceptor(Context context, JsonSpiceService service) {
         this.context = context;
+        this.service = service;
     }
 
     @Override

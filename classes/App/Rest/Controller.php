@@ -8,6 +8,8 @@
 
 
 namespace App\Rest;
+
+
 use App\Core\BaseController;
 use App\Core\Request;
 use App\Core\Response;
@@ -21,6 +23,9 @@ use PHPixie\ORM\Model;
 use PHPixie\ORM\Result;
 use PHPixie\Paginate\Pager\ORM as ORMPager;
 use VulnModule\Config\Context;
+use VulnModule\Config\Annotations as Vuln;
+use VulnModule\Config\FieldDescriptor;
+use VulnModule\VulnerableField;
 
 /**
  * Base REST Controller.
@@ -28,6 +33,7 @@ use VulnModule\Config\Context;
  * @property Response $response
  * @property Request $request
  * @property Pixie $pixie
+ * @Vuln\Route("rest")
  */
 class Controller extends BaseController
 {
@@ -129,11 +135,22 @@ class Controller extends BaseController
         }
 
         // Create vulnerability service.
-        $this->vulninjection = $this->pixie->vulninjection->service('rest');
-        $this->pixie->setVulnService($this->vulninjection);
+        if (!$this->vulninjection) {
+            $this->vulninjection = $this->pixie->vulninjection->service('rest');
+            $this->pixie->setVulnService($this->vulninjection);
+        }
 
         // Switch vulnerability config to the controller level
         $this->vulninjection->goDown('rest');
+
+        $restContext = $this->vulninjection->getConfig()->getCurrentContext();
+        $controllerName = strtolower($this->modelName);
+
+        if (!$restContext->hasChildByName($controllerName)) {
+            $restContext->addChild(new Context($controllerName, null, Context::TYPE_CONTROLLER));
+        }
+
+        $this->vulninjection->goDown($controllerName);
 
         $this->request->adjustRequestContentType();
 
@@ -198,10 +215,20 @@ class Controller extends BaseController
 
     /**
      * Get one item by GET request.
+     * @Vuln\Route("rest", params={"action": "get", "id": "_id_"})
      */
     public function action_get()
     {
         return $this->item;
+    }
+
+    /**
+     * @return BaseModel|null
+     * @Vuln\Route("rest", params={"action": "head"})
+     */
+    public function action_head()
+    {
+        return $this->action_get();
     }
 
     /**
@@ -210,6 +237,7 @@ class Controller extends BaseController
      * @param null|array $data
      * @throws \App\Exception\HttpException
      * @return BaseModel|null
+     * @Vuln\Route("rest", params={"action": "post"})
      */
     public function action_post($data = null)
     {
@@ -223,7 +251,7 @@ class Controller extends BaseController
         $this->prepareData($data);
         $this->checkUpdateData($data);
 
-        $this->model->values($data);
+        $this->model->values($this->request->wrapArray($data, FieldDescriptor::SOURCE_BODY));
         $this->model->save();
         $this->item = $this->model;
 
@@ -235,6 +263,7 @@ class Controller extends BaseController
      * All fields must be provided.
      * @param null|array $data
      * @return BaseModel|null
+     * @Vuln\Route("rest", params={"action": "put", "id": "_id_"})
      */
     public function action_put($data = null)
     {
@@ -245,7 +274,7 @@ class Controller extends BaseController
         $this->prepareData($data);
         $this->checkUpdateData($data);
 
-        $this->item->values($data);
+        $this->item->values($this->request->wrapArray($data, FieldDescriptor::SOURCE_BODY));
         $this->item->save();
 
         return $this->item;
@@ -255,6 +284,7 @@ class Controller extends BaseController
      * Update certain fields of item by PATCH request.
      * @param array|null $data
      * @return \App\Model\BaseModel|null
+     * @Vuln\Route("rest", params={"action": "patch", "id": "_id_"})
      */
     public function action_patch($data = null)
     {
@@ -264,7 +294,7 @@ class Controller extends BaseController
         $this->prepareData($data);
         $this->checkPatchData($data);
 
-        $this->item->values($data);
+        $this->item->values($this->request->wrapArray($data, FieldDescriptor::SOURCE_BODY));
         $this->item->save();
 
         return $this->item;
@@ -272,6 +302,7 @@ class Controller extends BaseController
 
     /**
      * Remove item with DELETE request.
+     * @Vuln\Route("rest", params={"action": "delete"})
      */
     public function action_delete()
     {
@@ -280,6 +311,7 @@ class Controller extends BaseController
 
     /**
      * Fetch all possible methods on resource with OPTIONS method.
+     * @Vuln\Route("rest", params={"action": "options"})
      */
     public function action_options()
     {
@@ -291,11 +323,13 @@ class Controller extends BaseController
     /**
      * Get collection of items by GET request.
      * @return array
+     * @Vuln\Route("rest", params={"action": "get"})
      */
     public function action_get_collection()
     {
-        $page = $this->request->get('page', 1);
-        $perPage = $this->request->get('per_page', $this->perPage);
+        $page = $this->request->getWrap('page', 1);
+        $perPage = $this->request->getWrap('per_page', $this->perPage);
+
         $this->adjustOrder();
         $pager = $this->pixie->paginate->orm($this->model, $page, $perPage);
         $currentItems = $pager->current_items()->as_array(true);
@@ -432,6 +466,12 @@ class Controller extends BaseController
         $this->checkHasExcessFields($data, $dataFields);
 
         $notEnoughFields = array_diff($dataFields, array_keys($data));
+        $exposedFields = $this->exposedFields();
+        foreach ($notEnoughFields as $key => $field) {
+            if (!in_array($field, $exposedFields)) {
+                unset($notEnoughFields[$key]);
+            }
+        }
         if (count($notEnoughFields)) {
             $exception = new HttpException('Please provide next fields: '.implode(', ', $notEnoughFields), 400, null, 'Bad Request');
             throw $exception;
@@ -454,9 +494,8 @@ class Controller extends BaseController
             $exception = new HttpException('Remove excess fields: '.implode(', ', $excessRequestFields), 400, null, 'Bad Request');
 
             // Inject XMLExternalEntity vulnerability
-            $vuln = $this->pixie->vulnService->getVulnerability('XMLExternalEntity');
-
-            if ($vuln === true || $vuln['enabled']) {
+            $isVulnerable = $this->pixie->vulnService->getConfig()->getCurrentContext()->isVulnerableTo('XMLExternalEntity');
+            if ($isVulnerable) {
                 $exception->setParameter('invalidFields', $data);
             }
 
@@ -485,6 +524,7 @@ class Controller extends BaseController
      */
     public function run($action, array $params = [])
     {
+        $originalActionName = $action;
         $action = 'action_'.$action;
 
         if (!method_exists($this, $action)) {
@@ -497,17 +537,14 @@ class Controller extends BaseController
         if (!($this instanceof ErrorController)) {
             // Check referrer vulnerabilities
             $service = $this->pixie->getVulnService();
-            $config = $service->getConfig();
-            $isControllerLevel = $config->getLevel() <= 1;
-            $actionName = $this->request->param('action');
+            //$action = $this->request->param('action');
 
-            if ($isControllerLevel) {
-                if (!$config->has($actionName)) {
-                    $context = $config->getCurrentContext();
-                    $context->addContext(Context::createFromData($actionName, [], $context));
-                }
-                $service->goDown($actionName);
+            $context = $service->getConfig()->getCurrentContext();
+            if (!$context->hasChildByName($originalActionName)) {
+                $context->addChild(new Context($originalActionName, null, Context::TYPE_ACTION));
             }
+
+            $service->goDown($originalActionName);
         }
 
         if ($this->execute) {
@@ -526,7 +563,7 @@ class Controller extends BaseController
     {
         $pager->set_url_pattern($this->prefix . $this->underscorifyName($this->modelName) . '?page=#page#');
 
-        $this->meta['page'] = $pager->page;
+        $this->meta['page'] = $pager->page instanceof VulnerableField ? $pager->page->getFilteredValue() : $pager->page;
         $this->meta['page_url'] = $pager->url($pager->page);
         $this->response->addLinkUrl($pager->url($pager->page), 'current');
         $this->meta['first_page'] = 1;

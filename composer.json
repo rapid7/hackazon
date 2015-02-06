@@ -39,18 +39,31 @@
         }
     ],
     "require": {
-        "phpixie/core": "2.*@dev",
-        "phpixie/db": "2.*@dev",
-        "phpixie/orm": "2.*@dev",
-        "phpixie/auth": "2.*@dev",
-        "phpixie/email": "2.*@dev",
-        "phpixie/paginate":"2.*@dev",
-        "gwtphp/gwtphp": "dev-master",
-        "hackazon/amfphp": "dev-master"
+        "phpixie/core": "dev-master#18098764384057c94639a587c1f393dfeb3ef5ce",
+        "phpixie/db": "dev-master#67a5f61e1cc9887fdd39a864c5ce56e1b8737009",
+        "phpixie/orm": "dev-master#026af58ba5871e0eac526bfc294b4f7b0233b6d9",
+        "phpixie/auth": "dev-master#4ad10a65f4f888e631e7ebe3f9f52d60734ebfa0",
+        "phpixie/email": "dev-master#0fd099ecc71260a84ef7eba75533e9b744601310",
+        "phpixie/paginate":"dev-master#dfc904855998f7b49f25a127041a3968d513cff1",
+        "gwtphp/gwtphp": "dev-master#9b204c62fa8706f7833f0b58df1c3a62fc3d578a",
+        "hackazon/amfphp": "dev-master",
+        "doctrine/annotations": "1.2.1",
+        "symfony/form": "2.5.7",
+        "symfony/validator": "2.6.1",
+        "symfony/framework-bundle": "2.6.1",
+        "symfony/event-dispatcher": "2.6.1",
+        "apache/log4php": "2.3.0",
+        "silex/silex": "dev-master#4a79566ea01041ed5cd43d0cdbaad9452673dad8"
     },
     "extra": {
         "branch-alias": {
             "dev-master": "2.*-dev"
         }
+    },
+    "scripts": {
+        "make-phar": "App\\Utils\\ComposerPharMaker::convertVendorsToPhar",
+        "mp": "App\\Utils\\ComposerPharMaker::convertVendorsToPhar",
+        "remove-vendor-dirs": "App\\Utils\\ComposerPharMaker::removeVendorPackagesDirs",
+        "rvd": "App\\Utils\\ComposerPharMaker::removeVendorPackagesDirs"
     }
 }

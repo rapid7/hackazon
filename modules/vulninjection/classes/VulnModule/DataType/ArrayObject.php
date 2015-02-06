@@ -53,4 +53,15 @@ class ArrayObject extends \ArrayObject
 
         return null;
     }
+
+    public function findIndex($element)
+    {
+        foreach ($this->getIterator() as $k => $v) {
+            if ($element === $v) {
+                return $k;
+            }
+        }
+
+        return null;
+    }
 }

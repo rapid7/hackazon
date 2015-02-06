@@ -8,6 +8,7 @@
 
 
 namespace App\Model;
+use VulnModule\VulnerableField;
 
 /**
  * Class WishList.
@@ -81,25 +82,31 @@ class WishList extends BaseModel
 
     /**
      * Search Users and wishLists by username or email
-     * @param string $searchQuery
+     * @param string|VulnerableField $searchQuery
      * @return array
      */
     public function searchWishlists($searchQuery)
     {
+        if ($searchQuery instanceof VulnerableField) {
+            $searchString = $searchQuery->copy('%' . $searchQuery->raw() . '%');
+        } else {
+            $searchString = '%' . $searchQuery . '%';
+        }
         /** @var User[] $users */
         $users = $this->pixie->db->query('select')->fields('id')->table('tbl_users', 'user')
             ->join(['tbl_wish_list', 'wishlists'], ['wishlists.user_id', 'user.id'])
             ->where('wishlists.type', 'public')
             ->where(
                 'and', [
-                    array('email', 'like', '%' . $searchQuery . '%'),
-                    array('or', array('username', 'like', '%' . $searchQuery . '%')),
-          //          array('or', array('wishlists.name', 'like', '%' . $searchQuery . '%'))
+                    array('email', 'like', $searchString),
+                    array('or', array('username', 'like', ), $searchString)
+          //          array('or', array('wishlists.name', 'like', $searchString))
                 ]
             )->execute()->as_array(true);
+
         $userIds = [];
         foreach ($users as $usr) {
-            $userIds[] = $usr->id;
+            $userIds[] = $usr->id();
         }
 
         if ($userIds) {
@@ -154,7 +161,7 @@ class WishList extends BaseModel
 
         $wishList = new WishList($this->pixie);
 
-        if (!$wishList->isValidType($type)) {
+        if (!$wishList->isValidType($type instanceof VulnerableField ? $type->raw() : $type)) {
             $type = WishList::TYPE_PRIVATE;
         }
 

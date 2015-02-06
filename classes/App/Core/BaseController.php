@@ -10,13 +10,16 @@
 namespace App\Core;
 
 
+use App\Controller\Error;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
+use App\Rest\ErrorController;
 use PHPixie\Controller;
 use PHPixie\DB\PDOV\Connection;
 use PHPixie\ORM\Model;
-use VulnModule\Config\Context;
+use VulnModule\Config\FieldDescriptor;
 use VulnModule\Csrf\CsrfToken;
+use VulnModule\Vulnerability\PHPSessionIdOverflow;
 use VulnModule\VulnInjection\Service as VulnService;
 
 /**
@@ -50,13 +53,55 @@ class BaseController extends Controller
 
     protected $installationProcess = false;
 
+    protected $vulnConfigDir;
+
+    public function __construct($pixie)
+    {
+        parent::__construct($pixie);
+        $this->vulnConfigDir = __DIR__.'/../../../assets/config/vuln';
+    }
+
     public function before()
     {
         $className = $this->get_real_class($this);
         $controllerName = strtolower($className);
 
-        if ($className == 'Install' && $this->request->param('action') == 'index') {
+        // Create vulnerability service.
+        if (!isset($this->pixie->vulnService)) {
+            $this->vulninjection = $this->pixie->vulninjection->service($controllerName);
+            $this->pixie->setVulnService($this->vulninjection);
+
+        } else {
+            $this->vulninjection = $this->pixie->vulnService;
+            $this->pixie->vulnService->loadAndAddChildContext($controllerName);
+        }
+
+        $this->vulninjection->getConfig()->getCurrentContext()->setRequest($this->request);
+
+        // Switch vulnerability config to the controller level
+        $this->vulninjection->goDown($controllerName);
+
+        if (!($this instanceof Error || $this instanceof \App\Admin\Controller\Error || $this instanceof ErrorController)) {
+            $actionContext = $this->vulninjection->getCurrentContext()->getOrCreateChildByName($this->request->param('action'));
+            /** @var PHPSessionIdOverflow $sessVuln */
+            $sessVuln = $actionContext->getVulnerability('PHPSessionIdOverflow');
+            $sessVuln->fixSession();
+        }
+
+        if ($className == 'Install' && in_array($this->request->param('action'), ['index', 'login'])) {
             $this->installationProcess = true;
+        }
+
+        try {
+            /** @var Connection $pdov */
+            $this->pixie->db->get();
+            
+        } catch (\Exception $e) {
+            $this->pixie->session->set('isInstalled', false);
+            if (!$this->installationProcess) {
+                $this->redirect('/install');
+                return;
+            }
         }
 
         // Check Hackazon is installed
@@ -75,18 +120,11 @@ class BaseController extends Controller
                 $this->pixie->session->set('isInstalled', true);
 
             } catch (\Exception $e) {
+                $this->pixie->session->set('isInstalled', false);
                 $this->redirect('/install');
-                $this->execute = false;
                 return;
             }
         }
-
-        // Create vulnerability service.
-        $this->vulninjection = $this->pixie->vulninjection->service($controllerName);
-        $this->pixie->setVulnService($this->vulninjection);
-
-        // Switch vulnerability config to the controller level
-        $this->vulninjection->goDown($controllerName);
     }
 
     public function after()
@@ -97,6 +135,8 @@ class BaseController extends Controller
 
     /**
      * Obtains an object class name without namespaces
+     * @param $obj
+     * @return string
      */
     public function get_real_class($obj) {
         $classname = get_class($obj);
@@ -137,6 +177,9 @@ class BaseController extends Controller
     {
         if (!isset($params['action'])) {
             $params['action'] = false;
+            if (!isset($params['controller'])) {
+                $params['controller'] = false;
+            }
         }
         return $this->pixie->router->get($route)->url($params, $absolute, $protocol);
     }
@@ -152,15 +195,15 @@ class BaseController extends Controller
         $this->execute = false;
     }
 
-    /**
-     * @param $value
-     * @param null $field
-     * @return mixed
-     */
-    public function filterStoredXSS($value, $field = null)
-    {
-        return $this->pixie->getVulnService()->filterStoredXSSIfNeeded($field, $value);
-    }
+//    /**
+//     * @param $value
+//     * @param null $field
+//     * @return mixed
+//     */
+//    public function filterStoredXSS($value, $field = null)
+//    {
+//        return $this->pixie->getVulnService()->filterStoredXSSIfNeeded($field, $value);
+//    }
 
     /**
      * @param $tokenId
@@ -174,16 +217,20 @@ class BaseController extends Controller
             return true;
         }
 
+        $context = $service->getConfig()->getCurrentContext();
+
+        // Check if we need to filter this injection
+        if ($context->getVulnerability('CSRF')->isEnabled()) {
+            return true;
+        }
+
         $fullTokenId = self::TOKEN_PREFIX . $tokenId;
 
         if ($value === null) {
-            $value = $this->request->method == 'POST'
-                ? $this->request->post($fullTokenId) : $this->request->get($fullTokenId);
-        }
+            $source = in_array($this->request->method, ['POST', 'PATCH', 'PUT'])
+                ? FieldDescriptor::SOURCE_BODY : FieldDescriptor::SOURCE_QUERY;
+            $value = $this->request->getRawValue($source, $fullTokenId);
 
-        // Check if we need to filter this injection
-        if ($service->csrfIsEnabled()) {
-            return true;
         }
 
         if (!$value) {
@@ -242,6 +289,7 @@ class BaseController extends Controller
      */
     public function run($action)
     {
+        $actionName = $action;
         $action = 'action_'.$action;
         $forceHyphens = $this->request->param('force_hyphens');
 
@@ -249,35 +297,28 @@ class BaseController extends Controller
             // Try to change hyphens to underscores in action name
             $underscoredAction = str_replace('-', '_', $action);
             if (!$forceHyphens || !method_exists($this, $underscoredAction)) {
-                throw new NotFoundException("Method {$action} doesn't exist in " . get_class($this));
+                throw new NotFoundException("Action '{$actionName}' doesn't exist");
             } else {
                 $action = $underscoredAction;
             }
         }
 
-
         $this->execute = true;
         $this->before();
-        $service = null;
-        $isControllerLevel = true;
+
+        $service = $this->pixie->getVulnService();
+        if ($this->execute) {
+            $service->getConfig()->getCurrentContext()->setRequest($this->request);
+            $service->setRequest($this->request);
+        }
 
         if ($this->execute) {
-            // Check referrer vulnerabilities
-            $service = $this->pixie->getVulnService();
-            $config = $service->getConfig();
-            $isControllerLevel = $config->getLevel() <= 1;
             $actionName = $this->request->param('action');
+            $service->goDown($actionName);
+            $service->getConfig()->getCurrentContext()->setRequest($this->request);
 
-            if ($isControllerLevel) {
-                if (!$config->has($actionName)) {
-                    $context = $config->getCurrentContext();
-                    $context->addContext(Context::createFromData($actionName, [], $context));
-                }
-                $service->goDown($actionName);
-
-                // Check referrer for action level
-                $this->vulninjection->checkReferrer();
-            }
+            // Check referrer
+            $this->vulninjection->checkReferrer();
         }
 
         if ($this->execute)
@@ -285,7 +326,7 @@ class BaseController extends Controller
         if ($this->execute)
             $this->after();
 
-        if ($this->execute && $isControllerLevel) {
+        if ($this->execute) {
             $service->goUp();
         }
     }

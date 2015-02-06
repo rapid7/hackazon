@@ -1,4 +1,10 @@
 <div class="row">
+    <div class="col-lg-12 col-md-12">
+
+    </div>
+</div>
+
+<?php /* <div class="row">
     <div class="col-lg-3 col-md-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -572,3 +578,4 @@
 <!-- /.col-lg-4 -->
 </div>
 <!-- /.row -->
+*/

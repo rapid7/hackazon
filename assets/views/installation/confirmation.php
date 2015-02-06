@@ -4,6 +4,7 @@
 <table class="table table-striped">
     <tbody>
     <tr><td>Host:</td><td><?php $_($database['host']); ?></td></tr>
+    <tr><td>Port:</td><td><?php $_($database['port']); ?></td></tr>
     <tr><td>User:</td><td><?php $_($database['user']); ?></td></tr>
     <tr><td>Password:</td><td>***************</td></tr>
     <tr><td>Database:</td><td><?php $_($database['db']); ?></td></tr>
