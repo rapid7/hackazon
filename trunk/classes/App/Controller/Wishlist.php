@@ -258,7 +258,7 @@ class Wishlist extends Page {
             }
         }
 
-        if ($wishList->user_id != $this->user->id()) {
+        if (!$wishList->loaded() || $wishList->user_id != $this->user->id()) {
             $this->jsonResponse(['error' => 1, 'You can add products only to your own wish lists.']);
             return;
         }

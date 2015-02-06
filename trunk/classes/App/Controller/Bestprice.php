@@ -10,7 +10,16 @@ use App\Page;
  */
 class Bestprice extends Page
 {
-    public function action_index() {   
+    public function action_index() {
+        if ($this->request->method == 'POST') {
+            if ($this->request->is_ajax()) {
+                $this->jsonResponse([]);
+
+            } else {
+                $this->redirect('/bestprice');
+            }
+            return;
+        }
         $this->view->subview = 'pages/bestprice';
     }
 }

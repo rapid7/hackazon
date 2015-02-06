@@ -99,14 +99,14 @@ class WishList extends BaseModel
             ->where(
                 'and', [
                     array('email', 'like', $searchString),
-                    array('or', array('username', 'like', ), $searchString)
+                    array('or', array('username', 'like', $searchString))
           //          array('or', array('wishlists.name', 'like', $searchString))
                 ]
             )->execute()->as_array(true);
 
         $userIds = [];
         foreach ($users as $usr) {
-            $userIds[] = $usr->id();
+            $userIds[] = $usr->id;  // That's correct, not ->id()
         }
 
         if ($userIds) {
