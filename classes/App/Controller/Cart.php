@@ -30,14 +30,22 @@ class Cart extends Page {
         }
 
         $qty = $this->request->postWrap('qty', 1);
+        if (is_numeric($qty->getFilteredValue())) {
+            if ($qty->getFilteredValue() > 1000) {
+                $qty = $qty->copy(1000);
+            } else if ($qty->getFilteredValue() <= 0) {
+                $qty = $qty->copy(1);
+            }
+        }
+
         $productId = $this->request->postWrap('product_id');
         $result = $this->pixie->cart->addProductWithResult($productId, $qty);
 
         if ($this->request->is_ajax()) {
             $this->jsonResponse([
                 'success' => 1,
-                'productId' => $productId->raw(),
-                'newProduct' => !in_array($productId->raw(), $ids),
+                'productId' => $productId->getFilteredValue(),
+                'newProduct' => !in_array($productId->getFilteredValue(), $ids),
                 'product' => $result['product']->getFields([
                     'productID', 'name', 'Price'
                 ]),
