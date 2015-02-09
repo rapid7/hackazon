@@ -30,6 +30,7 @@
     var model = new AppViewModel();
 
     $(function() {
+        var alertBlock = $(".alert");
 
         $('#bestpriceForm').bootstrapValidator({
             feedbackIcons: {
@@ -47,18 +48,18 @@
                 dataType: "json",
                 data: $("#bestpriceForm").serialize(),
                 success: function(data) {
-                    $(".alert").empty().append('Thank you for your question. We will contact you as soon.').show();
+                    alertBlock.empty().append('Thank you for your question. We will contact you as soon.').show();
                     if (data.length) {
                         ko.applyBindings(model);
                         model.data(data);
                         $('#accordion1').css('display', 'block');
                     }
                     else {
-                        $(".alert").empty().append('There is some error happened during processing your request.').show();
+                        alertBlock.empty().append('There is some error happened during processing your request.').show();
                     }
                 },
                 fail: function() {
-                    $(".alert").empty().append('There is some error happened during processing your request.').show();
+                    alertBlock.empty().append('There is some error happened during processing your request.').show();
                 }
             }).always(function() { l.stop(); });
             return false;
