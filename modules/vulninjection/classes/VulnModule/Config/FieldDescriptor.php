@@ -17,6 +17,7 @@ class FieldDescriptor
 {
     const SOURCE_ANY = 'any';
     const SOURCE_QUERY = 'query';
+    const SOURCE_PARAM = 'param';
     const SOURCE_BODY = 'body';
     const SOURCE_HEADER = 'header';
     const SOURCE_COOKIE = 'cookie';
@@ -24,6 +25,7 @@ class FieldDescriptor
     protected static $sources = [
         self::SOURCE_ANY,
         self::SOURCE_QUERY,
+        self::SOURCE_PARAM,
         self::SOURCE_BODY,
         self::SOURCE_HEADER,
         self::SOURCE_COOKIE,

@@ -111,6 +111,11 @@ class Request extends \PHPixie\Request
         return $this->getWrappedValueOrArray(FieldDescriptor::SOURCE_COOKIE, $key, $default);
     }
 
+    public function paramWrap($key = null, $default = null)
+    {
+        return $this->getWrappedValueOrArray(FieldDescriptor::SOURCE_PARAM, $key, $default);
+    }
+
     public function headerWrap($key = null, $default = null)
     {
         return $this->getWrappedValueOrArray(FieldDescriptor::SOURCE_HEADER, $key, $default);
@@ -194,6 +199,9 @@ class Request extends \PHPixie\Request
 
         } else if ($source == FieldDescriptor::SOURCE_HEADER) {
             $raw = $this->header($key, $default);
+
+        } else if ($source == FieldDescriptor::SOURCE_PARAM) {
+            $raw = $this->param($key, $default);
 
         } else {
             $raw = $default;
