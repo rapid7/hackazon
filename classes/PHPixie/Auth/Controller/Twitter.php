@@ -1,6 +1,7 @@
 <?php
 
 namespace PHPixie\Auth\Controller;
+use PHPixie\Controller;
 
 /**
  * Abstract Twitter login controller. To use it you need to extend this class
@@ -14,7 +15,7 @@ namespace PHPixie\Auth\Controller;
  * Optionally you can pass a ?return_url =<url> parameter to specify where to redirect the
  * user after he is logged in. You can also specify a default redirect url in the auth.php config file.
  */
-abstract class Twitter extends \PHPixie\Controller {
+abstract class Twitter extends Controller {
 
     /**
      * Twitter login provider to log the user in
@@ -41,7 +42,7 @@ abstract class Twitter extends \PHPixie\Controller {
     protected $default_return_url;
 
     /*
-     * Initializes the controller oarameters
+     * Initializes the controller parameters
      *
      * @return void
      */
@@ -81,8 +82,9 @@ abstract class Twitter extends \PHPixie\Controller {
      */
     public function handle_request($display_mode) {
 
-        if ($error = $this->request->get('error'))
-            return $this->error($display_mode);
+        if ($error = $this->request->get('error')) {
+            $this->error($display_mode);
+        }
 
         $state = md5(uniqid(rand(), true));
         $timestamp = time();
@@ -91,7 +93,7 @@ abstract class Twitter extends \PHPixie\Controller {
             $params = $this->provider->exchange_code($state, $timestamp,$_GET['oauth_token'],$_GET['oauth_verifier']);
             $this->pixie->session->remove($this->state_key);
 
-            return $this->success($params, $display_mode);
+            $this->success($params, $display_mode);
         }
 
         $this->pixie->session->set($this->state_key, $state);
