@@ -5,14 +5,6 @@ return array (
     'technology' => 'web',
     'mapped_to' => 'wishlist',
     'storage_role' => 'root',
-    'fields' => 
-    array (
-        0 => 
-        array (
-            'name' => 'id',
-            'source' => 'query',
-        ),
-    ),
     'vulnerabilities' => 
     array (
         'vuln_list' => 
@@ -29,7 +21,7 @@ return array (
         array (
             'name' => 'add_product',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'add_product',
             'fields' => 
             array (
@@ -41,7 +33,7 @@ return array (
                 1 => 
                 array (
                     'name' => 'id',
-                    'source' => 'query',
+                    'source' => 'param',
                     'vulnerabilities' => 
                     array (
                         'vuln_list' => 
@@ -60,7 +52,7 @@ return array (
         array (
             'name' => 'view',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'view',
             'fields' => 
             array (
@@ -72,7 +64,7 @@ return array (
                 1 => 
                 array (
                     'name' => 'id',
-                    'source' => 'query',
+                    'source' => 'param',
                 ),
             ),
         ),
@@ -80,7 +72,7 @@ return array (
         array (
             'name' => 'new',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'new',
             'fields' => 
             array (
@@ -111,19 +103,19 @@ return array (
         array (
             'name' => 'edit',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'edit',
             'fields' => 
             array (
                 0 => 
                 array (
                     'name' => 'name',
-                    'source' => 'query',
+                    'source' => 'param',
                 ),
                 1 => 
                 array (
                     'name' => 'type',
-                    'source' => 'query',
+                    'source' => 'body',
                 ),
             ),
         ),
@@ -131,7 +123,7 @@ return array (
         array (
             'name' => 'set_default',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'set_default',
             'fields' => 
             array (
@@ -146,14 +138,14 @@ return array (
         array (
             'name' => 'delete_product',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'delete_product',
             'fields' => 
             array (
                 0 => 
                 array (
                     'name' => 'id',
-                    'source' => 'query',
+                    'source' => 'param',
                     'vulnerabilities' => 
                     array (
                         'vuln_list' => 
@@ -172,14 +164,14 @@ return array (
         array (
             'name' => 'delete',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'delete',
             'fields' => 
             array (
                 0 => 
                 array (
                     'name' => 'id',
-                    'source' => 'query',
+                    'source' => 'param',
                     'vulnerabilities' => 
                     array (
                         'vuln_list' => 
@@ -198,7 +190,7 @@ return array (
         array (
             'name' => 'search',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'search',
             'fields' => 
             array (
@@ -213,7 +205,7 @@ return array (
         array (
             'name' => 'remember',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'remember',
             'fields' => 
             array (
@@ -228,7 +220,7 @@ return array (
         array (
             'name' => 'remove_follower',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'remove_follower',
             'fields' => 
             array (

@@ -201,7 +201,7 @@ class Request extends \PHPixie\Request
             $raw = $this->header($key, $default);
 
         } else if ($source == FieldDescriptor::SOURCE_PARAM) {
-            $raw = $this->param($key, $default);
+            $raw = rawurldecode($this->param($key, $default));
 
         } else {
             $raw = $default;

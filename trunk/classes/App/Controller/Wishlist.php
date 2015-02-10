@@ -63,7 +63,7 @@ class Wishlist extends Page {
     public function action_view() {
         $this->prepare();
 
-        $id = $this->request->param('id');
+        $id = $this->request->paramWrap('id');
 
         /** @var \App\Model\WishList $wishList */
         $wishList = $this->pixie->orm->get('wishlist', $id);
@@ -138,7 +138,7 @@ class Wishlist extends Page {
             $this->redirect('/wishlist');
         }
 
-        $id = $this->request->param('id');
+        $id = $this->request->paramWrap('id');
         $name = $this->request->postWrap('name', 'New Wish List');
         $type = $this->request->postWrap('type', \App\Model\WishList::TYPE_PRIVATE);
 
@@ -229,14 +229,14 @@ class Wishlist extends Page {
             throw new ForbiddenException();
         }
 
-        $productId = $this->request->param('id');
+        $productId = $this->request->paramWrap('id');
         $wishlistId = $this->request->postWrap('wishlist_id');
 
         /** @var ProductModel $product */
         $product = $this->pixie->orm->get('product', $productId);
 
         if (!$product->loaded()) {
-            $this->jsonResponse(['error' => 1, 'Product with id=' . $productId . ' doesn\'t exist.']);
+            $this->jsonResponse(['error' => 1, 'Product with id=' . $productId->getFilteredValue() . ' doesn\'t exist.']);
             return;
         }
 
@@ -244,7 +244,7 @@ class Wishlist extends Page {
         $wishListModel = $this->pixie->orm->get('wishList');
 
         if ($product->isInUserWishList($this->user)) {
-            $this->jsonResponse(['success' => 1, 'Product with id=' . $productId . ' is in your wish list already.']);
+            $this->jsonResponse(['success' => 1, 'Product with id=' . $productId->getFilteredValue() . ' is in your wish list already.']);
             return;
         }
 
@@ -289,7 +289,7 @@ class Wishlist extends Page {
             throw new ForbiddenException();
         }
 
-        $productId = $this->request->param('id');
+        $productId = $this->request->paramWrap('id');
 
         /** @var ProductModel $product */
         $product = $this->pixie->orm->get('product', $productId);
@@ -321,9 +321,9 @@ class Wishlist extends Page {
             throw new ForbiddenException();
         }
 
-        $id = $this->request->param('id');
+        $id = $this->request->paramWrap('id');
 
-        if (!$id) {
+        if (!$id->getFilteredValue()) {
             throw new HttpException("Missing wishlist id.");
         }
         $wishList = $this->getWishList($id);
@@ -427,6 +427,7 @@ class Wishlist extends Page {
                 ->where(array('user_id', '=', $this->pixie->auth->user()->id()),
                         array('and', array('follower_id', '=', $this->request->postWrap('follower_id'))))
                 ->find();
+
         if ($item->loaded()) {
             $item->delete();
             $this->jsonResponse(['success' => 1]);
