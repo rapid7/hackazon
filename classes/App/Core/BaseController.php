@@ -10,8 +10,10 @@
 namespace App\Core;
 
 
+use App\Controller\Error;
 use App\Exception\HttpException;
 use App\Exception\NotFoundException;
+use App\Rest\ErrorController;
 use PHPixie\Controller;
 use PHPixie\DB\PDOV\Connection;
 use PHPixie\ORM\Model;
@@ -322,7 +324,9 @@ class BaseController extends Controller
             $service->getConfig()->getCurrentContext()->setRequest($this->request);
 
             // Check referrer
-            $this->vulninjection->checkReferrer();
+            if (!($this instanceof Error) && !($this instanceof \App\Admin\Controller\Error) && !($this instanceof ErrorController)) {
+                $this->vulninjection->checkReferrer();
+            }
         }
 
         if ($this->execute)

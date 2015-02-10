@@ -36,7 +36,7 @@ class Faq extends Page
 
         $entries = $this->model->getEntries()->as_array();
         foreach ($entries as $key => $entry) {
-            $entry->question = $service->wrapValueByPath($entry->question, 'default->faq|userQuestion:any|0');
+            $entry->question = $service->wrapValueByPath($entry->question, 'default->faq->index|userQuestion:any|0', true);
             $entries[$key] = $entry;
         }
         $this->view->entries = $entries;

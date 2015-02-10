@@ -301,27 +301,7 @@ class Service {
     public function checkReferrer() {
         /** @var Vulnerability\Referer $vuln */
         $vuln = $this->getContextVulnerability('Referer');
-
-        if ($vuln->isEnabled()) {
-            return;
-        }
-
-//        $referer = $_SERVER['HTTP_REFERER'];
-//        $parts = parse_url($referer);
-//
-//        $host = $parts['host'];
-//        $method = $_SERVER['REQUEST_METHOD'];
-//        $proto = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
-//        $path = $parts['path'];
-//
-//        $isFilterable = $this->checkIsIn($method, $vuln['methods']) && $this->checkIsIn(strtolower($proto), $vuln['protocols']);
-//
-//        if ($isFilterable
-//            && ((!$path || !$this->referrerPathIsAllowed($path, $vuln['paths']))
-//                || (!$host || !$this->checkIsIn($host, $vuln['hosts'])))
-//        ) {
-//            throw new ForbiddenException();
-//        }
+        $vuln->checkReferer($this->request);
     }
 
     /**
@@ -416,7 +396,13 @@ class Service {
         }
     }
 
-    public function wrapValueByPath($value, $path)
+    /**
+     * @param string $value
+     * @param string $path Absolute path to vulnerability block which is to be bound to variable.
+     * @param bool $restored Indicates, whether the field is restored from serialized source.
+     * @return VulnerableField
+     */
+    public function wrapValueByPath($value, $path, $restored = true)
     {
         $parts = preg_split('/\|/', $path);
         if (!$parts[0] || !$parts[1] || (!$parts[2] && $parts[2] != 0)) {
@@ -427,6 +413,7 @@ class Service {
         $name = $fieldParts[0];
         $source = $fieldParts[1] ?: FieldDescriptor::SOURCE_ANY;
         $result = new VulnerableField(new FieldDescriptor($name, $source), $value, $element);
+        $result->setRestored($restored);
         return $result;
     }
 

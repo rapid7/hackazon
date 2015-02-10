@@ -37,6 +37,12 @@ class VulnerableField
      */
     protected $vulnerableElementId;
 
+    /**
+     * Check whether the vulnerability is restored from serialized source (e.g. session).
+     * @var bool
+     */
+    protected $restored = false;
+
     function __construct(FieldDescriptor $descriptor, $value = null, VulnerableElement $vulnerabilities = null)
     {
         $this->descriptor = $descriptor;
@@ -125,8 +131,10 @@ class VulnerableField
 
     public function escapeXSS()
     {
-        if ($this->isVulnerableTo('XSS')) {
-            return (string) $this->getFilteredValue();
+        /** @var V\XSS $vuln */
+        $vuln  = $this->getVulnerability('XSS');
+        if ($vuln->isEnabled() && (!$this->isRestored() || $vuln->isStored())) {
+            return (string)$this->getFilteredValue();
         }
 
         return htmlspecialchars($this->getFilteredValue(), ENT_COMPAT, 'UTF-8');
@@ -157,7 +165,7 @@ class VulnerableField
         /** @var Vulnerability $vuln */
         foreach ($this->vulnerableElement->getComputedVulnerabilities() as $vuln) {
             if ($vuln) {
-                $value = $vuln->filter($value);
+                $value = $vuln->filter($value, $this->isRestored());
             }
         }
 
@@ -184,5 +192,21 @@ class VulnerableField
         }
 
         return $this->vulnerableElement;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isRestored()
+    {
+        return $this->restored;
+    }
+
+    /**
+     * @param boolean $restored
+     */
+    public function setRestored($restored)
+    {
+        $this->restored = $restored;
     }
 }
