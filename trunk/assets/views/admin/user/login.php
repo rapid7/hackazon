@@ -15,7 +15,8 @@
                         </div>
                     <?php endif; ?>
 
-                    <form role="form" method="post" action="/admin/user/login">
+                    <form role="form" method="post" action="/admin/user/login<?php echo isset($returnUrl) && $returnUrl
+                        ? '?return_url=' . $_esc(rawurlencode($returnUrl)) : ''; ?>">
                         <fieldset>
                             <div class="form-group">
                                 <input class="form-control" placeholder="Username/E-mail" name="username" type="text" autofocus>

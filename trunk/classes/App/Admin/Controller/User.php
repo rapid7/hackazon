@@ -35,7 +35,8 @@ class User extends CRUDController
             $this->redirect('/admin/');
         }
 
-        $this->view->returnUrl = $this->request->get('return_url', '');
+        $returnUrl =  $this->request->get('return_url', '');
+        $this->view->returnUrl = $returnUrl;
 
         if ($this->request->method == 'POST') {
 
@@ -64,12 +65,12 @@ class User extends CRUDController
                             return;
                         }
 
-                        $this->redirect('/admin/');
+                        $this->redirect($returnUrl ?: '/admin/');
                         return;
 
                     } else {
                         $this->pixie->session->flash('error', 'You don\'t have enough permissions to access admin area.');
-                        $this->redirect('/admin/user/login');
+                        $this->redirect('/admin/user/login' . ($returnUrl ? '?return_url=' . rawurlencode($returnUrl) : ''));
                         return;
                     }
                 }
