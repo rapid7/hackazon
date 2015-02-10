@@ -126,7 +126,7 @@ class VulnerableField
 
     public function __toString()
     {
-        return (string) $this->rawValue;
+        return (string) $this->getFilteredValue();
     }
 
     public function escapeXSS()

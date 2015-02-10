@@ -53,4 +53,17 @@ class Router extends \PHPixie\Router
         $url = preg_replace('|\/+$|', '', $url);
         return $url ?: '/';
     }
+
+    /**
+     * @inheritdoc
+     */
+    protected function rule($str)
+    {
+        $str = $str[0];
+        $regexp = '[\\w\\d\\-\\.\\s_%]+';
+        if(is_array($this->temp_rule)) {
+            $regexp = $this->pixie->arr($this->temp_rule[1], str_replace(array('<', '>'), '', $str), $regexp);
+        }
+        return '(?P'.$str.$regexp.')';
+    }
 }
