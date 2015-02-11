@@ -135,14 +135,10 @@ var Context = can.Control('Context', {
 
     '> .panel-body > .context-fields .js-fields-container sortupdate': function () {
         this.calculateFieldOrder();
-        console.log(arguments);
     },
 
     '> .panel-body > .js-child-contexts sortupdate': function () {
-        this.childrenContainer.children('.js-context-panel').each(function () {
-            var panel = $(this);
-            panel.contextControl('checkPositionButtons')
-        });
+        this.checkChildrenPositionButtons();
     },
 
     '> .panel-body > .context-fields .js-field-block removefieldclaim': function (el) {
@@ -219,6 +215,7 @@ var Context = can.Control('Context', {
         contextElement.contextControl();
         location.hash = newContextId;
         contextElement.find('.js-name-field').focus();
+        this.checkChildrenPositionButtons();
     },
 
     calculateFieldOrder: function () {
@@ -243,6 +240,13 @@ var Context = can.Control('Context', {
         } else {
             this.moveDownButton.hide();
         }
+    },
+
+    checkChildrenPositionButtons: function () {
+        this.childrenContainer.children('.js-context-panel').each(function () {
+            var panel = $(this);
+            panel.contextControl('checkPositionButtons')
+        });
     }
 });
 
