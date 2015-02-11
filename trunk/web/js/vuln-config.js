@@ -116,9 +116,16 @@ var Context = can.Control('Context', {
         this.childrenContainer.sortable();
         //this.childrenContainer.disableSelection();
 
-        if (this.element.parents('.js-context-panel').length == 0) {
+        this.hasParents = !!this.element.parents('.js-context-panel').length;
+
+        if (!this.hasParents) {
             this.element.find('> .panel-heading .js-remove').remove();
+            this.element.find('> .panel-heading .js-position-buttons').remove();
         }
+        this.moveUpButton = this.element.find('> .panel-heading .js-move-up');
+        this.moveDownButton = this.element.find('> .panel-heading .js-move-down');
+
+        this.checkPositionButtons();
     },
 
     '> .panel-body > .context-fields .js-add-field click': function (el, ev) {
@@ -128,6 +135,14 @@ var Context = can.Control('Context', {
 
     '> .panel-body > .context-fields .js-fields-container sortupdate': function () {
         this.calculateFieldOrder();
+        console.log(arguments);
+    },
+
+    '> .panel-body > .js-child-contexts sortupdate': function () {
+        this.childrenContainer.children('.js-context-panel').each(function () {
+            var panel = $(this);
+            panel.contextControl('checkPositionButtons')
+        });
     },
 
     '> .panel-body > .context-fields .js-field-block removefieldclaim': function (el) {
@@ -150,13 +165,42 @@ var Context = can.Control('Context', {
         this.addField();
     },
 
+    '> .panel-heading .js-move-up click': function (el, ev) {
+        ev.preventDefault();
+        var prevElement = this.element.prev('.js-context-panel');
+
+        if (!prevElement.length) {
+            return;
+        }
+
+        this.element.insertBefore(prevElement);
+        this.checkPositionButtons();
+        prevElement.contextControl('checkPositionButtons');
+    },
+
+    '> .panel-heading .js-move-down click': function (el, ev) {
+        ev.preventDefault();
+        var nextElement = this.element.next('.js-context-panel');
+
+        if (!nextElement.length) {
+            return;
+        }
+
+        this.element.insertAfter(nextElement);
+        this.checkPositionButtons();
+        nextElement.contextControl('checkPositionButtons');
+    },
+
     addField: function () {
         var idBase = this.fieldsBlock.data('field-collection-id');
         var name = this.fieldsBlock.data('field-collection-name');
         var id = this.fieldsIdCounter++;
         var template = can.view("#tplField", {id: idBase + '_' + id, name: name + '[' + id + ']', field_index: id});
         this.fieldsContainer.append(template);
-        this.fieldsContainer.children('#' + idBase + '_' + id).contextField();
+        var newFieldId = '#' + idBase + '_' + id;
+        var newField = this.fieldsContainer.children(newFieldId);
+        newField.contextField();
+        newField.find('.js-name-field').focus();
 
         this.fieldsContainer.sortable();
         //this.fieldsContainer.disableSelection();
@@ -170,13 +214,35 @@ var Context = can.Control('Context', {
         var id = this.childrenIdCounter++;
         var template = can.view("#tplContext", {id: idBase + '_' + id, name: name + '[' + id + ']', field_index: id});
         this.childrenContainer.append(template);
-        this.childrenContainer.children('#' + idBase + '_' + id).contextControl();
+        var newContextId = '#' + idBase + '_' + id;
+        var contextElement = this.childrenContainer.children(newContextId);
+        contextElement.contextControl();
+        location.hash = newContextId;
+        contextElement.find('.js-name-field').focus();
     },
 
     calculateFieldOrder: function () {
         var order = this.fieldsContainer.children('.js-field-block').map(function (i, f) { return $(f).data('id'); })
             .toArray().join(',');
         this.element.find('> .panel-body > .js-field-order').val(order);
+    },
+
+    checkPositionButtons: function () {
+        if (!this.hasParents) {
+            return;
+        }
+
+        if (this.element.prev('.js-context-panel').length) {
+            this.moveUpButton.show();
+        } else {
+            this.moveUpButton.hide();
+        }
+
+        if (this.element.next('.js-context-panel').length) {
+            this.moveDownButton.show();
+        } else {
+            this.moveDownButton.hide();
+        }
     }
 });
 
