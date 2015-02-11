@@ -62,7 +62,8 @@ class SessionCartStorage implements ICartStorage
      */
     public function setProductCount($product, $quantity = 1)
     {
-        if ($quantity <= 0) {
+        $filteredQuantity = $quantity instanceof VulnerableField ? $quantity->getFilteredValue() : $quantity;
+        if ($filteredQuantity <= 0) {
             $this->removeProduct($product);
             return;
         }
@@ -71,7 +72,9 @@ class SessionCartStorage implements ICartStorage
             /** @var CartItems $item */
             foreach ($_SESSION['cart_service']['items'] as $item) {
                 if ($item->product_id == $product->id()) {
-                    $item->qty = $quantity;
+                    if (!is_infinite($filteredQuantity) && !is_null($filteredQuantity) && is_numeric($filteredQuantity)) {
+                        $item->qty = $quantity;
+                    }
                     return;
                 }
             }
@@ -106,7 +109,7 @@ class SessionCartStorage implements ICartStorage
     {
         $filteredQuantity = $quantity instanceof VulnerableField ? $quantity->getFilteredValue() : $quantity;
 
-        if ($filteredQuantity == 0) {
+        if (is_infinite($filteredQuantity) || is_null($filteredQuantity) || !is_numeric($filteredQuantity) || $filteredQuantity <= 0) {
             return;
         }
 
@@ -115,8 +118,11 @@ class SessionCartStorage implements ICartStorage
         foreach ($_SESSION['cart_service']['items'] as $item) {
             // If product already exists, just increase quantity
             if ($item->product_id == $product->id()) {
-                $item->qty += $filteredQuantity;
-                $added = true;
+                $newQuantity = $item->qty + $filteredQuantity;
+                if (!is_infinite($newQuantity) && !is_null($newQuantity) && is_numeric($newQuantity)) {
+                    $item->qty = $newQuantity;
+                    $added = true;
+                }
                 break;
             }
         }
@@ -131,11 +137,6 @@ class SessionCartStorage implements ICartStorage
             $item->name = $product->name;
             $this->getCart()->items_count += $filteredQuantity;
             $_SESSION['cart_service']['items'][] = $item;
-            $added = true;
-        }
-
-        if ($added === false) {
-            return;
         }
 
         $this->getCart()->items_qty += $filteredQuantity;

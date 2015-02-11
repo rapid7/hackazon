@@ -228,7 +228,8 @@ class CartService implements ICartStorage
         $coupon = $this->getCoupon();
         $total = 0;
         foreach ($this->getItems() as $item) {
-            $total += $item->price * $item->qty;
+            $quantity = is_infinite($item->qty) || is_null($item->qty) || !is_numeric($item->qty) ? 1 : $item->qty;
+            $total += $item->price * $quantity;
         }
         $total *= $coupon ? (1.0 - $coupon->discount / 100) : 1;
         return $total;
