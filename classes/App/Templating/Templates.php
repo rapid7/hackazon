@@ -134,15 +134,19 @@ class Templates
                 <?php echo isset($form['type']) ? $formHelper->widget($form['type']) : ''; ?>
                 <?php echo isset($form['technology']) ? $formHelper->widget($form['technology']) : ''; ?>
 
-                <?php if ($form->vars['edit_mode_enabled']): ?>
                 <div class="pull-right">
-                    <div class="btn-group">
-                        <button class="btn btn-default js-add-field" type="button">Add Field</button>
-                        <button class="btn btn-default js-add-child-context" type="button">Add Child</button>
-                        <button class="btn btn-default js-remove" type="button">Remove</button>
-                    </div>
+                    <?php if ($form->vars['edit_mode_enabled']): ?>
+                        <div class="btn-group">
+                            <button class="btn btn-default btn-sm js-add-field" type="button">Add Field</button>
+                            <button class="btn btn-default btn-sm js-add-child-context" type="button">Add Child</button>
+                            <button class="btn btn-default btn-sm js-remove" type="button">Remove</button>
+                        </div>
+                        <div class="btn-group js-position-buttons">
+                            <button class="btn btn-default btn-sm js-move-up js-position-button" type="button" title="Move up">&#8593;</button>
+                            <button class="btn btn-default btn-sm js-move-down js-position-button" type="button" title="Move down">&#8595;</button>
+                        </div>
+                    <?php endif; ?>
                 </div>
-            <?php endif; ?>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
@@ -999,7 +1003,7 @@ class Templates
     {
         /** @var FormView $form */
         ?>
-        <?php echo $formHelper->vars['value']; ?>
+        <?php //echo $form['name']->vars['value']; ?>
         <?php echo $formHelper->errors($form) ?>
         <?php echo $formHelper->widget($form) ?>
         <?php
