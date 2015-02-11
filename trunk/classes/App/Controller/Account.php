@@ -218,7 +218,11 @@ class Account extends Page
             }
 
         } else {
+            $service = $this->pixie->vulnService;
             $data = $user->getFields(array_merge($fields, ['photo']));
+            foreach ($data as $key => $value) {
+                $data[$key] = $service->wrapValueByPath($value, 'default->account->edit_profile|'.$key.':body|0', true);
+            }
         }
 
         foreach ($data as $key => $value) {
