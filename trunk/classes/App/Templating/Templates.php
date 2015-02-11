@@ -147,6 +147,7 @@ class Templates
                         </div>
                     <?php endif; ?>
                 </div>
+                <div class="clearfix clear"></div>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
@@ -270,6 +271,7 @@ class Templates
                     </div>
                 </div>
             <?php endif; ?>
+                <div class="clearfix"></div>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
