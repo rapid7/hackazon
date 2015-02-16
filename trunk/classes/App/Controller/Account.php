@@ -221,6 +221,7 @@ class Account extends Page
 
             } else {
                 $data['photo'] = $user->photo;
+                $this->response->add_header("HTTP/1.1 400 Bad Request");
             }
 
         } else {
