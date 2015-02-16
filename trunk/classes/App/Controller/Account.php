@@ -47,7 +47,13 @@ class Account extends Page
             $myOrders = $ordersPager->current_items()->as_array();
             $this->view->myOrders = $myOrders;
         }
+        $service = $this->pixie->vulnService;
+        $userData = $this->pixie->auth->user()->as_array();
+        foreach ($userData as $key => $value) {
+            $userData[$key] = $service->wrapValueByPath($value, 'default->account->edit_profile|'.$key.':body|0', true);
+        }
         $this->view->user = $this->pixie->auth->user();
+        $this->view->userData = $userData;
         $this->view->subview = 'account/account';
     }
 

@@ -11,23 +11,23 @@
 		<tbody>
 			<tr>
 				<td>Username:</td>
-				<td><?php $_($user->username); ?></td>
+				<td><?php $_($userData['username']); ?></td>
 			</tr>
 			<tr>
 				<td>E-mail:</td>
-				<td><?php $_($user->email); ?></td>
+				<td><?php $_($userData['email']); ?></td>
 			</tr>
 			<tr>
 				<td>First Name:</td>
-				<td><?php $_($user->first_name); ?></td>
+				<td><?php $_($userData['first_name']); ?></td>
 			</tr>
 			<tr>
 				<td>Last Name:</td>
-				<td><?php $_($user->last_name); ?></td>
+				<td><?php $_($userData['last_name']); ?></td>
 			</tr>
 			<tr>
 				<td>Phone:</td>
-				<td><?php $_($user->user_phone); ?></td>
+				<td><?php $_($userData['user_phone']); ?></td>
 			</tr>
 			</tbody>
 		</table>
