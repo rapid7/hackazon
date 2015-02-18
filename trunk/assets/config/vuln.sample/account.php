@@ -3,6 +3,7 @@ return array (
     'name' => 'account',
     'type' => 'controller',
     'technology' => 'web',
+    'mapped_to' => 'account',
     'storage_role' => 'root',
     'children' => 
     array (
@@ -10,15 +11,15 @@ return array (
         array (
             'name' => 'index',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'index',
         ),
         'orders' => 
         array (
             'name' => 'orders',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'orders',
             'fields' => 
             array (
                 0 => 
@@ -48,8 +49,8 @@ return array (
         array (
             'name' => 'documents',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'documents',
             'fields' => 
             array (
                 0 => 
@@ -73,8 +74,8 @@ return array (
         array (
             'name' => 'help_articles',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'help_articles',
             'fields' => 
             array (
                 0 => 
@@ -98,8 +99,8 @@ return array (
         array (
             'name' => 'edit_profile',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'edit_profile',
             'fields' => 
             array (
                 0 => 
@@ -120,6 +121,17 @@ return array (
                 array (
                     'name' => 'first_name',
                     'source' => 'any',
+                    'vulnerabilities' => 
+                    array (
+                        'vuln_list' => 
+                        array (
+                            'XSS' => 
+                            array (
+                                'enabled' => true,
+                                'stored' => true,
+                            ),
+                        ),
+                    ),
                 ),
                 2 => 
                 array (
@@ -243,8 +255,8 @@ return array (
         array (
             'name' => 'add_photo',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'add_photo',
         ),
     ),
 );
