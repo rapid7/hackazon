@@ -206,6 +206,9 @@ public class MainActivity extends AbstractRootActivity {
         } else if (item.equals("cart")) {
             fragment = new CartFragment();
 
+        } else if (item.equals("contact us")) {
+            fragment = new ContactMessageFragment();
+
         } else {
             fragment = new AboutFragment();
         }
