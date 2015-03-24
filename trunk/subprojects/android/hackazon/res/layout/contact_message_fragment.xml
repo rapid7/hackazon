@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/contactMessageLayout"
+              android:padding="@dimen/activity_vertical_margin">
+
+    <LinearLayout
+            android:id="@+id/loading_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/loaderBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+            <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:indeterminate="true" />
+            <TextView
+                    style="@android:style/TextAppearance.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/loading_please_wait"
+                    android:textColor="#222222"
+                    android:textSize="20sp" />
+        </LinearLayout>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reload"
+                android:id="@+id/reloadButton"
+                android:gravity="center"
+                android:visibility="gone"
+                />
+
+
+    </LinearLayout>
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/contactMessageView"
+                    android:visibility="gone">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:id="@+id/nameLabel"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/name"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:inputType="textUri"
+                android:text=""
+                android:layout_below="@id/nameLabel"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:id="@+id/emailLabel"
+                android:layout_below="@id/name"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/email"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:inputType="textEmailAddress"
+                android:layout_below="@id/emailLabel"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/phone"
+                android:id="@+id/phoneLabel"
+                android:layout_below="@id/email"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/phoneField"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:inputType="phone"
+                android:layout_below="@id/phoneLabel"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/message"
+                android:id="@+id/messageLabel"
+                android:layout_below="@id/phoneField"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/messageField"
+                android:inputType="textMultiLine"
+                android:layout_below="@id/messageLabel"
+                android:layout_above="@+id/saveButton"
+                />
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/send_contact_message"
+                android:id="@+id/saveButton"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+</RelativeLayout>

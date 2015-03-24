@@ -17,6 +17,7 @@
         <item>Orders</item>
         <item>Cart</item>
         <item>Profile</item>
+        <item>Contact Us</item>
     </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -99,4 +100,9 @@
     <string name="customer_address.item.location">Location</string>
     <string name="customer_address.item.address">Location</string>
     <string name="logout">Logout</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="send_contact_message">Send message</string>
+    <string name="phone">Phone</string>
+    <string name="message">Message</string>
 </resources>

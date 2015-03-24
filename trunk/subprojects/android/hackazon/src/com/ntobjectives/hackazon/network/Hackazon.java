@@ -98,4 +98,17 @@ public interface Hackazon {
 
     @POST("/api/orderAddresses")
     OrderAddress addOrderAddress(@Body OrderAddress address);
+
+    // CONTACT MESSAGES
+    @GET("/api/contactMessages")
+    ContactMessage.ContactMessageResponse contactMessages();
+
+    @GET("/api/contactMessages/{id}")
+    ContactMessage contactMessage(@Path("id") int id);
+
+    @PUT("/api/contactMessages/{id}")
+    ContactMessage updateContactMessages(@Path("id") int id, @Body ContactMessage contactMessage);
+
+    @POST("/api/contactMessages")
+    ContactMessage addContactMessages(@Body ContactMessage contactMessage);
 }
