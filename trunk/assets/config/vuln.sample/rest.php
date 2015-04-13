@@ -87,7 +87,7 @@ return array (
                                 array (
                                     'XSS' => 
                                     array (
-                                        'enabled' => false,
+                                        'enabled' => true,
                                         'stored' => true,
                                     ),
                                 ),
@@ -113,7 +113,7 @@ return array (
                                 array (
                                     'SQL' => 
                                     array (
-                                        'enabled' => false,
+                                        'enabled' => true,
                                         'blind' => false,
                                     ),
                                 ),
