@@ -3,6 +3,7 @@ return array (
     'name' => 'checkout',
     'type' => 'controller',
     'technology' => 'generic',
+    'mapped_to' => 'checkout',
     'storage_role' => 'root',
     'fields' => 
     array (
@@ -16,7 +17,7 @@ return array (
                 array (
                     'XSS' => 
                     array (
-                        'enabled' => false,
+                        'enabled' => true,
                         'stored' => true,
                     ),
                 ),
@@ -65,7 +66,7 @@ return array (
             'name' => 'shipping',
             'type' => 'action',
             'technology' => 'generic',
-            'storage_role' => 'child',
+            'mapped_to' => 'shipping',
             'fields' => 
             array (
                 0 => 
@@ -79,7 +80,7 @@ return array (
                         array (
                             'SQL' => 
                             array (
-                                'enabled' => false,
+                                'enabled' => true,
                                 'blind' => false,
                             ),
                         ),
@@ -107,7 +108,7 @@ return array (
             'name' => 'billing',
             'type' => 'action',
             'technology' => 'generic',
-            'storage_role' => 'child',
+            'mapped_to' => 'billing',
             'fields' => 
             array (
                 0 => 
@@ -120,7 +121,7 @@ return array (
                         array (
                             'SQL' => 
                             array (
-                                'enabled' => false,
+                                'enabled' => true,
                                 'blind' => false,
                             ),
                         ),
@@ -143,7 +144,7 @@ return array (
             'name' => 'getAddress',
             'type' => 'action',
             'technology' => 'generic',
-            'storage_role' => 'child',
+            'mapped_to' => 'getAddress',
             'fields' => 
             array (
                 0 => 
@@ -158,7 +159,7 @@ return array (
             'name' => 'deleteAddress',
             'type' => 'action',
             'technology' => 'generic',
-            'storage_role' => 'child',
+            'mapped_to' => 'deleteAddress',
             'fields' => 
             array (
                 0 => 
@@ -173,21 +174,21 @@ return array (
             'name' => 'placeOrder',
             'type' => 'action',
             'technology' => 'generic',
-            'storage_role' => 'child',
+            'mapped_to' => 'placeOrder',
         ),
         'confirmation' => 
         array (
             'name' => 'confirmation',
             'type' => 'action',
             'technology' => 'generic',
-            'storage_role' => 'child',
+            'mapped_to' => 'confirmation',
         ),
         'order' => 
         array (
             'name' => 'order',
             'type' => 'action',
             'technology' => 'generic',
-            'storage_role' => 'child',
+            'mapped_to' => 'order',
         ),
     ),
 );

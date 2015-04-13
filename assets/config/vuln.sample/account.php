@@ -37,7 +37,7 @@ return array (
                         array (
                             'XSS' => 
                             array (
-                                'enabled' => false,
+                                'enabled' => true,
                                 'stored' => false,
                             ),
                         ),
@@ -121,17 +121,6 @@ return array (
                 array (
                     'name' => 'first_name',
                     'source' => 'any',
-                    'vulnerabilities' => 
-                    array (
-                        'vuln_list' => 
-                        array (
-                            'XSS' => 
-                            array (
-                                'enabled' => true,
-                                'stored' => true,
-                            ),
-                        ),
-                    ),
                 ),
                 2 => 
                 array (

@@ -3,25 +3,16 @@ return array (
     'name' => 'product',
     'type' => 'controller',
     'technology' => 'web',
+    'mapped_to' => 'product',
     'storage_role' => 'root',
-    'vulnerabilities' => 
-    array (
-        'vuln_list' => 
-        array (
-            'CSRF' => 
-            array (
-                'enabled' => false,
-            ),
-        ),
-    ),
     'children' => 
     array (
         'view' => 
         array (
             'name' => 'view',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'view',
             'fields' => 
             array (
                 0 => 
@@ -34,7 +25,7 @@ return array (
                         array (
                             'IntegerOverflow' => 
                             array (
-                                'enabled' => false,
+                                'enabled' => true,
                                 'transform_strategy' => 'cast_to_integer',
                                 'custom_value' => 0,
                                 'action_on_not_numeric' => 'bypass',
