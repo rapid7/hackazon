@@ -3,6 +3,7 @@ return array (
     'name' => 'contact',
     'type' => 'controller',
     'technology' => 'web',
+    'mapped_to' => 'contact',
     'storage_role' => 'root',
     'vulnerabilities' => 
     array (
@@ -20,8 +21,8 @@ return array (
         array (
             'name' => 'index',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'index',
             'fields' => 
             array (
                 0 => 

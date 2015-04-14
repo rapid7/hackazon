@@ -18,7 +18,7 @@ return array (
                     'XSS' => 
                     array (
                         'enabled' => true,
-                        'stored' => true,
+                        'stored' => false,
                     ),
                 ),
             ),
