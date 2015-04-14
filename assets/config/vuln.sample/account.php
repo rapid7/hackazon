@@ -30,7 +30,7 @@ return array (
                 1 => 
                 array (
                     'name' => 'id',
-                    'source' => 'query',
+                    'source' => 'param',
                     'vulnerabilities' => 
                     array (
                         'vuln_list' => 
@@ -121,6 +121,22 @@ return array (
                 array (
                     'name' => 'first_name',
                     'source' => 'any',
+                    'vulnerabilities' => 
+                    array (
+                        'vuln_list' => 
+                        array (
+                            'SQL' => 
+                            array (
+                                'enabled' => false,
+                                'blind' => false,
+                            ),
+                            'XSS' => 
+                            array (
+                                'enabled' => true,
+                                'stored' => true,
+                            ),
+                        ),
+                    ),
                 ),
                 2 => 
                 array (
@@ -168,22 +184,6 @@ return array (
                 array (
                     'name' => 'username',
                     'source' => 'any',
-                    'vulnerabilities' => 
-                    array (
-                        'vuln_list' => 
-                        array (
-                            'SQL' => 
-                            array (
-                                'enabled' => true,
-                                'blind' => false,
-                            ),
-                            'XSS' => 
-                            array (
-                                'enabled' => true,
-                                'stored' => true,
-                            ),
-                        ),
-                    ),
                 ),
                 7 => 
                 array (
