@@ -137,39 +137,39 @@
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="fullName">Full name:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="fullName" name="fullName" required type="text" value="<?php $_($billingAddress['full_name']); ?>">
+                            <input class="form-control" id="fullName" name="fullName" required type="text" value="<?php $_(''.$billingAddress['full_name']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="addressLine1">Address line 1:</label>
                         <div class="col-xs-8">
                             <input class="form-control" required id="addressLine1" name="addressLine1" type="text" placeholder="Street address, P.O. box, company name, c/o"
-                                   value="<?php $_($billingAddress['address_line_1']); ?>">
+                                   value="<?php $_(''.$billingAddress['address_line_1']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="addressLine2">Address line 2:</label>
                         <div class="col-xs-8">
                             <input class="form-control" id="addressLine2" name="addressLine2" type="text" placeholder="Apartment, suite, unit, building, floor, etc. "
-                                   value="<?php $_($billingAddress['address_line_2']); ?>">
+                                   value="<?php $_(''.$billingAddress['address_line_2']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="city">City:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="city" name="city" type="text" value="<?php $_($billingAddress['city']); ?>">
+                            <input class="form-control" required id="city" name="city" type="text" value="<?php $_(''.$billingAddress['city']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="region">State/Province/Region:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="region" name="region" type="text" value="<?php $_($billingAddress['region']); ?>">
+                            <input class="form-control" required id="region" name="region" type="text" value="<?php $_(''.$billingAddress['region']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="zip">ZIP:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="zip" name="zip" type="text" value="<?php $_($billingAddress['zip']); ?>">
+                            <input class="form-control" required id="zip" name="zip" type="text" value="<?php $_(''.$billingAddress['zip']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
@@ -184,12 +184,12 @@
                     <div class="form-group">
                         <label class="col-xs-4 control-label" data-validation="required" for="phone">Phone number:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="phone" name="phone" type="text" value="<?php $_($billingAddress['phone']); ?>">
+                            <input class="form-control" id="phone" name="phone" type="text" value="<?php $_(''.$billingAddress['phone']); ?>">
                         </div>
                     </div>
                 </fieldset>
                 <?php $_token('checkout_step3', false); ?>
-                <input type="hidden" id="address_id" name="address_id" value="<?php $_($billingAddress['uid']); ?>"/>
+                <input type="hidden" id="address_id" name="address_id" value="<?php $_(''.$billingAddress['uid']); ?>"/>
                 <input type="hidden" id="full_form" name="full_form" value="1"/>
             </form>
         </div>
@@ -199,7 +199,7 @@
 				<b><?php echo $_($address->getWrapperOrValue('full_name')); ?></b><br />
 				<?php echo $_($address->getWrapperOrValue('address_line_1')); ?><br />
 				<?php echo $_($address->getWrapperOrValue('address_line_2')); ?><br />
-				<?php echo $_($address->getWrapperOrValue('city'))  . ' ' .  $_($address->getWrapperOrValue('region'))
+				<?php echo $_($address->getWrapperOrValue('city'))  . ' ' .  $_(''.$address->getWrapperOrValue('region'))
                     . ' ' .  $_($address->getWrapperOrValue('zip')) ?><br />
 				<?php echo $_($address->getWrapperOrValue('country_id')); ?><br />
 				<?php echo $_($address->getWrapperOrValue('phone')); ?><br />
