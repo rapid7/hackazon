@@ -142,39 +142,39 @@
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="fullName">Full name:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="fullName" name="fullName" required type="text" value="<?php $_($shippingAddress['full_name']); ?>">
+                            <input class="form-control" id="fullName" name="fullName" required type="text" value="<?php $_(''.$shippingAddress['full_name']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="addressLine1">Address line 1:</label>
                         <div class="col-xs-8">
                             <input class="form-control" required id="addressLine1" name="addressLine1" type="text"
-                                   placeholder="Street address, P.O. box, company name, c/o" value="<?php $_($shippingAddress['address_line_1']); ?>">
+                                   placeholder="Street address, P.O. box, company name, c/o" value="<?php $_(''.$shippingAddress['address_line_1']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-4 control-label" for="addressLine2">Address line 2:</label>
                         <div class="col-xs-8">
                             <input class="form-control" id="addressLine2" name="addressLine2" type="text"
-                                   placeholder="Apartment, suite, unit, building, floor, etc. " value="<?php $_($shippingAddress['address_line_2']); ?>">
+                                   placeholder="Apartment, suite, unit, building, floor, etc. " value="<?php $_(''.$shippingAddress['address_line_2']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="city">City:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="city" name="city" type="text" value="<?php $_($shippingAddress['city']); ?>">
+                            <input class="form-control" required id="city" name="city" type="text" value="<?php $_(''.$shippingAddress['city']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="region">State/Province/Region:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="region" name="region" type="text" value="<?php $_($shippingAddress['region']); ?>">
+                            <input class="form-control" required id="region" name="region" type="text" value="<?php $_(''.$shippingAddress['region']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label required class="col-xs-4 control-label" for="zip">ZIP:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" required id="zip" name="zip" type="text" value="<?php $_($shippingAddress['zip']); ?>">
+                            <input class="form-control" required id="zip" name="zip" type="text" value="<?php $_(''.$shippingAddress['zip']); ?>">
                         </div>
                     </div>
                     <div class="form-group">
@@ -189,12 +189,12 @@
                     <div class="form-group">
                         <label class="col-xs-4 control-label" data-validation="required" for="phone">Phone number:</label>
                         <div class="col-xs-8">
-                            <input class="form-control" id="phone" name="phone" type="text" value="<?php $_($shippingAddress['phone']); ?>">
+                            <input class="form-control" id="phone" name="phone" type="text" value="<?php $_(''.$shippingAddress['phone']); ?>">
                         </div>
                     </div>
                 </fieldset>
                 <?php $_token('checkout_step2', false); ?>
-                <input type="hidden" id="address_id" name="address_id" value="<?php $_($shippingAddress['uid']); ?>"/>
+                <input type="hidden" id="address_id" name="address_id" value="<?php $_(''.$shippingAddress['uid']); ?>"/>
                 <input type="hidden" id="full_form" name="full_form" value="1"/>
             </form>
         </div>

@@ -163,8 +163,8 @@ class VulnerableField
         $value = $this->rawValue;
 
         /** @var Vulnerability $vuln */
-        foreach ($this->vulnerableElement->getComputedVulnerabilities() as $vuln) {
-            if ($vuln) {
+        foreach ($this->_getVulnElement()->getComputedVulnerabilities() as $vuln) {
+            if ($vuln instanceof Vulnerability) {
                 $value = $vuln->filter($value, $this->isRestored());
             }
         }
