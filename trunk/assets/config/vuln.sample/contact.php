@@ -5,16 +5,6 @@ return array (
     'technology' => 'web',
     'mapped_to' => 'contact',
     'storage_role' => 'root',
-    'vulnerabilities' => 
-    array (
-        'vuln_list' => 
-        array (
-            'CSRF' => 
-            array (
-                'enabled' => true,
-            ),
-        ),
-    ),
     'children' => 
     array (
         'index' => 
@@ -55,6 +45,16 @@ return array (
                 array (
                     'name' => 'contact_message',
                     'source' => 'body',
+                ),
+            ),
+            'vulnerabilities' => 
+            array (
+                'vuln_list' => 
+                array (
+                    'CSRF' => 
+                    array (
+                        'enabled' => true,
+                    ),
                 ),
             ),
         ),

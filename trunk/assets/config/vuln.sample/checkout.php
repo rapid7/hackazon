@@ -9,51 +9,35 @@ return array (
     array (
         0 => 
         array (
-            'name' => 'fullName',
-            'source' => 'any',
-            'vulnerabilities' => 
-            array (
-                'vuln_list' => 
-                array (
-                    'XSS' => 
-                    array (
-                        'enabled' => true,
-                        'stored' => false,
-                    ),
-                ),
-            ),
-        ),
-        1 => 
-        array (
             'name' => 'addressLine1',
             'source' => 'any',
         ),
-        2 => 
+        1 => 
         array (
             'name' => 'addressLine2',
             'source' => 'any',
         ),
-        3 => 
+        2 => 
         array (
             'name' => 'city',
             'source' => 'any',
         ),
-        4 => 
+        3 => 
         array (
             'name' => 'region',
             'source' => 'any',
         ),
-        5 => 
+        4 => 
         array (
             'name' => 'zip',
             'source' => 'any',
         ),
-        6 => 
+        5 => 
         array (
             'name' => 'country_id',
             'source' => 'any',
         ),
-        7 => 
+        6 => 
         array (
             'name' => 'phone',
             'source' => 'any',
@@ -78,10 +62,10 @@ return array (
                         'name' => 'addressLineVuln',
                         'vuln_list' => 
                         array (
-                            'SQL' => 
+                            'XSS' => 
                             array (
                                 'enabled' => true,
-                                'blind' => false,
+                                'stored' => true,
                             ),
                         ),
                     ),

@@ -13,23 +13,13 @@ return array (
             'source' => 'query',
         ),
     ),
-    'vulnerabilities' => 
-    array (
-        'vuln_list' => 
-        array (
-            'CSRF' => 
-            array (
-                'enabled' => false,
-            ),
-        ),
-    ),
     'children' => 
     array (
         'add_product' => 
         array (
             'name' => 'add_product',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'add_product',
             'fields' => 
             array (
@@ -60,7 +50,7 @@ return array (
         array (
             'name' => 'view',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'view',
             'fields' => 
             array (
@@ -80,7 +70,7 @@ return array (
         array (
             'name' => 'new',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'new',
             'fields' => 
             array (
@@ -106,12 +96,22 @@ return array (
                     'source' => 'body',
                 ),
             ),
+            'vulnerabilities' => 
+            array (
+                'vuln_list' => 
+                array (
+                    'CSRF' => 
+                    array (
+                        'enabled' => true,
+                    ),
+                ),
+            ),
         ),
         'edit' => 
         array (
             'name' => 'edit',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'edit',
             'fields' => 
             array (
@@ -131,7 +131,7 @@ return array (
         array (
             'name' => 'set_default',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'set_default',
             'fields' => 
             array (
@@ -146,7 +146,7 @@ return array (
         array (
             'name' => 'delete_product',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'delete_product',
             'fields' => 
             array (
@@ -172,7 +172,7 @@ return array (
         array (
             'name' => 'delete',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'delete',
             'fields' => 
             array (
@@ -198,7 +198,7 @@ return array (
         array (
             'name' => 'search',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'search',
             'fields' => 
             array (
@@ -213,7 +213,7 @@ return array (
         array (
             'name' => 'remember',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'remember',
             'fields' => 
             array (
@@ -228,7 +228,7 @@ return array (
         array (
             'name' => 'remove_follower',
             'type' => 'action',
-            'technology' => 'generic',
+            'technology' => 'web',
             'mapped_to' => 'remove_follower',
             'fields' => 
             array (

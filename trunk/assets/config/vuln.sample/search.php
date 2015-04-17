@@ -3,6 +3,7 @@ return array (
     'name' => 'search',
     'type' => 'controller',
     'technology' => 'web',
+    'mapped_to' => 'search',
     'storage_role' => 'root',
     'children' => 
     array (
@@ -10,8 +11,8 @@ return array (
         array (
             'name' => 'index',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'index',
             'fields' => 
             array (
                 0 => 
@@ -22,10 +23,10 @@ return array (
                     array (
                         'vuln_list' => 
                         array (
-                            'SQL' => 
+                            'XSS' => 
                             array (
                                 'enabled' => true,
-                                'blind' => false,
+                                'stored' => false,
                             ),
                         ),
                     ),

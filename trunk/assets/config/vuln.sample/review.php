@@ -3,25 +3,16 @@ return array (
     'name' => 'review',
     'type' => 'controller',
     'technology' => 'web',
+    'mapped_to' => 'review',
     'storage_role' => 'root',
-    'vulnerabilities' => 
-    array (
-        'vuln_list' => 
-        array (
-            'CSRF' => 
-            array (
-                'enabled' => true,
-            ),
-        ),
-    ),
     'children' => 
     array (
         'send' => 
         array (
             'name' => 'send',
             'type' => 'action',
-            'technology' => 'generic',
-            'storage_role' => 'child',
+            'technology' => 'web',
+            'mapped_to' => 'send',
             'fields' => 
             array (
                 0 => 
@@ -48,6 +39,16 @@ return array (
                 array (
                     'name' => 'userEmail',
                     'source' => 'body',
+                ),
+            ),
+            'vulnerabilities' => 
+            array (
+                'vuln_list' => 
+                array (
+                    'CSRF' => 
+                    array (
+                        'enabled' => true,
+                    ),
                 ),
             ),
         ),
