@@ -47,7 +47,7 @@ return array (
                 array (
                     'CSRF' => 
                     array (
-                        'enabled' => true,
+                        'enabled' => false,
                     ),
                 ),
             ),

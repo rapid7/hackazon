@@ -5,24 +5,6 @@ return array (
     'technology' => 'rest',
     'mapped_to' => 'rest',
     'storage_role' => 'root',
-    'vulnerabilities' => 
-    array (
-        'vuln_list' => 
-        array (
-            'CSRF' => 
-            array (
-                'enabled' => true,
-            ),
-            'Referer' => 
-            array (
-                'enabled' => true,
-            ),
-            'XMLExternalEntity' => 
-            array (
-                'enabled' => true,
-            ),
-        ),
-    ),
     'children' => 
     array (
         'user' => 
@@ -55,6 +37,20 @@ return array (
                                         'blind' => true,
                                     ),
                                 ),
+                            ),
+                        ),
+                    ),
+                    'vulnerabilities' => 
+                    array (
+                        'vuln_list' => 
+                        array (
+                            'Referer' => 
+                            array (
+                                'enabled' => true,
+                            ),
+                            'XMLExternalEntity' => 
+                            array (
+                                'enabled' => true,
                             ),
                         ),
                     ),
@@ -91,6 +87,20 @@ return array (
                                         'stored' => true,
                                     ),
                                 ),
+                            ),
+                        ),
+                    ),
+                    'vulnerabilities' => 
+                    array (
+                        'vuln_list' => 
+                        array (
+                            'Referer' => 
+                            array (
+                                'enabled' => true,
+                            ),
+                            'XMLExternalEntity' => 
+                            array (
+                                'enabled' => true,
                             ),
                         ),
                     ),
