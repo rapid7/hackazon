@@ -13,16 +13,6 @@ return array (
             'type' => 'controller',
             'technology' => 'amf',
             'mapped_to' => 'SliderService',
-            'vulnerabilities' => 
-            array (
-                'vuln_list' => 
-                array (
-                    'CSRF' => 
-                    array (
-                        'enabled' => true,
-                    ),
-                ),
-            ),
             'children' => 
             array (
                 'getSlides' => 
@@ -59,16 +49,6 @@ return array (
             'type' => 'controller',
             'technology' => 'amf',
             'mapped_to' => 'CouponService',
-            'vulnerabilities' => 
-            array (
-                'vuln_list' => 
-                array (
-                    'OSCommand' => 
-                    array (
-                        'enabled' => true,
-                    ),
-                ),
-            ),
             'children' => 
             array (
                 'useCoupon' => 
@@ -89,7 +69,7 @@ return array (
                                 array (
                                     'SQL' => 
                                     array (
-                                        'enabled' => false,
+                                        'enabled' => true,
                                         'blind' => true,
                                     ),
                                 ),
