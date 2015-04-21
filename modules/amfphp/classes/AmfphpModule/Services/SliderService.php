@@ -38,7 +38,7 @@ class SliderService extends Service
         ];
 
         if (!is_numeric($num) || (int)$num < 1 || (int)$num > count($slides)) {
-            throw new \InvalidArgumentException();
+            throw new \InvalidArgumentException("Invalid slides number: " . $num);
         }
 
         $num = (int)$num;

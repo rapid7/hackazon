@@ -27,6 +27,8 @@ class Config extends \Amfphp_Core_Config implements IPixifiable
         ];
         $this->pluginsFolders[] = dirname(__FILE__) . '/../Plugins/';
         $this->pluginsConfig['Pixifier']['pixie'] = $pixie;
+        $this->pluginsConfig['AmfphpJsonEx']['pixie'] = $pixie;
+        //$this->disabledPlugins[] = 'AmfphpJson';
     }
 
     function getPixie()
