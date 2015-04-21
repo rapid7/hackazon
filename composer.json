@@ -53,7 +53,8 @@
         "symfony/framework-bundle": "2.6.1",
         "symfony/event-dispatcher": "2.6.1",
         "apache/log4php": "2.3.0",
-        "silex/silex": "dev-master#4a79566ea01041ed5cd43d0cdbaad9452673dad8"
+        "silex/silex": "dev-master#4a79566ea01041ed5cd43d0cdbaad9452673dad8",
+        "phpunit/phpunit": "3.7.*"
     },
     "extra": {
         "branch-alias": {
@@ -65,5 +66,8 @@
         "mp": "App\\Utils\\ComposerPharMaker::convertVendorsToPhar",
         "remove-vendor-dirs": "App\\Utils\\ComposerPharMaker::removeVendorPackagesDirs",
         "rvd": "App\\Utils\\ComposerPharMaker::removeVendorPackagesDirs"
+    },
+    "config": {
+        "bin-dir": "bin/"
     }
 }
