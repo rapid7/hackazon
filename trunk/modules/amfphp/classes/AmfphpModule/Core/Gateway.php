@@ -92,4 +92,16 @@ class Gateway extends \Amfphp_Core_Gateway
 
         return $this->rawOutputData;
     }
+
+    public function getResponseHeaders()
+    {
+        $filterManager = \Amfphp_Core_FilterManager::getInstance();
+        $headers = array('Content-Type' => $this->contentType);
+        $headers = $filterManager->callFilters(self::FILTER_HEADERS, $headers, $this->contentType);
+        $ret = array();
+        foreach($headers as $key => $value){
+            $ret[] = implode(': ', array_filter([trim($key), trim($value)]));
+        }
+        return $ret;
+    }
 }
