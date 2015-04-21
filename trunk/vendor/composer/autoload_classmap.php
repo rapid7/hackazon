@@ -172,6 +172,7 @@ return array(
     'App\\Templating\\ClassTemplateLoader' => $baseDir . '/classes/App/Templating/ClassTemplateLoader.php',
     'App\\Templating\\PhpEngine' => $baseDir . '/classes/App/Templating/PhpEngine.php',
     'App\\Templating\\Templates' => $baseDir . '/classes/App/Templating/Templates.php',
+    'App\\Test\\WebTestCase' => $baseDir . '/classes/App/Test/WebTestCase.php',
     'App\\Traits\\Pixifiable' => $baseDir . '/classes/App/Traits/Pixifiable.php',
     'App\\Utils\\BigInteger' => $baseDir . '/classes/App/Utils/BigInteger.php',
     'App\\Utils\\ComposerPharMaker' => $baseDir . '/classes/App/Utils/ComposerPharMaker.php',
