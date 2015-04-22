@@ -21,25 +21,6 @@ return array (
                     'type' => 'action',
                     'technology' => 'amf',
                     'mapped_to' => 'getSlides',
-                    'fields' => 
-                    array (
-                        0 => 
-                        array (
-                            'name' => 'num',
-                            'source' => 'body',
-                            'vulnerabilities' => 
-                            array (
-                                'vuln_list' => 
-                                array (
-                                    'SQL' => 
-                                    array (
-                                        'enabled' => true,
-                                        'blind' => false,
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
                 ),
             ),
         ),
