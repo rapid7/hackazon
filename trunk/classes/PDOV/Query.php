@@ -3,6 +3,7 @@
 namespace PHPixie\DB\PDOV;
 use PHPixie\DB;
 use VulnModule\DataType\ArrayObject;
+use VulnModule\Vulnerability\XSS;
 use VulnModule\VulnerableField;
 
 
@@ -66,6 +67,8 @@ class Query extends DB\Query
         $this->_db_type = $this->_db->db_type;
         $this->_quote = $this->_db_type == 'mysql' ? '`' : '"';
         $this->vulnFields = new \SplObjectStorage();
+        $this->methods['limit'] = array('integer', 'NULL', 'string');
+        $this->methods['offset'] = array('integer', 'NULL', 'string');
     }
 
     /**
@@ -145,11 +148,13 @@ class Query extends DB\Query
                 $params['vuln_fields'][] = $val;
             }
 
+            $filteredVal = $val->getFilteredValue();
+
             if ($val->isVulnerableTo('SQL')) {
-                return "'" . $val->getFilteredValue() . "'";
+                return "'" . $filteredVal . "'";
 
             } else {
-                $params[] = $val->getFilteredValue();
+                $params[] = $filteredVal;
                 return '?';
             }
         }

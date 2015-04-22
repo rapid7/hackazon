@@ -25,7 +25,9 @@ use PHPixie\Paginate\Pager\ORM as ORMPager;
 use VulnModule\Config\Context;
 use VulnModule\Config\Annotations as Vuln;
 use VulnModule\Config\FieldDescriptor;
+use VulnModule\Vulnerability\XSS;
 use VulnModule\VulnerableField;
+use VulnModule\VulnInjection\Service;
 
 /**
  * Base REST Controller.
@@ -91,6 +93,8 @@ class Controller extends BaseController
 
     protected $responseFormat = self::FORMAT_JSON;
 
+    protected $originalActionName;
+
     public static function createController($controllerName, Request $request, Pixie $pixie, $isSubRequest = false)
     {
         if (!$controllerName || $controllerName == 'Default') {
@@ -151,6 +155,19 @@ class Controller extends BaseController
         }
 
         $this->vulninjection->goDown($controllerName);
+
+        if (!($this instanceof ErrorController)) {
+            // Check referrer vulnerabilities
+            $service = $this->pixie->getVulnService();
+            //$action = $this->request->param('action');
+
+            $context = $service->getConfig()->getCurrentContext();
+            if (!$context->hasChildByName($this->originalActionName)) {
+                $context->addChild(new Context($this->originalActionName, null, Context::TYPE_ACTION));
+            }
+
+            $service->goDown($this->originalActionName);
+        }
 
         $this->request->adjustRequestContentType();
 
@@ -273,8 +290,8 @@ class Controller extends BaseController
         unset($data[$this->model->id_field]);
         $this->prepareData($data);
         $this->checkUpdateData($data);
-
-        $this->item->values($this->request->wrapArray($data, FieldDescriptor::SOURCE_BODY));
+        $values = $this->filterXSS($this->request->wrapArray($data, FieldDescriptor::SOURCE_BODY));
+        $this->item->values($values);
         $this->item->save();
 
         return $this->item;
@@ -327,8 +344,14 @@ class Controller extends BaseController
      */
     public function action_get_collection()
     {
-        $page = $this->request->getWrap('page', 1);
-        $perPage = $this->request->getWrap('per_page', $this->perPage);
+        $page = 1;
+        $perPage = $this->perPage;
+        if ($this->request->get('page') !== null) {
+            $page = $this->request->getWrap('page', 1);
+        }
+        if ($this->request->get('per_page') !== null) {
+            $perPage = $this->request->getWrap('per_page', $this->perPage);
+        }
 
         $this->adjustOrder();
         $pager = $this->pixie->paginate->orm($this->model, $page, $perPage);
@@ -526,6 +549,7 @@ class Controller extends BaseController
     {
         $originalActionName = $action;
         $action = 'action_'.$action;
+        $this->originalActionName = $originalActionName;
 
         if (!method_exists($this, $action)) {
             throw new NotFoundException("Method {$action} doesn't exist in " . get_class($this), 404, null, 'Not Found');
@@ -533,19 +557,6 @@ class Controller extends BaseController
 
         $this->execute = true;
         $this->before();
-
-        if (!($this instanceof ErrorController)) {
-            // Check referrer vulnerabilities
-            $service = $this->pixie->getVulnService();
-            //$action = $this->request->param('action');
-
-            $context = $service->getConfig()->getCurrentContext();
-            if (!$context->hasChildByName($originalActionName)) {
-                $context->addChild(new Context($originalActionName, null, Context::TYPE_ACTION));
-            }
-
-            $service->goDown($originalActionName);
-        }
 
         if ($this->execute) {
             //error_log("Action: " . $action);
@@ -722,5 +733,23 @@ class Controller extends BaseController
     public function setIsCollectionRequested($isCollectionRequested)
     {
         $this->isCollectionRequested = $isCollectionRequested;
+    }
+
+    private function filterXSS($wrappedValues)
+    {
+        /** @var VulnerableField $val */
+        foreach ($wrappedValues as $val) {
+            if ($val->isVulnerableTo('XSS')) {
+                /** @var XSS $xss */
+                $xss = $val->getVulnerability('XSS');
+                if (!$xss->isStored()) {
+                    $val->setRaw(preg_replace(Service::PATTERN_XSS, '', $val->raw()));
+                }
+            } else {
+                $val->setRaw(preg_replace(Service::PATTERN_XSS, '', $val->raw()));
+            }
+        }
+
+        return $wrappedValues;
     }
 }

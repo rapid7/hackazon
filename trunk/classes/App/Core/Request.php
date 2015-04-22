@@ -308,6 +308,8 @@ class Request extends \PHPixie\Request
             // Inject XMLExternalEntity vulnerability
             if ($protected = !$this->pixie->vulnService->isVulnerableTo('XMLExternalEntity')) {
                 libxml_disable_entity_loader(true);
+            } else {
+                libxml_disable_entity_loader(false);
             }
 
             try {
