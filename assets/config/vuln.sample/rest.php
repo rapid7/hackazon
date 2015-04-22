@@ -44,10 +44,6 @@ return array (
                     array (
                         'vuln_list' => 
                         array (
-                            'Referer' => 
-                            array (
-                                'enabled' => true,
-                            ),
                             'XMLExternalEntity' => 
                             array (
                                 'enabled' => true,
@@ -65,9 +61,9 @@ return array (
             'mapped_to' => 'category',
             'children' => 
             array (
-                'get' => 
+                'put' => 
                 array (
-                    'name' => 'get',
+                    'name' => 'put',
                     'type' => 'action',
                     'technology' => 'rest',
                     'mapped_to' => 'get',
@@ -87,20 +83,6 @@ return array (
                                         'stored' => true,
                                     ),
                                 ),
-                            ),
-                        ),
-                    ),
-                    'vulnerabilities' => 
-                    array (
-                        'vuln_list' => 
-                        array (
-                            'Referer' => 
-                            array (
-                                'enabled' => true,
-                            ),
-                            'XMLExternalEntity' => 
-                            array (
-                                'enabled' => true,
                             ),
                         ),
                     ),

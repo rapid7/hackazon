@@ -12,6 +12,7 @@ namespace App\Test;
 
 
 use Goutte\Client;
+use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 
 /**
@@ -120,5 +121,29 @@ class WebTestCase extends \PHPUnit_Framework_TestCase
     {
         parent::tearDown();
         unset($this->client);
+    }
+
+    /**
+     * @return null|Response
+     */
+    protected function getResponse()
+    {
+        if (!$this->client) {
+            return null;
+        }
+
+        return $this->client->getResponse();
+    }
+
+    /**
+     * @return null|Request
+     */
+    protected function getRequest()
+    {
+        if (!$this->client) {
+            return null;
+        }
+
+        return $this->client->getRequest();
     }
 }

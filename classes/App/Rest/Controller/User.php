@@ -93,6 +93,14 @@ class User extends Controller
         return parent::action_post($data);
     }
 
+    public function action_get_collection()
+    {
+        $username = $this->request->getWrap('username');
+        if ($username) {
+            $this->model->where('and', ['username', '=', $username]);
+        }
+        return parent::action_get_collection();
+    }
 
     protected function preloadModel()
     {

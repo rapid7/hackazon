@@ -33,7 +33,7 @@ class ORM extends \PHPixie\Paginate\Pager\ORM
 
         $this->offset = $filteredPageSize * ($filteredPage - 1);
         $this->num_items = $this->item_count();
-        $this->num_pages = ceil($this->num_items / $filteredPageSize);
+        $this->num_pages = ceil($this->num_items / (int)$filteredPageSize);
 
         $this->first_page_url = $first_page_url;
     }
