@@ -1,0 +1,14 @@
+<phpunit
+    processIsolation="true"
+    bootstrap="vendor/autoload.php"
+
+    >
+    <testsuites>
+        <testsuite name="unit">
+
+        </testsuite>
+        <testsuite name="integration">
+            <directory>classes/Tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

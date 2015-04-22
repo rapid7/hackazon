@@ -16,4 +16,8 @@ return array(
     'annotation_length' => 900,
     'rest_in_profile' => false,
     'profile_rest_data_type' => 'xml', // json | xml
+    'test_user' => [
+        'username' => 'test_user',
+        'password' => '123456'
+    ]
 );
