@@ -91,6 +91,21 @@ class AmfphpJsonEx extends \AmfphpJson
 
             return $result;
 
+        } catch (\App\Exception\SQLException $ex) {
+            $result = [
+                'error' => true,
+                'code' => $ex->getCode(),
+                'message' => $ex->isBlind() ? '' : $ex->getMessage()
+            ];
+
+            if (!$ex->isBlind() && $this->returnErrorDetails) {
+                $result['trace'] = $ex->getTraceAsString();
+            }
+
+            $this->exception = $ex;
+
+            return $result;
+
         } catch (\Exception $ex) {
             $result = [
                 'error' => true,
