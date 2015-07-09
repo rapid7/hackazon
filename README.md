@@ -1,40 +1,41 @@
-[PHPixie](http://phpixie.com)
-=======
+Hackazon
+========
 
-I
-PHPixie is a lightweight PHP MVC framework designed for 
-rapid development, speed and simplicty. By avoiding as
-much boilerplate code as possible it allows for better 
-understanding of what the framework actually does and
-amazing performance.
+Hackazon is a free, vulnerable test site that is an online storefront built with the same
+technologies used in today’s rich client and mobile applications. Hackazon has an AJAX
+interface, strict workflows and RESTful API’s used by a companion mobile app providing
+uniquely-effective training and testing ground for IT security professionals. And, it’s
+full of your favorite vulnerabilities like SQL Injection, cross-site scripting and so on.
 
-You can learn it in under 30 minutes using this tutorial:
-[Learn PHPixie in 30 minutes](http://phpixie.com/tutorials/learn-phpixie-in-30-minutes/).
+Today’s web and mobile applications as well as web services have a host of new
+technologies that are not being adequately tested for security vulnerabilities. It is
+critical for IT security professionals to have a vulnerable web application to use for
+testing the effectiveness of their tools and for honing their skills.
 
+Hackazon enables users to configure each area of the application in order to change the
+vulnerability landscape to prevent “known vuln testing” or any other form of ‘cheating.’
+Since the application includes RESTful interfaces that power AJAX functionality and
+mobile clients (JSON, XML, GwT, and AMF), users will need to the latest application
+security testing tools and techniques to discover all the vulnerabilities. Hackazon also
+requires detailed testing of strict workflows, like shopping carts,that are commonly used
+in business applications.
 
-What to expect:
----------------
+Features
+========
+* REST Support - http://www.w3.org/2001/sw/wiki/REST
+* GWT Support - http://www.gwtproject.org
+* AJAX and Standard HTTP Requests are Supported
 
-* Very Lightweight
+Technical Details
+=================
+* PHP Version – 5.4
+* PHP Framework – http://phpixie.com/
+* JS – http://jquery.com/ & http://knockoutjs.com/
+* CSS – http://getbootstrap.com/
+* DB – MySQL 5.5 with InnoDB Support
+* Web Server – Apache 2.0
 
-  Avoids as much boilerplate as possible to reduce your webserver load.
-
-* Super Fast
-
-  PHPixie was designed with speed in mind to provide lightning fast performance. [source](http://phpixie.com/blog/php-framework-benchmark/)
-
-* Well documented
-
-  Thorough documentation for the entire application.
-
-* Rapid development
-
-  PHPixie gets out of the way and lets you write code the way you want.
-
-* Automagic
-
-  Automating key functions in the framework to facilitate a faster approach to application development.
-
-* Write your own code
-
-  PHPixie handles the foundation and lets you shape the rest any way you like.
+Additional Information
+======================
+[Wiki](https://github.com/rapid7/hackazon/wiki)
+CyberSecology Blog: [Hackazon Test Site Review](http://cybersecology.com/hackazon-review/)
