@@ -4,7 +4,7 @@
 /assets/config/parameters.php
 /assets/config/email.php
 /assets/config/rest.php
-/assets/config/bak/*
+/assets/config/bak/
 /assets/config/vuln/
 /web/log.txt
 /web/test.php
