@@ -3,7 +3,7 @@
    "info":{
       "version":"1.0.0",
       "title":"Hackazon Mobile API",
-      "description":"#### Shopping API for Hackazon mobile app.\n"
+      "description":"#### Shopping API for Hackazon: HTML UI & Android mobile Application \n"
    },
    "schemes":[
       "http"
@@ -191,7 +191,7 @@
             ]
          }
       },
-      "/api/cart/cartItems":{
+      "/api/cartItems":{
          "post":{
             "responses":{
                "200":{
@@ -215,7 +215,7 @@
                   "name":"uid",
                   "required":false,
                   "in":"query",
-                  "description":"Session based web application scanning with tweaks.",
+                  "description":"",
                   "type":"string"
                },
                {
@@ -605,10 +605,7 @@
                "200":{
                   "description":"Response will be in JSON",
                   "schema":{
-                     "type":"array",
-                     "items":{
-                        "$ref":"#/definitions/UserProfileData"
-                     }
+                     "$ref":"#/definitions/UserProfileData"
                   }
                }
             },
@@ -621,6 +618,56 @@
                   "description":"In the form of: Token kjs879sad78f9sd87f",
                   "type":"string",
                   "pattern":"Token \\w+"
+               }
+            ]
+         }
+      },
+      "/api/user/{user_id}": {
+         "put": {
+            "responses": {
+               "200": {
+                  "description": "Response will be in JSON",
+                  "schema":{
+                     "$ref":"#/definitions/UserProfileData"
+                  }
+               }
+            },
+            "description": "update a users data.",
+            "parameters": [
+               {
+                  "name": "user_id",
+                  "in:": "path",
+                  "required": true,
+                  "type": "integer"
+               },
+               {
+                  "name": "body",
+                  "in": "body",
+                  "schema": {
+                     "$ref": "#/definitions/UserProfileData"
+                  }
+               }
+            ]
+         }
+      },
+      "/api/contactMessages": {
+         "post": {
+            "responses": {
+               "200": {
+                  "description": "Response will be in JSON",
+                  "schema": {
+                     "$ref": "#/definitions/ContactMessage"
+                  }
+               }
+            },
+            "description": "Send a contact message.",
+            "parameters": [
+               {
+                  "name": "body",
+                  "in": "body",
+                  "schema": {
+                     "$ref": "#/definitions/ContactMessage"
+                  }
                }
             ]
          }
@@ -758,6 +805,32 @@
                "type":"string"
             },
             "price":{
+               "type":"string"
+            }
+         }
+      },
+      "ContactMessage": {
+         "type": "object",
+         "properties": {
+            "created_at":{
+               "type":"string"
+            },
+            "customer_id":{
+               "type":"string"
+            },
+            "email":{
+               "type":"string"
+            },
+            "message":{
+               "type":"string"
+            },
+            "name":{
+               "type":"string"
+            },
+            "phone":{
+               "type":"string"
+            },
+            "id":{
                "type":"string"
             }
          }
