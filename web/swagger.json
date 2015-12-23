@@ -1,0 +1,54 @@
+{
+   "swagger":"2.0",
+   "info":{
+      "version":"1.0.0",
+      "title":"Hackazon API",
+      "description":"#### Shopping API for Hackazon: HTML UI & Android mobile Application \n"
+   },
+   "schemes":[
+      "http"
+   ],
+   "produces":[
+      "application/json"
+   ],
+   "host":"hackazon.webscantest.com",
+   "basePath":"/",
+   "paths":{
+      "/swagger.json":{
+         "get":{
+            "responses":{
+               "200":{
+                  "description":"Swagger 2.0 definition root.",
+                  "schema":{
+                     "$ref":"swagger.json"
+                  }
+               }
+            }
+         }
+      },
+      "/swagger.html-ui.json":{
+         "get":{
+            "responses":{
+               "200":{
+                  "description":"Swagger 2.0 definition of UI endpoints",
+                  "schema":{
+                     "$ref":"swagger.html-ui.json"
+                  }
+               }
+            }
+         }
+      },
+      "/swagger.android-ui.json":{
+         "get":{
+            "responses":{
+               "200":{
+                  "description":"Swagger 2.0 definition of Android API endpoints",
+                  "schema":{
+                     "$ref":"swagger.android-ui.json"
+                  }
+               }
+            }
+         }
+      }
+   }
+}
