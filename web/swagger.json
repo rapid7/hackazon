@@ -15,40 +15,13 @@
    "basePath":"/",
    "paths":{
       "/swagger.json":{
-         "get":{
-            "responses":{
-               "200":{
-                  "description":"Swagger 2.0 definition root.",
-                  "schema":{
-                     "$ref":"swagger.json"
-                  }
-               }
-            }
-         }
+         "$ref":"swagger.json"
       },
       "/swagger.html-ui.json":{
-         "get":{
-            "responses":{
-               "200":{
-                  "description":"Swagger 2.0 definition of UI endpoints",
-                  "schema":{
-                     "$ref":"swagger.html-ui.json"
-                  }
-               }
-            }
-         }
+         "$ref":"swagger.html-ui.json"
       },
       "/swagger.android-ui.json":{
-         "get":{
-            "responses":{
-               "200":{
-                  "description":"Swagger 2.0 definition of Android API endpoints",
-                  "schema":{
-                     "$ref":"swagger.android-ui.json"
-                  }
-               }
-            }
-         }
+         "$ref":"swagger.android-ui.json"
       }
    }
 }
