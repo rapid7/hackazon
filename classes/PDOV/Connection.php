@@ -205,6 +205,7 @@ class Connection extends \PHPixie\DB\Connection {
         }
 
         $this->isBlinded = false;
+	$this->pixie->debug->display_errors = true; 	// FIX SQLi
     }
 
     public function stopBlindness()
