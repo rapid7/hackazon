@@ -40,7 +40,7 @@ CREATE TABLE `tbl_brand` (
 DROP TABLE IF EXISTS `tbl_cart`;
 CREATE TABLE `tbl_cart` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `items_count` int(10) unsigned DEFAULT '0',
   `items_qty` int(10) unsigned DEFAULT '0',
@@ -61,7 +61,7 @@ DROP TABLE IF EXISTS `tbl_cart_items`;
 CREATE TABLE `tbl_cart_items` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cart_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `product_id` int(10) unsigned DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -246,7 +246,7 @@ CREATE TABLE `tbl_news` (
 DROP TABLE IF EXISTS `tbl_orders`;
 CREATE TABLE `tbl_orders` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `customer_firstname` varchar(60) DEFAULT NULL,
   `customer_lastname` varchar(60) DEFAULT NULL,
@@ -284,7 +284,7 @@ DROP TABLE IF EXISTS `tbl_order_items`;
 CREATE TABLE `tbl_order_items` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cart_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `product_id` int(10) unsigned DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
