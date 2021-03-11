@@ -23,12 +23,13 @@ class TokenProvider extends Provider
 
     public function authenticate()
     {
-        $headers = getallheaders();
+        // Ensure headers are lower-case
+        $headers = array_change_key_case(getallheaders());
         $token = null;
 
         // Fetch token from headers or query string.
-        if ($headers['Authorization'] && strpos($headers['Authorization'], 'Token ') === 0) {
-            $parts = preg_split('/\s+/', $headers['Authorization'], 2, PREG_SPLIT_NO_EMPTY);
+        if ($headers['authorization'] && strpos($headers['authorization'], 'Token ') === 0) {
+            $parts = preg_split('/\s+/', $headers['authorization'], 2, PREG_SPLIT_NO_EMPTY);
             $token = $parts[1];
 
         } else if ($this->controller->request->get('_token')) {
