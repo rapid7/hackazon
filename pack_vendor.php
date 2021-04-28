@@ -3,7 +3,7 @@
  * Created by IntelliJ IDEA.
  * User: Nikolay Chervyakov 
  * Date: 26.11.2014
- * Time: 16:26
+
  *
  * The PHP has a problem with compressing more than 2042 files in one PHAR:
  * @link[https://bugs.php.net/bug.php?id=53467]
